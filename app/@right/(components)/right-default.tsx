@@ -21,6 +21,17 @@ export default function RightDefault() {
           {t("joinTheAction")}&quot; 🔥🔥🔥
         </blockquote>
 
+        <h2 className="scroll-m-20 border-b pb-2 text-xl font-semibold tracking-tight first:mt-0 underline text-blue-600 my-4 ">
+          <a
+            href="https://github.com/aifa-agi/aifa"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-600 transition-colors duration-200"
+          >
+            GitHub https://github.com/aifa-agi/aifa
+          </a>
+        </h2>
+
         <p className="leading-7 [&:not(:first-child)]:mt-6">
           {t("heroDescription")}
         </p>
