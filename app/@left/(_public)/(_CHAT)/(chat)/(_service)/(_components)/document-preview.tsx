@@ -1,4 +1,4 @@
-// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/document-preview.tsx
+// @/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/document-preview.tsx
 
 "use client";
 
@@ -153,7 +153,7 @@ const PureHitboxLayer = ({
   result,
   setArtifact,
 }: {
-  hitboxRef: React.RefObject<HTMLDivElement>;
+  hitboxRef: React.RefObject<HTMLDivElement | null>;
   result: any;
   setArtifact: (
     updaterFn: UIArtifact | ((currentArtifact: UIArtifact) => UIArtifact)
