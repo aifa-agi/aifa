@@ -1,0 +1,274 @@
+{
+  "title": {
+    "en": "Terms of Service",
+    "es": "Términos de Servicio",
+    "de": "Nutzungsbedingungen",
+    "fr": "Conditions d'utilisation",
+    "it": "Termini di Servizio",
+    "ru": "Условия использования"
+  },
+  "acceptance.title": {
+    "en": "Acceptance of Terms",
+    "es": "Aceptación de Términos",
+    "de": "Annahme der Bedingungen",
+    "fr": "Acceptation des conditions",
+    "it": "Accettazione dei termini",
+    "ru": "Принятие условий"
+  },
+  "acceptance.description": {
+    "en": "By accessing and using our services, you accept and agree to be bound by the terms and provision of this agreement.",
+    "es": "Al acceder y usar nuestros servicios, acepta y está de acuerdo en estar sujeto a los términos y disposiciones de este acuerdo.",
+    "de": "Durch den Zugriff auf und die Nutzung unserer Dienste akzeptieren Sie die Bedingungen und Bestimmungen dieser Vereinbarung und erklären sich damit einverstanden.",
+    "fr": "En accédant et en utilisant nos services, vous acceptez et acceptez d'être lié par les termes et dispositions de cet accord.",
+    "it": "Accedendo e utilizzando i nostri servizi, accetti e accetti di essere vincolato dai termini e dalle disposizioni di questo accordo.",
+    "ru": "Получая доступ к нашим услугам и используя их, вы принимаете и соглашаетесь соблюдать условия и положения данного соглашения."
+  },
+  "serviceDescription.title": {
+    "en": "Service Description",
+    "es": "Descripción del Servicio",
+    "de": "Servicebeschreibung",
+    "fr": "Description du service",
+    "it": "Descrizione del servizio",
+    "ru": "Описание услуги"
+  },
+  "serviceDescription.description": {
+    "en": "We provide web-based software services designed to help users create, manage, and optimize their digital presence and business operations.",
+    "es": "Proporcionamos servicios de software basados en web diseñados para ayudar a los usuarios a crear, gestionar y optimizar su presencia digital y operaciones comerciales.",
+    "de": "Wir bieten webbasierte Software-Services, die Benutzern helfen, ihre digitale Präsenz und Geschäftsabläufe zu erstellen, zu verwalten und zu optimieren.",
+    "fr": "Nous fournissons des services logiciels basés sur le web conçus pour aider les utilisateurs à créer, gérer et optimiser leur présence numérique et leurs opérations commerciales.",
+    "it": "Forniamo servizi software basati sul web progettati per aiutare gli utenti a creare, gestire e ottimizzare la loro presenza digitale e le operazioni aziendali.",
+    "ru": "Мы предоставляем веб-программные услуги, предназначенные для помощи пользователям в создании, управлении и оптимизации их цифрового присутствия и бизнес-операций."
+  },
+  "userAccounts.title": {
+    "en": "User Accounts",
+    "es": "Cuentas de Usuario",
+    "de": "Benutzerkonten",
+    "fr": "Comptes utilisateur",
+    "it": "Account utente",
+    "ru": "Учетные записи пользователей"
+  },
+  "userAccounts.description": {
+    "en": "When you create an account with us, you must provide accurate and complete information. You are responsible for:",
+    "es": "Cuando crea una cuenta con nosotros, debe proporcionar información precisa y completa. Usted es responsable de:",
+    "de": "Wenn Sie ein Konto bei uns erstellen, müssen Sie genaue und vollständige Informationen angeben. Sie sind verantwortlich für:",
+    "fr": "Lorsque vous créez un compte chez nous, vous devez fournir des informations exactes et complètes. Vous êtes responsable de:",
+    "it": "Quando crei un account con noi, devi fornire informazioni accurate e complete. Sei responsabile di:",
+    "ru": "Когда вы создаете учетную запись у нас, вы должны предоставить точную и полную информацию. Вы несете ответственность за:"
+  },
+  "userAccounts.accuracy": {
+    "en": "Maintaining the accuracy of your account information",
+    "es": "Mantener la precisión de la información de su cuenta",
+    "de": "Die Genauigkeit Ihrer Kontoinformationen aufrechterhalten",
+    "fr": "Maintenir l'exactitude des informations de votre compte",
+    "it": "Mantenere l'accuratezza delle informazioni del tuo account",
+    "ru": "Поддержание точности информации вашей учетной записи"
+  },
+  "userAccounts.security": {
+    "en": "Safeguarding your password and account security",
+    "es": "Proteger su contraseña y la seguridad de su cuenta",
+    "de": "Den Schutz Ihres Passworts und der Kontosicherheit",
+    "fr": "Protéger votre mot de passe et la sécurité de votre compte",
+    "it": "Proteggere la tua password e la sicurezza dell'account",
+    "ru": "Защита вашего пароля и безопасности учетной записи"
+  },
+  "userAccounts.responsibility": {
+    "en": "All activities that occur under your account",
+    "es": "Todas las actividades que ocurren bajo su cuenta",
+    "de": "Alle Aktivitäten, die unter Ihrem Konto auftreten",
+    "fr": "Toutes les activités qui se produisent sous votre compte",
+    "it": "Tutte le attività che si verificano sotto il tuo account",
+    "ru": "Все действия, происходящие в рамках вашей учетной записи"
+  },
+  "userConduct.title": {
+    "en": "User Conduct",
+    "es": "Conducta del Usuario",
+    "de": "Benutzerverhalten",
+    "fr": "Conduite de l'utilisateur",
+    "it": "Condotta dell'utente",
+    "ru": "Поведение пользователя"
+  },
+  "userConduct.description": {
+    "en": "You agree to use our services responsibly and in accordance with these terms. You must not:",
+    "es": "Acepta usar nuestros servicios de manera responsable y de acuerdo con estos términos. No debe:",
+    "de": "Sie stimmen zu, unsere Dienste verantwortungsbewusst und in Übereinstimmung mit diesen Bedingungen zu nutzen. Sie dürfen nicht:",
+    "fr": "Vous acceptez d'utiliser nos services de manière responsable et conformément à ces conditions. Vous ne devez pas:",
+    "it": "Accetti di utilizzare i nostri servizi in modo responsabile e in conformità con questi termini. Non devi:",
+    "ru": "Вы соглашаетесь использовать наши услуги ответственно и в соответствии с данными условиями. Вы не должны:"
+  },
+  "userConduct.lawful": {
+    "en": "Use our services for any unlawful purpose",
+    "es": "Usar nuestros servicios para cualquier propósito ilegal",
+    "de": "Unsere Dienste für rechtswidrige Zwecke nutzen",
+    "fr": "Utiliser nos services à des fins illégales",
+    "it": "Utilizzare i nostri servizi per scopi illegali",
+    "ru": "Использовать наши услуги в незаконных целях"
+  },
+  "userConduct.respectful": {
+    "en": "Engage in harassment, abuse, or discriminatory behavior",
+    "es": "Participar en acoso, abuso o comportamiento discriminatorio",
+    "de": "Belästigung, Missbrauch oder diskriminierendes Verhalten zeigen",
+    "fr": "S'engager dans le harcèlement, l'abus ou un comportement discriminatoire",
+    "it": "Impegnarsi in molestie, abusi o comportamenti discriminatori",
+    "ru": "Заниматься преследованием, злоупотреблением или дискриминационным поведением"
+  },
+  "userConduct.noHarm": {
+    "en": "Attempt to harm or disrupt our services or systems",
+    "es": "Intentar dañar o interrumpir nuestros servicios o sistemas",
+    "de": "Versuchen, unsere Dienste oder Systeme zu schädigen oder zu stören",
+    "fr": "Tenter de nuire ou de perturber nos services ou systèmes",
+    "it": "Tentare di danneggiare o interrompere i nostri servizi o sistemi",
+    "ru": "Пытаться нанести вред или нарушить работу наших услуг или систем"
+  },
+  "userConduct.noSpam": {
+    "en": "Send spam or engage in other unsolicited communications",
+    "es": "Enviar spam o participar en otras comunicaciones no solicitadas",
+    "de": "Spam senden oder andere unerwünschte Kommunikation betreiben",
+    "fr": "Envoyer du spam ou s'engager dans d'autres communications non sollicitées",
+    "it": "Inviare spam o impegnarsi in altre comunicazioni non richieste",
+    "ru": "Отправлять спам или заниматься другими нежелательными коммуникациями"
+  },
+  "intellectualProperty.title": {
+    "en": "Intellectual Property",
+    "es": "Propiedad Intelectual",
+    "de": "Geistiges Eigentum",
+    "fr": "Propriété intellectuelle",
+    "it": "Proprietà intellettuale",
+    "ru": "Интеллектуальная собственность"
+  },
+  "intellectualProperty.description": {
+    "en": "Our services and all related content, features, and functionality are owned by us and are protected by copyright, trademark, and other intellectual property laws.",
+    "es": "Nuestros servicios y todo el contenido, características y funcionalidad relacionados son de nuestra propiedad y están protegidos por derechos de autor, marcas comerciales y otras leyes de propiedad intelectual.",
+    "de": "Unsere Dienste und alle damit verbundenen Inhalte, Funktionen und Funktionalitäten gehören uns und sind durch Urheberrecht, Markenrecht und andere Gesetze zum Schutz des geistigen Eigentums geschützt.",
+    "fr": "Nos services et tout le contenu, les fonctionnalités et les fonctionnalités connexes nous appartiennent et sont protégés par le droit d'auteur, les marques de commerce et d'autres lois sur la propriété intellectuelle.",
+    "it": "I nostri servizi e tutti i contenuti, le caratteristiche e le funzionalità correlate sono di nostra proprietà e sono protetti da copyright, marchi e altre leggi sulla proprietà intellettuale.",
+    "ru": "Наши услуги и все связанные с ними контент, функции и функциональность принадлежат нам и защищены авторским правом, товарными знаками и другими законами об интеллектуальной собственности."
+  },
+  "paymentTerms.title": {
+    "en": "Payment Terms",
+    "es": "Términos de Pago",
+    "de": "Zahlungsbedingungen",
+    "fr": "Conditions de paiement",
+    "it": "Termini di pagamento",
+    "ru": "Условия оплаты"
+  },
+  "paymentTerms.description": {
+    "en": "For paid services, the following payment terms apply:",
+    "es": "Para los servicios pagos, se aplican los siguientes términos de pago:",
+    "de": "Für kostenpflichtige Dienste gelten die folgenden Zahlungsbedingungen:",
+    "fr": "Pour les services payants, les conditions de paiement suivantes s'appliquent:",
+    "it": "Per i servizi a pagamento, si applicano i seguenti termini di pagamento:",
+    "ru": "Для платных услуг действуют следующие условия оплаты:"
+  },
+  "paymentTerms.pricing": {
+    "en": "Prices are as posted on our website and may change",
+    "es": "Los precios son los publicados en nuestro sitio web y pueden cambiar",
+    "de": "Die Preise entsprechen den auf unserer Website veröffentlichten und können sich ändern",
+    "fr": "Les prix sont ceux affichés sur notre site web et peuvent changer",
+    "it": "I prezzi sono quelli pubblicati sul nostro sito web e possono cambiare",
+    "ru": "Цены указаны на нашем веб-сайте и могут изменяться"
+  },
+  "paymentTerms.billing": {
+    "en": "Billing occurs automatically on your subscription renewal date",
+    "es": "La facturación ocurre automáticamente en la fecha de renovación de su suscripción",
+    "de": "Die Abrechnung erfolgt automatisch an Ihrem Abonnement-Verlängerungsdatum",
+    "fr": "La facturation se fait automatiquement à votre date de renouvellement d'abonnement",
+    "it": "La fatturazione avviene automaticamente alla data di rinnovo del tuo abbonamento",
+    "ru": "Выставление счетов происходит автоматически в дату продления вашей подписки"
+  },
+  "paymentTerms.refunds": {
+    "en": "Refunds are provided according to our refund policy",
+    "es": "Los reembolsos se proporcionan de acuerdo con nuestra política de reembolsos",
+    "de": "Rückerstattungen werden gemäß unserer Rückerstattungsrichtlinie gewährt",
+    "fr": "Les remboursements sont fournis selon notre politique de remboursement",
+    "it": "I rimborsi sono forniti secondo la nostra politica di rimborso",
+    "ru": "Возвраты предоставляются в соответствии с нашей политикой возврата"
+  },
+  "termination.title": {
+    "en": "Termination",
+    "es": "Terminación",
+    "de": "Kündigung",
+    "fr": "Résiliation",
+    "it": "Risoluzione",
+    "ru": "Прекращение"
+  },
+  "termination.description": {
+    "en": "We may terminate or suspend your account and access to our services immediately, without prior notice, for conduct that we believe violates these Terms of Service.",
+    "es": "Podemos terminar o suspender su cuenta y acceso a nuestros servicios inmediatamente, sin previo aviso, por conducta que creemos viola estos Términos de Servicio.",
+    "de": "Wir können Ihr Konto und den Zugang zu unseren Diensten sofort ohne vorherige Ankündigung kündigen oder aussetzen, wenn wir glauben, dass Ihr Verhalten diese Nutzungsbedingungen verletzt.",
+    "fr": "Nous pouvons résilier ou suspendre votre compte et l'accès à nos services immédiatement, sans préavis, pour une conduite que nous croyons violer ces Conditions d'utilisation.",
+    "it": "Possiamo terminare o sospendere il tuo account e l'accesso ai nostri servizi immediatamente, senza preavviso, per condotte che riteniamo violino questi Termini di Servizio.",
+    "ru": "Мы можем прекратить или приостановить ваш аккаунт и доступ к нашим услугам немедленно, без предварительного уведомления, за поведение, которое, по нашему мнению, нарушает данные Условия использования."
+  },
+  "disclaimers.title": {
+    "en": "Disclaimers",
+    "es": "Descargos de Responsabilidad",
+    "de": "Haftungsausschlüsse",
+    "fr": "Avis de non-responsabilité",
+    "it": "Esclusioni di responsabilità",
+    "ru": "Отказ от ответственности"
+  },
+  "disclaimers.description": {
+    "en": "Our services are provided 'as is' without any warranties, express or implied. We do not guarantee that our services will be uninterrupted, secure, or error-free.",
+    "es": "Nuestros servicios se proporcionan 'tal como están' sin ninguna garantía, expresa o implícita. No garantizamos que nuestros servicios sean ininterrumpidos, seguros o libres de errores.",
+    "de": "Unsere Dienste werden 'wie sie sind' ohne jegliche Gewährleistungen, ausdrücklich oder stillschweigend, bereitgestellt. Wir garantieren nicht, dass unsere Dienste ununterbrochen, sicher oder fehlerfrei sind.",
+    "fr": "Nos services sont fournis 'tels quels' sans aucune garantie, expresse ou implicite. Nous ne garantissons pas que nos services seront ininterrompus, sécurisés ou sans erreur.",
+    "it": "I nostri servizi sono forniti 'così come sono' senza garanzie, esplicite o implicite. Non garantiamo che i nostri servizi saranno ininterrotti, sicuri o privi di errori.",
+    "ru": "Наши услуги предоставляются 'как есть' без каких-либо гарантий, явных или подразумеваемых. Мы не гарантируем, что наши услуги будут бесперебойными, безопасными или безошибочными."
+  },
+  "limitation.title": {
+    "en": "Limitation of Liability",
+    "es": "Limitación de Responsabilidad",
+    "de": "Haftungsbeschränkung",
+    "fr": "Limitation de responsabilité",
+    "it": "Limitazione di responsabilità",
+    "ru": "Ограничение ответственности"
+  },
+  "limitation.description": {
+    "en": "In no event shall we be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of our services.",
+    "es": "En ningún caso seremos responsables de ningún daño indirecto, incidental, especial, consecuencial o punitivo que surja de su uso de nuestros servicios.",
+    "de": "In keinem Fall haften wir für indirekte, zufällige, besondere, Folge- oder Strafschäden, die aus Ihrer Nutzung unserer Dienste entstehen.",
+    "fr": "En aucun cas nous ne serons responsables de dommages indirects, accessoires, spéciaux, consécutifs ou punitifs découlant de votre utilisation de nos services.",
+    "it": "In nessun caso saremo responsabili per danni indiretti, incidentali, speciali, consequenziali o punitivi derivanti dal tuo uso dei nostri servizi.",
+    "ru": "Ни при каких обстоятельствах мы не несем ответственности за любые косвенные, случайные, особые, последующие или штрафные ущербы, возникающие в результате использования вами наших услуг."
+  },
+  "changes.title": {
+    "en": "Changes to Terms",
+    "es": "Cambios a los Términos",
+    "de": "Änderungen der Bedingungen",
+    "fr": "Modifications des conditions",
+    "it": "Modifiche ai termini",
+    "ru": "Изменения условий"
+  },
+  "changes.description": {
+    "en": "We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting. Your continued use of our services constitutes acceptance of the modified terms.",
+    "es": "Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios serán efectivos inmediatamente después de su publicación. Su uso continuado de nuestros servicios constituye la aceptación de los términos modificados.",
+    "de": "Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Änderungen werden sofort nach der Veröffentlichung wirksam. Ihre fortgesetzte Nutzung unserer Dienste stellt die Annahme der geänderten Bedingungen dar.",
+    "fr": "Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications prendront effet immédiatement après publication. Votre utilisation continue de nos services constitue l'acceptation des conditions modifiées.",
+    "it": "Ci riserviamo il diritto di modificare questi termini in qualsiasi momento. Le modifiche saranno efficaci immediatamente dopo la pubblicazione. Il tuo uso continuato dei nostri servizi costituisce accettazione dei termini modificati.",
+    "ru": "Мы оставляем за собой право изменять данные условия в любое время. Изменения вступают в силу немедленно после публикации. Ваше продолжение использования наших услуг означает принятие измененных условий."
+  },
+  "contact.title": {
+    "en": "Contact Information",
+    "es": "Información de Contacto",
+    "de": "Kontaktinformationen",
+    "fr": "Informations de contact",
+    "it": "Informazioni di contatto",
+    "ru": "Контактная информация"
+  },
+  "contact.description": {
+    "en": "If you have any questions about these Terms of Service, please contact us at legal@yourdomain.com",
+    "es": "Si tiene alguna pregunta sobre estos Términos de Servicio, contáctenos en legal@yourdomain.com",
+    "de": "Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns bitte unter legal@yourdomain.com",
+    "fr": "Si vous avez des questions sur ces Conditions d'utilisation, veuillez nous contacter à legal@yourdomain.com",
+    "it": "Se hai domande su questi Termini di Servizio, contattaci all'indirizzo legal@yourdomain.com",
+    "ru": "Если у вас есть вопросы по поводу данных Условий использования, свяжитесь с нами по адресу legal@yourdomain.com"
+  },
+  "lastUpdated": {
+    "en": "Last updated: December 2024",
+    "es": "Última actualización: Diciembre 2024",
+    "de": "Zuletzt aktualisiert: Dezember 2024",
+    "fr": "Dernière mise à jour: Décembre 2024",
+    "it": "Ultimo aggiornamento: Dicembre 2024",
+    "ru": "Последнее обновление: Декабрь 2024"
+  }
+}

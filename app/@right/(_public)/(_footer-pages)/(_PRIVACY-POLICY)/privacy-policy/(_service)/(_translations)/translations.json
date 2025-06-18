@@ -1,0 +1,218 @@
+{
+  "Privacy Policy": {
+    "en": "Privacy Policy",
+    "es": "Política de Privacidad",
+    "de": "Datenschutzrichtlinie",
+    "fr": "Politique de confidentialité",
+    "it": "Informativa sulla Privacy",
+    "ru": "Политика конфиденциальности"
+  },
+  "Information We Collect": {
+    "en": "Information We Collect",
+    "es": "Información que Recopilamos",
+    "de": "Informationen, die wir sammeln",
+    "fr": "Informations que nous collectons",
+    "it": "Informazioni che raccogliamo",
+    "ru": "Информация, которую мы собираем"
+  },
+  "We collect information you provide directly to us, such as when you create an account, use our services, or contact us.": {
+    "en": "We collect information you provide directly to us, such as when you create an account, use our services, or contact us.",
+    "es": "Recopilamos información que nos proporciona directamente, como cuando crea una cuenta, usa nuestros servicios o se pone en contacto con nosotros.",
+    "de": "Wir sammeln Informationen, die Sie uns direkt zur Verfügung stellen, z.B. wenn Sie ein Konto erstellen, unsere Dienste nutzen oder uns kontaktieren.",
+    "fr": "Nous collectons les informations que vous nous fournissez directement, par exemple lorsque vous créez un compte, utilisez nos services ou nous contactez.",
+    "it": "Raccogliamo le informazioni che ci fornisci direttamente, ad esempio quando crei un account, utilizzi i nostri servizi o ci contatti.",
+    "ru": "Мы собираем информацию, которую вы предоставляете нам напрямую, например, когда создаете учетную запись, используете наши услуги или связываетесь с нами."
+  },
+  "Personal information (name, email address, phone number)": {
+    "en": "Personal information (name, email address, phone number)",
+    "es": "Información personal (nombre, dirección de correo electrónico, número de teléfono)",
+    "de": "Persönliche Informationen (Name, E-Mail-Adresse, Telefonnummer)",
+    "fr": "Informations personnelles (nom, adresse e-mail, numéro de téléphone)",
+    "it": "Informazioni personali (nome, indirizzo email, numero di telefono)",
+    "ru": "Персональная информация (имя, адрес электронной почты, номер телефона)"
+  },
+  "Usage data and analytics": {
+    "en": "Usage data and analytics",
+    "es": "Datos de uso y análisis",
+    "de": "Nutzungsdaten und Analysen",
+    "fr": "Données d'utilisation et analyses",
+    "it": "Dati di utilizzo e analisi",
+    "ru": "Данные об использовании и аналитика"
+  },
+  "Cookies and similar tracking technologies": {
+    "en": "Cookies and similar tracking technologies",
+    "es": "Cookies y tecnologías de seguimiento similares",
+    "de": "Cookies und ähnliche Tracking-Technologien",
+    "fr": "Cookies et technologies de suivi similaires",
+    "it": "Cookie e tecnologie di tracciamento simili",
+    "ru": "Файлы cookie и аналогичные технологии отслеживания"
+  },
+  "How We Use Your Information": {
+    "en": "How We Use Your Information",
+    "es": "Cómo Usamos Su Información",
+    "de": "Wie wir Ihre Informationen verwenden",
+    "fr": "Comment nous utilisons vos informations",
+    "it": "Come utilizziamo le tue informazioni",
+    "ru": "Как мы используем вашу информацию"
+  },
+  "We use the information we collect to provide, maintain, and improve our services.": {
+    "en": "We use the information we collect to provide, maintain, and improve our services.",
+    "es": "Utilizamos la información que recopilamos para proporcionar, mantener y mejorar nuestros servicios.",
+    "de": "Wir verwenden die gesammelten Informationen, um unsere Dienste bereitzustellen, zu warten und zu verbessern.",
+    "fr": "Nous utilisons les informations que nous collectons pour fournir, maintenir et améliorer nos services.",
+    "it": "Utilizziamo le informazioni che raccogliamo per fornire, mantenere e migliorare i nostri servizi.",
+    "ru": "Мы используем собираемую информацию для предоставления, поддержания и улучшения наших услуг."
+  },
+  "Provide and deliver our services": {
+    "en": "Provide and deliver our services",
+    "es": "Proporcionar y entregar nuestros servicios",
+    "de": "Bereitstellung und Lieferung unserer Dienste",
+    "fr": "Fournir et livrer nos services",
+    "it": "Fornire e consegnare i nostri servizi",
+    "ru": "Предоставление и доставка наших услуг"
+  },
+  "Communicate with you about our services": {
+    "en": "Communicate with you about our services",
+    "es": "Comunicarnos con usted sobre nuestros servicios",
+    "de": "Mit Ihnen über unsere Dienste kommunizieren",
+    "fr": "Communiquer avec vous au sujet de nos services",
+    "it": "Comunicare con te sui nostri servizi",
+    "ru": "Общение с вами о наших услугах"
+  },
+  "Improve and develop new features": {
+    "en": "Improve and develop new features",
+    "es": "Mejorar y desarrollar nuevas características",
+    "de": "Verbesserung und Entwicklung neuer Funktionen",
+    "fr": "Améliorer et développer de nouvelles fonctionnalités",
+    "it": "Migliorare e sviluppare nuove funzionalità",
+    "ru": "Улучшение и разработка новых функций"
+  },
+  "Data Protection": {
+    "en": "Data Protection",
+    "es": "Protección de Datos",
+    "de": "Datenschutz",
+    "fr": "Protection des données",
+    "it": "Protezione dei dati",
+    "ru": "Защита данных"
+  },
+  "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.": {
+    "en": "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.",
+    "es": "Implementamos medidas de seguridad apropiadas para proteger su información personal contra el acceso no autorizado, alteración, divulgación o destrucción.",
+    "de": "Wir implementieren angemessene Sicherheitsmaßnahmen, um Ihre persönlichen Informationen vor unbefugtem Zugriff, Änderung, Offenlegung oder Zerstörung zu schützen.",
+    "fr": "Nous mettons en place des mesures de sécurité appropriées pour protéger vos informations personnelles contre l'accès non autorisé, la modification, la divulgation ou la destruction.",
+    "it": "Implementiamo misure di sicurezza appropriate per proteggere le tue informazioni personali da accesso non autorizzato, alterazione, divulgazione o distruzione.",
+    "ru": "Мы применяем соответствующие меры безопасности для защиты вашей персональной информации от несанкционированного доступа, изменения, раскрытия или уничтожения."
+  },
+  "Cookies and Tracking": {
+    "en": "Cookies and Tracking",
+    "es": "Cookies y Seguimiento",
+    "de": "Cookies und Tracking",
+    "fr": "Cookies et suivi",
+    "it": "Cookie e tracciamento",
+    "ru": "Файлы cookie и отслеживание"
+  },
+  "We use cookies and similar technologies to enhance your experience, analyze usage patterns, and personalize content.": {
+    "en": "We use cookies and similar technologies to enhance your experience, analyze usage patterns, and personalize content.",
+    "es": "Utilizamos cookies y tecnologías similares para mejorar su experiencia, analizar patrones de uso y personalizar el contenido.",
+    "de": "Wir verwenden Cookies und ähnliche Technologien, um Ihre Erfahrung zu verbessern, Nutzungsmuster zu analysieren und Inhalte zu personalisieren.",
+    "fr": "Nous utilisons des cookies et des technologies similaires pour améliorer votre expérience, analyser les modèles d'utilisation et personnaliser le contenu.",
+    "it": "Utilizziamo cookie e tecnologie simili per migliorare la tua esperienza, analizzare i modelli di utilizzo e personalizzare i contenuti.",
+    "ru": "Мы используем файлы cookie и аналогичные технологии для улучшения вашего опыта, анализа моделей использования и персонализации контента."
+  },
+  "Third-Party Services": {
+    "en": "Third-Party Services",
+    "es": "Servicios de Terceros",
+    "de": "Drittanbieter-Dienste",
+    "fr": "Services tiers",
+    "it": "Servizi di terze parti",
+    "ru": "Сторонние сервисы"
+  },
+  "We may share your information with trusted third-party service providers who assist us in operating our services, subject to confidentiality agreements.": {
+    "en": "We may share your information with trusted third-party service providers who assist us in operating our services, subject to confidentiality agreements.",
+    "es": "Podemos compartir su información con proveedores de servicios de terceros de confianza que nos ayudan a operar nuestros servicios, sujeto a acuerdos de confidencialidad.",
+    "de": "Wir können Ihre Informationen mit vertrauenswürdigen Drittanbietern teilen, die uns beim Betrieb unserer Dienste unterstützen, vorbehaltlich Vertraulichkeitsvereinbarungen.",
+    "fr": "Nous pouvons partager vos informations avec des fournisseurs de services tiers de confiance qui nous aident à exploiter nos services, sous réserve d'accords de confidentialité.",
+    "it": "Possiamo condividere le tue informazioni con fornitori di servizi di terze parti fidati che ci assistono nel funzionamento dei nostri servizi, soggetti ad accordi di riservatezza.",
+    "ru": "Мы можем делиться вашей информацией с доверенными сторонними поставщиками услуг, которые помогают нам в работе наших сервисов, при условии соглашений о конфиденциальности."
+  },
+  "Your Rights": {
+    "en": "Your Rights",
+    "es": "Sus Derechos",
+    "de": "Ihre Rechte",
+    "fr": "Vos droits",
+    "it": "I tuoi diritti",
+    "ru": "Ваши права"
+  },
+  "You have certain rights regarding your personal information:": {
+    "en": "You have certain rights regarding your personal information:",
+    "es": "Tiene ciertos derechos con respecto a su información personal:",
+    "de": "Sie haben bestimmte Rechte bezüglich Ihrer persönlichen Informationen:",
+    "fr": "Vous avez certains droits concernant vos informations personnelles:",
+    "it": "Hai certi diritti riguardo alle tue informazioni personali:",
+    "ru": "У вас есть определенные права в отношении вашей персональной информации:"
+  },
+  "Access and review your personal information": {
+    "en": "Access and review your personal information",
+    "es": "Acceder y revisar su información personal",
+    "de": "Zugriff auf und Überprüfung Ihrer persönlichen Informationen",
+    "fr": "Accéder et examiner vos informations personnelles",
+    "it": "Accedere e rivedere le tue informazioni personali",
+    "ru": "Доступ и просмотр вашей персональной информации"
+  },
+  "Correct inaccurate information": {
+    "en": "Correct inaccurate information",
+    "es": "Corregir información inexacta",
+    "de": "Unrichtige Informationen korrigieren",
+    "fr": "Corriger les informations inexactes",
+    "it": "Correggere informazioni inesatte",
+    "ru": "Исправление неточной информации"
+  },
+  "Request deletion of your personal information": {
+    "en": "Request deletion of your personal information",
+    "es": "Solicitar la eliminación de su información personal",
+    "de": "Löschung Ihrer persönlichen Informationen beantragen",
+    "fr": "Demander la suppression de vos informations personnelles",
+    "it": "Richiedere la cancellazione delle tue informazioni personali",
+    "ru": "Запрос на удаление вашей персональной информации"
+  },
+  "Contact Us": {
+    "en": "Contact Us",
+    "es": "Contáctanos",
+    "de": "Kontaktieren Sie uns",
+    "fr": "Contactez-nous",
+    "it": "Contattaci",
+    "ru": "Свяжитесь с нами"
+  },
+  "If you have any questions about this Privacy Policy, please contact us at privacy@yourdomain.com": {
+    "en": "If you have any questions about this Privacy Policy, please contact us at privacy@yourdomain.com",
+    "es": "Si tiene alguna pregunta sobre esta Política de Privacidad, contáctenos en privacy@yourdomain.com",
+    "de": "Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, kontaktieren Sie uns bitte unter privacy@yourdomain.com",
+    "fr": "Si vous avez des questions sur cette Politique de confidentialité, veuillez nous contacter à privacy@yourdomain.com",
+    "it": "Se hai domande su questa Informativa sulla Privacy, contattaci all'indirizzo privacy@yourdomain.com",
+    "ru": "Если у вас есть вопросы по поводу данной Политики конфиденциальности, свяжитесь с нами по адресу privacy@yourdomain.com"
+  },
+  "Changes to This Policy": {
+    "en": "Changes to This Policy",
+    "es": "Cambios a Esta Política",
+    "de": "Änderungen an dieser Richtlinie",
+    "fr": "Modifications de cette politique",
+    "it": "Modifiche a questa politica",
+    "ru": "Изменения в данной политике"
+  },
+  "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page.": {
+    "en": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page.",
+    "es": "Podemos actualizar esta Política de Privacidad de vez en cuando. Le notificaremos cualquier cambio publicando la nueva política en esta página.",
+    "de": "Wir können diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Wir werden Sie über Änderungen informieren, indem wir die neue Richtlinie auf dieser Seite veröffentlichen.",
+    "fr": "Nous pouvons mettre à jour cette Politique de confidentialité de temps à autre. Nous vous informerons de tout changement en publiant la nouvelle politique sur cette page.",
+    "it": "Possiamo aggiornare questa Informativa sulla Privacy di tanto in tanto. Ti informeremo di eventuali modifiche pubblicando la nuova politica su questa pagina.",
+    "ru": "Мы можем время от времени обновлять данную Политику конфиденциальности. Мы уведомим вас о любых изменениях, опубликовав новую политику на этой странице."
+  },
+  "Last updated: December 2024": {
+    "en": "Last updated: December 2024",
+    "es": "Última actualización: Diciembre 2024",
+    "de": "Zuletzt aktualisiert: Dezember 2024",
+    "fr": "Dernière mise à jour: Décembre 2024",
+    "it": "Ultimo aggiornamento: Dicembre 2024",
+    "ru": "Последнее обновление: Декабрь 2024"
+  }
+}

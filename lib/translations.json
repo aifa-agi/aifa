@@ -1,0 +1,142 @@
+[
+    {
+      "original": "Control Panel",
+      "translations": {
+        "en": "Control Panel",
+        "ru": "Панель управления"
+      }
+    },
+    {
+      "original": "Site Preview",
+      "translations": {
+        "en": "Site Preview",
+        "ru": "Предпросмотр сайта"
+      }
+    },
+    {
+      "original": "Админка А",
+      "translations": {
+        "en": "Admin A",
+        "ru": "Админка А"
+      }
+    },
+    {
+      "original": "Админка Б",
+      "translations": {
+        "en": "Admin B",
+        "ru": "Админка Б"
+      }
+    },
+    {
+      "original": "Сайт А",
+      "translations": {
+        "en": "Site A",
+        "ru": "Сайт А"
+      }
+    },
+    {
+      "original": "Сайт Б",
+      "translations": {
+        "en": "Site B",
+        "ru": "Сайт Б"
+      }
+    },
+    {
+      "original": "Панель управления",
+      "translations": {
+        "en": "Control Panel",
+        "ru": "Панель управления"
+      }
+    },
+    {
+      "original": "Попробовать снова",
+      "translations": {
+        "en": "Try again",
+        "ru": "Попробовать снова"
+      }
+    },
+    {
+      "original": "Загрузка...",
+      "translations": {
+        "en": "Loading...",
+        "ru": "Загрузка..."
+      }
+    },
+    {
+      "original": "Приветственное сообщение",
+      "translations": {
+        "en": "Welcome message",
+        "ru": "Приветственное сообщение"
+      }
+    },
+    {
+      "original": "Переключить на Админка",
+      "translations": {
+        "en": "Switch to Admin",
+        "ru": "Переключить на Админка"
+      }
+    },
+    {
+      "original": "Переключить на Сайт",
+      "translations": {
+        "en": "Switch to Site",
+        "ru": "Переключить на Сайт"
+      }
+    },
+    {
+      "original": "Админка - Страница A",
+      "translations": {
+        "en": "Admin - Page A",
+        "ru": "Админка - Страница A"
+      }
+    },
+    {
+      "original": "Админка - Страница Б",
+      "translations": {
+        "en": "Admin - Page B",
+        "ru": "Админка - Страница Б"
+      }
+    },
+    {
+      "original": "Сайт - Страница A",
+      "translations": {
+        "en": "Site - Page A",
+        "ru": "Сайт - Страница A"
+      }
+    },
+    {
+      "original": "Сайт - Страница Б",
+      "translations": {
+        "en": "Site - Page B",
+        "ru": "Сайт - Страница Б"
+      }
+    },
+    {
+      "original": "Меню",
+      "translations": {
+        "en": "Menu",
+        "ru": "Меню"
+      }
+    },
+    {
+      "original": "Закрыть",
+      "translations": {
+        "en": "Close",
+        "ru": "Закрыть"
+      }
+    },
+    {
+      "original": "Build something with Web1V2",
+      "translations": {
+        "en": "Build something with Web1V2",
+        "ru": "Создайте что-то с Web1V2"
+      }
+    },
+    {
+      "original": "Turn your ideas into a stunning app in just a minute",
+      "translations": {
+        "en": "Turn your ideas into a stunning app in just a minute",
+        "ru": "Превратите ваши идеи в потрясающее приложение всего за минуту"
+      }
+    }
+  ]
