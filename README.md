@@ -18,11 +18,11 @@ Complete documentation and usage examples are **coming soon** — we are activel
 
 ## 🔧 Quick Start
 
-Coming soon - full documentation in development
-git clone https://github.com/aifa-agi/aifa.git
-cd aifa
-npm install
-npm run dev
+- **Coming soon - full documentation in development**
+- **git clone https://github.com/aifa-agi/aifa.git**
+- **cd aifa**
+- **pnpm install**
+- **pnpm run dev**
 
 ## 🚀 Features
 
