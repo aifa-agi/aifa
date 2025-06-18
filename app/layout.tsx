@@ -15,7 +15,7 @@ import RightDrawerBar from "./@right/(components)/right-drawer-dar";
 // Import the new provider component.
 import { OnlineStatusProvider } from "@/components/shared/online-status-provider";
 import { RightSidebarProvider } from "@/contexts/right-sidebar-context";
-import { GoogleAnalytics } from "@next/third-parties/google";
+//import { GoogleAnalytics } from "@next/third-parties/google";
 export const metadata: Metadata = {
   metadataBase: new URL("https://aifa.dev"),
   title: "AI-First Architecture",
@@ -119,11 +119,11 @@ export default async function RootLayout({
                 </div>
               </RightSidebarProvider>
             </OnlineStatusProvider>
-            {process.env.NODE_ENV === "production" && (
+            {/* {process.env.NODE_ENV === "production" && (
               <GoogleAnalytics
                 gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID!}
               />
-            )}
+            )} */}
           </SessionProvider>
         </ThemeProvider>
       </body>
