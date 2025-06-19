@@ -1,5 +1,3 @@
-// @app/@left/(_public)/(_CHAT)/(chat)/chat/[id]/(_routing)/page.tsx
-
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
@@ -14,31 +12,43 @@ import { getChatById } from "../../../(_service)/(_db-queries)/chat/queries";
 import { getMessagesByChatId } from "../../../(_service)/(_db-queries)/message/queries";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const { id } = params;
-  const chat = await getChatById(id);
+  let chat;
+  let messagesFromDb: Message[] = [];
+  let session;
 
-  if (!chat) {
-    notFound();
-  }
+  try {
+    const params = await props.params;
+    const { id } = params;
 
-  const session = await auth();
+    chat = await getChatById(id);
 
-  if (!session) {
-    redirect("/api/auth/guest");
-  }
-
-  if (chat.visibility === Visibility.private) {
-    if (!session.user || session.user.id !== chat.userId) {
-      return notFound();
+    if (!chat) {
+      notFound();
     }
+
+    // Получаем сессию пользователя
+    session = await auth();
+
+    if (!session) {
+      redirect("/api/auth/guest");
+    }
+
+    // Проверяем приватность чата
+    if (chat.visibility === Visibility.private) {
+      if (!session.user || session.user.id !== chat.userId) {
+        notFound();
+      }
+    }
+
+    // Получаем сообщения
+    messagesFromDb = await getMessagesByChatId(id);
+  } catch (error) {
+    // Логируем ошибку для отладки (можно убрать на проде)
+    console.error("Error in chat page:", error);
+    // Можно показать свою страницу ошибки или скрыть детали
+    notFound(); // или redirect("/error") если есть кастомная страница
   }
 
-  const messagesFromDb = await getMessagesByChatId(id);
-  console.log(
-    "// @/app/@left/(chat)/[id]/page.tsx messagesFromDb: ",
-    messagesFromDb
-  );
   function convertToUIMessages(messages: Array<Message>): Array<UIMessage> {
     function isAttachmentArray(data: unknown): data is Attachment[] {
       return (
@@ -57,10 +67,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       id: message.id,
       parts: message.parts as UIMessage["parts"],
       role: message.role as UIMessage["role"],
-      // Note: content will soon be deprecated in @ai-sdk/react
       content: "",
       createdAt: message.createdAt,
-
       experimental_attachments: isAttachmentArray(
         message.attachments as unknown
       )
@@ -84,7 +92,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         autoResume={true}
       />
 
-      <DataStreamHandler id={id} />
+      <DataStreamHandler id={chat.id} />
     </>
   );
 }

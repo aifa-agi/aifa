@@ -30,7 +30,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build":  "prisma db push && next build",
     "turbo": "next dev --turbo",
     "start": "next start",
     "lint": "next lint",
