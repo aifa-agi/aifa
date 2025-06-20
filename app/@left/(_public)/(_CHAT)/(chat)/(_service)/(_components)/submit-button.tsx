@@ -1,12 +1,9 @@
-// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/submit-button.tsx
-
 "use client";
 
 import { useFormStatus } from "react-dom";
-
 import { LoaderIcon } from "@/components/shared/icons";
-
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "../(_libs)/translation"; // Используем только этот путь!
 
 export function SubmitButton({
   children,
@@ -15,6 +12,7 @@ export function SubmitButton({
   children: React.ReactNode;
   isSuccessful: boolean;
 }) {
+  const { t } = useTranslation();
   const { pending } = useFormStatus();
 
   return (
@@ -33,7 +31,7 @@ export function SubmitButton({
       )}
 
       <output aria-live="polite" className="sr-only">
-        {pending || isSuccessful ? "Loading" : "Submit form"}
+        {pending || isSuccessful ? t("Loading") : t("Submit form")}
       </output>
     </Button>
   );

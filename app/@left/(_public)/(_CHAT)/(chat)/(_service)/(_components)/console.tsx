@@ -16,6 +16,7 @@ import {
 } from "react";
 import { cn } from "@/lib/utils";
 import { useArtifactSelector } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_hooks)/use-artifact";
+import { useTranslation } from "../(_libs)/translation";
 
 export interface ConsoleOutputContent {
   type: "text" | "image";
@@ -37,7 +38,7 @@ export function Console({ consoleOutputs, setConsoleOutputs }: ConsoleProps) {
   const [height, setHeight] = useState<number>(300);
   const [isResizing, setIsResizing] = useState(false);
   const consoleEndRef = useRef<HTMLDivElement>(null);
-
+  const { t } = useTranslation();
   const isArtifactVisible = useArtifactSelector((state) => state.isVisible);
 
   const minHeight = 100;
@@ -106,7 +107,7 @@ export function Console({ consoleOutputs, setConsoleOutputs }: ConsoleProps) {
             <div className="text-muted-foreground">
               <TerminalWindowIcon />
             </div>
-            <div>Console</div>
+            <div>{t("Console")}</div>
           </div>
           <Button
             variant="ghost"

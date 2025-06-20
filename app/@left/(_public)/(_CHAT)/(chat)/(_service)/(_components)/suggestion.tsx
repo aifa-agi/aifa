@@ -1,9 +1,9 @@
-// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/suggestion.tsx
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useWindowSize } from "usehooks-ts";
+import { useTranslation } from "../(_libs)/translation"; // Используем только этот путь!
 
 import type { UISuggestion } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/editor/suggestions";
 
@@ -24,6 +24,7 @@ export const Suggestion = ({
   onApply: () => void;
   artifactKind: ArtifactKind;
 }) => {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const { width: windowWidth } = useWindowSize();
 
@@ -55,7 +56,7 @@ export const Suggestion = ({
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-2">
               <div className="size-4 bg-muted-foreground/25 rounded-full" />
-              <div className="font-medium">Assistant</div>
+              <div className="font-medium">{t("Assistant")}</div>
             </div>
             <button
               type="button"
@@ -73,7 +74,7 @@ export const Suggestion = ({
             className="w-fit py-1.5 px-3 rounded-full"
             onClick={onApply}
           >
-            Apply
+            {t("Apply")}
           </Button>
         </motion.div>
       )}

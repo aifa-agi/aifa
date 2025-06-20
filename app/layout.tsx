@@ -16,6 +16,7 @@ import RightDrawerBar from "./@right/(components)/right-drawer-dar";
 import { OnlineStatusProvider } from "@/components/shared/online-status-provider";
 import { RightSidebarProvider } from "@/contexts/right-sidebar-context";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { LanguageProvider } from "@/contexts/language-context";
 export const metadata: Metadata = {
   metadataBase: new URL("https://aifa.dev"),
   title: "AI-First Architecture",
@@ -98,26 +99,28 @@ export default async function RootLayout({
           <SessionProvider>
             {/* Wrap the entire application body with our new provider */}
             <OnlineStatusProvider>
-              <RightSidebarProvider>
-                <div className="hidden md:block h-screen w-screen">
-                  <ResizablePanelGroup direction="horizontal">
-                    <ResizablePanel defaultSize={40} minSize={35}>
-                      <div className="overflow-hidden">{left}</div>
-                    </ResizablePanel>
-                    <ResizableHandle withHandle />
-                    <ResizablePanel defaultSize={60} minSize={35}>
-                      {right}
-                    </ResizablePanel>
-                  </ResizablePanelGroup>
-                </div>
-
-                <div className="w-full md:hidden relative">
-                  {left}
-                  <div className="border-l overflow-hidden border-secondary">
-                    <RightDrawerBar>{right}</RightDrawerBar>
+              <LanguageProvider>
+                <RightSidebarProvider>
+                  <div className="hidden md:block h-screen w-screen">
+                    <ResizablePanelGroup direction="horizontal">
+                      <ResizablePanel defaultSize={40} minSize={35}>
+                        <div className="overflow-hidden">{left}</div>
+                      </ResizablePanel>
+                      <ResizableHandle withHandle />
+                      <ResizablePanel defaultSize={60} minSize={35}>
+                        {right}
+                      </ResizablePanel>
+                    </ResizablePanelGroup>
                   </div>
-                </div>
-              </RightSidebarProvider>
+
+                  <div className="w-full md:hidden relative">
+                    {left}
+                    <div className="border-l overflow-hidden border-secondary">
+                      <RightDrawerBar>{right}</RightDrawerBar>
+                    </div>
+                  </div>
+                </RightSidebarProvider>
+              </LanguageProvider>
             </OnlineStatusProvider>
             {process.env.NODE_ENV === "production" && (
               <GoogleAnalytics

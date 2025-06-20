@@ -7,7 +7,6 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
 import Script from "next/script";
 import { validateTranslations } from "./(_service)/(_libs)/validate-translations";
-import { LanguageProvider } from "./(_service)/(_contexts)/language-context";
 import { RoleStatus } from "./(_service)/(_components)/role-status";
 
 export const experimental_ppr = true;
@@ -30,7 +29,7 @@ export default async function Layout({
       <SidebarProvider defaultOpen={!isCollapsed}>
         <AppSidebar user={session?.user} />
         <SidebarInset>
-          <LanguageProvider>{children}</LanguageProvider>
+          {children}
           <RoleStatus />
         </SidebarInset>
       </SidebarProvider>

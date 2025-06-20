@@ -1,8 +1,11 @@
-// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/greeting.tsx
+// @/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/greeting.tsx
 
 import { motion } from "framer-motion";
+import { useTranslation } from "../(_libs)/translation";
 
 export const Greeting = () => {
+  const { t } = useTranslation();
+
   return (
     <div
       key="overview"
@@ -15,7 +18,7 @@ export const Greeting = () => {
         transition={{ delay: 0.5 }}
         className="text-2xl font-semibold"
       >
-        Hello there!
+        {t("Hello there!")}
       </motion.div>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -24,7 +27,7 @@ export const Greeting = () => {
         transition={{ delay: 0.6 }}
         className="text-2xl text-zinc-500"
       >
-        How can I help you today?
+        {t("How can I help you today?")}
       </motion.div>
     </div>
   );

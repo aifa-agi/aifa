@@ -31,7 +31,6 @@ export function SidebarUserNav({ user }: { user: User }) {
 
   //const isGuest = guestRegex.test(data?.user?.email ?? "");
   const isGuest = data?.user.type === "guest";
-  console.log("SidebarUserNav:  data?.user.", data?.user);
   return (
     <SidebarMenu>
       <SidebarMenuItem>

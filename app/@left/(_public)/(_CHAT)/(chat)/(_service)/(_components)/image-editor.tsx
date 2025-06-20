@@ -1,5 +1,6 @@
-// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/image-editor.tsx
+// @/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/image-editor.tsx
 
+import { useTranslation } from "../(_libs)/translation";
 import { LoaderIcon } from "../../../../../../../components/shared/icons";
 import cn from "classnames";
 
@@ -18,6 +19,7 @@ export function ImageEditor({
   status,
   isInline,
 }: ImageEditorProps) {
+  const { t } = useTranslation();
   return (
     <div
       className={cn("flex flex-row items-center justify-center w-full", {
@@ -32,7 +34,7 @@ export function ImageEditor({
               <LoaderIcon />
             </div>
           )}
-          <div>Generating Image...</div>
+          <div>{t("Generating Image...")}</div>
         </div>
       ) : (
         <picture>

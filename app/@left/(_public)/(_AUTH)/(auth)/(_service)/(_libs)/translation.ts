@@ -1,11 +1,11 @@
-// @/app/@left/(_public)/(_AUTH-FRACTAL)/(auth)/(_service)/(_libs)/translation.ts
+// @/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_libs)/translation.ts
 
+import { useChatLanguage } from "@/contexts/language-context";
 import translations from "../(_translations)/translations.json";
 import {
   DEFAULT_LANGUAGE,
   SupportedLanguage,
 } from "@/config/translations.config";
-import { useLanguage } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_contexts)/language-context";
 
 type TranslationEntry = {
   [K in SupportedLanguage]?: string;
@@ -18,8 +18,7 @@ type Translations = {
 const typedTranslations: Translations = translations;
 
 export function useTranslation() {
-  const { language } = useLanguage();
-
+  const { language } = useChatLanguage();
   function t(key: string): string {
     const entry = typedTranslations[key];
     if (!entry) return key;

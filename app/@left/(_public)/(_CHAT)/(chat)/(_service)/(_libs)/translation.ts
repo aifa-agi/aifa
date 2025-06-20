@@ -1,5 +1,6 @@
 // @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_libs)/translation.ts
-import { useLanguage } from "../(_contexts)/language-context";
+
+import { useChatLanguage } from "@/contexts/language-context";
 import translations from "../(_translations)/translations.json";
 import {
   DEFAULT_LANGUAGE,
@@ -15,10 +16,8 @@ type Translations = {
 };
 
 const typedTranslations: Translations = translations;
-
 export function useTranslation() {
-  const { language } = useLanguage();
-
+  const { language } = useChatLanguage();
   function t(key: string): string {
     const entry = typedTranslations[key];
     if (!entry) return key;

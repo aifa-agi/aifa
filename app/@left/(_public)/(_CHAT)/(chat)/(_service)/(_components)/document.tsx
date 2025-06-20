@@ -11,6 +11,7 @@ import {
 } from "../../../../../../../components/shared/icons";
 import { toast } from "sonner";
 import { useArtifact } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_hooks)/use-artifact";
+import { useTranslation } from "../(_libs)/translation";
 
 const getActionText = (
   type: "create" | "update" | "request-suggestions",
@@ -42,7 +43,7 @@ function PureDocumentToolResult({
   isReadonly,
 }: DocumentToolResultProps) {
   const { setArtifact } = useArtifact();
-
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -50,7 +51,7 @@ function PureDocumentToolResult({
       onClick={(event) => {
         if (isReadonly) {
           toast.error(
-            "Viewing files in shared chats is currently not supported."
+            t("Viewing files in shared chats is currently not supported.")
           );
           return;
         }
@@ -105,7 +106,7 @@ function PureDocumentToolCall({
   isReadonly,
 }: DocumentToolCallProps) {
   const { setArtifact } = useArtifact();
-
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -113,7 +114,7 @@ function PureDocumentToolCall({
       onClick={(event) => {
         if (isReadonly) {
           toast.error(
-            "Viewing files in shared chats is currently not supported."
+            t("Viewing files in shared chats is currently not supported.")
           );
           return;
         }

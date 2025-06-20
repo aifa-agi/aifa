@@ -22,8 +22,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useTranslation } from "../(_libs)/translation";
 
 export function AppSidebar({ user }: { user: User | undefined }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const { setOpenMobile } = useSidebar();
 
@@ -40,7 +42,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               className="flex flex-row gap-3 items-center"
             >
               <span className="text-lg font-semibold px-2 hover:bg-muted rounded-md cursor-pointer">
-                AI-Chatbot
+                {t("AI-Chatbot")}
               </span>
             </Link>
             <Tooltip>
@@ -58,7 +60,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                   <PlusIcon />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent align="end">New Chat</TooltipContent>
+              <TooltipContent align="end">{t("New Chat")}</TooltipContent>
             </Tooltip>
           </div>
         </SidebarMenu>

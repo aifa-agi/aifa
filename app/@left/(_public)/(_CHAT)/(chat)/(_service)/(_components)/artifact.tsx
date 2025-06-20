@@ -30,6 +30,7 @@ import { textArtifact } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_
 import equal from "fast-deep-equal";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import type { VisibilityType } from "./visibility-selector";
+import { useTranslation } from "../(_libs)/translation";
 
 export const artifactDefinitions = [
   textArtifact,
@@ -88,7 +89,7 @@ function PureArtifact({
   selectedVisibilityType: VisibilityType;
 }) {
   const { artifact, setArtifact, metadata, setMetadata } = useArtifact();
-
+  const { t } = useTranslation();
   const {
     data: documents,
     isLoading: isDocumentsFetching,
@@ -423,7 +424,7 @@ function PureArtifact({
 
                   {isContentDirty ? (
                     <div className="text-sm text-muted-foreground">
-                      Saving changes...
+                      {t("Saving changes...")}
                     </div>
                   ) : document ? (
                     <div className="text-sm text-muted-foreground">

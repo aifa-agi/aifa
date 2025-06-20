@@ -1,5 +1,3 @@
-// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/version-footer.tsx
-
 "use client";
 
 import { isAfter } from "date-fns";
@@ -14,6 +12,7 @@ import { getDocumentTimestampByIndex } from "@/lib/utils";
 import { LoaderIcon } from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
 import { useArtifact } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_hooks)/use-artifact";
+import { useTranslation } from "../(_libs)/translation"; // Используйте только этот путь!
 
 interface VersionFooterProps {
   handleVersionChange: (type: "next" | "prev" | "toggle" | "latest") => void;
@@ -34,7 +33,9 @@ export const VersionFooter = ({
   const { mutate } = useSWRConfig();
   const [isMutating, setIsMutating] = useState(false);
 
-  if (!documents) return;
+  const { t } = useTranslation();
+
+  if (!documents) return null;
 
   return (
     <motion.div
@@ -45,9 +46,9 @@ export const VersionFooter = ({
       transition={{ type: "spring", stiffness: 140, damping: 20 }}
     >
       <div>
-        <div>You are viewing a previous version</div>
+        <div>{t("You are viewing a previous version")}</div>
         <div className="text-muted-foreground text-sm">
-          Restore this version to make edits
+          {t("Restore this version to make edits")}
         </div>
       </div>
 
@@ -60,12 +61,7 @@ export const VersionFooter = ({
             mutate(
               `/api/document?id=${artifact.documentId}`,
               await fetch(
-                `/api/document?id=${
-                  artifact.documentId
-                }&timestamp=${getDocumentTimestampByIndex(
-                  documents,
-                  currentVersionIndex
-                )}`,
+                `/api/document?id=${artifact.documentId}&timestamp=${getDocumentTimestampByIndex(documents, currentVersionIndex)}`,
                 {
                   method: "DELETE",
                 }
@@ -90,7 +86,7 @@ export const VersionFooter = ({
             );
           }}
         >
-          <div>Restore this version</div>
+          <div>{t("Restore this version")}</div>
           {isMutating && (
             <div className="animate-spin">
               <LoaderIcon />
@@ -103,7 +99,7 @@ export const VersionFooter = ({
             handleVersionChange("latest");
           }}
         >
-          Back to latest version
+          {t("Back to latest version")}
         </Button>
       </div>
     </motion.div>

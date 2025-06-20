@@ -1,5 +1,3 @@
-// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/sidebar-toggle.tsx
-
 import type { ComponentProps } from "react";
 
 import { type SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
@@ -11,10 +9,12 @@ import {
 
 import { SidebarLeftIcon, UserIcon } from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "../(_libs)/translation";
 
 export function SidebarToggle({
   className,
 }: ComponentProps<typeof SidebarTrigger>) {
+  const { t } = useTranslation();
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -29,7 +29,7 @@ export function SidebarToggle({
           <UserIcon />
         </Button>
       </TooltipTrigger>
-      <TooltipContent align="start">Toggle Sidebar</TooltipContent>
+      <TooltipContent align="start">{t("Toggle Sidebar")}</TooltipContent>
     </Tooltip>
   );
 }

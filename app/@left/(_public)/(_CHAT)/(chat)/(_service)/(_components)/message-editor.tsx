@@ -1,5 +1,3 @@
-// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/message-editor.tsx
-
 "use client";
 
 import { ChatRequestOptions, Message } from "ai";
@@ -8,6 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Textarea } from "../../../../../../../components/ui/textarea";
 import { deleteTrailingMessages } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_actions)/actions";
 import { UseChatHelpers } from "@ai-sdk/react";
+import { useTranslation } from "../(_libs)/translation";
 
 export type MessageEditorProps = {
   message: Message;
@@ -22,6 +21,7 @@ export function MessageEditor({
   setMessages,
   reload,
 }: MessageEditorProps) {
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [draftContent, setDraftContent] = useState<string>(message.content);
@@ -65,7 +65,7 @@ export function MessageEditor({
             setMode("view");
           }}
         >
-          Cancel
+          {t("Cancel")}
         </Button>
         <Button
           data-testid="message-editor-send-button"
@@ -100,7 +100,7 @@ export function MessageEditor({
             reload();
           }}
         >
-          {isSubmitting ? "Sending..." : "Send"}
+          {isSubmitting ? t("Sending...") : t("Send")}
         </Button>
       </div>
     </div>

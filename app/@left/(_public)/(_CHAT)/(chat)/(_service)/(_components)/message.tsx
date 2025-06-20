@@ -25,6 +25,7 @@ import { MessageEditor } from "./message-editor";
 import { DocumentPreview } from "./document-preview";
 import { MessageReasoning } from "./message-reasoning";
 import type { UseChatHelpers } from "@ai-sdk/react";
+import { useTranslation } from "../(_libs)/translation";
 
 const PurePreviewMessage = ({
   chatId,
@@ -46,7 +47,7 @@ const PurePreviewMessage = ({
   requiresScrollPadding: boolean;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
-
+  const { t } = useTranslation();
   return (
     <AnimatePresence>
       <motion.div
@@ -125,7 +126,7 @@ const PurePreviewMessage = ({
                               <PencilEditIcon />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Edit message</TooltipContent>
+                          <TooltipContent>{t("Edit message")}</TooltipContent>
                         </Tooltip>
                       )}
 
@@ -193,7 +194,9 @@ const PurePreviewMessage = ({
                         <div>
                           <pre className="whitespace-pre-wrap break-words font-mono">
                             {/* {JSON.stringify(result, null, 2)} */}
-                            I&apos;`m going to study the knowledge base now.
+                            {t(
+                              "Now I'm going to explore the knowledge base. I need some time..."
+                            )}
                           </pre>
                           <div className="flex flex-col">
                             {[44, 32, 28, 64, 52].map((item) => (
@@ -246,8 +249,9 @@ const PurePreviewMessage = ({
                         // <div className="overflow-x-auto max-w-full bg-primary text-primary-foreground px-3 py-2 rounded-xl">
                         <pre className="whitespace-pre-wrap break-words font-mono">
                           {/* {JSON.stringify(result, null, 2)} */}
-                          One more moment, and the answer will be ready in a
-                          second...
+                          {t(
+                            "One more moment, and the answer will be ready in a second..."
+                          )}
                         </pre>
                         //  </div>
                       )}
@@ -289,7 +293,7 @@ export const PreviewMessage = memo(
 
 export const ThinkingMessage = () => {
   const role = "assistant";
-
+  const { t } = useTranslation();
   return (
     <motion.div
       data-testid="message-assistant-loading"
@@ -312,7 +316,7 @@ export const ThinkingMessage = () => {
 
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-col gap-4 text-muted-foreground">
-            Hmm...
+            {t("In process...")}
             <div className="flex flex-col">
               {[44, 32, 28, 64, 52].map((item) => (
                 <div

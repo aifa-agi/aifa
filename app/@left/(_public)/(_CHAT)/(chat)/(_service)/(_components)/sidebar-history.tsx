@@ -29,6 +29,7 @@ import { ChatItem } from "./sidebar-history-item";
 import useSWRInfinite from "swr/infinite";
 import { LoaderIcon } from "../../../../../../../components/shared/icons";
 import { Chat } from "@prisma/client";
+import { useTranslation } from "../(_libs)/translation";
 
 type GroupedChats = {
   today: Chat[];
@@ -98,7 +99,7 @@ export function getChatHistoryPaginationKey(
 export function SidebarHistory({ user }: { user: User | undefined }) {
   const { setOpenMobile } = useSidebar();
   const { id } = useParams();
-
+  const { t } = useTranslation();
   const {
     data: paginatedChatHistories,
     setSize,
@@ -155,7 +156,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="px-2 text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2">
-            Login to save and revisit previous chats!
+            {t("Login to save and revisit previous chats!")}
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -166,7 +167,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     return (
       <SidebarGroup>
         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-          Today
+          {t("Today")}
         </div>
         <SidebarGroupContent>
           <div className="flex flex-col">
@@ -196,7 +197,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="px-2 text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2">
-            Your conversations will appear here once you start chatting!
+            {t("Your conversations will appear here once you start chatting!")}
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -221,7 +222,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.today.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          Today
+                          {t("Today")}
                         </div>
                         {groupedChats.today.map((chat) => (
                           <ChatItem
@@ -241,7 +242,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.yesterday.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          Yesterday
+                          {t("Yesterday")}
                         </div>
                         {groupedChats.yesterday.map((chat) => (
                           <ChatItem
@@ -261,7 +262,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.lastWeek.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          Last 7 days
+                          {t("Last 7 days")}
                         </div>
                         {groupedChats.lastWeek.map((chat) => (
                           <ChatItem
@@ -281,7 +282,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.lastMonth.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          Last 30 days
+                          {t("Last 30 days")}
                         </div>
                         {groupedChats.lastMonth.map((chat) => (
                           <ChatItem
@@ -301,7 +302,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.older.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          Older than last month
+                          {t("Older than last month")}
                         </div>
                         {groupedChats.older.map((chat) => (
                           <ChatItem
@@ -332,14 +333,14 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
           {hasReachedEnd ? (
             <div className="px-2 text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2 mt-8">
-              You have reached the end of your chat history.
+              {t("You have reached the end of your chat history.")}
             </div>
           ) : (
             <div className="p-2 text-zinc-500 dark:text-zinc-400 flex flex-row gap-2 items-center mt-8">
               <div className="animate-spin">
                 <LoaderIcon />
               </div>
-              <div>Loading Chats...</div>
+              <div>{t("Loading Chats...")}</div>
             </div>
           )}
         </SidebarGroupContent>
@@ -348,16 +349,17 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t("Are you absolutely sure?")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              chat and remove it from our servers.
+              {t(
+                "This action cannot be undone. This will permanently delete your chat and remove it from our servers."
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>
-              Continue
+              {t("Continue")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

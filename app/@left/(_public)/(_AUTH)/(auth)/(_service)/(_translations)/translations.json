@@ -15,6 +15,14 @@
   "it": "Accedi",
   "ru": "Войти"
 },
+"Sign out": {
+    "en": "Sign out",
+    "es": "Cerrar sesión",
+    "de": "Abmelden",
+    "fr": "Déconnexion",
+    "it": "Disconnetti",
+    "ru": "Выйти"
+  },
   "Don't have an account yet?": {
     "en": "Don't have an account yet?",
     "es": "¿Aún no tienes una cuenta?",

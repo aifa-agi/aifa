@@ -1,4 +1,4 @@
-// @/app/@left/(_public)/(_AUTH-FRACTAL)/(auth)/(_service)/(_contexts)/language-context.tsx
+// @/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_contexts)/language-context.tsx
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
@@ -17,7 +17,7 @@ const LanguageContext = createContext<LanguageContextType>({
   setLanguage: () => {},
 });
 
-export const useLanguage = () => useContext(LanguageContext);
+export const useChatLanguage = () => useContext(LanguageContext);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -32,7 +32,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     }
   }, []);
-
+  useEffect(() => {}, [language]);
   return (
     <LanguageContext.Provider value={{ language, setLanguage }}>
       {children}

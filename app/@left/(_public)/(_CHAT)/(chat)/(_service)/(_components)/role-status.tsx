@@ -48,7 +48,7 @@ export async function RoleStatus() {
       <span>
         Powered by{" "}
         <a
-          href="https://aifa.dev"
+          href="https://github.com/aifa-agi/aifa"
           className="font-semibold underline hover:text-primary-foreground"
           target="_blank"
           rel="noopener noreferrer"
