@@ -1,6 +1,4 @@
-// @/lib/utils/validateCuid.ts
-
 export function isValidCuid(id: string): boolean {
-  // cuid package имеет функцию isCuid, либо пишем регулярку
-  return /^c[^\s-]{8,}$/i.test(id);
+  // Проверяем, что строка состоит из 24 латинских букв/цифр
+  return /^[a-z0-9]{24}$/i.test(id);
 }

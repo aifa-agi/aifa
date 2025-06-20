@@ -16,7 +16,7 @@ const textPartSchema = z.object({
 });
 
 export const postRequestBodySchema = z.object({
-  id: cuidString,
+  id: z.string(),
   message: z.object({
     id: cuidString,
     createdAt: z.coerce.date(),

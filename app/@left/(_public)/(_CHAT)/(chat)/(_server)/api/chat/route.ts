@@ -75,7 +75,8 @@ export async function POST(request: Request) {
     const json = await request.json();
     console.log("// @/app/(chat)/api/chat/route.ts function POST json:", json);
     requestBody = postRequestBodySchema.parse(json);
-  } catch {
+  } catch (e) {
+    console.error("Zod parse error:", e);
     return new Response("Invalid request body", { status: 400 });
   }
 
