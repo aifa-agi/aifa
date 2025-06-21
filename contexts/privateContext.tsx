@@ -32,7 +32,6 @@ export const PrivateProvider = ({
   );
 };
 
-// Пользовательский хук для удобного доступа к контексту
 export function usePrivateContext(): PrivateContextType {
   const context = useContext(PrivateContext);
   if (!context) {

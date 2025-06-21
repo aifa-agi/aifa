@@ -1,7 +1,14 @@
 // @/contexts/right-sidebar-context.tsx
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface RightSidebarContextType {
   isOpen: boolean;
@@ -13,7 +20,7 @@ const RightSidebarContext = createContext<RightSidebarContextType | undefined>(
   undefined
 );
 
-// Кастомный хук для удобного доступа к контексту
+// Custom hook for context access
 export const useRightSidebar = () => {
   const context = useContext(RightSidebarContext);
   if (context === undefined) {
@@ -25,10 +32,22 @@ export const useRightSidebar = () => {
 };
 
 export const RightSidebarProvider = ({ children }: { children: ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isMobile, device } = useMediaQuery();
+
+  // SSR-safe: do not render children until device is detected
+  const [isOpen, setIsOpen] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (device !== null) {
+      setIsOpen(isMobile);
+    }
+  }, [device, isMobile]);
 
   const openDrawer = () => setIsOpen(true);
   const closeDrawer = () => setIsOpen(false);
+
+  // Optionally, show loader or nothing until device is detected
+  if (isOpen === null) return null;
 
   return (
     <RightSidebarContext.Provider value={{ isOpen, openDrawer, closeDrawer }}>

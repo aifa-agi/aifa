@@ -13,10 +13,12 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import RightDrawerBar from "./@right/(components)/right-drawer-dar";
 // Import the new provider component.
-import { OnlineStatusProvider } from "@/components/shared/online-status-provider";
+import { OnlineStatusProvider } from "@/contexts/online-status-provider";
 import { RightSidebarProvider } from "@/contexts/right-sidebar-context";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { LanguageProvider } from "@/contexts/language-context";
+import { AppProvider } from "@/contexts/app-context";
+import { DevIndicatorClient } from "@/lib/utils/dev-indicator-client";
 export const metadata: Metadata = {
   metadataBase: new URL("https://aifa.dev"),
   title: "AI-First Architecture",
@@ -101,24 +103,27 @@ export default async function RootLayout({
             <OnlineStatusProvider>
               <LanguageProvider>
                 <RightSidebarProvider>
-                  <div className="hidden md:block h-screen w-screen">
-                    <ResizablePanelGroup direction="horizontal">
-                      <ResizablePanel defaultSize={40} minSize={35}>
-                        <div className="overflow-hidden">{left}</div>
-                      </ResizablePanel>
-                      <ResizableHandle withHandle />
-                      <ResizablePanel defaultSize={60} minSize={35}>
-                        {right}
-                      </ResizablePanel>
-                    </ResizablePanelGroup>
-                  </div>
-
-                  <div className="w-full md:hidden relative">
-                    {left}
-                    <div className="border-l overflow-hidden border-secondary">
-                      <RightDrawerBar>{right}</RightDrawerBar>
+                  <AppProvider>
+                    <div className="hidden md:block h-screen w-screen">
+                      <ResizablePanelGroup direction="horizontal">
+                        <ResizablePanel defaultSize={40} minSize={35}>
+                          <div className="overflow-hidden">{left}</div>
+                        </ResizablePanel>
+                        <ResizableHandle withHandle />
+                        <ResizablePanel defaultSize={60} minSize={35}>
+                          {right}
+                        </ResizablePanel>
+                      </ResizablePanelGroup>
                     </div>
-                  </div>
+
+                    <div className="w-full md:hidden relative">
+                      {left}
+                      <div className="border-l overflow-hidden border-secondary">
+                        <RightDrawerBar>{right}</RightDrawerBar>
+                      </div>
+                    </div>
+                    <DevIndicatorClient />
+                  </AppProvider>
                 </RightSidebarProvider>
               </LanguageProvider>
             </OnlineStatusProvider>

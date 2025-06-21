@@ -1,52 +1,57 @@
-// @/app/@right/(_public)/(_footer)/(_PRIVACY-POLICY)/privacy-policy/(_policy)/(_components)/privacy-policy.tsx
 "use client";
 
+import { InteractiveSection } from "@/components/shared/interactive-section";
 import { useTranslation } from "../(_libs)/translation";
+import { useAppContext } from "@/contexts/app-context";
+import { useRightSidebar } from "@/contexts/right-sidebar-context";
+import { useInteractiveSections } from "@/hooks/useInteractiveSections";
 
 export default function PrivacyPolicy() {
   const { t } = useTranslation();
+  const { setInteractionContext } = useAppContext();
+  const { isOpen, closeDrawer } = useRightSidebar();
+
+  const {
+    sendModeSectionId,
+    setSendModeSectionId,
+    hoveredSectionId,
+    setHoveredSectionId,
+    isMobile,
+  } = useInteractiveSections();
+
+  const pageName = t("Privacy Policy");
+
+  const handleSendClick = (sectionId: string) => {
+    setInteractionContext(pageName, sectionId);
+    if (isMobile && isOpen) {
+      closeDrawer();
+    }
+    setTimeout(() => setSendModeSectionId(null), 500);
+  };
 
   return (
-    // Main container for the page content, ensuring it takes full width within its parent.
-    <div className="w-full">
-      {/* 
-        Page Title: 
-        - Styled using shadcn/ui's standard for a main page heading.
-        - `scroll-m-20` ensures proper scroll anchoring for in-page links.
-        - `font-semibold` and `tracking-tight` are part of the shadcn/ui typography system.
-      */}
+    <div className="w-full md:p-8">
       <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight mb-8">
-        {t("Privacy Policy")}
+        {pageName}
       </h1>
 
-      {/* Each section is semantically separated for clarity and styling. */}
-      <section>
-        {/* 
-          Section Heading:
-          - Styled as a shadcn/ui h2/h3.
-          - `mt-10` adds significant vertical space from the previous section.
-          - `border-b pb-2` creates a visual separator, improving readability for long documents.
-        */}
+      <InteractiveSection
+        id="info-collect"
+        isSendMode={sendModeSectionId === "info-collect"}
+        isHovered={hoveredSectionId === "info-collect"}
+        isMobile={isMobile}
+        onHover={setHoveredSectionId}
+        onActivate={setSendModeSectionId}
+        onSend={handleSendClick}
+      >
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 border-b pb-2 mb-4">
           {t("Information We Collect")}
         </h2>
-        {/* 
-          Paragraph Text:
-          - `leading-7` sets a comfortable line height for readability.
-          - `[&:not(:first-child)]:mt-6` adds top margin to subsequent paragraphs.
-        */}
         <p className="leading-7 [&:not(:first-child)]:mt-6">
           {t(
             "We collect information you provide directly to us, such as when you create an account, use our services, or contact us."
           )}
         </p>
-        {/* 
-          Unordered List:
-          - Styled using shadcn/ui's list preset.
-          - `my-6 ml-6` provides vertical margin and left indentation.
-          - `list-disc` enables standard bullet points.
-          - `[&>li]:mt-2` adds consistent spacing between list items.
-        */}
         <ul className="my-6 ml-6 list-disc [&>li]:mt-2">
           <li>
             {t("Personal information (name, email address, phone number)")}
@@ -54,9 +59,17 @@ export default function PrivacyPolicy() {
           <li>{t("Usage data and analytics")}</li>
           <li>{t("Cookies and similar tracking technologies")}</li>
         </ul>
-      </section>
+      </InteractiveSection>
 
-      <section>
+      <InteractiveSection
+        id="info-use"
+        isSendMode={sendModeSectionId === "info-use"}
+        isHovered={hoveredSectionId === "info-use"}
+        isMobile={isMobile}
+        onHover={setHoveredSectionId}
+        onActivate={setSendModeSectionId}
+        onSend={handleSendClick}
+      >
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 border-b pb-2 mb-4">
           {t("How We Use Your Information")}
         </h2>
@@ -70,9 +83,17 @@ export default function PrivacyPolicy() {
           <li>{t("Communicate with you about our services")}</li>
           <li>{t("Improve and develop new features")}</li>
         </ul>
-      </section>
+      </InteractiveSection>
 
-      <section>
+      <InteractiveSection
+        id="data-protection"
+        isSendMode={sendModeSectionId === "data-protection"}
+        isHovered={hoveredSectionId === "data-protection"}
+        isMobile={isMobile}
+        onHover={setHoveredSectionId}
+        onActivate={setSendModeSectionId}
+        onSend={handleSendClick}
+      >
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 border-b pb-2 mb-4">
           {t("Data Protection")}
         </h2>
@@ -81,9 +102,17 @@ export default function PrivacyPolicy() {
             "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction."
           )}
         </p>
-      </section>
+      </InteractiveSection>
 
-      <section>
+      <InteractiveSection
+        id="cookies-tracking"
+        isSendMode={sendModeSectionId === "cookies-tracking"}
+        isHovered={hoveredSectionId === "cookies-tracking"}
+        isMobile={isMobile}
+        onHover={setHoveredSectionId}
+        onActivate={setSendModeSectionId}
+        onSend={handleSendClick}
+      >
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 border-b pb-2 mb-4">
           {t("Cookies and Tracking")}
         </h2>
@@ -92,9 +121,17 @@ export default function PrivacyPolicy() {
             "We use cookies and similar technologies to enhance your experience, analyze usage patterns, and personalize content."
           )}
         </p>
-      </section>
+      </InteractiveSection>
 
-      <section>
+      <InteractiveSection
+        id="third-party-services"
+        isSendMode={sendModeSectionId === "third-party-services"}
+        isHovered={hoveredSectionId === "third-party-services"}
+        isMobile={isMobile}
+        onHover={setHoveredSectionId}
+        onActivate={setSendModeSectionId}
+        onSend={handleSendClick}
+      >
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 border-b pb-2 mb-4">
           {t("Third-Party Services")}
         </h2>
@@ -103,9 +140,17 @@ export default function PrivacyPolicy() {
             "We may share your information with trusted third-party service providers who assist us in operating our services, subject to confidentiality agreements."
           )}
         </p>
-      </section>
+      </InteractiveSection>
 
-      <section>
+      <InteractiveSection
+        id="your-rights"
+        isSendMode={sendModeSectionId === "your-rights"}
+        isHovered={hoveredSectionId === "your-rights"}
+        isMobile={isMobile}
+        onHover={setHoveredSectionId}
+        onActivate={setSendModeSectionId}
+        onSend={handleSendClick}
+      >
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 border-b pb-2 mb-4">
           {t("Your Rights")}
         </h2>
@@ -117,9 +162,17 @@ export default function PrivacyPolicy() {
           <li>{t("Correct inaccurate information")}</li>
           <li>{t("Request deletion of your personal information")}</li>
         </ul>
-      </section>
+      </InteractiveSection>
 
-      <section>
+      <InteractiveSection
+        id="contact-us"
+        isSendMode={sendModeSectionId === "contact-us"}
+        isHovered={hoveredSectionId === "contact-us"}
+        isMobile={isMobile}
+        onHover={setHoveredSectionId}
+        onActivate={setSendModeSectionId}
+        onSend={handleSendClick}
+      >
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 border-b pb-2 mb-4">
           {t("Contact Us")}
         </h2>
@@ -128,9 +181,17 @@ export default function PrivacyPolicy() {
             "If you have any questions about this Privacy Policy, please contact us at privacy@yourdomain.com"
           )}
         </p>
-      </section>
+      </InteractiveSection>
 
-      <section>
+      <InteractiveSection
+        id="changes-to-policy"
+        isSendMode={sendModeSectionId === "changes-to-policy"}
+        isHovered={hoveredSectionId === "changes-to-policy"}
+        isMobile={isMobile}
+        onHover={setHoveredSectionId}
+        onActivate={setSendModeSectionId}
+        onSend={handleSendClick}
+      >
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 border-b pb-2 mb-4">
           {t("Changes to This Policy")}
         </h2>
@@ -139,13 +200,8 @@ export default function PrivacyPolicy() {
             "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page."
           )}
         </p>
-      </section>
+      </InteractiveSection>
 
-      {/* 
-        Footer Text / Meta Information:
-        - `mt-8 pt-4 border-t` creates a separator line from the main content.
-        - `text-sm text-muted-foreground` styles the text to be less prominent, suitable for metadata.
-      */}
       <div className="mt-8 pt-4 border-t">
         <p className="text-sm text-muted-foreground">
           {t("Last updated: December 2024")}
