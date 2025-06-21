@@ -1,7 +1,7 @@
 //@/app/@left/(_public)/(_AUTH-FRACTAL)/(auth)/(_service)/(_libs)/sync-role-users.ts
 
 import { prisma } from "@/lib/db";
-import { generateHashedPassword } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_libs)/utils";
+import { generateHashedPassword } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_libs)/utils";
 import { UserType } from "@prisma/client";
 
 // Определяем общую конфигурацию для ролей в одном месте

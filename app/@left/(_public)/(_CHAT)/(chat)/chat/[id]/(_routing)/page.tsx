@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
 import { Chat } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/chat";
 import { DataStreamHandler } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/data-stream-handler";
 import { DEFAULT_CHAT_MODEL } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/models";
@@ -10,6 +9,7 @@ import { VisibilityType } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/
 import { Message, Visibility } from "@prisma/client";
 import { getChatById } from "../../../(_service)/(_db-queries)/chat/queries";
 import { getMessagesByChatId } from "../../../(_service)/(_db-queries)/message/queries";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   let chat;

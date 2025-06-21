@@ -1,6 +1,6 @@
 //@/app/@left/(_public)/(_AUTH-FRACTAL)/(auth)/(_server)/api/auth/guest/route.ts
 
-import { signIn } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+import { signIn } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import { isDevelopmentEnvironment } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_constants)/constants";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";

@@ -4,8 +4,8 @@
 
 import { z } from "zod";
 
-import { getUser } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_db-queries)/get-user";
-import { createUser } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_db-queries)/create-user";
+import { getUser } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_db-queries)/get-user";
+import { createUser } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_db-queries)/create-user";
 import { signIn } from "../../../(_service)/(_actions)/auth";
 
 const authFormSchema = z.object({

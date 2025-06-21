@@ -1,5 +1,5 @@
 import Form from "next/form";
-import { signOut } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+import { signOut } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import { useTranslation } from "../(_libs)/translation";
 
 export const SignOutForm = () => {

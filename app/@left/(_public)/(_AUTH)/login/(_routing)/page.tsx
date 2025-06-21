@@ -1,4 +1,4 @@
-// @/app/@left/(_public)/(_AUTH-FRACTAL)/(auth)/login/(_routing)/page.tsx
+// @/(_AUTH/(auth)/login/(_routing)/page.tsx
 import MvpLoginForm from "../(_service)/(_components)/mvp-login-form";
 import GoogleLoginForm from "../(_service)/(_components)/providers/google-login-form";
 import ResendLoginForm from "../(_service)/(_components)/providers/resend-login-form";

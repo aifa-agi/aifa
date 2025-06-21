@@ -1,4 +1,4 @@
-// @/app/@left/(_public)/(_AUTH-FRACTAL)/(auth)/(_service)/(_libs)/get-privileged-emails.ts
+// @/app/(_AUTH/(auth)/(_service)/(_libs)/get-privileged-emails.ts
 import "server-only";
 
 type PrivilegedEmails = {

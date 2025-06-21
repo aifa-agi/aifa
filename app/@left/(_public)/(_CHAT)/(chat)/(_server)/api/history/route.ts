@@ -1,6 +1,6 @@
 // @app/@left/(_public)/(_CHAT)/(chat)/(_server)/api/history/route.ts
 
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import { NextRequest } from "next/server";
 import { getChatsByUserId } from "../../../(_service)/(_db-queries)/chat/queries";
 

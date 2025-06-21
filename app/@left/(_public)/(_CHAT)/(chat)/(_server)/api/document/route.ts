@@ -1,6 +1,6 @@
 // app\@left\(_public)\(_CHAT)\(chat)\(_server)\api\document\route.ts
 
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import type { ArtifactKind } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/artifact";
 import {
   deleteDocumentsByIdAfterTimestamp,

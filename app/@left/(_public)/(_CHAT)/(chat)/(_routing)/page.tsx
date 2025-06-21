@@ -4,9 +4,10 @@ import { cookies } from "next/headers";
 import { Chat } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/chat";
 import { DEFAULT_CHAT_MODEL } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/models";
 import { DataStreamHandler } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/data-stream-handler";
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+
 import { redirect } from "next/navigation";
 import { generateCuid } from "@/lib/utils/generateCuid";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 
 export default async function Page() {
   const session = await auth();

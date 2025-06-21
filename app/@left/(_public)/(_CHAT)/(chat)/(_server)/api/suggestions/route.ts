@@ -1,6 +1,6 @@
 // @/app/@left/(_public)/(_CHAT)/(chat)/(_server)/api/suggestions/route.ts
 
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import { getSuggestionsByDocumentId } from "../../../(_service)/(_db-queries)/suggestion/queries";
 
 export async function GET(request: Request) {

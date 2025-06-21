@@ -7,7 +7,7 @@ import {
   smoothStream,
   streamText,
 } from "ai";
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import {
   type RequestHints,
   systemPrompt,

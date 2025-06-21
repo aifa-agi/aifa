@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { User } from "@prisma/client";
-import { generateHashedPassword } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_libs)/utils";
+import { generateHashedPassword } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_libs)/utils";
 
 export async function createUser(
   email: string,

@@ -9,11 +9,12 @@ export const experimental_ppr = true;
 import { Chat } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/chat";
 import { DEFAULT_CHAT_MODEL } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/models";
 import { DataStreamHandler } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/data-stream-handler";
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+
 import { redirect } from "next/navigation";
 import { generateCuid } from "@/lib/utils/generateCuid";
 import { RoleStatus } from "./(_public)/(_CHAT)/(chat)/(_service)/(_components)/role-status";
 import { validateTranslations } from "../@right/(_service)/(_libs)/validate-translations";
+import { auth } from "./(_public)/(_AUTH)/(_service)/(_actions)/auth";
 
 export default async function Page() {
   validateTranslations();

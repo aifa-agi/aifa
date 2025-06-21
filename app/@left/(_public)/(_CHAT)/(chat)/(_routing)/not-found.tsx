@@ -1,4 +1,4 @@
-// @/app/@left/(_public)/(_CHAT)/(chat)/(_routing)/not-found.tsx
+// @/app/(_CHAT)/(chat)/(_routing)/not-found.tsx
 
 "use client";
 

@@ -1,6 +1,6 @@
 // @/app/@left/(_public)/(_CHAT)/(chat)/(_server)/api/vote/route.ts
 
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import { prisma } from "@/lib/db";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

@@ -1,6 +1,6 @@
 // @/app\@left\(_public)\(_CHAT-FRACTAL)\(chat)\(_service)\(_constants)\constants.ts
 
-import { generateDummyPassword } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_libs)/utils";
+import { generateDummyPassword } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_libs)/utils";
 
 export const isProductionEnvironment = process.env.NODE_ENV === "production";
 export const isDevelopmentEnvironment = process.env.NODE_ENV === "development";

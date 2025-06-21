@@ -1,6 +1,6 @@
 // @app/@left/(_public)/(_CHAT)/(chat)/(_components)/role-status.tsx
 
-import { auth } from "@/app/@left/(_public)/(_AUTH)/(auth)/(_service)/(_actions)/auth";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 
 // Helper function to get background color based on user type.
 // It's co-located here as it's only used by this component.
