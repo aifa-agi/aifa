@@ -1,13 +1,18 @@
 "use client";
 
+import { useRef, useEffect } from "react";
 import { InteractiveSection } from "@/components/shared/interactive-section";
 import { useTranslation } from "../(_libs)/translation";
 import { useAppContext } from "@/contexts/app-context";
 import { useRightSidebar } from "@/contexts/right-sidebar-context";
 import { useInteractiveSections } from "@/hooks/useInteractiveSections";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function PrivacyPolicy() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { setInteractionContext } = useAppContext();
   const { isOpen, closeDrawer } = useRightSidebar();
 
@@ -21,12 +26,47 @@ export default function PrivacyPolicy() {
 
   const pageName = t("Privacy Policy");
 
+  const infoCollectRef = useRef<HTMLElement>(null);
+  const infoUseRef = useRef<HTMLElement>(null);
+  const dataProtectionRef = useRef<HTMLElement>(null);
+  const cookiesTrackingRef = useRef<HTMLElement>(null);
+  const thirdPartyServicesRef = useRef<HTMLElement>(null);
+  const yourRightsRef = useRef<HTMLElement>(null);
+  const contactUsRef = useRef<HTMLElement>(null);
+  const changesToPolicyRef = useRef<HTMLElement>(null);
+
+  const sectionRefs: Record<string, React.RefObject<HTMLElement | null>> = {
+    "info-collect": infoCollectRef,
+    "info-use": infoUseRef,
+    "data-protection": dataProtectionRef,
+    "cookies-tracking": cookiesTrackingRef,
+    "third-party-services": thirdPartyServicesRef,
+    "your-rights": yourRightsRef,
+    "contact-us": contactUsRef,
+    "changes-to-policy": changesToPolicyRef,
+  };
+
+  // получаем параметр scroll-to
+  const searchParams = useSearchParams();
+  const scrollTo = searchParams.get("scroll-to");
+
+  useEffect(() => {
+    if (!scrollTo) return;
+    const ref = sectionRefs[scrollTo];
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      setSendModeSectionId(scrollTo);
+      const timer = setTimeout(() => setSendModeSectionId(null), 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [scrollTo, setSendModeSectionId]);
+
   const handleSendClick = (sectionId: string) => {
     setInteractionContext(pageName, sectionId);
     if (isMobile && isOpen) {
       closeDrawer();
     }
-    setTimeout(() => setSendModeSectionId(null), 500);
+    setTimeout(() => setSendModeSectionId(null), 1000);
   };
 
   return (
@@ -35,8 +75,40 @@ export default function PrivacyPolicy() {
         {pageName}
       </h1>
 
+      {/* --- КНОПКИ ДЛЯ ПРОВЕРКИ ПРОКРУТКИ --- */}
+      <div className="flex gap-4 mb-6">
+        <Button
+          onClick={() =>
+            router.push("/privacy-policy?scroll-to=info-collect", {
+              scroll: false,
+            })
+          }
+        >
+          info-collect
+        </Button>
+        <Button
+          onClick={() =>
+            router.push("/privacy-policy?scroll-to=info-use", {
+              scroll: false,
+            })
+          }
+        >
+          info-use
+        </Button>
+        <Button
+          onClick={() =>
+            router.push("/privacy-policy?scroll-to=your-rights", {
+              scroll: false,
+            })
+          }
+        >
+          your-rights
+        </Button>
+      </div>
+
       <InteractiveSection
         id="info-collect"
+        ref={infoCollectRef}
         isSendMode={sendModeSectionId === "info-collect"}
         isHovered={hoveredSectionId === "info-collect"}
         isMobile={isMobile}
@@ -63,6 +135,7 @@ export default function PrivacyPolicy() {
 
       <InteractiveSection
         id="info-use"
+        ref={infoUseRef}
         isSendMode={sendModeSectionId === "info-use"}
         isHovered={hoveredSectionId === "info-use"}
         isMobile={isMobile}
@@ -87,6 +160,7 @@ export default function PrivacyPolicy() {
 
       <InteractiveSection
         id="data-protection"
+        ref={dataProtectionRef}
         isSendMode={sendModeSectionId === "data-protection"}
         isHovered={hoveredSectionId === "data-protection"}
         isMobile={isMobile}
@@ -106,6 +180,7 @@ export default function PrivacyPolicy() {
 
       <InteractiveSection
         id="cookies-tracking"
+        ref={cookiesTrackingRef}
         isSendMode={sendModeSectionId === "cookies-tracking"}
         isHovered={hoveredSectionId === "cookies-tracking"}
         isMobile={isMobile}
@@ -125,6 +200,7 @@ export default function PrivacyPolicy() {
 
       <InteractiveSection
         id="third-party-services"
+        ref={thirdPartyServicesRef}
         isSendMode={sendModeSectionId === "third-party-services"}
         isHovered={hoveredSectionId === "third-party-services"}
         isMobile={isMobile}
@@ -144,6 +220,7 @@ export default function PrivacyPolicy() {
 
       <InteractiveSection
         id="your-rights"
+        ref={yourRightsRef}
         isSendMode={sendModeSectionId === "your-rights"}
         isHovered={hoveredSectionId === "your-rights"}
         isMobile={isMobile}
@@ -166,6 +243,7 @@ export default function PrivacyPolicy() {
 
       <InteractiveSection
         id="contact-us"
+        ref={contactUsRef}
         isSendMode={sendModeSectionId === "contact-us"}
         isHovered={hoveredSectionId === "contact-us"}
         isMobile={isMobile}
@@ -185,6 +263,7 @@ export default function PrivacyPolicy() {
 
       <InteractiveSection
         id="changes-to-policy"
+        ref={changesToPolicyRef}
         isSendMode={sendModeSectionId === "changes-to-policy"}
         isHovered={hoveredSectionId === "changes-to-policy"}
         isMobile={isMobile}
@@ -201,6 +280,37 @@ export default function PrivacyPolicy() {
           )}
         </p>
       </InteractiveSection>
+
+      {/* --- КНОПКИ ДЛЯ ПРОВЕРКИ ПРОКРУТКИ --- */}
+      <div className="flex gap-4 mb-6">
+        <Button
+          onClick={() =>
+            router.push("/privacy-policy?scroll-to=info-collect", {
+              scroll: false,
+            })
+          }
+        >
+          info-collect
+        </Button>
+        <Button
+          onClick={() =>
+            router.push("/privacy-policy?scroll-to=info-use", {
+              scroll: false,
+            })
+          }
+        >
+          info-use
+        </Button>
+        <Button
+          onClick={() =>
+            router.push("/privacy-policy?scroll-to=your-rights", {
+              scroll: false,
+            })
+          }
+        >
+          your-rights
+        </Button>
+      </div>
 
       <div className="mt-8 pt-4 border-t">
         <p className="text-sm text-muted-foreground">

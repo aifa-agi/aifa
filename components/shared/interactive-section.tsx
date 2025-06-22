@@ -1,5 +1,7 @@
 // @/components/interactive-section.tsx
+
 import { HelpCircle, ArrowUpCircle } from "lucide-react";
+import { Ref } from "react";
 
 interface InteractiveSectionProps {
   id: string;
@@ -10,6 +12,7 @@ interface InteractiveSectionProps {
   onHover: (id: string | null) => void;
   onActivate: (id: string) => void;
   onSend: (id: string) => void;
+  ref?: Ref<HTMLElement>;
 }
 
 export function InteractiveSection({
@@ -21,9 +24,11 @@ export function InteractiveSection({
   onHover,
   onActivate,
   onSend,
+  ref,
 }: InteractiveSectionProps) {
   return (
     <section
+      ref={ref}
       data-interactive-id={id}
       className={`interactive-section${isSendMode ? "  text-primary" : ""}`}
       onMouseEnter={() => {
@@ -45,7 +50,7 @@ export function InteractiveSection({
             onActivate(id);
           }}
           className="interaction-icon p-1 rounded-full bg-background hover:bg-accent"
-          aria-label="Спросите ии"
+          aria-label="ASK AI"
           type="button"
         >
           <HelpCircle className="size-5 text-muted-foreground" />
@@ -58,9 +63,9 @@ export function InteractiveSection({
             onSend(id);
           }}
           className="interaction-icon p-1 rounded-full bg-background hover:bg-accent"
-          aria-label="Спросите ии"
+          aria-label="ASK AI"
           type="button"
-          title={!isMobile ? "Спросите ии" : undefined}
+          title={!isMobile ? "ASK AI" : undefined}
         >
           <ArrowUpCircle className="size-5 text-white" />
         </button>
