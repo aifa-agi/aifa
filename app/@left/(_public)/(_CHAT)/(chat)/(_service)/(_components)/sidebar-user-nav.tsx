@@ -96,7 +96,9 @@ export function SidebarUserNav({ user }: { user: User }) {
                   }
 
                   if (isGuest) {
-                    router.push("/login");
+                    signOut({
+                      redirectTo: "/login",
+                    });
                   } else {
                     signOut({
                       redirectTo: "/register",
