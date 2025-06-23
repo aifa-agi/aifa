@@ -1,22 +1,33 @@
+"use client";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function LoadingPage() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
   return (
-    <div className="flex flex-col items-center justify-center min-h-dvh bg-white">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       {/* Иллюстрация */}
       <Image
-        src="/_static/illustrations/work-from-home.jpg"
+        src={
+          isDark
+            ? "/_static/illustrations/idea-launch.svg"
+            : "/_static/illustrations/success.svg"
+        }
         alt="Work from Home Illustration"
-        width={320}
-        height={240}
+        width={400}
+        height={400}
         priority
-        className="mb-6 "
+        className="pointer-events-none mb-5 mt-6 dark:invert"
       />
       {/* Приветственный текст */}
-      <h1 className="text-primary text-2xl font-semibold whitespace-pre-wrap mx-4 text-center">
+      <h1 className="text-foreground text-2xl font-semibold whitespace-pre-wrap mx-4 text-center">
         Welcome to the Ai-First user interface concept
       </h1>
-      <p className="text-black text-xl mt-4">Loading ...</p>
+      <p className="text-muted-foreground text-xl mt-4">Loading ...</p>
     </div>
   );
 }
