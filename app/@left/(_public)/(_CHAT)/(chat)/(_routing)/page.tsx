@@ -8,6 +8,7 @@ import { DataStreamHandler } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_servic
 import { redirect } from "next/navigation";
 import { generateCuid } from "@/lib/utils/generateCuid";
 import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
+import LoadingPage from "@/app/@left/loading";
 
 export default async function Page() {
   const session = await auth();

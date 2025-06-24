@@ -23,7 +23,7 @@ import {
   SidebarGroupContent,
   SidebarMenu,
   useSidebar,
-} from "@/components/ui/sidebar";
+} from "./sidebar";
 import { fetcher } from "@/lib/utils";
 import { ChatItem } from "./sidebar-history-item";
 import useSWRInfinite from "swr/infinite";

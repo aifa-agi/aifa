@@ -3,11 +3,15 @@
 import { cookies } from "next/headers";
 
 import { AppSidebar } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
 import Script from "next/script";
 import { validateTranslations } from "./(_service)/(_libs)/validate-translations";
 import { RoleStatus } from "./(_service)/(_components)/role-status";
 import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "./(_service)/(_components)/sidebar";
 
 export const experimental_ppr = true;
 

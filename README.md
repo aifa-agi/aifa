@@ -53,3 +53,8 @@ This project is distributed under the AGPL-3.0 license to ensure openness of all
 ---
 
 _The future is not written in corporate data centers, but in code that lives and evolves on millions of servers around the world._
+
+## 🏋️‍♀️ Author
+
+Roman Bolshiynov,
+telegram contact: **@bolshiyanov**

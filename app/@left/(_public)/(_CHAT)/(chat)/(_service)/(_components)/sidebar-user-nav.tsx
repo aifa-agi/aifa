@@ -15,17 +15,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./sidebar";
 import { useRouter } from "next/navigation";
 import { toast } from "./toast";
 import { LoaderIcon } from "../../../../../../../components/shared/icons";
+import { useTranslation } from "../(_libs)/translation";
 
 export function SidebarUserNav({ user }: { user: User }) {
   const router = useRouter();
+  const { t } = useTranslation();
   const { data, status } = useSession();
   const { setTheme, theme } = useTheme();
 
@@ -41,7 +39,7 @@ export function SidebarUserNav({ user }: { user: User }) {
                 <div className="flex flex-row gap-2">
                   <div className="size-6 bg-zinc-500/30 rounded-full animate-pulse" />
                   <span className="bg-zinc-500/30 text-transparent rounded-md animate-pulse">
-                    Loading auth status
+                    {t("Loading auth status...")}
                   </span>
                 </div>
                 <div className="animate-spin text-zinc-500">
@@ -61,7 +59,7 @@ export function SidebarUserNav({ user }: { user: User }) {
                   className="rounded-full"
                 />
                 <span data-testid="user-email" className="truncate">
-                  {isGuest ? "Guest" : user?.email}
+                  {isGuest ? t("Guest") : user?.email}
                 </span>
                 <ChevronUp className="ml-auto" />
               </SidebarMenuButton>
@@ -77,7 +75,7 @@ export function SidebarUserNav({ user }: { user: User }) {
               className="cursor-pointer"
               onSelect={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
-              {`Toggle ${theme === "light" ? "dark" : "light"} mode`}
+              {`${t("Toggle")} ${theme === "light" ? t("dark") : t("light")} ${t("mode")}`}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild data-testid="user-nav-item-auth">
@@ -88,8 +86,9 @@ export function SidebarUserNav({ user }: { user: User }) {
                   if (status === "loading") {
                     toast({
                       type: "error",
-                      description:
-                        "Checking authentication status, please try again!",
+                      description: t(
+                        "Checking authentication status, please try again!"
+                      ),
                     });
 
                     return;
@@ -106,7 +105,7 @@ export function SidebarUserNav({ user }: { user: User }) {
                   }
                 }}
               >
-                {isGuest ? "Login to your account" : "Sign out"}
+                {isGuest ? t("Login to your account") : t("Sign out")}
               </button>
             </DropdownMenuItem>
           </DropdownMenuContent>

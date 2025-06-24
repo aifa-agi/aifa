@@ -31,6 +31,14 @@
     "it": "Salvataggio delle modifiche...",
     "ru": "Сохранение изменений..."
   },
+  "signOut": {
+    "en": "Sign out",        
+    "es": "Cerrar sesión",   
+    "de": "Abmelden",        
+    "fr": "Se déconnecter",  
+    "it": "Esci",            
+    "ru": "Выйти"           
+  },
    "Console": {
     "en": "Console",
     "es": "Consola",
@@ -402,6 +410,70 @@
     "fr": "Retour à la dernière version",
     "it": "Torna all'ultima versione",
     "ru": "Вернуться к последней версии"
-  }  
+  },
+  "Checking authentication status, please try again!": {
+    "en": "Checking authentication status, please try again!",
+    "es": "Verificando el estado de autenticación, ¡por favor inténtalo de nuevo!",
+    "de": "Authentifizierungsstatus wird überprüft, bitte versuchen Sie es erneut!",
+    "fr": "Vérification du statut d'authentification, veuillez réessayer !",
+    "it": "Controllo dello stato di autenticazione, riprova!",
+    "ru": "Ошибка проверки статуса аутентификации, пожалуйста, попробуйте еще раз!"
+  },
+  "Login to your account": {
+    "en": "Login to your account",
+    "es": "Inicia sesión en tu cuenta",
+    "de": "Melden Sie sich bei Ihrem Konto an",
+    "fr": "Connectez-vous à votre compte",
+    "it": "Accedi al tuo account",
+    "ru": "Войдите в свой аккаунт"
+  },
+  "light": {
+    "en": "Light",
+    "es": "Claro",
+    "de": "Hell",
+    "fr": "Clair",
+    "it": "Chiaro",
+    "ru": "Светлая"
+  },
+  "dark": {
+    "en": "Dark",
+    "es": "Oscuro",
+    "de": "Dunkel",
+    "fr": "Sombre",
+    "it": "Scuro",
+    "ru": "Темная"
+  },
+  "Toggle": {
+    "en": "Toggle theme",
+    "es": "Cambiar tema",
+    "de": "Theme wechseln",
+    "fr": "Changer de thème",
+    "it": "Cambia tema",
+    "ru": "Переключить тему"
+  },
+  "Guest": {
+    "en": "Guest",
+    "es": "Invitado",
+    "de": "Gast",
+    "fr": "Invité",
+    "it": "Ospite",
+    "ru": "Гость"
+  },
+  "Loading auth status...": {
+    "en": "Loading auth status...",
+    "es": "Cargando estado de autenticación...",
+    "de": "Authentifizierungsstatus wird geladen...",
+    "fr": "Chargement du statut d'authentification...",
+    "it": "Caricamento dello stato di autenticazione...",
+    "ru": "Загрузка статуса аутентификации..."
+  }  ,
+  "mode": {
+    "en": "Mode",
+    "es": "Modo",
+    "de": "Modus",
+    "fr": "Mode",
+    "it": "Modalità",
+    "ru": "Режим"
+  }
 
 }

@@ -15,7 +15,8 @@ import {
   SidebarHeader,
   SidebarMenu,
   useSidebar,
-} from "@/components/ui/sidebar";
+} from "./sidebar";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import {
   Tooltip,
@@ -68,7 +69,22 @@ export function AppSidebar({ user }: { user: User | undefined }) {
       <SidebarContent>
         <SidebarHistory user={user} />
       </SidebarContent>
-      <SidebarFooter>{user && <SidebarUserNav user={user} />}</SidebarFooter>
+      <SidebarFooter>
+        {user ? (
+          <SidebarUserNav user={user} />
+        ) : (
+          <Button
+            variant="secondary"
+            onClick={() =>
+              signOut({
+                redirectTo: "/register",
+              })
+            }
+          >
+            {t("Sign out")}
+          </Button>
+        )}
+      </SidebarFooter>
     </Sidebar>
   );
 }

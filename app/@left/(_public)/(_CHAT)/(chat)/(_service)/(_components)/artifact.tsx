@@ -21,7 +21,7 @@ import { VersionFooter } from "./version-footer";
 import { ArtifactActions } from "./artifact-actions";
 import { ArtifactCloseButton } from "./artifact-close-button";
 import { ArtifactMessages } from "./artifact-messages";
-import { useSidebar } from "@/components/ui/sidebar";
+import { useSidebar } from "./sidebar";
 import { useArtifact } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_hooks)/use-artifact";
 import { imageArtifact } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/artifacts/image/client";
 import { codeArtifact } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/artifacts/code/client";

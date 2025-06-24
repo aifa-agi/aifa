@@ -1,75 +1,48 @@
-// @/app/@left/(_public)/(_CHAT)/(chat)/(_routing)/page.tsx
-import { cookies } from "next/headers";
+"use client";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import { AppSidebar } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import Script from "next/script";
+export default function LoadingPage() {
+  const [isDark, setIsDark] = useState(false);
+  const router = useRouter();
 
-export const experimental_ppr = true;
-import { Chat } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/chat";
-import { DEFAULT_CHAT_MODEL } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/models";
-import { DataStreamHandler } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_components)/data-stream-handler";
-
-import { redirect } from "next/navigation";
-import { generateCuid } from "@/lib/utils/generateCuid";
-import { RoleStatus } from "./(_public)/(_CHAT)/(chat)/(_service)/(_components)/role-status";
-import { validateTranslations } from "../@right/(_service)/(_libs)/validate-translations";
-import { auth } from "./(_public)/(_AUTH)/(_service)/(_actions)/auth";
-
-export default async function Page() {
-  validateTranslations();
-  const [session, cookieStore] = await Promise.all([auth(), cookies()]);
-  const isCollapsed = cookieStore.get("sidebar:state")?.value !== "true";
-
-  if (!session) {
-    redirect("/api/auth/guest");
-  }
-
-  const id = generateCuid();
-
-  const modelIdFromCookie = cookieStore.get("chat-model");
-
-  if (!modelIdFromCookie) {
-    return (
-      <>
-        <Script
-          src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"
-          strategy="beforeInteractive"
-        />
-        <SidebarProvider defaultOpen={!isCollapsed}>
-          <AppSidebar user={session?.user} />
-          <SidebarInset>
-            <Chat
-              key={id}
-              id={id}
-              initialMessages={[]}
-              initialChatModel={DEFAULT_CHAT_MODEL}
-              initialVisibilityType="private"
-              isReadonly={false}
-              session={session}
-              autoResume={false}
-            />
-            <DataStreamHandler id={id} />
-            <RoleStatus />
-          </SidebarInset>
-        </SidebarProvider>
-      </>
-    );
-  }
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
 
   return (
-    <>
-      <Chat
-        key={id}
-        id={id}
-        initialMessages={[]}
-        initialChatModel={modelIdFromCookie.value || DEFAULT_CHAT_MODEL}
-        initialVisibilityType="private"
-        isReadonly={false}
-        session={session}
-        autoResume={false}
-      />
-      <DataStreamHandler id={id} />
-    </>
+    <div className="flex flex-col min-h-screen items-center justify-center p-6">
+      <h1 className="text-foreground text-xl font-semibold whitespace-pre-wrap m-2 text-center">
+        Welcome to the Ai-First user interface concept
+      </h1>
+      <div className="flex-1 flex items-center justify-center w-full">
+        <div className="w-full flex justify-center">
+          <Image
+            src={
+              isDark
+                ? "/_static/illustrations/idea-launch.svg"
+                : "/_static/illustrations/success.svg"
+            }
+            alt="Work from Home Illustration"
+            width={400}
+            height={400}
+            priority
+            className="pointer-events-none my-5 max-h-[40vh] size-auto dark:invert"
+          />
+        </div>
+      </div>
+      <Button
+        className="text-xl w-full mt-auto mb-2"
+        onClick={() =>
+          router.push("/", {
+            scroll: false,
+          })
+        }
+      >
+        Open Chat GPT
+      </Button>
+    </div>
   );
 }

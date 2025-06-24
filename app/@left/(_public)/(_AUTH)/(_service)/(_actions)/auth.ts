@@ -149,13 +149,32 @@ export const {
         token.type = (user as any).type;
       }
       if (token.sub) {
-        // Refresh token data from DB to keep it current
-        const dbUser = await getUserById(token.sub);
-        if (dbUser) {
-          token.type = dbUser.type;
-          token.name = dbUser.name;
-          token.email = dbUser.email;
-          token.picture = dbUser.image;
+        try {
+          // Пытаемся обновить данные с коротким timeout
+          const dbUser = await getUserById(token.sub, {
+            retries: 1,
+            timeout: 3000,
+            throwOnError: false,
+          });
+
+          if (dbUser) {
+            token.type = dbUser.type;
+            token.name = dbUser.name;
+            token.email = dbUser.email;
+            token.picture = dbUser.image;
+          } else {
+            console.warn(
+              `Could not refresh user data for ${token.sub}, using cached token data`
+            );
+          }
+        } catch (error) {
+          console.error(
+            "Failed to refresh user data, using cached token:",
+            error
+          );
+          await signOut({
+            redirectTo: "/login",
+          });
         }
       }
       return token;

@@ -5,7 +5,7 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "./sidebar";
 import Link from "next/link";
 import {
   DropdownMenu,
