@@ -1,15 +1,16 @@
 import * as React from "react";
 import Link from "next/link";
 
-import { footerLinks } from "@/config/footer-links";
+import { footerLinks } from "@/app/@right/(_service)/(_components)/footer-links";
 import { cn } from "@/lib/utils";
 
 //import { NewsletterForm } from "../forms/newsletter-form";
 
-import { socialLinks } from "@/config/social-links";
+import { socialLinks } from "@/app/@right/(_service)/(_config)/social-links-config";
 import { GitHubIcon } from "@/components/shared/icons";
 import { XIcon } from "lucide-react";
 import { NewsletterForm } from "./newsletter-form";
+import { ModeToggle } from "@/components/shared/mode-toggle";
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
@@ -82,7 +83,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
             >
               <XIcon className="size-5" />
             </Link>
-            {/* <ModeToggle /> */}
+            <ModeToggle />
           </div>
         </div>
       </div>

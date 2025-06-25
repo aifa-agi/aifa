@@ -21,13 +21,13 @@ export const socialIconMap: Record<SocialIconName, React.FC<any>> = {
   phone: Phone,
 };
 
-export type SiteConfig = {
+export type AppConfig = {
   name: string;
   description: string;
   url: string;
   ogImage: string;
   mailSupport: string;
-  socialinks: SocialLink[];
+  manifest: string;
 };
 
 export type NavItem = {

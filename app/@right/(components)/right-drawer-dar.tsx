@@ -34,7 +34,6 @@ export default function RightDrawerBar({
       <Sheet open={isOpen} onOpenChange={handleOpenChange}>
         <SheetTrigger asChild>
           <Button
-            variant="outline"
             aria-label="AIFA content"
             className="fixed top-2 right-4 z-50 flex items-center justify-center md:hidden h-[34px]"
           >
@@ -44,7 +43,7 @@ export default function RightDrawerBar({
 
         <SheetContent
           side="left"
-          className="w-full p-2 md:hidden [&>[data-dialog-close]]:hidden  [&>button]:hidden [&>button[aria-label='Close']]:block"
+          className="w-full p-0 md:hidden [&>[data-dialog-close]]:hidden  [&>button]:hidden [&>button[aria-label='Close']]:block"
         >
           <SheetHeader>
             <SheetTitle className="hidden">
@@ -55,7 +54,6 @@ export default function RightDrawerBar({
           <SheetClose asChild>
             <Button
               size="sm"
-              variant="outline"
               className="absolute top-2 right-2 h-[34px]"
               aria-label="Close"
             >

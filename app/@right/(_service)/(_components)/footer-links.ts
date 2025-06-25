@@ -1,6 +1,6 @@
-import { SidebarNavItem } from "@/types";
+import { FooterNavItem } from "../(_types)/types";
 
-export const footerLinks: SidebarNavItem[] = [
+export const footerLinks: FooterNavItem[] = [
   {
     title: "Company",
     items: [

@@ -65,7 +65,7 @@ export function InteractiveSection({
           className="interaction-icon p-1 rounded-full  bg-primary"
           aria-label="ASK AI"
           type="button"
-          title={!isMobile ? "ASK AI" : undefined}
+          title={!isMobile ? "ASK CHAT GPT" : undefined}
         >
           <ArrowUpCircle className="size-5 text-white " />
         </button>

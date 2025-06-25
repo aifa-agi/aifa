@@ -3,8 +3,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { __ } from "../../lib/translation";
 import { Button } from "@/components/ui/button";
+import { __ } from "@/lib/translation";
 
 interface LeftErrorProps {
   error: Error & { digest?: string }; // Error object with optional digest property
