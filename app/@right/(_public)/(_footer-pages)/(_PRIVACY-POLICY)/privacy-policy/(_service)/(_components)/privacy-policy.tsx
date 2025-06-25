@@ -70,7 +70,7 @@ export default function PrivacyPolicy() {
   };
 
   return (
-    <div className="w-full md:p-8">
+    <div className="w-full ">
       <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight mb-8">
         {pageName}
       </h1>

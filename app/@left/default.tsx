@@ -14,8 +14,8 @@ export default function LoadingPage() {
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-center p-6">
-      <h1 className="text-foreground text-xl font-semibold whitespace-pre-wrap m-2 text-center">
-        Welcome to the Ai-First user interface concept
+      <h1 className="text-foreground text-6xl font-semibold whitespace-pre-wrap m-2 text-center">
+        AIFA
       </h1>
       <div className="flex-1 flex items-center justify-center w-full">
         <div className="w-full flex justify-center">
@@ -41,7 +41,7 @@ export default function LoadingPage() {
           })
         }
       >
-        Open Chat GPT
+        Chat GPT
       </Button>
     </div>
   );

@@ -12,12 +12,17 @@ const iconsByType: Record<"success" | "error", ReactNode> = {
 
 export function toast(props: Omit<ToastProps, "id">) {
   return sonnerToast.custom((id) => (
-    <Toast id={id} type={props.type} description={props.description} />
+    <Toast
+      id={id}
+      type={props.type}
+      title={props.title}
+      description={props.description}
+    />
   ));
 }
 
 function Toast(props: ToastProps) {
-  const { id, type, description } = props;
+  const { id, type, title, description } = props;
 
   const descriptionRef = useRef<HTMLDivElement>(null);
   const [multiLine, setMultiLine] = useState(false);
@@ -58,16 +63,21 @@ function Toast(props: ToastProps) {
         >
           {iconsByType[type]}
         </div>
-        <div ref={descriptionRef} className="text-zinc-950 text-sm">
-          {description}
+        <div className="flex flex-col">
+          {title && <div className="font-semibold text-zinc-950">{title}</div>}
+          <div ref={descriptionRef} className="text-zinc-950 text-sm">
+            {description}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
+// Обновлённый интерфейс ToastProps
 interface ToastProps {
   id: string | number;
   type: "success" | "error";
-  description: string;
+  title?: ReactNode;
+  description: ReactNode;
 }

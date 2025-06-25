@@ -7,7 +7,7 @@ export default function RightDefault() {
   const { t } = useTranslation();
   return (
     <>
-      <div className="hide-scrollbar w-full h-[calc(100%-64px)] overflow-y-auto  p-8 my-4 mt-12 ">
+      <div className=" w-full p-8 my-4 mt-12 ">
         <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl">
           {t("evolvingAIAgentArchitecture")}
         </h1>

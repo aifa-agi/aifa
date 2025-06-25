@@ -1,15 +1,17 @@
 // @/app/@right/default.tsx
 
+import { SiteFooter } from "./(_service)/(_components)/site-footer";
 import RightDefault from "./(components)/right-default";
-import RightNavBar from "./(components)/right-nav-bar";
 
 export default function Default() {
   return (
     <>
-      <div className="flex-1 ">
-        <RightNavBar />
+      <div className="flex flex-col h-screen pb-6">
+        <main className="flex-1 overflow-y-auto hide-scrollbar px-4">
+          <RightDefault />
+          <SiteFooter />
+        </main>
       </div>
-      <RightDefault />
     </>
   );
 }
