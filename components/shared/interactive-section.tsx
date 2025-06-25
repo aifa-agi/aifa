@@ -49,11 +49,11 @@ export function InteractiveSection({
             e.stopPropagation();
             onActivate(id);
           }}
-          className="interaction-icon p-1 rounded-full bg-background hover:bg-accent"
+          className="interaction-icon p-1 rounded-full hover:bg-primary "
           aria-label="ASK AI"
           type="button"
         >
-          <HelpCircle className="size-5 text-muted-foreground" />
+          <HelpCircle className="size-5 text-muted-foreground hover:text-white" />
         </button>
       )}
       {isSendMode && (
@@ -62,12 +62,12 @@ export function InteractiveSection({
             e.stopPropagation();
             onSend(id);
           }}
-          className="interaction-icon p-1 rounded-full bg-background hover:bg-accent"
+          className="interaction-icon p-1 rounded-full  bg-primary"
           aria-label="ASK AI"
           type="button"
           title={!isMobile ? "ASK AI" : undefined}
         >
-          <ArrowUpCircle className="size-5 text-white" />
+          <ArrowUpCircle className="size-5 text-white " />
         </button>
       )}
       {children}
