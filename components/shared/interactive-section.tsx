@@ -62,7 +62,7 @@ export function InteractiveSection({
             e.stopPropagation();
             onSend(id);
           }}
-          className="interaction-icon p-1 rounded-full  bg-primary"
+          className="interaction-arrow-icon p-1 rounded-full  bg-primary"
           aria-label="ASK AI"
           type="button"
           title={!isMobile ? "ASK CHAT GPT" : undefined}

@@ -2,19 +2,19 @@
 
 import { FooterTypes } from "../(_types)/footer-types";
 
-// Public footer config
 export const footerPublicConfig: FooterTypes = [
   {
-    title: "Company",
+    category: "Company",
+    roles: ["guest", "authUser", "admin"],
     items: [
       { title: "About", href: "#" },
       { title: "Enterprise", href: "#" },
-      { title: "Terms", href: "/public/terms-of-service" },
-      { title: "Privacy", href: "/public/privacy-policy" },
+      { title: "Terms", href: "/terms-of-service" },
+      { title: "Privacy", href: "/privacy-policy" },
     ],
   },
   {
-    title: "Product",
+    category: "Product",
     items: [
       { title: "Security", href: "#" },
       { title: "Customization", href: "#" },
@@ -23,7 +23,8 @@ export const footerPublicConfig: FooterTypes = [
     ],
   },
   {
-    title: "Docs",
+    category: "Docs",
+    roles: ["authUser", "admin"],
     items: [
       { title: "Introduction", href: "#" },
       { title: "Installation", href: "#" },
@@ -33,10 +34,10 @@ export const footerPublicConfig: FooterTypes = [
   },
 ];
 
-// Admin footer config
 export const footerAdminConfig: FooterTypes = [
   {
-    title: "Admin Panel",
+    category: "Admin Panel",
+    roles: ["admin"],
     items: [
       { title: "Dashboard", href: "/admin" },
       { title: "Users", href: "/admin/users" },
@@ -44,7 +45,8 @@ export const footerAdminConfig: FooterTypes = [
     ],
   },
   {
-    title: "Support",
+    category: "Support",
+    roles: ["admin"],
     items: [
       { title: "Help Center", href: "/admin/help" },
       { title: "Contact Support", href: "/admin/contact" },
@@ -52,11 +54,9 @@ export const footerAdminConfig: FooterTypes = [
   },
 ];
 
-// Universal footer configs object
 export const footerConfigs = {
   Public: footerPublicConfig,
   Admin: footerAdminConfig,
-  // Add more layouts as needed
 };
 
-export type FooterLayout = keyof typeof footerConfigs; // "Public" | "Admin"
+export type FooterLayout = keyof typeof footerConfigs;

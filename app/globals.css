@@ -186,7 +186,21 @@
   opacity: 0;
   transform: scale(0.9);
 }
+.interaction-arrow-icon {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: opacity 5.4s ease-in-out, transform 5.4s ease-in-out;
+  opacity: 0.3;
+  transform: scale(0.9);
+}
 .interactive-section:hover .interaction-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+.interactive-section:hover .interaction-arrow-icon {
   opacity: 1;
   transform: scale(1);
 }

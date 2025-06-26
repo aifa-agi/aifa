@@ -1,3 +1,5 @@
+// @/app/@right/(_service)/(_components)/navbar.tsx
+
 "use client";
 
 import Link from "next/link";
@@ -11,6 +13,8 @@ import {
   NavBarLayout,
 } from "../(_config)/nav-bar-config";
 import { appConfig } from "@/config/appConfig";
+import { useSession } from "next-auth/react";
+import type { UserType } from "../(_types)/nav-bar-types";
 
 interface NavBarProps {
   scroll?: boolean;
@@ -21,12 +25,20 @@ export function NavBar({ scroll = false }: NavBarProps) {
   const scrolled = useScroll(50);
   const selectedLayout = useSelectedLayoutSegment();
 
-  // Проверяем, что selectedLayout — валидный ключ
+  console.log(" selectedLayout NavBar", selectedLayout);
+
+  const { data: session } = useSession();
+  const userType: UserType = session?.user?.type || "guest";
+
   const links =
     selectedLayout &&
     Object.prototype.hasOwnProperty.call(navBarConfigs, selectedLayout)
       ? navBarConfigs[selectedLayout as NavBarLayout]
       : navBarPublicConfig.mainNav;
+
+  const filteredLinks = links.filter(
+    (item) => !item.roles || item.roles.includes(userType)
+  );
 
   return (
     <header
@@ -47,9 +59,9 @@ export function NavBar({ scroll = false }: NavBarProps) {
             />
           </Link>
 
-          {links && links.length > 0 ? (
+          {filteredLinks && filteredLinks.length > 0 ? (
             <nav className="hidden gap-6 md:flex">
-              {links.map((item, index) => (
+              {filteredLinks.map((item, index) => (
                 <Link
                   key={index}
                   href={item.disabled ? "#" : item.href}

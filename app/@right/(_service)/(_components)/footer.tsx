@@ -1,12 +1,14 @@
+// @/app/@right/(_service)/(_components)/footer.tsx
+
 "use client";
 
 import * as React from "react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 import { socialLinks } from "@/app/@right/(_service)/(_config)/social-links-config";
-
 import { NewsletterForm } from "./newsletter-form";
 import { ModeToggle } from "@/components/shared/mode-toggle";
 import {
@@ -14,24 +16,34 @@ import {
   FooterLayout,
   footerPublicConfig,
 } from "../(_config)/footer-config";
+import type { UserType } from "../(_types)/footer-types";
 
 export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
   const selectedLayout = useSelectedLayoutSegment();
 
-  // Check if there is a config for the current layout
+  // Получаем роль пользователя из сессии
+  const { data: session } = useSession();
+  const userType: UserType = session?.user?.type || "guest";
+
+  // Выбираем нужный конфиг
   const sections =
     selectedLayout &&
     Object.prototype.hasOwnProperty.call(footerConfigs, selectedLayout)
       ? footerConfigs[selectedLayout as FooterLayout]
       : footerPublicConfig;
 
+  // Фильтруем категории по ролям
+  const filteredSections = sections.filter(
+    (section) => !section.roles || section.roles.includes(userType)
+  );
+
   return (
     <footer className={cn("border-t mt-6", className)}>
       <div className="container grid max-w-4xl grid-cols-2 gap-6 py-14 xl:grid-cols-5 ">
-        {sections.map((section) => (
-          <div key={section.title}>
+        {filteredSections.map((section) => (
+          <div key={section.category}>
             <span className="text-sm font-medium text-foreground">
-              {section.title}
+              {section.category}
             </span>
             <ul className="mt-4 list-inside space-y-3">
               {section.items?.map((link) => (

@@ -1,17 +1,19 @@
-import type { NavItem } from "../(_types)/nav-bar-types";
+// @/app/@right/(_service)/(_config)/nav-bar-config.ts
+
+import type { NavItem, UserType } from "../(_types)/nav-bar-types";
 
 export const navBarPublicConfig = {
   mainNav: [
-    { title: "Home", href: "/" },
-    { title: "Blog", href: "/blog" },
-    { title: "Documentation", href: "/docs" },
+    { title: "Home", href: "/" }, // доступно всем
+    { title: "Blog", href: "/blog" }, // доступно всем
+    { title: "Documentation", href: "/docs", roles: ["authUser", "admin"] },
   ] as NavItem[],
 };
 
 export const navBarAdminConfig = {
   mainNav: [
-    { title: "Admin Dashboard", href: "/admin" },
-    { title: "Users", href: "/admin/users" },
+    { title: "Admin Dashboard", href: "/admin", roles: ["admin"] },
+    { title: "Users", href: "/admin/users", roles: ["admin"] },
   ] as NavItem[],
 };
 
@@ -20,4 +22,4 @@ export const navBarConfigs = {
   Admin: navBarAdminConfig.mainNav,
 };
 
-export type NavBarLayout = keyof typeof navBarConfigs; // "Public" | "Admin"
+export type NavBarLayout = keyof typeof navBarConfigs;

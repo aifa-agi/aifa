@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/resizable";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
-import RightDrawerBar from "./@right/(components)/right-drawer-dar";
+import RightDrawerBar from "./@right/(_service)/(_components)/right-drawer-bar";
 // Import the new provider component.
 import { OnlineStatusProvider } from "@/contexts/online-status-provider";
 import { RightSidebarProvider } from "@/contexts/right-sidebar-context";

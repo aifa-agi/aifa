@@ -2,6 +2,7 @@
 
 import { Metadata } from "next";
 import PrivacyPolicy from "../(_service)/(_components)/privacy-policy";
+
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:

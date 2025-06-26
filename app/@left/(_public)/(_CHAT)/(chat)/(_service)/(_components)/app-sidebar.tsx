@@ -43,7 +43,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               className="flex flex-row gap-3 items-center"
             >
               <span className="text-lg font-semibold px-2 hover:bg-muted rounded-md cursor-pointer">
-                {t("AI-Chatbot")}
+                {t("Chat GPT")}
               </span>
             </Link>
             <Tooltip>
