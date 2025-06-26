@@ -1,4 +1,4 @@
-import { AppConfig } from "@/types";
+import { AppConfig } from "@/types/app-config";
 
 const site_url = process.env.NEXT_PUBLIC_APP_URL!;
 

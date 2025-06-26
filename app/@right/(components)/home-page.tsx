@@ -3,7 +3,7 @@
 
 import { useTranslation } from "../(_service)/(_libs)/translation";
 
-export default function RightDefault() {
+export default function HomePage() {
   const { t } = useTranslation();
   return (
     <>

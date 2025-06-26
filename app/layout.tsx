@@ -19,13 +19,6 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { LanguageProvider } from "@/contexts/language-context";
 import { AppProvider } from "@/contexts/app-context";
 import { DevIndicatorClient } from "@/lib/utils/dev-indicator-client";
-export const metadata: Metadata = {
-  metadataBase: new URL("https://aifa.dev"),
-  title: "AI-First Architecture",
-  description:
-    "AI Agents in an Evolving and Self-Replicating Architecture for developing full-featured web applications, open source",
-  manifest: "/manifest.json",
-};
 
 export const viewport: Viewport = {
   width: "device-width",

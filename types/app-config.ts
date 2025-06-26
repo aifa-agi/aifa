@@ -1,3 +1,5 @@
+// @/types/app-config.ts
+
 export type AppConfig = {
   name: string;
   description: string;
