@@ -11,7 +11,7 @@ export const metadata = constructMetadata();
 export default function Default() {
   return (
     <>
-      <div className="flex flex-col h-screen pb-6">
+      <div className="flex flex-col min-h-svh pb-6">
         <NavBar scroll={true} />
         <main className="flex-1 overflow-y-auto hide-scrollbar px-4">
           <HomePage />

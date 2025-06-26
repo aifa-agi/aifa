@@ -13,7 +13,7 @@ export default function LoadingPage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center p-6">
+    <div className="flex flex-col min-h-svh items-center justify-center p-6">
       <h1 className="text-foreground text-6xl font-semibold whitespace-pre-wrap m-2 text-center">
         AIFA
       </h1>

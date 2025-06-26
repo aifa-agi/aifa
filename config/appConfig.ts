@@ -1,6 +1,6 @@
 import { AppConfig } from "@/types/app-config";
 
-const site_url = process.env.NEXT_PUBLIC_APP_URL || "https://aifa.dev";
+const site_url = "https://aifa.dev";
 
 export const appConfig: AppConfig = {
   name: "AIFA",
