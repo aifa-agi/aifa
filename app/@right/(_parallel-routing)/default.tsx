@@ -1,10 +1,10 @@
 // @/app/@right/default.tsx
 //THIS IS ROOT PAGE, USING AS HOME PAGE, CAN NOT HAVE LAYOUT!
 
-import { NavBar } from "./(_service)/(_components)/navbar";
-import { Footer } from "./(_service)/(_components)/footer";
-import HomePage from "./(components)/home-page";
 import { constructMetadata } from "@/lib/construct-metadata";
+import { NavBar } from "../(_service)/(_components)/navbar";
+import HomePage from "../(_service)/(_components)/home-page";
+import { Footer } from "../(_service)/(_components)/footer";
 
 export const metadata = constructMetadata();
 
