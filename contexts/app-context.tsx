@@ -57,23 +57,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   const pathname = usePathname();
 
-  useEffect(() => {
-    console.log("[AppContext] navigationHistory changed:", navigationHistory);
-    console.log(
-      "[AppContext] currentHistoryIndex changed:",
-      currentHistoryIndex
-    );
-    // Проверим, что реально записано в localStorage
-    console.log(
-      "[AppContext] localStorage rightSlotNavigationHistory:",
-      window.localStorage.getItem("rightSlotNavigationHistory")
-    );
-    console.log(
-      "[AppContext] localStorage rightSlotHistoryIndex:",
-      window.localStorage.getItem("rightSlotHistoryIndex")
-    );
-  }, [navigationHistory, currentHistoryIndex]);
-
   // Эффект для автоматического отслеживания навигации по страницам в правом слоте
   useEffect(() => {
     if (pathname && pathname !== navigationHistory[currentHistoryIndex]) {
@@ -95,15 +78,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const setInteractionContext = useCallback(
     (pageName: string, elementId: string) => {
       const interaction = { pageName, elementId };
-      console.log(
-        "[AppContext] setInteractionContext called with:",
-        interaction
-      );
-      setActiveInteraction(interaction);
 
-      if (process.env.NODE_ENV === "development") {
-        console.log("[AppContext DEV] Interaction Context Set:", interaction);
-      }
+      setActiveInteraction(interaction);
     },
     []
   );

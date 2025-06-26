@@ -13,11 +13,11 @@ export default function PublicLoginFooter() {
   const { openDrawer } = useRightSidebar();
 
   const termsOfServiceOnClick = () => {
-    router.push("/terms-of-service");
+    router.push("/public/terms-of-service");
     openDrawer();
   };
   const privacyPolicyOnClick = () => {
-    router.push("/privacy-policy");
+    router.push("/public/privacy-policy");
     openDrawer();
   };
   return (

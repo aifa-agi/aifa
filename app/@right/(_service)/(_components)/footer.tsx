@@ -1,22 +1,34 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
-
-import { footerLinks } from "@/app/@right/(_service)/(_components)/footer-links";
+import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-//import { NewsletterForm } from "../forms/newsletter-form";
-
 import { socialLinks } from "@/app/@right/(_service)/(_config)/social-links-config";
-import { GitHubIcon } from "@/components/shared/icons";
-import { XIcon } from "lucide-react";
+
 import { NewsletterForm } from "./newsletter-form";
 import { ModeToggle } from "@/components/shared/mode-toggle";
+import {
+  footerConfigs,
+  FooterLayout,
+  footerPublicConfig,
+} from "../(_config)/footer-config";
 
-export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
+export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
+  const selectedLayout = useSelectedLayoutSegment();
+
+  // Check if there is a config for the current layout
+  const sections =
+    selectedLayout &&
+    Object.prototype.hasOwnProperty.call(footerConfigs, selectedLayout)
+      ? footerConfigs[selectedLayout as FooterLayout]
+      : footerPublicConfig;
+
   return (
     <footer className={cn("border-t mt-6", className)}>
       <div className="container grid max-w-4xl grid-cols-2 gap-6 py-14 xl:grid-cols-5 ">
-        {footerLinks.map((section) => (
+        {sections.map((section) => (
           <div key={section.title}>
             <span className="text-sm font-medium text-foreground">
               {section.title}
@@ -42,9 +54,6 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
 
       <div className="border-t py-4">
         <div className="container flex max-w-6xl items-center justify-between">
-          {/* <span className="text-muted-foreground text-sm">
-            Copyright &copy; 2025. All rights reserved.
-          </span> */}
           <p className="text-left text-sm text-muted-foreground">
             Built by{" "}
             <Link
@@ -67,22 +76,21 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
           </p>
 
           <div className="flex items-center gap-3">
-            <Link
-              href={socialLinks[1].url}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              <GitHubIcon className="size-5" />
-            </Link>
-            <Link
-              href={socialLinks[0].url}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              <XIcon className="size-5" />
-            </Link>
+            {socialLinks.map((social) => {
+              const Icon = social.icon;
+              return (
+                <Link
+                  key={social.title}
+                  href={social.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium underline underline-offset-4"
+                  aria-label={social.title}
+                >
+                  <Icon className="size-5" />
+                </Link>
+              );
+            })}
             <ModeToggle />
           </div>
         </div>

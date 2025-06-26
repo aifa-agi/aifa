@@ -1,15 +1,15 @@
 "use client";
 
-import { useContext } from "react";
 import Link from "next/link";
-import Image from "next/image"; // Import Next.js Image component
+import Image from "next/image";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { useSession } from "next-auth/react";
-
 import { cn } from "@/lib/utils";
 import { useScroll } from "@/hooks/use-scroll";
-import { GitHubIcon } from "@/components/shared/icons";
-import { navBarConfig } from "../(_config)/nav-bar-config";
+import {
+  navBarConfigs,
+  navBarPublicConfig,
+  NavBarLayout,
+} from "../(_config)/nav-bar-config";
 import { appConfig } from "@/config/appConfig";
 
 interface NavBarProps {
@@ -20,7 +20,13 @@ interface NavBarProps {
 export function NavBar({ scroll = false }: NavBarProps) {
   const scrolled = useScroll(50);
   const selectedLayout = useSelectedLayoutSegment();
-  const links = navBarConfig.mainNav;
+
+  // Проверяем, что selectedLayout — валидный ключ
+  const links =
+    selectedLayout &&
+    Object.prototype.hasOwnProperty.call(navBarConfigs, selectedLayout)
+      ? navBarConfigs[selectedLayout as NavBarLayout]
+      : navBarPublicConfig.mainNav;
 
   return (
     <header

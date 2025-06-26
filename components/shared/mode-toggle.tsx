@@ -20,16 +20,18 @@ export function ModeToggle() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           className="size-8 px-0 flex justify-center items-center relative"
         >
           <SunMedium
+            size={24}
             className="absolute inset-0 m-auto transition-all
-      rotate-0 scale-100 dark:-rotate-90 dark:scale-0"
+      rotate-0 scale-100 dark:-rotate-90 dark:scale-0 "
           />
           <Moon
+            size={24}
             className="absolute inset-0 m-auto transition-all
-      rotate-90 scale-0 dark:rotate-0 dark:scale-100"
+      rotate-90 scale-0 dark:rotate-0 dark:scale-100 "
           />
           <span className="sr-only">Toggle theme</span>
         </Button>

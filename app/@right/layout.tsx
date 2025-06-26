@@ -4,7 +4,7 @@
 
 import React, { Children } from "react";
 
-import { SiteFooter } from "./(_service)/(_components)/site-footer";
+import { Footer } from "./(_service)/(_components)/footer";
 import { NavBar } from "./(_service)/(_components)/navbar";
 
 export default function RightLayout({
@@ -17,7 +17,7 @@ export default function RightLayout({
       <NavBar scroll={true} />
       <main className="flex-1 overflow-y-auto hide-scrollbar px-4">
         {Children.toArray(children)}
-        <SiteFooter />
+        <Footer />
       </main>
     </div>
   );

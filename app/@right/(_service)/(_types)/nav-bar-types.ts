@@ -1,3 +1,5 @@
+// @/app/@right/(_service)/(_types)/nav-bar-types.ts
+
 export type NavItem = {
   title: string;
   href: string;
@@ -8,9 +10,4 @@ export type MainNavItem = NavItem;
 
 export type NavBarTypes = {
   mainNav: MainNavItem[];
-};
-
-export type FooterNavItem = {
-  title: string;
-  items: NavItem[];
 };

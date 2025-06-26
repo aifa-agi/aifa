@@ -1,7 +1,7 @@
 // @/app/@right/default.tsx
 
 import { NavBar } from "./(_service)/(_components)/navbar";
-import { SiteFooter } from "./(_service)/(_components)/site-footer";
+import { Footer } from "./(_service)/(_components)/footer";
 import RightDefault from "./(components)/right-default";
 
 export default function Default() {
@@ -11,7 +11,7 @@ export default function Default() {
         <NavBar scroll={true} />
         <main className="flex-1 overflow-y-auto hide-scrollbar px-4">
           <RightDefault />
-          <SiteFooter />
+          <Footer />
         </main>
       </div>
     </>
