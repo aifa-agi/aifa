@@ -13,7 +13,7 @@ export default function RightLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-svh pb-6">
+    <div className="flex flex-col h-svh pb-6">
       <NavBar scroll={true} />
       <main className="flex-1 overflow-y-auto hide-scrollbar px-4">
         {Children.toArray(children)}
