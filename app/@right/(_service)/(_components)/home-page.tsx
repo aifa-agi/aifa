@@ -1,7 +1,7 @@
 // @/app/@right/default.tsx
 "use client";
 
-import { useTranslation } from "../(_service)/(_libs)/translation";
+import { useTranslation } from "../(_libs)/translation";
 
 export default function HomePage() {
   const { t } = useTranslation();
