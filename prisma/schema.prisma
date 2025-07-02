@@ -30,6 +30,7 @@ enum UserType {
   authUser
   subscriber
   customer
+  apiUser
 }
 
 // Модели для NextAuth/Auth.js

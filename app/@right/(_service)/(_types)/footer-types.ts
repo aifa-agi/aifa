@@ -7,7 +7,8 @@ export type UserType =
   | "editor"
   | "authUser"
   | "subscriber"
-  | "customer";
+  | "customer"
+  | "apiUser";
 
 export type NavItem = {
   title: string;
