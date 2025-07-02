@@ -1,6 +1,6 @@
 // @/app/@right/(_service)/(_config)/nav-bar-config.ts
 
-import type { NavItem, UserType } from "../(_types)/nav-bar-types";
+import type { NavItem } from "../(_types)/nav-bar-types";
 
 export const navBarPublicConfig = {
   mainNav: [
