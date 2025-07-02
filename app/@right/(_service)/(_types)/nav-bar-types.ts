@@ -1,13 +1,6 @@
 // @/app/@right/(_service)/(_types)/nav-bar-types.ts
 
-export type UserType =
-  | "guest"
-  | "architect"
-  | "admin"
-  | "editor"
-  | "authUser"
-  | "subscriber"
-  | "customer";
+import { UserType } from "@prisma/client";
 
 export type NavItem = {
   title: string;

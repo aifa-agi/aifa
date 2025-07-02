@@ -14,7 +14,7 @@ import {
 } from "../(_config)/nav-bar-config";
 import { appConfig } from "@/config/appConfig";
 import { useSession } from "next-auth/react";
-import type { UserType } from "../(_types)/nav-bar-types";
+import { UserType } from "@prisma/client";
 
 interface NavBarProps {
   scroll?: boolean;
