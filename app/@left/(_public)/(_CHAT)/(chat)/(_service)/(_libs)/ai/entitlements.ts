@@ -39,4 +39,8 @@ export const entitlementsByUserType: Record<UserType, Entitlements> = {
     maxMessagesPerDay: 100,
     availableChatModelIds: ["chat-model", "chat-model-reasoning"],
   },
+  apiUser: {
+    maxMessagesPerDay: 100,
+    availableChatModelIds: ["chat-model", "chat-model-reasoning"],
+  },
 };
