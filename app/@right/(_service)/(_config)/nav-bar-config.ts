@@ -5,8 +5,8 @@ import type { NavItem } from "../(_types)/nav-bar-types";
 export const navBarPublicConfig = {
   mainNav: [
     { title: "Home", href: "/" }, // доступно всем
-    { title: "Blog", href: "/blog" }, // доступно всем
-    { title: "Documentation", href: "/docs", roles: ["authUser", "admin"] },
+    { title: "Blog", href: "/public" }, // доступно всем
+    { title: "Documentation", href: "/public", roles: ["authUser", "admin"] },
   ] as NavItem[],
 };
 

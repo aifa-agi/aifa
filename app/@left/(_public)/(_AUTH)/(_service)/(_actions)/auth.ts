@@ -3,7 +3,6 @@
 import NextAuth, { type DefaultSession, type Profile } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserType } from "@prisma/client";
-import { z } from "zod";
 import { compare } from "bcrypt-ts";
 
 // Провайдеры
