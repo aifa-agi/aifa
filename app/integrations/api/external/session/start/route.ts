@@ -1,4 +1,4 @@
-// @/app/(_AUTH)/(auth)/(_server)/api/external/session/start/route.ts
+// @/app/integrations/api/external/session/start/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
