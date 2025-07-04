@@ -4,7 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { nanoid } from "nanoid";
 
-const redis = Redis.fromEnv();
+// Явная инициализация клиента с правильными переменными для HTTP REST API
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
 
 const SESSION_TTL_SECONDS = 60 * 60 * 4; // 4 часа
 
