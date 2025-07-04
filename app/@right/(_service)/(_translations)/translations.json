@@ -7,14 +7,17 @@
     "fr": "AIFA : La révolution de l'IA d'abord dans le développement web",
     "it": "AIFA: La rivoluzione AI-First nello sviluppo web"
   },
+  
   "evolvingAIAgentArchitecture": {
-    "ru": "AIFA: AI-агенты в эволюционирующей и самореплицирующейся архитектуре для разработки полностековых веб-приложений",
-    "en": "AIFA: AI Agents in an Evolving and Self-Replicating Architecture for full stack web app development",
-    "es": "AIFA: Agentes de IA en una arquitectura evolutiva y autorreplicante para el desarrollo de aplicaciones web full-stack",
-    "de": "AIFA: KI-Agenten in einer sich entwickelnden und selbstreplizierenden Architektur für die Entwicklung von Full-Stack-Webanwendungen",
-    "fr": "AIFA: Agents d'IA dans une architecture évolutive et auto-réplicative pour le développement d'applications web full-stack",
-    "it": "AIFA: Agenti AI in un'architettura in evoluzione e autoreplicante per lo sviluppo di applicazioni web full-stack"
-  },
+    "ru": "AIFA: Революционный интерфейс и AI-агенты в эволюционирующей и самореплицирующейся блокчейн-архитектуре для разработки полностековых веб-приложений",
+    "en": "AIFA: Revolution UI & AI Agents in an evolving, self-replicating blockchain architecture for full stack web app development",
+    "es": "AIFA: Interfaz Revolucionaria y Agentes de IA en una arquitectura blockchain evolutiva y autorreplicante para el desarrollo de aplicaciones web full-stack",
+    "de": "AIFA: Revolutionäre Benutzeroberfläche & KI-Agenten in einer sich entwickelnden, selbstreplizierenden Blockchain-Architektur für die Entwicklung von Full-Stack-Webanwendungen",
+    "fr": "AIFA : Interface Révolutionnaire et Agents d'IA dans une architecture blockchain évolutive et auto-réplicative pour le développement d'applications web full-stack",
+    "it": "AIFA: Interfaccia Rivoluzionaria e Agenti AI in un'architettura blockchain in evoluzione e autoreplicante per lo sviluppo di applicazioni web full-stack"
+  }
+
+,
   "welcomeGPL": {
     "ru": "Добро пожаловать на проект с открытым исходным кодом по лицензии GPL.",
     "en": "Welcome to the open-source project under the GPL license.",
