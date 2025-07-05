@@ -32,7 +32,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     session = await auth();
 
     if (!session) {
-      redirect("/api/auth/guest");
+      //redirect("/api/auth/guest");
+      redirect("/login");
     }
 
     // Проверяем приватность чата

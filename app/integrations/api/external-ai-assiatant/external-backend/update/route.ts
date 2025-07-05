@@ -8,16 +8,16 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-const SESSION_TTL_SECONDS = 60 * 60 * 4; // TTL как при создании
+const SESSION_TTL_SECONDS = 60 * 60 * 4;
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { session_id, authSecret, ...updateData } = body;
+    const { session_id, auth_secret, ...updateData } = body;
 
-    if (authSecret !== process.env.AUTH_SECRET) {
+    if (auth_secret !== process.env.NEXTAUTH_SECRET) {
       return NextResponse.json(
-        { error: "Unauthorized: invalid authSecret" },
+        { error: "Unauthorized: invalid auth_secret" },
         { status: 401 }
       );
     }

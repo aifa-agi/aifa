@@ -11,8 +11,8 @@ export async function GET(request: Request) {
 
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET,
-    secureCookie: !isDevelopmentEnvironment,
+    secret: process.env.NEXTAUTH_SECRET,
+    //secureCookie: !isDevelopmentEnvironment,
   });
   if (token) {
     return NextResponse.redirect(new URL("/", request.url));
