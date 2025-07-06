@@ -1,15 +1,17 @@
 // @/app/integrations/api/external-ai-assiatant/external-backend/start/route.ts
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getNextAuthUrl } from "@/lib/utils/get-next-auth-url";
 import { Redis } from "@upstash/redis";
+import { StartSessionSchema } from "../../_types/session";
+import { apiResponse } from "@/app/integrations/lib/api/response";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 const SESSION_TTL_SECONDS = 60 * 60 * 4;
-// Вспомогательная функция для извлечения sub (user id) из JWT
+
 function extractSubFromJWT(token: string): string | null {
   try {
     const payload = token.split(".")[1];
@@ -22,9 +24,30 @@ function extractSubFromJWT(token: string): string | null {
   }
 }
 
+function parseAvailableItems(
+  available_items: string | null | undefined
+): string[] | undefined {
+  if (!available_items) return undefined;
+  return available_items
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const json = await req.json();
+
+    // Валидация через zod
+    const parse = StartSessionSchema.safeParse(json);
+    if (!parse.success) {
+      return apiResponse({
+        success: false,
+        error: parse.error.issues,
+        message: "Validation error",
+        status: 400,
+      });
+    }
     const {
       user_id,
       name,
@@ -33,17 +56,18 @@ export async function POST(req: NextRequest) {
       user_info,
       purchase_history,
       available_products,
+      available_items,
       auth_secret,
-    } = body;
+    } = parse.data;
 
     if (auth_secret !== process.env.NEXTAUTH_SECRET) {
-      return NextResponse.json(
-        { error: "Unauthorized: invalid authSecret" },
-        { status: 401 }
-      );
+      return apiResponse({
+        success: false,
+        error: "Unauthorized: invalid auth_secret",
+        status: 401,
+      });
     }
 
-    // Только авторизация и возврат JWT, запись в Redis теперь централизована в auth.ts
     const nextAuthRes = await fetch(
       `${getNextAuthUrl()}/integrations/api/external-ai-assiatant/auth/signin/api`,
       {
@@ -55,22 +79,25 @@ export async function POST(req: NextRequest) {
 
     if (!nextAuthRes.ok) {
       const error = await nextAuthRes.json();
-      return NextResponse.json(
-        { error: "NextAuth error", details: error },
-        { status: 500 }
-      );
+      return apiResponse({
+        success: false,
+        error: error,
+        message: "NextAuth error",
+        status: 500,
+      });
     }
 
     const { token } = await nextAuthRes.json();
-
-    // Извлекаем sub (user id) из JWT
     const sub = extractSubFromJWT(token);
     if (!sub) {
-      return NextResponse.json(
-        { error: "Failed to extract user id from JWT" },
-        { status: 500 }
-      );
+      return apiResponse({
+        success: false,
+        error: "Failed to extract user id from JWT",
+        status: 500,
+      });
     }
+
+    const availableItemsArray = parseAvailableItems(available_items);
 
     const sessionData = {
       user_id,
@@ -80,6 +107,7 @@ export async function POST(req: NextRequest) {
       user_info,
       purchase_history,
       available_products,
+      available_items: availableItemsArray,
       createdAt: new Date().toISOString(),
     };
 
@@ -87,12 +115,19 @@ export async function POST(req: NextRequest) {
       ex: SESSION_TTL_SECONDS,
     });
 
-    return NextResponse.json({ success: true, session_id: sub, jwt: token });
+    return apiResponse({
+      success: true,
+      data: { session_id: sub, jwt: token },
+      message: "Session created",
+      status: 200,
+    });
   } catch (error) {
     console.error("Error in /external-backend/start:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return apiResponse({
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+      status: 500,
+      message: "Internal Server Error",
+    });
   }
 }
