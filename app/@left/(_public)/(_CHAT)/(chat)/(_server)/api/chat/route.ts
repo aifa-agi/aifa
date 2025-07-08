@@ -35,6 +35,7 @@ import { prisma } from "@/lib/db";
 import { Chat, Message, Prisma, UserType } from "@prisma/client";
 import { openai } from "@ai-sdk/openai";
 import { generateCuid } from "@/lib/utils/generateCuid";
+import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
 
 export const maxDuration = 60;
 
@@ -65,15 +66,12 @@ function getStreamContext() {
  * and stream AI-generated responses.
  */
 export async function POST(request: Request) {
-  console.log(
-    "// @/app/(chat)/api/chat/route.ts function POST request:",
-    request
-  );
+  const authHeader = request.headers.get("authorization");
+  console.log("Authorization header:", authHeader);
 
   let requestBody: PostRequestBody;
   try {
     const json = await request.json();
-    console.log("// @/app/(chat)/api/chat/route.ts function POST json:", json);
     requestBody = postRequestBodySchema.parse(json);
   } catch (e) {
     console.error("Zod parse error:", e);
@@ -88,17 +86,30 @@ export async function POST(request: Request) {
       selectedVisibilityType,
     } = requestBody;
 
-    // Authenticate user session
-    const session = await auth();
-    if (!session?.user) {
+    let session = await auth();
+
+    let token = request.headers.get("authorization");
+    const expires = new Date(Date.now() + 60 * 60 * 4000).toISOString();
+
+    if (!session && token) {
+      const sub = extractSubFromJWT(token);
+      session = {
+        user: {
+          id: sub || "",
+          type: "apiUser",
+        },
+        expires,
+      };
+    }
+
+    if (!session || session.user.id === "") {
       return new Response("Unauthorized", { status: 401 });
     }
+
     const userId = session.user.id;
-    const userType: UserType = session.user.type;
-    console.log(
-      "consile: // @/app/@left/(chat)/api/chat/route.ts userId: ",
-      userId
-    );
+    const userType = session.user.type;
+
+    // Теперь session всегда определён и его можно безопасно использовать далее
 
     // Count how many user messages they sent in last 24 hours
     const messageCount = await prisma.message.count({

@@ -30,37 +30,6 @@ declare module "next-auth" {
 }
 
 const providers: Provider[] = [
-  // --- API USER CREDENTIALS PROVIDER ---
-  Credentials({
-    id: "api",
-    name: "API User",
-    credentials: {
-      userId: { label: "User ID", type: "text", required: true },
-      name: { label: "Name", type: "text", required: false },
-    },
-    async authorize(credentials: any) {
-      const { userId, name } = credentials;
-
-      if (!userId) return null;
-
-      // Проверяем/создаём пользователя
-      let user = await prisma.user.findUnique({ where: { id: userId } });
-      if (!user) {
-        user = await prisma.user.create({
-          data: {
-            id: userId,
-            name: name || null,
-            type: "apiUser",
-          },
-        });
-      }
-      return {
-        id: user.id,
-        name: user.name,
-        type: user.type,
-      };
-    },
-  }),
   Credentials({
     credentials: {},
     async authorize({ email, password }: any) {

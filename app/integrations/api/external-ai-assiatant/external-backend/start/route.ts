@@ -5,24 +5,14 @@ import { getNextAuthUrl } from "@/lib/utils/get-next-auth-url";
 import { Redis } from "@upstash/redis";
 import { StartSessionSchema } from "../../_types/session";
 import { apiResponse } from "@/app/integrations/lib/api/response";
+import { createId } from "@paralleldrive/cuid2"; // Для генерации CUID2
+import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 const SESSION_TTL_SECONDS = 60 * 60 * 4;
-
-function extractSubFromJWT(token: string): string | null {
-  try {
-    const payload = token.split(".")[1];
-    const decoded = JSON.parse(
-      Buffer.from(payload, "base64").toString("utf-8")
-    );
-    return decoded.sub || null;
-  } catch {
-    return null;
-  }
-}
 
 function parseAvailableItems(
   available_items: string | null | undefined
@@ -68,6 +58,9 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const chatId = createId();
+    const messageId = createId();
+
     const nextAuthRes = await fetch(
       `${getNextAuthUrl()}/integrations/api/external-ai-assiatant/auth/signin/api`,
       {
@@ -99,6 +92,57 @@ export async function POST(req: NextRequest) {
 
     const availableItemsArray = parseAvailableItems(available_items);
 
+    const systemMessage = `ты ассистент искусственного интеллекта в ресторане который должен будет помогать пользователю по имени ${name || "Гость"}. Когда в следующий раз к тебе обратиться пользователь приветствуй его по этому имени.`;
+
+    const chatRequestBody = {
+      id: chatId,
+      message: {
+        id: messageId,
+        createdAt: new Date().toISOString(),
+        role: "assistant",
+        content: systemMessage,
+        parts: [
+          {
+            text: systemMessage,
+            type: "text",
+          },
+        ],
+      },
+      selectedChatModel: "chat-model",
+      selectedVisibilityType: "public",
+    };
+
+    const chatApiRes = await fetch(`${getNextAuthUrl()}/api/chat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(chatRequestBody),
+    });
+
+    let aiResponse: any = null;
+    const contentType = chatApiRes.headers.get("content-type");
+
+    if (!chatApiRes.ok) {
+      // Если ошибка, пробуем получить текст ошибки
+      const errorText = await chatApiRes.text();
+      return apiResponse({
+        success: false,
+        error: errorText,
+        message: "AI chat error",
+        status: 500,
+      });
+    }
+
+    if (contentType && contentType.includes("application/json")) {
+      aiResponse = await chatApiRes.json();
+    } else {
+      // Если не JSON, просто берём текст
+      aiResponse = await chatApiRes.text();
+    }
+
+    // 6. Сохраняем сессию в Redis
     const sessionData = {
       user_id,
       name,
@@ -109,6 +153,7 @@ export async function POST(req: NextRequest) {
       available_products,
       available_items: availableItemsArray,
       createdAt: new Date().toISOString(),
+      chatId,
     };
 
     await redis.set(`session:${sub}`, sessionData, {
@@ -117,12 +162,15 @@ export async function POST(req: NextRequest) {
 
     return apiResponse({
       success: true,
-      data: { session_id: sub, jwt: token },
-      message: "Session created",
+      data: {
+        session_id: sub,
+        jwt: token,
+        chatId,
+      },
+      message: "Session created and initial chat started",
       status: 200,
     });
   } catch (error) {
-    console.error("Error in /external-backend/start:", error);
     return apiResponse({
       success: false,
       error: error instanceof Error ? error.message : String(error),

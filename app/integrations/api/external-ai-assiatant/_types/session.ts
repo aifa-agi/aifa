@@ -43,3 +43,12 @@ export const UpdateSessionSchema = z.object({
 });
 
 export type UpdateSessionRequest = z.infer<typeof UpdateSessionSchema>;
+
+// Тип для ответа start/route
+export type StartSessionResponse = {
+  session_id: string;
+  jwt: string;
+  chatId: string;
+  messageId: string;
+  aiResponse: any;
+};

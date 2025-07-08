@@ -130,6 +130,10 @@ export function Chat({
     setMessages,
   });
 
+  useEffect(() => {
+    console.log("essages in chat txt ", messages);
+  }, [messages]);
+
   return (
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
