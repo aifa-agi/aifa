@@ -1,0 +1,431 @@
+{
+  "Use your email and password to log in": {
+    "en": "Use your email and password to log in",
+    "es": "Usa tu correo electrónico y contraseña para iniciar sesión",
+    "de": "Verwenden Sie Ihre E-Mail-Adresse und Ihr Passwort, um sich anzumelden",
+    "fr": "Utilisez votre e-mail et votre mot de passe pour vous connecter",
+    "it": "Usa la tua email e password per accedere",
+    "ru": "Используйте email и пароль для входа"
+  },
+  "Enter": {
+  "en": "Log in",
+  "es": "Iniciar sesión",
+  "de": "Anmelden",
+  "fr": "Se connecter",
+  "it": "Accedi",
+  "ru": "Войти"
+},
+"Sign out": {
+    "en": "Sign out",
+    "es": "Cerrar sesión",
+    "de": "Abmelden",
+    "fr": "Déconnexion",
+    "it": "Disconnetti",
+    "ru": "Выйти"
+  },
+  "Don't have an account yet?": {
+    "en": "Don't have an account yet?",
+    "es": "¿Aún no tienes una cuenta?",
+    "de": "Sie haben noch kein Konto?",
+    "fr": "Vous n'avez pas encore de compte ?",
+    "it": "Non hai ancora un account?",
+    "ru": "Еще нет аккаунта?"
+  },
+  "Sign up": {
+    "en": "Sign up",
+    "es": "Registrarse",
+    "de": "Registrieren",
+    "fr": "S'inscrire",
+    "it": "Registrati",
+    "ru": "Зарегистрироваться"
+  },
+  "The page was not found. Go back to the main page.": {
+    "en": "The page was not found. Go back to the main page.",
+    "es": "La página no fue encontrada. Vuelve a la página principal.",
+    "de": "Die Seite wurde nicht gefunden. Gehe zurück zur Hauptseite.",
+    "fr": "La page n'a pas été trouvée. Retournez à la page principale.",
+    "it": "La pagina non è stata trovata. Torna alla pagina principale.",
+    "ru": "Страница не найдена. Вернитесь на главную страницу."
+  },
+  "Home page": {
+    "en": "Home page",
+    "es": "Página principal",
+    "de": "Startseite",
+    "fr": "Page d'accueil",
+    "it": "Pagina principale",
+    "ru": "Главная страница"
+  },
+  "Invalid credentials!": {
+    "en": "Invalid credentials!",
+    "es": "¡Credenciales inválidas!",
+    "de": "Ungültige Zugangsdaten!",
+    "fr": "Identifiants invalides !",
+    "it": "Credenziali non valide!",
+    "ru": "Неверные учетные данные!"
+  },
+  "Form validation error!": {
+    "en": "Form validation error!",
+    "es": "¡Error de validación del formulario!",
+    "de": "Formularvalidierungsfehler!",
+    "fr": "Erreur de validation du formulaire !",
+    "it": "Errore di validazione del modulo!",
+    "ru": "Ошибка валидации формы!"
+  },
+"The account already exists!": {
+    "en": "The account already exists!",
+    "es": "¡La cuenta ya existe!",
+    "de": "Das Konto existiert bereits!",
+    "fr": "Le compte existe déjà !",
+    "it": "L'account esiste già!",
+    "ru": "Аккаунт уже существует!"
+  },
+  "Failed to create an account!": {
+    "en": "Failed to create an account!",
+    "es": "¡No se pudo crear la cuenta!",
+    "de": "Konto konnte nicht erstellt werden!",
+    "fr": "Échec de la création du compte !",
+    "it": "Impossibile creare l'account!",
+    "ru": "Не удалось создать аккаунт!"
+  },
+  "failed": {
+    "en": "failed",
+    "es": "fallido",
+    "de": "fehlgeschlagen",
+    "fr": "échoué",
+    "it": "fallito",
+    "ru": "ошибка"
+  },
+  "forbidden_email": {
+    "en": "forbidden_email",
+    "es": "correo_prohibido",
+    "de": "verbotene_email",
+    "fr": "email_interdite",
+    "it": "email_vietata",
+    "ru": "запрещённый_email"
+  },
+  "Registration with such an email is prohibited.": {
+    "en": "Registration with such an email is prohibited.",
+    "es": "El registro con este correo electrónico está prohibido.",
+    "de": "Die Registrierung mit dieser E-Mail ist verboten.",
+    "fr": "L'inscription avec cet e-mail est interdite.",
+    "it": "La registrazione con questa email è vietata.",
+    "ru": "Регистрация с таким email запрещена."
+  },
+  "Data validation error!": {
+    "en": "Data validation error!",
+    "es": "¡Error de validación de datos!",
+    "de": "Datenvalidierungsfehler!",
+    "fr": "Erreur de validation des données !",
+    "it": "Errore di validazione dei dati!",
+    "ru": "Ошибка проверки данных!"
+  },
+  "Account has been successfully created!": {
+    "en": "Account has been successfully created!",
+    "es": "¡La cuenta se ha creado con éxito!",
+    "de": "Das Konto wurde erfolgreich erstellt!",
+    "fr": "Le compte a été créé avec succès !",
+    "it": "L'account è stato creato con successo!",
+    "ru": "Аккаунт успешно создан!"
+  },
+  "Registration": {
+    "en": "Registration",
+    "es": "Registro",
+    "de": "Registrierung",
+    "fr": "Inscription",
+    "it": "Registrazione",
+    "ru": "Регистрация"
+  },
+  "Create an account using email and password": {
+    "en": "Create an account using email and password",
+    "es": "Crea una cuenta usando correo electrónico y contraseña",
+    "de": "Erstellen Sie ein Konto mit E-Mail und Passwort",
+    "fr": "Créez un compte avec e-mail et mot de passe",
+    "it": "Crea un account usando email e password",
+    "ru": "Создайте аккаунт с помощью email и пароля"
+  },
+  "Do you already have an account?": {
+    "en": "Do you already have an account?",
+    "es": "¿Ya tienes una cuenta?",
+    "de": "Haben Sie bereits ein Konto?",
+    "fr": "Avez-vous déjà un compte ?",
+    "it": "Hai già un account?",
+    "ru": "У вас уже есть аккаунт?"
+  },
+  "instead of that.": {
+    "en": "instead of that.",
+    "es": "en vez de eso.",
+    "de": "stattdessen.",
+    "fr": "au lieu de cela.",
+    "it": "invece di quello.",
+    "ru": "вместо этого."
+  },
+  "Email": {
+    "en": "Email",
+    "es": "Correo electrónico",
+    "de": "E-Mail",
+    "fr": "E-mail",
+    "it": "E-mail",
+    "ru": "Электронная почта"
+  },
+  "your.email@example.com": {
+    "en": "your.email@example.com",
+    "es": "tu.email@ejemplo.com",
+    "de": "deine.email@beispiel.com",
+    "fr": "votre.email@exemple.com",
+    "it": "tua.email@esempio.com",
+    "ru": "vash.email@primer.com"
+  },
+  "Password": {
+    "en": "Password",
+    "es": "Contraseña",
+    "de": "Passwort",
+    "fr": "Mot de passe",
+    "it": "Password",
+    "ru": "Пароль"
+  },
+  "Logging in...": {
+    "en": "Logging in...",
+    "es": "Iniciando sesión...",
+    "de": "Anmelden...",
+    "fr": "Connexion en cours...",
+    "it": "Accesso in corso...",
+    "ru": "Выполняется вход..."
+  },
+  "Login": {
+    "en": "Login",
+    "es": "Iniciar sesión",
+    "de": "Anmelden",
+    "fr": "Se connecter",
+    "it": "Accedi",
+    "ru": "Войти"
+  },
+  "Or": {
+    "en": "Or",
+    "es": "O",
+    "de": "Oder",
+    "fr": "Ou",
+    "it": "O",
+    "ru": "Или"
+  },
+  "Entering as Guest...": {
+    "en": "Entering as Guest...",
+    "es": "Entrando como invitado...",
+    "de": "Als Gast eintreten...",
+    "fr": "Entrée en tant qu'invité...",
+    "it": "Entrando come ospite...",
+    "ru": "Вход в качестве гостя..."
+  },
+  "Continue as Guest": {
+    "en": "Continue as Guest",
+    "es": "Continuar como invitado",
+    "de": "Als Gast fortfahren",
+    "fr": "Continuer en tant qu'invité",
+    "it": "Continua come ospite",
+    "ru": "Продолжить как гость"
+  },
+  "Something went wrong!": {
+    "en": "Something went wrong!",
+    "es": "¡Algo salió mal!",
+    "de": "Etwas ist schief gelaufen!",
+    "fr": "Quelque chose s'est mal passé!",
+    "it": "Qualcosa è andato storto!",
+    "ru": "Что-то пошло не так!"
+  },
+  "Guest login failed!": {
+    "en": "Guest login failed!",
+    "es": "¡El inicio de sesión de invitado falló!",
+    "de": "Gast-Login fehlgeschlagen!",
+    "fr": "La connexion invité a échoué !",
+    "it": "Accesso ospite fallito!",
+    "ru":"Не удалось войти как гость!"
+  },
+
+  
+  "Email Address": {
+    "en": "Email Address",
+    "es": "Dirección de correo electrónico",
+    "de": "E-Mail-Adresse",
+    "fr": "Adresse e-mail",
+    "it": "Indirizzo email",
+    "ru": "Адрес электронной почты"
+  },
+  "user@acme.com": {
+    "en": "user@acme.com",
+    "es": "usuario@acme.com",
+    "de": "benutzer@acme.com",
+    "fr": "utilisateur@acme.com",
+    "it": "utente@acme.com",
+    "ru": "user@acme.com"
+  },
+  "Authorization": {
+    "en": "Authorization",
+    "es": "Autorización",
+    "de": "Autorisierung",
+    "fr": "Autorisation",
+    "it": "Autorizzazione",
+    "ru": "Авторизация"
+  },
+  
+ "Sign in with one of the providers": {
+    "en": "Sign in with one of the providers",
+    "es": "Inicie sesión con uno de los proveedores",
+    "de": "Melden Sie sich mit einem der Anbieter an",
+    "fr": "Connectez-vous avec l'un des fournisseurs",
+    "it": "Accedi con uno dei provider",
+    "ru": "Войдите с помощью одного из провайдеров"
+  },
+  "Need privileged access?": {
+    "en": "Need privileged access?",
+    "es": "¿Necesita acceso privilegiado?",
+    "de": "Benötigen Sie privilegierten Zugriff?",
+    "fr": "Besoin d'un accès privilégié ?",
+    "it": "Necessita di un accesso privilegiato?",
+    "ru": "Нужен привилегированный доступ?"
+  },
+  
+ "Need standard access?": {
+    "en": "Need standard access?",
+    "es": "¿Necesita acceso estándar?",
+    "de": "Benötigen Sie Standardzugriff?",
+    "fr": "Besoin d'un accès standard ?",
+    "it": "Necessita di un accesso standard?",
+    "ru": "Нужен обычный доступ?"
+  }
+  ,
+  
+ "Privileged Access": {
+    "en": "Privileged Access",
+    "es": "Acceso Privilegiado",
+    "de": "Privilegierter Zugriff",
+    "fr": "Accès Privilégié",
+    "it": "Accesso Privilegiato",
+    "ru": "Привилегированный доступ"
+  },
+  
+ "Access for architects, administrators, and editors": {
+    "en": "Access for architects, administrators, and editors",
+    "es": "Acceso para arquitectos, administradores y editores",
+    "de": "Zugriff für Architekten, Administratoren und Redakteure",
+    "fr": "Accès pour les architectes, administrateurs et éditeurs",
+    "it": "Accesso per architetti, amministratori ed editori",
+    "ru": "Доступ для архитекторов, администраторов и редакторов"
+  }
+,
+"Or continue with": {
+  "en": "Or continue with",
+  "es": "O continuar con",
+  "de": "Oder fortfahren mit",
+  "fr": "Ou continuer avec",
+  "it": "Oppure continua con",
+  "ru": "Или продолжить с"
+},
+"Sign-in link sent to": {
+  "en": "Sign-in link sent to",
+  "es": "Enlace de acceso enviado a",
+  "de": "Anmeldelink gesendet an",
+  "fr": "Lien de connexion envoyé à",
+  "it": "Link di accesso inviato a",
+  "ru": "Ссылка для входа отправлена на"
+},
+"Failed to send the link. Please try again later.": {
+  "en": "Failed to send the link. Please try again later.",
+  "es": "No se pudo enviar el enlace. Por favor, inténtelo de nuevo más tarde.",
+  "de": "Link konnte nicht gesendet werden. Bitte versuchen Sie es später noch einmal.",
+  "fr": "Impossible d'envoyer le lien. Veuillez réessayer plus tard.",
+  "it": "Impossibile inviare il link. Riprova più tardi.",
+  "ru": "Не удалось отправить ссылку. Попробуйте позже."
+},
+"Please check your email,": {
+  "en": "Please check your email,",
+  "es": "Por favor, revise su correo electrónico,",
+  "de": "Bitte überprüfen Sie Ihre E-Mails,",
+  "fr": "Veuillez vérifier votre e-mail,",
+  "it": "Controlla la tua email,",
+  "ru": "Пожалуйста, проверьте свою почту,"
+},
+"Also, check your SPAM folder.": {
+  "en": "Also, check your SPAM folder.",
+  "es": "Además, revise su carpeta de SPAM.",
+  "de": "Überprüfen Sie auch Ihren SPAM-Ordner.",
+  "fr": "Vérifiez également votre dossier SPAM.",
+  "it": "Controlla anche la cartella SPAM.",
+  "ru": "Также проверьте папку СПАМ."
+}
+,
+"Architect": {
+  "en": "Architect",
+  "es": "Arquitecto",
+  "de": "Architekt",
+  "fr": "Architecte",
+  "it": "Architetto",
+  "ru": "архитектор"
+},
+"администратор": {
+  "en": "Administrator",
+  "es": "Administrador",
+  "de": "Administrator",
+  "fr": "Administrateur",
+  "it": "Amministratore",
+  "ru": "администратор"
+},
+"редактор": {
+  "en": "Editor",
+  "es": "Editor",
+  "de": "Redakteur",
+  "fr": "Éditeur",
+  "it": "Editore",
+  "ru": "редактор"
+}  
+,
+"Input password for": {
+  "en": "Input password for",
+  "es": "Introduzca la contraseña para",
+  "de": "Passwort eingeben für",
+  "fr": "Saisissez le mot de passe pour",
+  "it": "Inserisci la password per",
+  "ru": "Введите пароль для"
+}
+,
+"Login successful!": {
+  "en": "Login successful!",
+  "es": "¡Inicio de sesión exitoso!",
+  "de": "Anmeldung erfolgreich!",
+  "fr": "Connexion réussie !",
+  "it": "Accesso effettuato con successo!",
+  "ru": "Вход выполнен успешно!"
+}
+,
+"ByClickingContinueYouAgreeToOur": {
+    "en": "By clicking continue, you agree to our",
+    "es": "Al hacer clic en continuar, aceptas nuestros",
+    "de": "Durch Klicken auf Weiter stimmst du unseren",
+    "fr": "En cliquant sur continuer, vous acceptez nos",
+    "it": "Cliccando su continua, accetti i nostri",
+    "ru": "Нажимая продолжить, вы соглашаетесь с нашими"
+  },
+  "TermsOfService": {
+    "en": "Terms of Service",
+    "es": "Términos de Servicio",
+    "de": "Nutzungsbedingungen",
+    "fr": "Conditions d'utilisation",
+    "it": "Termini di Servizio",
+    "ru": "Условиями использования"
+  },
+  "and": {
+    "en": "and",
+    "es": "y",
+    "de": "und",
+    "fr": "et",
+    "it": "e",
+    "ru": "и"
+  },
+  "PrivacyPolicy": {
+    "en": "Privacy Policy",
+    "es": "Política de Privacidad",
+    "de": "Datenschutzrichtlinie",
+    "fr": "Politique de confidentialité",
+    "it": "Informativa sulla Privacy",
+    "ru": "Политикой конфиденциальности"
+  }
+
+}

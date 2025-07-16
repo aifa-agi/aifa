@@ -1,0 +1,1733 @@
+{
+  "heroTitle": {
+    "ru": "AIFA: AI-первый переворот в веб-разработке",
+    "en": "AIFA: The AI-First Revolution in Web Development",
+    "es": "AIFA: La primera revolución de la IA en el desarrollo web",
+    "de": "AIFA: Die KI-zuerst-Revolution in der Webentwicklung",
+    "fr": "AIFA : La révolution de l'IA d'abord dans le développement web",
+    "it": "AIFA: La rivoluzione AI-First nello sviluppo web"
+  },
+  
+  "evolvingAIAgentArchitecture": {
+    "ru": "AIFA: Революционный интерфейс и AI-агенты в эволюционирующей и самореплицирующейся блокчейн-архитектуре для разработки полностековых веб-приложений",
+    "en": "AIFA: Revolution UI & AI Agents in an evolving, self-replicating blockchain architecture for full stack web app development",
+    "es": "AIFA: Interfaz Revolucionaria y Agentes de IA en una arquitectura blockchain evolutiva y autorreplicante para el desarrollo de aplicaciones web full-stack",
+    "de": "AIFA: Revolutionäre Benutzeroberfläche & KI-Agenten in einer sich entwickelnden, selbstreplizierenden Blockchain-Architektur für die Entwicklung von Full-Stack-Webanwendungen",
+    "fr": "AIFA : Interface Révolutionnaire et Agents d'IA dans une architecture blockchain évolutive et auto-réplicative pour le développement d'applications web full-stack",
+    "it": "AIFA: Interfaccia Rivoluzionaria e Agenti AI in un'architettura blockchain in evoluzione e autoreplicante per lo sviluppo di applicazioni web full-stack"
+  }
+
+,
+  "welcomeGPL": {
+    "ru": "Добро пожаловать на проект с открытым исходным кодом по лицензии GPL.",
+    "en": "Welcome to the open-source project under the GPL license.",
+    "es": "Bienvenido al proyecto de código abierto bajo la licencia GPL.",
+    "de": "Willkommen beim Open-Source-Projekt unter der GPL-Lizenz.",
+    "fr": "Bienvenue sur le projet open-source sous licence GPL.",
+    "it": "Benvenuti nel progetto open-source con licenza GPL."
+  },
+  "useChatbotForInfo": {
+    "ru": "Используйте чат-бот, чтобы больше узнать об AIFA.",
+    "en": "Use the chatbot to learn more about AIFA.",
+    "es": "Usa el chatbot para aprender más sobre AIFA.",
+    "de": "Nutzen Sie den Chatbot, um mehr über AIFA zu erfahren.",
+    "fr": "Utilisez le chatbot pour en savoir plus sur AIFA.",
+    "it": "Usa la chatbot per saperne di più su AIFA."
+  },
+  "joinTheAction": {
+    "ru": "Присоединяйтесь, будет жарко!",
+    "en": "Join in, things are about to get intense!",
+    "es": "¡Únete, esto se va a poner intenso!",
+    "de": "Mach mit, es wird heiß hergehen!",
+    "fr": "Rejoignez-nous, ça va être chaud !",
+    "it": "Unisciti a noi, l'atmosfera si sta surriscaldando!"
+  },
+  "heroTagline": {
+    "ru": "Перестаньте создавать сайты. Начинайте создавать интеллектуальные впечатления.",
+    "en": "Stop building websites. Start building intelligent experiences.",
+    "es": "Deje de crear sitios web. Empiece a crear experiencias inteligentes.",
+    "de": "Hören Sie auf, Websites zu erstellen. Beginnen Sie, intelligente Erlebnisse zu schaffen.",
+    "fr": "Arrêtez de créer des sites web. Commencez à créer des expériences intelligentes.",
+    "it": "Smetti di creare siti web. Inizia a creare esperienze intelligenti."
+  },
+  "heroDescription": {
+    "ru": "AIFA — это не просто ещё один конструктор сайтов, это будущее веб-разработки, где ИИ становится вашим основным интерфейсом, а традиционные сайты — вспомогательной визуализацией. Пока другие догоняют вчерашние технологии, вы создаёте приложения завтрашнего дня.",
+    "en": "AIFA is not just another website builder; it's the future of web development, where AI becomes your primary interface and traditional sites are a secondary visualization. While others catch up with yesterday's technology, you are building tomorrow's applications.",
+    "es": "AIFA no es solo otro constructor de sitios web; es el futuro del desarrollo web, donde la IA se convierte en su interfaz principal y los sitios tradicionales son una visualización secundaria. Mientras otros se ponen al día con la tecnología de ayer, usted está construyendo las aplicaciones del mañana.",
+    "de": "AIFA ist nicht nur ein weiterer Website-Baukasten; es ist die Zukunft der Webentwicklung, in der KI zu Ihrer primären Schnittstelle wird und traditionelle Websites eine sekundäre Visualisierung darstellen. Während andere die Technologie von gestern aufholen, bauen Sie die Anwendungen von morgen.",
+    "fr": "AIFA n'est pas juste un autre constructeur de sites web ; c'est l'avenir du développement web, où l'IA devient votre interface principale et les sites traditionnels une visualisation secondaire. Pendant que d'autres rattrapent la technologie d'hier, vous construisez les applications de demain.",
+    "it": "AIFA non è solo un altro costruttore di siti web; è il futuro dello sviluppo web, in cui l'IA diventa la tua interfaccia principale e i siti tradizionali una visualizzazione secondaria. Mentre gli altri si adeguano alla tecnologia di ieri, tu stai costruendo le applicazioni di domani."
+  },
+  "paradigmShiftTitle": {
+    "ru": "Парадигмальный сдвиг: почему AI-первый подход меняет всё",
+    "en": "The Paradigm Shift: Why the AI-First Approach Changes Everything",
+    "es": "El cambio de paradigma: por qué el enfoque AI-First lo cambia todo",
+    "de": "Der Paradigmenwechsel: Warum der AI-First-Ansatz alles verändert",
+    "fr": "Le changement de paradigme : pourquoi l'approche AI-First change tout",
+    "it": "Il cambio di paradigma: perché l'approccio AI-First cambia tutto"
+  },
+  "modernWebProblemTitle": {
+    "ru": "Проблема современного веб-разработки",
+    "en": "The Problem with Modern Web Development",
+    "es": "El problema del desarrollo web moderno",
+    "de": "Das Problem der modernen Webentwicklung",
+    "fr": "Le problème du développement web moderne",
+    "it": "Il problema dello sviluppo web moderno"
+  },
+  "traditionalWebProblemPart1": {
+    "ru": "Традиционные сайты нарушены. Пользователи не хотят блуждать по бесконечным меню, искать на страницах или подстраиваться под ваш интерфейс. Они хотят ",
+    "en": "Traditional websites are broken. Users don't want to wander through endless menus, search pages, or adapt to your interface. They want to ",
+    "es": "Los sitios web tradicionales están rotos. Los usuarios no quieren deambular por menús interminables, buscar en páginas o adaptarse a su interfaz. Quieren ",
+    "de": "Traditionelle Websites sind kaputt. Benutzer wollen nicht durch endlose Menüs wandern, Seiten durchsuchen oder sich an Ihre Benutzeroberfläche anpassen. Sie wollen ",
+    "fr": "Les sites web traditionnels sont cassés. Les utilisateurs ne veulent pas errer dans des menus sans fin, chercher sur des pages ou s'adapter à votre interface. Ils veulent ",
+    "it": "I siti web tradizionali sono rotti. Gli utenti non vogliono vagare per menu infiniti, cercare pagine o adattarsi alla tua interfaccia. Vogliono "
+  },
+  "askAndReceive": {
+    "ru": "задавать вопросы и получать ответы",
+    "en": "ask questions and get answers",
+    "es": "hacer preguntas y obtener respuestas",
+    "de": "Fragen stellen und Antworten erhalten",
+    "fr": "poser des questions et obtenir des réponses",
+    "it": "fare domande e ottenere risposte"
+  },
+  "traditionalWebProblemPart2": {
+    "ru": ". Они хотят ",
+    "en": ". They want to ",
+    "es": ". Quieren ",
+    "de": ". Sie wollen ",
+    "fr": ". Ils veulent ",
+    "it": ". Vogliono "
+  },
+  "expressNeeds": {
+    "ru": "выражать свои потребности и получать их удовлетворение",
+    "en": "express their needs and have them met",
+    "es": "expresar sus necesidades y que se las satisfagan",
+    "de": "ihre Bedürfnisse äußern und sie erfüllt bekommen",
+    "fr": "exprimer leurs besoins et les voir satisfaits",
+    "it": "esprimere i loro bisogni e vederli soddisfatti"
+  },
+  "traditionalWebProblemPart3": {
+    "ru": ". Им нужна беседа, а не навигация.",
+    "en": ". They need a conversation, not navigation.",
+    "es": ". Necesitan una conversación, no navegación.",
+    "de": ". Sie brauchen eine Konversation, keine Navigation.",
+    "fr": ". Ils ont besoin d'une conversation, pas de navigation.",
+    "it": ". Hanno bisogno di una conversazione, non di navigazione."
+  },
+  "toolsCritique": {
+    "ru": "Даже V0 и похожие инструменты, будучи инновационными, всё ещё мыслят интерфейсом в первую очередь, а ИИ — во вторую. Они помогают создавать лучшие сайты, но не меняют фундаментально взаимодействие пользователей с продуктом.",
+    "en": "Even V0 and similar tools, while innovative, still think interface-first and AI-second. They help create better websites but don't fundamentally change how users interact with the product.",
+    "es": "Incluso V0 y herramientas similares, aunque innovadoras, todavía piensan primero en la interfaz y segundo en la IA. Ayudan a crear mejores sitios web, pero no cambian fundamentalmente la forma en que los usuarios interactúan con el producto.",
+    "de": "Selbst V0 und ähnliche Tools denken, obwohl innovativ, immer noch Interface-first und AI-second. Sie helfen dabei, bessere Websites zu erstellen, ändern aber nicht grundlegend, wie Benutzer mit dem Produkt interagieren.",
+    "fr": "Même V0 et les outils similaires, bien qu'innovants, pensent toujours à l'interface en premier et à l'IA en second. Ils aident à créer de meilleurs sites web mais ne changent pas fondamentalement la façon dont les utilisateurs interagissent avec le produit.",
+    "it": "Anche V0 e strumenti simili, sebbene innovativi, pensano ancora prima all'interfaccia e poi all'IA. Aiutano a creare siti web migliori ma non cambiano fondamentalmente il modo in cui gli utenti interagiscono con il prodotto."
+  },
+  "aifaRevolutionTitle": {
+    "ru": "Революционный подход AIFA: AI-первичная архитектура",
+    "en": "The AIFA Revolution: AI-First Architecture",
+    "es": "La revolución de AIFA: Arquitectura AI-First",
+    "de": "Die AIFA-Revolution: AI-First-Architektur",
+    "fr": "La révolution AIFA : Architecture AI-First",
+    "it": "La rivoluzione AIFA: Architettura AI-First"
+  },
+  "aifaParadigmFlip": {
+    "ru": "AIFA переворачивает эту парадигму полностью:",
+    "en": "AIFA flips this paradigm completely:",
+    "es": "AIFA invierte este paradigma por completo:",
+    "de": "AIFA dreht dieses Paradigma komplett um:",
+    "fr": "AIFA renverse complètement ce paradigme :",
+    "it": "AIFA ribalta completamente questo paradigma:"
+  },
+  "leftSideTitle": {
+    "ru": "Левая сторона = Основной интерфейс (чатбот ИИ)",
+    "en": "Left Side = Primary Interface (AI Chatbot)",
+    "es": "Lado izquierdo = Interfaz principal (chatbot de IA)",
+    "de": "Linke Seite = Primäre Schnittstelle (KI-Chatbot)",
+    "fr": "Côté gauche = Interface principale (Chatbot IA)",
+    "it": "Lato sinistro = Interfaccia principale (Chatbot AI)"
+  },
+  "leftSidePoint1": {
+    "ru": "40% экрана на десктопе",
+    "en": "40% of the screen on desktop",
+    "es": "40% de la pantalla en el escritorio",
+    "de": "40% des Bildschirms auf dem Desktop",
+    "fr": "40% de l'écran sur ordinateur",
+    "it": "40% dello schermo su desktop"
+  },
+  "leftSidePoint2": {
+    "ru": "По умолчанию на мобильных",
+    "en": "Default on mobile",
+    "es": "Predeterminado en dispositivos móviles",
+    "de": "Standard auf dem Handy",
+    "fr": "Par défaut sur mobile",
+    "it": "Predefinito su mobile"
+  },
+  "leftSidePoint3": {
+    "ru": "Основная точка взаимодействия для ВСЕХ пользователей",
+    "en": "The main point of interaction for ALL users",
+    "es": "El punto principal de interacción para TODOS los usuarios",
+    "de": "Der Hauptinteraktionspunkt für ALLE Benutzer",
+    "fr": "Le principal point d'interaction pour TOUS les utilisateurs",
+    "it": "Il punto principale di interazione per TUTTI gli utenti"
+  },
+  "leftSidePoint4": {
+    "ru": "Ваша бизнес-аналитика в формате беседы",
+    "en": "Your business analytics in a conversational format",
+    "es": "Sus análisis de negocio en formato conversacional",
+    "de": "Ihre Geschäftsanalysen im Konversationsformat",
+    "fr": "Vos analyses commerciales dans un format conversationnel",
+    "it": "Le tue analisi di business in formato conversazionale"
+  },
+  "rightSideTitle": {
+    "ru": "Правая сторона = Визуальная поддержка (веб-приложение)",
+    "en": "Right Side = Visual Support (Web Application)",
+    "es": "Lado derecho = Soporte visual (Aplicación web)",
+    "de": "Rechte Seite = Visuelle Unterstützung (Webanwendung)",
+    "fr": "Côté droit = Support visuel (Application web)",
+    "it": "Lato destro = Supporto visivo (Applicazione Web)"
+  },
+  "rightSidePoint1": {
+    "ru": "Вспомогательная визуализация решений ИИ",
+    "en": "Auxiliary visualization of AI decisions",
+    "es": "Visualización auxiliar de las decisiones de la IA",
+    "de": "Zusätzliche Visualisierung von KI-Entscheidungen",
+    "fr": "Visualisation auxiliaire des décisions de l'IA",
+    "it": "Visualizzazione ausiliaria delle decisioni dell'IA"
+  },
+  "rightSidePoint2": {
+    "ru": "Динамический контент, отвечающий на взаимодействия в чате",
+    "en": "Dynamic content that responds to chat interactions",
+    "es": "Contenido dinámico que responde a las interacciones del chat",
+    "de": "Dynamischer Inhalt, der auf Chat-Interaktionen reagiert",
+    "fr": "Contenu dynamique qui répond aux interactions du chat",
+    "it": "Contenuto dinamico che risponde alle interazioni della chat"
+  },
+  "rightSidePoint3": {
+    "ru": "Традиционные UI-элементы как дополнения",
+    "en": "Traditional UI elements as add-ons",
+    "es": "Elementos de interfaz de usuario tradicionales como complementos",
+    "de": "Traditionelle UI-Elemente als Add-ons",
+    "fr": "Éléments d'interface utilisateur traditionnels en tant que compléments",
+    "it": "Elementi UI tradizionali come componenti aggiuntivi"
+  },
+  "rethinkingInteraction": {
+    "ru": "Это не просто дизайн, это фундаментальное переосмысление взаимодействия человека с цифровыми продуктами.",
+    "en": "This isn't just design; it's a fundamental rethinking of human interaction with digital products.",
+    "es": "Esto no es solo diseño; es una reconsideración fundamental de la interacción humana con los productos digitales.",
+    "de": "Das ist nicht nur Design; es ist ein grundlegendes Umdenken der menschlichen Interaktion mit digitalen Produkten.",
+    "fr": "Ce n'est pas seulement du design ; c'est une refonte fondamentale de l'interaction humaine avec les produits numériques.",
+    "it": "Questo non è solo design; è un ripensamento fondamentale dell'interazione umana con i prodotti digitali."
+  },
+  "syncTitle": {
+    "ru": "Синхронизация, меняющая всё",
+    "en": "The Sync That Changes Everything",
+    "es": "La sincronización que lo cambia todo",
+    "de": "Die Synchronisierung, die alles verändert",
+    "fr": "La synchronisation qui change tout",
+    "it": "La sincronizzazione che cambia tutto"
+  },
+  "syncDescription": {
+    "ru": "Вот что делает AIFA по-настоящему революционным: ",
+    "en": "Here's what makes AIFA truly revolutionary: ",
+    "es": "Esto es lo que hace que AIFA sea verdaderamente revolucionario: ",
+    "de": "Das macht AIFA wirklich revolutionär: ",
+    "fr": "Voici ce qui rend AIFA vraiment révolutionnaire : ",
+    "it": "Ecco cosa rende AIFA veramente rivoluzionario: "
+  },
+  "perfectSync": {
+    "ru": "Идеальная синхронизация между ИИ и интерфейсом",
+    "en": "Perfect synchronization between AI and the interface",
+    "es": "Sincronización perfecta entre la IA y la interfaz",
+    "de": "Perfekte Synchronisation zwischen KI und der Benutzeroberfläche",
+    "fr": "Synchronisation parfaite entre l'IA et l'interface",
+    "it": "Sincronizzazione perfetta tra l'IA e l'interfaccia"
+  },
+  "whenChatbotActsTitle": {
+    "ru": "Когда чатбот ИИ упоминает или выделяет что-то:",
+    "en": "When the AI chatbot mentions or highlights something:",
+    "es": "Cuando el chatbot de IA menciona o resalta algo:",
+    "de": "Wenn der KI-Chatbot etwas erwähnt oder hervorhebt:",
+    "fr": "Lorsque le chatbot IA mentionne ou met en évidence quelque chose :",
+    "it": "Quando il chatbot AI menziona o evidenzia qualcosa:"
+  },
+  "chatbotActsPoint1": {
+    "ru": "Соответствующий элемент сразу подсвечивается в правой панели",
+    "en": "The corresponding element is immediately highlighted in the right panel",
+    "es": "El elemento correspondiente se resalta inmediatamente en el panel derecho",
+    "de": "Das entsprechende Element wird sofort im rechten Bereich hervorgehoben",
+    "fr": "L'élément correspondant est immédiatement mis en surbrillance dans le panneau de droite",
+    "it": "L'elemento corrispondente viene immediatamente evidenziato nel pannello di destra"
+  },
+  "chatbotActsPoint2": {
+    "ru": "Автоматически открываются релевантные страницы",
+    "en": "Relevant pages are opened automatically",
+    "es": "Las páginas relevantes se abren automáticamente",
+    "de": "Relevante Seiten werden automatisch geöffnet",
+    "fr": "Les pages pertinentes s'ouvrent automatiquement",
+    "it": "Le pagine pertinenti vengono aperte automaticamente"
+  },
+  "chatbotActsPoint3": {
+    "ru": "Определённые разделы выделяются и фокусируются",
+    "en": "Specific sections are highlighted and focused",
+    "es": "Se resaltan y enfocan secciones específicas",
+    "de": "Bestimmte Abschnitte werden hervorgehoben und fokussiert",
+    "fr": "Des sections spécifiques sont mises en évidence et ciblées",
+    "it": "Sezioni specifiche vengono evidenziate e messe a fuoco"
+  },
+  "chatbotActsPoint4": {
+    "ru": "Пользователи не теряют контекст и не путаются",
+    "en": "Users don't lose context or get confused",
+    "es": "Los usuarios no pierden el contexto ni se confunden",
+    "de": "Benutzer verlieren nicht den Kontext oder werden verwirrt",
+    "fr": "Les utilisateurs ne perdent pas le contexte et ne sont pas confus",
+    "it": "Gli utenti non perdono il contesto e non si confondono"
+  },
+  "whenUserClicksTitle": {
+    "ru": "Когда пользователи кликают на элементы интерфейса:",
+    "en": "When users click on interface elements:",
+    "es": "Cuando los usuarios hacen clic en los elementos de la interfaz:",
+    "de": "Wenn Benutzer auf Oberflächenelemente klicken:",
+    "fr": "Lorsque les utilisateurs cliquent sur les éléments de l'interface :",
+    "it": "Quando gli utenti cliccano sugli elementi dell'interfaccia:"
+  },
+  "userClicksPoint1": {
+    "ru": "ИИ сразу отвечает с контекстом",
+    "en": "The AI responds immediately with context",
+    "es": "La IA responde inmediatamente con contexto",
+    "de": "Die KI antwortet sofort mit Kontext",
+    "fr": "L'IA répond immédiatement avec du contexte",
+    "it": "L'IA risponde immediatamente con il contesto"
+  },
+  "userClicksPoint2": {
+    "ru": "Объясняет, что они видят",
+    "en": "Explains what they are seeing",
+    "es": "Explica lo que están viendo",
+    "de": "Erklärt, was sie sehen",
+    "fr": "Explique ce qu'ils voient",
+    "it": "Spiega cosa stanno vedendo"
+  },
+  "userClicksPoint3": {
+    "ru": "Предлагает следующие действия",
+    "en": "Suggests next actions",
+    "es": "Sugiere las siguientes acciones",
+    "de": "Schlägt nächste Aktionen vor",
+    "fr": "Suggère les prochaines actions",
+    "it": "Suggerisce le azioni successive"
+  },
+  "userClicksPoint4": {
+    "ru": "Делает интеллектуальные комментарии",
+    "en": "Makes intelligent comments",
+    "es": "Hace comentarios inteligentes",
+    "de": "Macht intelligente Kommentare",
+    "fr": "Fait des commentaires intelligents",
+    "it": "Fa commenti intelligenti"
+  },
+  "smartInterfaceExperience": {
+    "ru": "Так создаётся опыт, в котором пользователи разговаривают с умным интерфейсом, который умеет как говорить, так и показывать, вместо того чтобы кликать по статичным страницам в поисках нужного.",
+    "en": "This creates an experience where users talk to a smart interface that can both speak and show, instead of clicking through static pages to find what they need.",
+    "es": "Esto crea una experiencia en la que los usuarios hablan con una interfaz inteligente que puede tanto hablar como mostrar, en lugar de hacer clic en páginas estáticas para encontrar lo que necesitan.",
+    "de": "Dies schafft eine Erfahrung, bei der Benutzer mit einer intelligenten Benutzeroberfläche sprechen, die sowohl sprechen als auch zeigen kann, anstatt sich durch statische Seiten zu klicken, um das zu finden, was sie benötigen.",
+    "fr": "Cela crée une expérience où les utilisateurs parlent à une interface intelligente qui peut à la fois parler et montrer, au lieu de cliquer sur des pages statiques pour trouver ce dont ils ont besoin.",
+    "it": "Questo crea un'esperienza in cui gli utenti parlano con un'interfaccia intelligente che può sia parlare che mostrare, invece di cliccare su pagine statiche per trovare ciò di cui hanno bisogno."
+  },
+  "twoAppsEcosystemTitle": {
+    "ru": "Два взаимосвязанных приложения, одна мощная экосистема",
+    "en": "Two Interconnected Apps, One Powerful Ecosystem",
+    "es": "Dos aplicaciones interconectadas, un ecosistema potente",
+    "de": "Zwei miteinander verbundene Apps, ein leistungsstarkes Ökosystem",
+    "fr": "Deux applications interconnectées, un écosystème puissant",
+    "it": "Due app interconnesse, un ecosistema potente"
+  },
+  "app1ArchitectWorkshopTitle": {
+    "ru": "Приложение #1: Мастерская архитектора (конструктор приложений)",
+    "en": "Application #1: The Architect's Workshop (Application Builder)",
+    "es": "Aplicación #1: El taller del arquitecto (Constructor de aplicaciones)",
+    "de": "Anwendung #1: Die Werkstatt des Architekten (Anwendungs-Builder)",
+    "fr": "Application #1 : L'atelier de l'architecte (Constructeur d'applications)",
+    "it": "Applicazione #1: Il laboratorio dell'architetto (Costruttore di applicazioni)"
+  },
+  "forCreatorsVisionaries": {
+    "ru": "Для создателей, предпринимателей и визионеров",
+    "en": "For creators, entrepreneurs, and visionaries",
+    "es": "Para creadores, emprendedores y visionarios",
+    "de": "Für Schöpfer, Unternehmer und Visionäre",
+    "fr": "Pour les créateurs, les entrepreneurs et les visionnaires",
+    "it": "Per creatori, imprenditori e visionari"
+  },
+  "app1Description": {
+    "ru": "Здесь вы проектируете и создаёте своё AI-первичное приложение без написания кода. ИИ — ваш партнёр по разработке, понимающий вашу идею и превращающий её в рабочие приложения.",
+    "en": "Here you design and build your AI-first application without writing code. The AI is your development partner, understanding your idea and turning it into working applications.",
+    "es": "Aquí diseñas y construyes tu aplicación AI-first sin escribir código. La IA es tu socio de desarrollo, entendiendo tu idea y convirtiéndola en aplicaciones funcionales.",
+    "de": "Hier entwerfen und erstellen Sie Ihre AI-First-Anwendung ohne Code zu schreiben. Die KI ist Ihr Entwicklungspartner, der Ihre Idee versteht und sie in funktionierende Anwendungen umwandelt.",
+    "fr": "Ici, vous concevez et construisez votre application AI-first sans écrire de code. L'IA est votre partenaire de développement, comprenant votre idée et la transformant en applications fonctionnelles.",
+    "it": "Qui progetti e costruisci la tua applicazione AI-first senza scrivere codice. L'IA è il tuo partner di sviluppo, che comprende la tua idea e la trasforma in applicazioni funzionanti."
+  },
+  "interfaceStructureTitle": {
+    "ru": "Структура интерфейса:",
+    "en": "Interface Structure:",
+    "es": "Estructura de la interfaz:",
+    "de": "Schnittstellenstruktur:",
+    "fr": "Structure de l'interface :",
+    "it": "Struttura dell'interfaccia:"
+  },
+  "leftPanelDevAssistant": {
+    "ru": "Левая панель: ваш AI помощник разработчика",
+    "en": "Left Panel: Your AI Developer Assistant",
+    "es": "Panel izquierdo: Tu asistente de desarrollador de IA",
+    "de": "Linkes Panel: Ihr KI-Entwicklerassistent",
+    "fr": "Panneau de gauche : Votre assistant développeur IA",
+    "it": "Pannello sinistro: il tuo assistente sviluppatore AI"
+  },
+  "understandsBusinessGoals": {
+    "ru": "Понимает бизнес-цели",
+    "en": "Understands business goals",
+    "es": "Entiende los objetivos de negocio",
+    "de": "Versteht Geschäftsziele",
+    "fr": "Comprend les objectifs commerciaux",
+    "it": "Comprende gli obiettivi di business"
+  },
+  "suggestsOptimalArchitecture": {
+    "ru": "Предлагает оптимальную архитектуру",
+    "en": "Suggests optimal architecture",
+    "es": "Sugiere una arquitectura óptima",
+    "de": "Schlägt eine optimale Architektur vor",
+    "fr": "Suggère une architecture optimale",
+    "it": "Suggerisce un'architettura ottimale"
+  },
+  "generatesAppModules": {
+    "ru": "Генерирует модули приложения",
+    "en": "Generates application modules",
+    "es": "Genera módulos de aplicación",
+    "de": "Generiert Anwendungsmodule",
+    "fr": "Génère des modules d'application",
+    "it": "Genera moduli applicativi"
+  },
+  "managesVisualStructure": {
+    "ru": "Управляет визуальной структурой",
+    "en": "Manages the visual structure",
+    "es": "Gestiona la estructura visual",
+    "de": "Verwaltet die visuelle Struktur",
+    "fr": "Gère la structure visuelle",
+    "it": "Gestisce la struttura visiva"
+  },
+  "explainsComponentConnections": {
+    "ru": "Объясняет связи компонентов",
+    "en": "Explains component connections",
+    "es": "Explica las conexiones de los componentes",
+    "de": "Erklärt Komponentenverbindungen",
+    "fr": "Explique les connexions des composants",
+    "it": "Spiega le connessioni dei componenti"
+  },
+  "reactsInRealTime": {
+    "ru": "Реагирует на каждое взаимодействие в реальном времени",
+    "en": "Reacts to every interaction in real-time",
+    "es": "Reacciona a cada interacción en tiempo real",
+    "de": "Reagiert auf jede Interaktion in Echtzeit",
+    "fr": "Réagit à chaque interaction en temps réel",
+    "it": "Reagisce a ogni interazione in tempo reale"
+  },
+  "rightPanelThreeTabs": {
+    "ru": "Правая панель: три синхронизированных вкладки",
+    "en": "Right Panel: Three Synchronized Tabs",
+    "es": "Panel derecho: Tres pestañas sincronizadas",
+    "de": "Rechtes Panel: Drei synchronisierte Registerkarten",
+    "fr": "Panneau de droite : Trois onglets synchronisés",
+    "it": "Pannello destro: Tre schede sincronizzate"
+  },
+  "projectVisualization": {
+    "ru": "Проектная визуализация (диаграммы React Flow)",
+    "en": "Project Visualization (React Flow diagrams)",
+    "es": "Visualización del proyecto (diagramas de React Flow)",
+    "de": "Projektvisualisierung (React Flow-Diagramme)",
+    "fr": "Visualisation du projet (diagrammes React Flow)",
+    "it": "Visualizzazione del progetto (diagrammi di React Flow)"
+  },
+  "adminPanelPreview": {
+    "ru": "Предпросмотр панели администратора",
+    "en": "Admin Panel Preview",
+    "es": "Vista previa del panel de administración",
+    "de": "Vorschau des Admin-Panels",
+    "fr": "Aperçu du panneau d'administration",
+    "it": "Anteprima del pannello di amministrazione"
+  },
+  "publicSitePreview": {
+    "ru": "Предпросмотр публичного сайта",
+    "en": "Public Site Preview",
+    "es": "Vista previa del sitio público",
+    "de": "Vorschau der öffentlichen Website",
+    "fr": "Aperçu du site public",
+    "it": "Anteprima del sito pubblico"
+  },
+  "app2LivePlatformTitle": {
+    "ru": "Приложение #2: Ваша работающая платформа с AI",
+    "en": "Application #2: Your Live AI-Powered Platform",
+    "es": "Aplicación #2: Tu plataforma en vivo con IA",
+    "de": "Anwendung #2: Ihre live KI-gestützte Plattform",
+    "fr": "Application #2 : Votre plateforme en direct alimentée par l'IA",
+    "it": "Applicazione #2: La tua piattaforma live basata sull'IA"
+  },
+  "forEndUsersCommunity": {
+    "ru": "Для конечных пользователей, клиентов и сообщества",
+    "en": "For end-users, customers, and the community",
+    "es": "Para usuarios finales, clientes y la comunidad",
+    "de": "Für Endbenutzer, Kunden und die Community",
+    "fr": "Pour les utilisateurs finaux, les clients et la communauté",
+    "it": "Per utenti finali, clienti e la community"
+  },
+  "app2Description": {
+    "ru": "Это продакшен-приложение, в котором пользователи взаимодействуют с AI, обеспечивающим весь опыт.",
+    "en": "This is the production application where users interact with the AI that powers the entire experience.",
+    "es": "Esta es la aplicación de producción donde los usuarios interactúan con la IA que impulsa toda la experiencia.",
+    "de": "Dies ist die Produktionsanwendung, in der Benutzer mit der KI interagieren, die das gesamte Erlebnis antreibt.",
+    "fr": "C'est l'application de production où les utilisateurs interagissent avec l'IA qui alimente toute l'expérience.",
+    "it": "Questa è l'applicazione di produzione in cui gli utenti interagiscono con l'IA che alimenta l'intera esperienza."
+  },
+  "multiLevelRoleExperience": {
+    "ru": "Многоуровневый опыт ролей:",
+    "en": "Multi-level Role Experience:",
+    "es": "Experiencia de roles multinivel:",
+    "de": "Mehrstufige Rollenerfahrung:",
+    "fr": "Expérience de rôle à plusieurs niveaux :",
+    "it": "Esperienza di ruolo multilivello:"
+  },
+  "forAdminsTitle": {
+    "ru": "Для администраторов:",
+    "en": "For Administrators:",
+    "es": "Para administradores:",
+    "de": "Für Administratoren:",
+    "fr": "Pour les administrateurs :",
+    "it": "Per gli amministratori:"
+  },
+  "adminPoint1": {
+    "ru": "AI помогает управлять платформой через чат",
+    "en": "AI helps manage the platform via chat",
+    "es": "La IA ayuda a gestionar la plataforma a través del chat",
+    "de": "KI hilft bei der Verwaltung der Plattform per Chat",
+    "fr": "L'IA aide à gérer la plateforme via le chat",
+    "it": "L'IA aiuta a gestire la piattaforma tramite chat"
+  },
+  "adminPoint2": {
+    "ru": "Генерирует контент, управляет пользователями, анализирует данные",
+    "en": "Generates content, manages users, analyzes data",
+    "es": "Genera contenido, gestiona usuarios, analiza datos",
+    "de": "Generiert Inhalte, verwaltet Benutzer, analysiert Daten",
+    "fr": "Génère du contenu, gère les utilisateurs, analyse les données",
+    "it": "Genera contenuti, gestisce gli utenti, analizza i dati"
+  },
+  "adminPoint3": {
+    "ru": "Правая панель показывает админские интерфейсы и предпросмотр сайта",
+    "en": "The right panel shows admin interfaces and site preview",
+    "es": "El panel derecho muestra las interfaces de administrador y la vista previa del sitio",
+    "de": "Das rechte Panel zeigt Admin-Oberflächen und eine Website-Vorschau",
+    "fr": "Le panneau de droite affiche les interfaces d'administration et l'aperçu du site",
+    "it": "Il pannello di destra mostra le interfacce di amministrazione e l'anteprima del sito"
+  },
+  "adminPoint4": {
+    "ru": "Полный контроль над настройками платформы и содержимым",
+    "en": "Full control over platform settings and content",
+    "es": "Control total sobre la configuración de la plataforma y el contenido",
+    "de": "Volle Kontrolle über Plattform-Einstellungen und Inhalte",
+    "fr": "Contrôle total des paramètres de la plateforme et du contenu",
+    "it": "Controllo completo sulle impostazioni e sui contenuti della piattaforma"
+  },
+  "forEditorsTitle": {
+    "ru": "Для редакторов:",
+    "en": "For Editors:",
+    "es": "Para editores:",
+    "de": "Für Redakteure:",
+    "fr": "Pour les éditeurs :",
+    "it": "Per gli editori:"
+  },
+  "editorPoint1": {
+    "ru": "Ограниченный, но мощный AI помощник для создания контента",
+    "en": "A limited but powerful AI assistant for content creation",
+    "es": "Un asistente de IA limitado pero potente para la creación de contenido",
+    "de": "Ein begrenzter, aber leistungsstarker KI-Assistent für die Inhaltserstellung",
+    "fr": "Un assistant IA limité mais puissant pour la création de contenu",
+    "it": "Un assistente AI limitato ma potente per la creazione di contenuti"
+  },
+  "editorPoint2": {
+    "ru": "Генерация статей, страниц, викторин через беседу",
+    "en": "Generate articles, pages, quizzes through conversation",
+    "es": "Generar artículos, páginas, cuestionarios a través de la conversación",
+    "de": "Generieren Sie Artikel, Seiten, Quizze durch Konversation",
+    "fr": "Générez des articles, des pages, des quiz par la conversation",
+    "it": "Genera articoli, pagine, quiz attraverso la conversazione"
+  },
+  "editorPoint3": {
+    "ru": "Ограниченный доступ к панели администратора",
+    "en": "Limited access to the admin panel",
+    "es": "Acceso limitado al panel de administración",
+    "de": "Eingeschränkter Zugriff auf das Admin-Panel",
+    "fr": "Accès limité au panneau d'administration",
+    "it": "Accesso limitato al pannello di amministrazione"
+  },
+  "editorPoint4": {
+    "ru": "Фокус на качестве контента и вовлечённости пользователей",
+    "en": "Focus on content quality and user engagement",
+    "es": "Enfoque en la calidad del contenido y la participación del usuario",
+    "de": "Fokus auf Inhaltsqualität und Benutzerengagement",
+    "fr": "Accent sur la qualité du contenu et l'engagement des utilisateurs",
+    "it": "Focus sulla qualità dei contenuti e sul coinvolgimento degli utenti"
+  },
+  "forRegisteredUsersTitle": {
+    "ru": "Для зарегистрированных пользователей:",
+    "en": "For Registered Users:",
+    "es": "Para usuarios registrados:",
+    "de": "Für registrierte Benutzer:",
+    "fr": "Pour les utilisateurs enregistrés :",
+    "it": "Per gli utenti registrati:"
+  },
+  "registeredPoint1": {
+    "ru": "Персональный AI ассистент, обученный по вашему контенту",
+    "en": "A personal AI assistant trained on your content",
+    "es": "Un asistente personal de IA entrenado en tu contenido",
+    "de": "Ein persönlicher KI-Assistent, der auf Ihren Inhalten geschult ist",
+    "fr": "Un assistant IA personnel formé sur votre contenu",
+    "it": "Un assistente AI personale addestrato sui tuoi contenuti"
+  },
+  "registeredPoint2": {
+    "ru": "Интерактивные разговоры с релевантным контентом",
+    "en": "Interactive conversations with relevant content",
+    "es": "Conversaciones interactivas con contenido relevante",
+    "de": "Interaktive Gespräche mit relevanten Inhalten",
+    "fr": "Conversations interactives avec un contenu pertinent",
+    "it": "Conversazioni interattive con contenuti pertinenti"
+  },
+  "registeredPoint3": {
+    "ru": "Доступ к закрытым функциям и материалам",
+    "en": "Access to private features and materials",
+    "es": "Acceso a funciones y materiales privados",
+    "de": "Zugriff auf private Funktionen und Materialien",
+    "fr": "Accès aux fonctionnalités et documents privés",
+    "it": "Accesso a funzioni e materiali privati"
+  },
+  "registeredPoint4": {
+    "ru": "Гладкая интеграция с платежными системами",
+    "en": "Seamless integration with payment systems",
+    "es": "Integración perfecta con los sistemas de pago",
+    "de": "Nahtlose Integration mit Zahlungssystemen",
+    "fr": "Intégration transparente avec les systèmes de paiement",
+    "it": "Integrazione perfetta con i sistemi di pagamento"
+  },
+  "forVisitorsTitle": {
+    "ru": "Для посетителей:",
+    "en": "For Visitors:",
+    "es": "Para visitantes:",
+    "de": "Für Besucher:",
+    "fr": "Pour les visiteurs :",
+    "it": "Per i visitatori:"
+  },
+  "visitorPoint1": {
+    "ru": "Мгновенное вовлечение через AI беседу",
+    "en": "Instant engagement through AI conversation",
+    "es": "Compromiso instantáneo a través de la conversación con IA",
+    "de": "Sofortiges Engagement durch KI-Konversation",
+    "fr": "Engagement instantané grâce à la conversation par IA",
+    "it": "Coinvolgimento istantaneo attraverso la conversazione con l'IA"
+  },
+  "visitorPoint2": {
+    "ru": "Не нужно искать или навигировать традиционно",
+    "en": "No need to search or navigate traditionally",
+    "es": "No es necesario buscar o navegar de forma tradicional",
+    "de": "Keine Notwendigkeit, traditionell zu suchen oder zu navigieren",
+    "fr": "Pas besoin de chercher ou de naviguer de manière traditionnelle",
+    "it": "Non c'è bisogno di cercare o navigare in modo tradizionale"
+  },
+  "visitorPoint3": {
+    "ru": "Интеллектуальный поиск контента через чат",
+    "en": "Intelligent content discovery via chat",
+    "es": "Descubrimiento inteligente de contenido a través del chat",
+    "de": "Intelligente Inhaltsentdeckung per Chat",
+    "fr": "Découverte intelligente de contenu via le chat",
+    "it": "Scoperta intelligente dei contenuti tramite chat"
+  },
+  "visitorPoint4": {
+    "ru": "Плавное превращение посетителей в клиентов",
+    "en": "Seamless conversion of visitors into customers",
+    "es": "Conversión fluida de visitantes en clientes",
+    "de": "Nahtlose Umwandlung von Besuchern in Kunden",
+    "fr": "Conversion transparente des visiteurs en clients",
+    "it": "Conversione fluida dei visitatori in clienti"
+  },
+  "aifaFeaturesTitle": {
+    "ru": "Революционные функции AIFA",
+    "en": "Revolutionary AIFA Features",
+    "es": "Funciones revolucionarias de AIFA",
+    "de": "Revolutionäre AIFA-Funktionen",
+    "fr": "Fonctionnalités révolutionnaires d'AIFA",
+    "it": "Funzionalità rivoluzionarie di AIFA"
+  },
+  "feature1ZeroDevOpsTitle": {
+    "ru": "1. Революция нулевого DevOps",
+    "en": "1. The Zero-DevOps Revolution",
+    "es": "1. La revolución de cero DevOps",
+    "de": "1. Die Null-DevOps-Revolution",
+    "fr": "1. La révolution zéro DevOps",
+    "it": "1. La rivoluzione Zero-DevOps"
+  },
+  "oneClickProdReady": {
+    "ru": "Один клик = полноценная продакшен среда",
+    "en": "One Click = Full-fledged Production Environment",
+    "es": "Un clic = Entorno de producción completo",
+    "de": "Ein Klick = Vollwertige Produktionsumgebung",
+    "fr": "Un clic = Environnement de production complet",
+    "it": "Un clic = Ambiente di produzione completo"
+  },
+  "zeroDevOpsDescription": {
+    "ru": "Забудьте о серверах, базах данных и сложных конвейерах. AIFA предоставляет настоящий \"1-клик деплой\":",
+    "en": "Forget about servers, databases, and complex pipelines. AIFA provides a true \"1-click deploy\":",
+    "es": "Olvídate de servidores, bases de datos y pipelines complejos. AIFA ofrece un verdadero \"despliegue con 1 clic\":",
+    "de": "Vergessen Sie Server, Datenbanken und komplexe Pipelines. AIFA bietet einen echten \"1-Klick-Deploy\":",
+    "fr": "Oubliez les serveurs, les bases de données et les pipelines complexes. AIFA offre un véritable « déploiement en 1 clic » :",
+    "it": "Dimentica server, database e pipeline complesse. AIFA offre un vero \"deploy con 1 clic\":"
+  },
+  "zeroDevOpsStep1": {
+    "ru": "Автоматическое клонирование проекта в GitHub",
+    "en": "Automatic project cloning to GitHub",
+    "es": "Clonación automática del proyecto en GitHub",
+    "de": "Automatisches Klonen von Projekten nach GitHub",
+    "fr": "Clonage automatique du projet sur GitHub",
+    "it": "Clonazione automatica del progetto su GitHub"
+  },
+  "zeroDevOpsStep2": {
+    "ru": "Мгновенная деплойка на Vercel двух приложений",
+    "en": "Instant deployment of two applications to Vercel",
+    "es": "Despliegue instantáneo de dos aplicaciones en Vercel",
+    "de": "Sofortige Bereitstellung von zwei Anwendungen auf Vercel",
+    "fr": "Déploiement instantané de deux applications sur Vercel",
+    "it": "Deployment istantaneo di due applicazioni su Vercel"
+  },
+  "zeroDevOpsStep3": {
+    "ru": "Автоматическая настройка всех секретов и переменных окружения",
+    "en": "Automatic configuration of all secrets and environment variables",
+    "es": "Configuración automática de todos los secretos y variables de entorno",
+    "de": "Automatische Konfiguration aller Geheimnisse und Umgebungsvariablen",
+    "fr": "Configuration automatique de tous les secrets et variables d'environnement",
+    "it": "Configurazione automatica di tutti i segreti e le variabili d'ambiente"
+  },
+  "whatHappensOnClickTitle": {
+    "ru": "Что происходит при клике на \"Запуск\":",
+    "en": "What happens when you click \"Launch\":",
+    "es": "Qué sucede cuando haces clic en \"Lanzar\":",
+    "de": "Was passiert, wenn Sie auf \"Starten\" klicken:",
+    "fr": "Que se passe-t-il lorsque vous cliquez sur « Lancer » :",
+    "it": "Cosa succede quando clicchi su \"Lancia\":"
+  },
+  "onClickStep1": {
+    "ru": "Проект автоматически клонируется в ваш репозиторий GitHub",
+    "en": "The project is automatically cloned to your GitHub repository",
+    "es": "El proyecto se clona automáticamente en tu repositorio de GitHub",
+    "de": "Das Projekt wird automatisch in Ihr GitHub-Repository geklont",
+    "fr": "Le projet est automatiquement cloné dans votre dépôt GitHub",
+    "it": "Il progetto viene clonato automaticamente nel tuo repository GitHub"
+  },
+  "onClickStep2": {
+    "ru": "Vercel деплоит оба приложения мгновенно:",
+    "en": "Vercel deploys both applications instantly:",
+    "es": "Vercel despliega ambas aplicaciones al instante:",
+    "de": "Vercel stellt beide Anwendungen sofort bereit:",
+    "fr": "Vercel déploie les deux applications instantanément :",
+    "it": "Vercel esegue il deploy di entrambe le applicazioni istantaneamente:"
+  },
+  "appBuilderDeploy": {
+    "ru": "Конструктор приложений (ваш дизайн интерфейса)",
+    "en": "Application Builder (your design interface)",
+    "es": "Constructor de aplicaciones (tu interfaz de diseño)",
+    "de": "Anwendungs-Builder (Ihre Design-Oberfläche)",
+    "fr": "Constructeur d'applications (votre interface de conception)",
+    "it": "Costruttore di applicazioni (la tua interfaccia di progettazione)"
+  },
+  "saasDeploy": {
+    "ru": "Self-hosted SaaS (публичный продукт)",
+    "en": "Self-hosted SaaS (public product)",
+    "es": "SaaS auto-alojado (producto público)",
+    "de": "Selbst gehostetes SaaS (öffentliches Produkt)",
+    "fr": "SaaS auto-hébergé (produit public)",
+    "it": "SaaS self-hosted (prodotto pubblico)"
+  },
+  "onClickStep3": {
+    "ru": "Все секреты и переменные конфигурируются автоматически из:",
+    "en": "All secrets and variables are configured automatically from:",
+    "es": "Todos los secretos y variables se configuran automáticamente desde:",
+    "de": "Alle Geheimnisse und Variablen werden automatisch konfiguriert aus:",
+    "fr": "Tous les secrets et variables sont configurés automatiquement à partir de :",
+    "it": "Tutti i segreti e le variabili vengono configurati automaticamente da:"
+  },
+  "secretOpenAI": {
+    "ru": "OpenAI API",
+    "en": "OpenAI API",
+    "es": "API de OpenAI",
+    "de": "OpenAI-API",
+    "fr": "API OpenAI",
+    "it": "API di OpenAI"
+  },
+  "secretStripe": {
+    "ru": "Stripe",
+    "en": "Stripe",
+    "es": "Stripe",
+    "de": "Stripe",
+    "fr": "Stripe",
+    "it": "Stripe"
+  },
+  "secretResend": {
+    "ru": "Resend (email)",
+    "en": "Resend (email)",
+    "es": "Resend (correo electrónico)",
+    "de": "Resend (E-Mail)",
+    "fr": "Resend (email)",
+    "it": "Resend (email)"
+  },
+  "secretVercelBlob": {
+    "ru": "Vercel Blob S3 хранилище",
+    "en": "Vercel Blob S3 storage",
+    "es": "Almacenamiento Vercel Blob S3",
+    "de": "Vercel Blob S3-Speicher",
+    "fr": "Stockage Vercel Blob S3",
+    "it": "Archiviazione Vercel Blob S3"
+  },
+  "secretRedis": {
+    "ru": "Redis",
+    "en": "Redis",
+    "es": "Redis",
+    "de": "Redis",
+    "fr": "Redis",
+    "it": "Redis"
+  },
+  "secretPostgres": {
+    "ru": "PostgreSQL (Neon)",
+    "en": "PostgreSQL (Neon)",
+    "es": "PostgreSQL (Neon)",
+    "de": "PostgreSQL (Neon)",
+    "fr": "PostgreSQL (Neon)",
+    "it": "PostgreSQL (Neon)"
+  },
+  "requirementsTitle": {
+    "ru": "Требования:",
+    "en": "Requirements:",
+    "es": "Requisitos:",
+    "de": "Anforderungen:",
+    "fr": "Exigences :",
+    "it": "Requisiti:"
+  },
+  "requirementGithub": {
+    "ru": "Аккаунт GitHub",
+    "en": "GitHub account",
+    "es": "Cuenta de GitHub",
+    "de": "GitHub-Konto",
+    "fr": "Compte GitHub",
+    "it": "Account GitHub"
+  },
+  "requirementVercel": {
+    "ru": "Аккаунт Vercel",
+    "en": "Vercel account",
+    "es": "Cuenta de Vercel",
+    "de": "Vercel-Konto",
+    "fr": "Compte Vercel",
+    "it": "Account Vercel"
+  },
+  "requirementNeon": {
+    "ru": "Бесплатный токен Neon Database",
+    "en": "Free Neon Database token",
+    "es": "Token gratuito de Neon Database",
+    "de": "Kostenloses Neon-Datenbank-Token",
+    "fr": "Jeton de base de données Neon gratuit",
+    "it": "Token gratuito del database Neon"
+  },
+  "noTechKnowledgeNeeded": {
+    "ru": "И всё. Технических знаний не требуется.",
+    "en": "And that's it. No technical knowledge required.",
+    "es": "Y eso es todo. No se requieren conocimientos técnicos.",
+    "de": "Und das war's. Keine technischen Kenntnisse erforderlich.",
+    "fr": "Et c'est tout. Aucune connaissance technique n'est requise.",
+    "it": "E questo è tutto. Non sono richieste conoscenze tecniche."
+  },
+  "feature2AIContentTitle": {
+    "ru": "2. AI-сгенерированный контент в масштабах",
+    "en": "2. AI-Generated Content at Scale",
+    "es": "2. Contenido generado por IA a escala",
+    "de": "2. KI-generierte Inhalte im großen Stil",
+    "fr": "2. Contenu généré par l'IA à grande échelle",
+    "it": "2. Contenuti generati dall'IA su larga scala"
+  },
+  "intelligentContentEcosystem": {
+    "ru": "Больше, чем сайт — интеллектуальная контентная экосистема",
+    "en": "More than a website — an intelligent content ecosystem",
+    "es": "Más que un sitio web: un ecosistema de contenido inteligente",
+    "de": "Mehr als eine Website – ein intelligentes Content-Ökosystem",
+    "fr": "Plus qu'un site web — un écosystème de contenu intelligent",
+    "it": "Più di un sito web — un ecosistema di contenuti intelligente"
+  },
+  "aifaContentCreationDescription": {
+    "ru": "AIFA не просто создаёт страницы — создаёт умный, SEO-оптимизированный взаимосвязанный контент.",
+    "en": "AIFA doesn't just create pages — it creates smart, SEO-optimized, interconnected content.",
+    "es": "AIFA no solo crea páginas, sino que crea contenido inteligente, optimizado para SEO e interconectado.",
+    "de": "AIFA erstellt nicht nur Seiten – es erstellt intelligente, SEO-optimierte, vernetzte Inhalte.",
+    "fr": "AIFA ne se contente pas de créer des pages — il crée du contenu intelligent, optimisé pour le référencement et interconnecté.",
+    "it": "AIFA non si limita a creare pagine, ma crea contenuti intelligenti, ottimizzati per la SEO e interconnessi."
+  },
+  "howItWorksTitle": {
+    "ru": "Как это работает:",
+    "en": "How it works:",
+    "es": "Cómo funciona:",
+    "de": "Wie es funktioniert:",
+    "fr": "Comment ça marche :",
+    "it": "Come funziona:"
+  },
+  "describeContentGoal": {
+    "ru": "Опишите цель контента, а не сам контент",
+    "en": "Describe the content's goal, not the content itself",
+    "es": "Describe el objetivo del contenido, no el contenido en sí",
+    "de": "Beschreiben Sie das Ziel des Inhalts, nicht den Inhalt selbst",
+    "fr": "Décrivez l'objectif du contenu, pas le contenu lui-même",
+    "it": "Descrivi l'obiettivo del contenuto, non il contenuto stesso"
+  },
+  "aiGeneratesStructures": {
+    "ru": "ИИ генерирует полные структуры страниц",
+    "en": "The AI generates complete page structures",
+    "es": "La IA genera estructuras de página completas",
+    "de": "Die KI generiert vollständige Seitenstrukturen",
+    "fr": "L'IA génère des structures de page complètes",
+    "it": "L'IA genera strutture di pagina complete"
+  },
+  "seoOptimizationIncluded": {
+    "ru": "Включена SEO-оптимизация",
+    "en": "SEO optimization is included",
+    "es": "La optimización SEO está incluida",
+    "de": "SEO-Optimierung ist inklusive",
+    "fr": "L'optimisation SEO est incluse",
+    "it": "L'ottimizzazione SEO è inclusa"
+  },
+  "autoInternalNav": {
+    "ru": "Автоматическая внутренняя навигация и ссылки",
+    "en": "Automatic internal navigation and linking",
+    "es": "Navegación y enlaces internos automáticos",
+    "de": "Automatische interne Navigation und Verlinkung",
+    "fr": "Navigation interne et liens automatiques",
+    "it": "Navigazione interna e collegamenti automatici"
+  },
+  "contentAdaptsToBrand": {
+    "ru": "Контент адаптируется под голос бренда и аудиторию",
+    "en": "Content adapts to brand voice and audience",
+    "es": "El contenido se adapta a la voz de la marca y a la audiencia",
+    "de": "Inhalte passen sich der Markenstimme und dem Publikum an",
+    "fr": "Le contenu s'adapte à la voix de la marque et à l'audience",
+    "it": "I contenuti si adattano alla voce del marchio e al pubblico"
+  },
+  "examplesTitle": {
+    "ru": "Примеры:",
+    "en": "Examples:",
+    "es": "Ejemplos:",
+    "de": "Beispiele:",
+    "fr": "Exemples :",
+    "it": "Esempi:"
+  },
+  "exampleTestimonials": {
+    "ru": "«Добавить раздел отзывов клиентов» → ИИ создаёт страницы с отзывами, профили клиентов, AI-аватары, категории отзывов и фильтры",
+    "en": "\"Add a customer testimonials section\" → The AI creates testimonial pages, customer profiles, AI avatars, review categories, and filters",
+    "es": "\"Añadir una sección de testimonios de clientes\" → La IA crea páginas de testimonios, perfiles de clientes, avatares de IA, categorías de reseñas y filtros",
+    "de": "\"Kundenstimmen-Bereich hinzufügen\" → Die KI erstellt Testimonial-Seiten, Kundenprofile, KI-Avatare, Bewertungskategorien und Filter",
+    "fr": "\"Ajouter une section de témoignages clients\" → L'IA crée des pages de témoignages, des profils clients, des avatars IA, des catégories d'avis et des filtres",
+    "it": "\"Aggiungi una sezione di testimonianze dei clienti\" → L'IA crea pagine di testimonianze, profili dei clienti, avatar AI, categorie di recensioni e filtri"
+  },
+  "exampleProductCatalog": {
+    "ru": "«Создать каталог товаров» → ИИ анализирует нишу, формирует категории, описания товаров, фильтры и поиск, обрабатывает цены",
+    "en": "\"Create a product catalog\" → The AI analyzes the niche, forms categories, product descriptions, filters and search, and processes prices",
+    "es": "\"Crear un catálogo de productos\" → La IA analiza el nicho, forma categorías, descripciones de productos, filtros y búsqueda, y procesa los precios",
+    "de": "\"Produktkatalog erstellen\" → Die KI analysiert die Nische, bildet Kategorien, Produktbeschreibungen, Filter und Suche und verarbeitet Preise",
+    "fr": "\"Créer un catalogue de produits\" → L'IA analyse la niche, forme des catégories, des descriptions de produits, des filtres et une recherche, et traite les prix",
+    "it": "\"Crea un catalogo prodotti\" → L'IA analizza la nicchia, forma categorie, descrizioni dei prodotti, filtri e ricerca, ed elabora i prezzi"
+  },
+  "exampleQuizSystem": {
+    "ru": "«Создать систему обучающих викторин» → ИИ создаёт образовательные викторины, интерактивные вопросы, отслеживание прогресса и сертификаты",
+    "en": "\"Create a learning quiz system\" → The AI creates educational quizzes, interactive questions, progress tracking, and certificates",
+    "es": "\"Crear un sistema de cuestionarios de aprendizaje\" → La IA crea cuestionarios educativos, preguntas interactivas, seguimiento del progreso y certificados",
+    "de": "\"Lernquiz-System erstellen\" → Die KI erstellt Lernquizze, interaktive Fragen, Fortschrittsverfolgung und Zertifikate",
+    "fr": "\"Créer un système de quiz d'apprentissage\" → L'IA crée des quiz éducatifs, des questions interactives, un suivi des progrès et des certificats",
+    "it": "\"Crea un sistema di quiz di apprendimento\" → L'IA crea quiz educativi, domande interattive, monitoraggio dei progressi e certificati"
+  },
+  "feature3QuizGenerationTitle": {
+    "ru": "3. Интеллектуальная генерация викторин и интерактивного контента",
+    "en": "3. Intelligent Quiz and Interactive Content Generation",
+    "es": "3. Generación inteligente de cuestionarios y contenido interactivo",
+    "de": "3. Intelligente Quiz- und interaktive Inhaltsgenerierung",
+    "fr": "3. Génération intelligente de quiz et de contenu interactif",
+    "it": "3. Generazione intelligente di quiz e contenuti interattivi"
+  },
+  "ideaToLearningInMinutes": {
+    "ru": "От идеи до интерактивного обучения за минуты",
+    "en": "From idea to interactive learning in minutes",
+    "es": "De la idea al aprendizaje interactivo en minutos",
+    "de": "Von der Idee zum interaktiven Lernen in Minuten",
+    "fr": "De l'idée à l'apprentissage interactif en quelques minutes",
+    "it": "Dall'idea all'apprendimento interattivo in pochi minuti"
+  },
+  "quizExamplePrompt": {
+    "ru": "Пример: «Создай викторину для изучения английского через популярные песни»",
+    "en": "Example: \"Create a quiz for learning English through popular songs\"",
+    "es": "Ejemplo: \"Crea un cuestionario para aprender inglés a través de canciones populares\"",
+    "de": "Beispiel: \"Erstelle ein Quiz zum Englischlernen durch beliebte Lieder\"",
+    "fr": "Exemple : « Créez un quiz pour apprendre l'anglais à travers des chansons populaires »",
+    "it": "Esempio: \"Crea un quiz per imparare l'inglese attraverso canzoni popolari\""
+  },
+  "howAIWorksQuizTitle": {
+    "ru": "Как работает ИИ:",
+    "en": "How the AI works:",
+    "es": "Cómo funciona la IA:",
+    "de": "Wie die KI funktioniert:",
+    "fr": "Comment fonctionne l'IA :",
+    "it": "Come funziona l'IA:"
+  },
+  "quizAIstep1": {
+    "ru": "Определяет тему: английский и музыка",
+    "en": "Determines the theme: English and music",
+    "es": "Determina el tema: inglés y música",
+    "de": "Bestimmt das Thema: Englisch und Musik",
+    "fr": "Détermine le thème : anglais et musique",
+    "it": "Determina il tema: inglese e musica"
+  },
+  "quizAIstep2": {
+    "ru": "Выбирает популярную песню (например, «Shape of You»)",
+    "en": "Selects a popular song (e.g., \"Shape of You\")",
+    "es": "Selecciona una canción popular (por ejemplo, \"Shape of You\")",
+    "de": "Wählt ein beliebtes Lied aus (z.B. \"Shape of You\")",
+    "fr": "Sélectionne une chanson populaire (par exemple, « Shape of You »)",
+    "it": "Seleziona una canzone popolare (ad es. \"Shape of You\")"
+  },
+  "quizAIstep3": {
+    "ru": "Анализирует текст песни: ключевые фразы, грамматику, слова",
+    "en": "Analyzes the song lyrics: key phrases, grammar, words",
+    "es": "Analiza la letra de la canción: frases clave, gramática, palabras",
+    "de": "Analysiert den Liedtext: Schlüsselsätze, Grammatik, Wörter",
+    "fr": "Analyse les paroles de la chanson : phrases clés, grammaire, mots",
+    "it": "Analizza il testo della canzone: frasi chiave, grammatica, parole"
+  },
+  "quizAIstep4": {
+    "ru": "Генерирует 5-10 вопросов с разными форматами (понимание, словарный запас, грамматика, перевод)",
+    "en": "Generates 5-10 questions with different formats (comprehension, vocabulary, grammar, translation)",
+    "es": "Genera de 5 a 10 preguntas con diferentes formatos (comprensión, vocabulario, gramática, traducción)",
+    "de": "Generiert 5-10 Fragen mit unterschiedlichen Formaten (Verständnis, Wortschatz, Grammatik, Übersetzung)",
+    "fr": "Génère 5 à 10 questions avec différents formats (compréhension, vocabulaire, grammaire, traduction)",
+    "it": "Genera 5-10 domande con formati diversi (comprensione, vocabolario, grammatica, traduzione)"
+  },
+  "quizAIstep5": {
+    "ru": "Форматирует викторину с вариантами ответа, пояснениями и динамическими отзывами",
+    "en": "Formats the quiz with multiple-choice answers, explanations, and dynamic feedback",
+    "es": "Formatea el cuestionario con respuestas de opción múltiple, explicaciones y retroalimentación dinámica",
+    "de": "Formatiert das Quiz mit Multiple-Choice-Antworten, Erklärungen und dynamischem Feedback",
+    "fr": "Met en forme le quiz avec des réponses à choix multiples, des explications et des commentaires dynamiques",
+    "it": "Formatta il quiz con risposte a scelta multipla, spiegazioni e feedback dinamico"
+  },
+  "quizAIstep6": {
+    "ru": "Сохраняет результат в базе, отслеживает прогресс",
+    "en": "Saves the result in the database, tracks progress",
+    "es": "Guarda el resultado en la base de datos, rastrea el progreso",
+    "de": "Speichert das Ergebnis in der Datenbank, verfolgt den Fortschritt",
+    "fr": "Enregistre le résultat dans la base de données, suit la progression",
+    "it": "Salva il risultato nel database, tiene traccia dei progressi"
+  },
+  "monetizationReadyTitle": {
+    "ru": "Монетизация готова:",
+    "en": "Monetization Ready:",
+    "es": "Monetización lista:",
+    "de": "Monetarisierung bereit:",
+    "fr": "Monétisation prête :",
+    "it": "Monetizzazione pronta:"
+  },
+  "freeBasicQuizzes": {
+    "ru": "Бесплатные базовые викторины",
+    "en": "Free basic quizzes",
+    "es": "Cuestionarios básicos gratuitos",
+    "de": "Kostenlose Basis-Quizze",
+    "fr": "Quiz de base gratuits",
+    "it": "Quiz di base gratuiti"
+  },
+  "paidDetailedExplanations": {
+    "ru": "Платные подробные объяснения",
+    "en": "Paid detailed explanations",
+    "es": "Explicaciones detalladas de pago",
+    "de": "Kostenpflichtige detaillierte Erklärungen",
+    "fr": "Explications détaillées payantes",
+    "it": "Spiegazioni dettagliate a pagamento"
+  },
+  "premiumSeries": {
+    "ru": "Премиум-серии",
+    "en": "Premium series",
+    "es": "Series premium",
+    "de": "Premium-Serien",
+    "fr": "Séries premium",
+    "it": "Serie premium"
+  },
+  "certificationPrograms": {
+    "ru": "Сертификационные программы",
+    "en": "Certification programs",
+    "es": "Programas de certificación",
+    "de": "Zertifizierungsprogramme",
+    "fr": "Programmes de certification",
+    "it": "Programmi di certificazione"
+  },
+  "feature4MonetizationTitle": {
+    "ru": "4. Встроенная монетизация с первого дня",
+    "en": "4. Built-in Monetization from Day One",
+    "es": "4. Monetización incorporada desde el primer día",
+    "de": "4. Eingebaute Monetarisierung vom ersten Tag an",
+    "fr": "4. Monétisation intégrée dès le premier jour",
+    "it": "4. Monetizzazione integrata fin dal primo giorno"
+  },
+  "startEarningImmediately": {
+    "ru": "Начинайте зарабатывать сразу, без настройки",
+    "en": "Start earning immediately, without setup",
+    "es": "Comienza a ganar de inmediato, sin configuración",
+    "de": "Verdienen Sie sofort, ohne Einrichtung",
+    "fr": "Commencez à gagner immédiatement, sans configuration",
+    "it": "Inizia a guadagnare immediatamente, senza configurazione"
+  },
+  "builtInMonetizationInfra": {
+    "ru": "AIFA содержит встроенную инфраструктуру монетизации:",
+    "en": "AIFA includes a built-in monetization infrastructure:",
+    "es": "AIFA incluye una infraestructura de monetización incorporada:",
+    "de": "AIFA enthält eine integrierte Monetarisierungsinfrastruktur:",
+    "fr": "AIFA comprend une infrastructure de monétisation intégrée :",
+    "it": "AIFA include un'infrastruttura di monetizzazione integrata:"
+  },
+  "stripeIntegrationTitle": {
+    "ru": "Интеграция Stripe (преднастроена):",
+    "en": "Stripe Integration (pre-configured):",
+    "es": "Integración con Stripe (preconfigurada):",
+    "de": "Stripe-Integration (vorkonfiguriert):",
+    "fr": "Intégration Stripe (préconfigurée) :",
+    "it": "Integrazione Stripe (preconfigurata):"
+  },
+  "oneTimePayments": {
+    "ru": "Одноразовые платежи",
+    "en": "One-time payments",
+    "es": "Pagos únicos",
+    "de": "Einmalige Zahlungen",
+    "fr": "Paiements uniques",
+    "it": "Pagamenti una tantum"
+  },
+  "subscriptions": {
+    "ru": "Подписки",
+    "en": "Subscriptions",
+    "es": "Suscripciones",
+    "de": "Abonnements",
+    "fr": "Abonnements",
+    "it": "Abbonamenti"
+  },
+  "freeTrials": {
+    "ru": "Бесплатные пробные периоды",
+    "en": "Free trials",
+    "es": "Pruebas gratuitas",
+    "de": "Kostenlose Testversionen",
+    "fr": "Essais gratuits",
+    "it": "Prove gratuite"
+  },
+  "autoAccessManagement": {
+    "ru": "Автоматическое управление доступами",
+    "en": "Automatic access management",
+    "es": "Gestión automática de accesos",
+    "de": "Automatische Zugriffsverwaltung",
+    "fr": "Gestion automatique des accès",
+    "it": "Gestione automatica degli accessi"
+  },
+  "directPayouts": {
+    "ru": "Прямые выплаты на ваш счет",
+    "en": "Direct payouts to your account",
+    "es": "Pagos directos a tu cuenta",
+    "de": "Direkte Auszahlungen auf Ihr Konto",
+    "fr": "Paiements directs sur votre compte",
+    "it": "Pagamenti diretti sul tuo conto"
+  },
+  "threeLevelAccessControl": {
+    "ru": "Трёхуровневый контроль доступа:",
+    "en": "Three-level access control:",
+    "es": "Control de acceso de tres niveles:",
+    "de": "Dreistufige Zugriffskontrolle:",
+    "fr": "Contrôle d'accès à trois niveaux :",
+    "it": "Controllo degli accessi a tre livelli:"
+  },
+  "publicLevel": {
+    "ru": "Публичный уровень: открыт всем, отлично для маркетинга",
+    "en": "Public level: open to everyone, great for marketing",
+    "es": "Nivel público: abierto a todos, ideal para marketing",
+    "de": "Öffentliche Ebene: für alle offen, ideal für Marketing",
+    "fr": "Niveau public : ouvert à tous, idéal pour le marketing",
+    "it": "Livello pubblico: aperto a tutti, ottimo per il marketing"
+  },
+  "registeredLevel": {
+    "ru": "Уровень зарегистрированных: по email, больше вовлечённости",
+    "en": "Registered level: by email, more engagement",
+    "es": "Nivel registrado: por correo electrónico, más participación",
+    "de": "Registrierte Ebene: per E-Mail, mehr Engagement",
+    "fr": "Niveau enregistré : par e-mail, plus d'engagement",
+    "it": "Livello registrato: tramite email, maggiore coinvolgimento"
+  },
+  "premiumLevel": {
+    "ru": "Премиум-уровень: платное содержимое и преимущества",
+    "en": "Premium level: paid content and benefits",
+    "es": "Nivel premium: contenido y beneficios de pago",
+    "de": "Premium-Level: kostenpflichtige Inhalte und Vorteile",
+    "fr": "Niveau premium : contenu payant et avantages",
+    "it": "Livello premium: contenuti e vantaggi a pagamento"
+  },
+  "revenueStreams": {
+    "ru": "подписки, курсы, анализы викторин, сообщество, консультации, e-commerce, бронирования",
+    "en": "subscriptions, courses, quiz analytics, community, consultations, e-commerce, bookings",
+    "es": "suscripciones, cursos, análisis de cuestionarios, comunidad, consultas, comercio electrónico, reservas",
+    "de": "Abonnements, Kurse, Quiz-Analysen, Community, Beratungen, E-Commerce, Buchungen",
+    "fr": "abonnements, cours, analyses de quiz, communauté, consultations, e-commerce, réservations",
+    "it": "abbonamenti, corsi, analisi dei quiz, community, consulenze, e-commerce, prenotazioni"
+  },
+  "revenueStreamsTitle": {
+    "ru": "Потоки дохода:",
+    "en": "Revenue Streams:",
+    "es": "Fuentes de ingresos:",
+    "de": "Einnahmequellen:",
+    "fr": "Flux de revenus :",
+    "it": "Flussi di entrate:"
+  },
+  "feature5MarketingAnalyticsTitle": {
+    "ru": "5. Продвинутый маркетинг и аналитика",
+    "en": "5. Advanced Marketing and Analytics",
+    "es": "5. Marketing y análisis avanzados",
+    "de": "5. Fortgeschrittenes Marketing und Analytik",
+    "fr": "5. Marketing et analyses avancés",
+    "it": "5. Marketing e analisi avanzati"
+  },
+  "builtInGrowthEngine": {
+    "ru": "Встроенный движок роста с AI-анализом",
+    "en": "Built-in growth engine with AI analysis",
+    "es": "Motor de crecimiento incorporado con análisis de IA",
+    "de": "Integrierte Wachstums-Engine mit KI-Analyse",
+    "fr": "Moteur de croissance intégré avec analyse par l'IA",
+    "it": "Motore di crescita integrato con analisi AI"
+  },
+  "abTesting": {
+    "ru": "A/B тестирование",
+    "en": "A/B testing",
+    "es": "Pruebas A/B",
+    "de": "A/B-Tests",
+    "fr": "Tests A/B",
+    "it": "Test A/B"
+  },
+  "seoOptimization": {
+    "ru": "SEO оптимизация",
+    "en": "SEO optimization",
+    "es": "Optimización SEO",
+    "de": "SEO-Optimierung",
+    "fr": "Optimisation SEO",
+    "it": "Ottimizzazione SEO"
+  },
+  "loadSpeedTracking": {
+    "ru": "Отслеживание скорости загрузки",
+    "en": "Load speed tracking",
+    "es": "Seguimiento de la velocidad de carga",
+    "de": "Verfolgung der Ladegeschwindigkeit",
+    "fr": "Suivi de la vitesse de chargement",
+    "it": "Monitoraggio della velocità di caricamento"
+  },
+  "userBehaviorAnalytics": {
+    "ru": "Аналитика пользовательского поведения и конверсий",
+    "en": "User behavior and conversion analytics",
+    "es": "Análisis del comportamiento del usuario y de las conversiones",
+    "de": "Analyse des Nutzerverhaltens und der Konversionen",
+    "fr": "Analyse du comportement des utilisateurs et des conversions",
+    "it": "Analisi del comportamento degli utenti e delle conversioni"
+  },
+  "technicalExcellenceTitle": {
+    "ru": "Техническое совершенство: готовность к масштабированию",
+    "en": "Technical Excellence: Ready to Scale",
+    "es": "Excelencia técnica: listo para escalar",
+    "de": "Technische Exzellenz: Bereit zum Skalieren",
+    "fr": "Excellence technique : prêt à évoluer",
+    "it": "Eccellenza tecnica: pronto per la scalabilità"
+  },
+  "technologiesTitle": {
+    "ru": "Технологии:",
+    "en": "Technologies:",
+    "es": "Tecnologías:",
+    "de": "Technologien:",
+    "fr": "Technologies :",
+    "it": "Tecnologie:"
+  },
+  "techStack1": {
+    "ru": "React 19 + Next.js 15",
+    "en": "React 19 + Next.js 15",
+    "es": "React 19 + Next.js 15",
+    "de": "React 19 + Next.js 15",
+    "fr": "React 19 + Next.js 15",
+    "it": "React 19 + Next.js 15"
+  },
+  "techStack2": {
+    "ru": "Prisma ORM + PostgreSQL (Neon)",
+    "en": "Prisma ORM + PostgreSQL (Neon)",
+    "es": "Prisma ORM + PostgreSQL (Neon)",
+    "de": "Prisma ORM + PostgreSQL (Neon)",
+    "fr": "Prisma ORM + PostgreSQL (Neon)",
+    "it": "Prisma ORM + PostgreSQL (Neon)"
+  },
+  "techStack3": {
+    "ru": "Redis",
+    "en": "Redis",
+    "es": "Redis",
+    "de": "Redis",
+    "fr": "Redis",
+    "it": "Redis"
+  },
+  "techStack4": {
+    "ru": "Vercel Blob",
+    "en": "Vercel Blob",
+    "es": "Vercel Blob",
+    "de": "Vercel Blob",
+    "fr": "Vercel Blob",
+    "it": "Vercel Blob"
+  },
+  "techStack5": {
+    "ru": "OpenAI AI SDK",
+    "en": "OpenAI AI SDK",
+    "es": "SDK de IA de OpenAI",
+    "de": "OpenAI AI SDK",
+    "fr": "SDK IA d'OpenAI",
+    "it": "SDK AI di OpenAI"
+  },
+  "techStack6": {
+    "ru": "Vector store для интеллектуального поиска",
+    "en": "Vector store for intelligent search",
+    "es": "Almacén de vectores para búsqueda inteligente",
+    "de": "Vektorspeicher für intelligente Suche",
+    "fr": "Magasin de vecteurs pour la recherche intelligente",
+    "it": "Archivio vettoriale per la ricerca intelligente"
+  },
+  "techStack7": {
+    "ru": "Stripe и мульти-язык",
+    "en": "Stripe and multi-language",
+    "es": "Stripe y multi-idioma",
+    "de": "Stripe und Mehrsprachigkeit",
+    "fr": "Stripe et multilingue",
+    "it": "Stripe e multilingua"
+  },
+  "optimizationsTitle": {
+    "ru": "Оптимизации:",
+    "en": "Optimizations:",
+    "es": "Optimizaciones:",
+    "de": "Optimierungen:",
+    "fr": "Optimisations :",
+    "it": "Ottimizzazioni:"
+  },
+  "optimization1": {
+    "ru": "Статическая генерация с интерактивом",
+    "en": "Static generation with interactivity",
+    "es": "Generación estática con interactividad",
+    "de": "Statische Generierung mit Interaktivität",
+    "fr": "Génération statique avec interactivité",
+    "it": "Generazione statica con interattività"
+  },
+  "optimization2": {
+    "ru": "Кэширование, оптимизация запросов",
+    "en": "Caching, query optimization",
+    "es": "Almacenamiento en caché, optimización de consultas",
+    "de": "Caching, Abfrageoptimierung",
+    "fr": "Mise en cache, optimisation des requêtes",
+    "it": "Caching, ottimizzazione delle query"
+  },
+  "optimization3": {
+    "ru": "CDN, ленивое подгрузка",
+    "en": "CDN, lazy loading",
+    "es": "CDN, carga diferida",
+    "de": "CDN, Lazy Loading",
+    "fr": "CDN, chargement paresseux",
+    "it": "CDN, caricamento pigro"
+  },
+  "optimization4": {
+    "ru": "Минимальный JavaScript",
+    "en": "Minimal JavaScript",
+    "es": "JavaScript mínimo",
+    "de": "Minimales JavaScript",
+    "fr": "JavaScript minimal",
+    "it": "JavaScript minimo"
+  },
+  "whyAifaIsBetterTitle": {
+    "ru": "Почему AIFA лучше конкурентов",
+    "en": "Why AIFA is Better than Competitors",
+    "es": "Por qué AIFA es mejor que la competencia",
+    "de": "Warum AIFA besser ist als die Konkurrenz",
+    "fr": "Pourquoi AIFA est meilleur que ses concurrents",
+    "it": "Perché AIFA è migliore della concorrenza"
+  },
+  "forV0Users": {
+    "ru": "Для пользователей V0:",
+    "en": "For V0 users:",
+    "es": "Para usuarios de V0:",
+    "de": "Für V0-Benutzer:",
+    "fr": "Pour les utilisateurs de V0 :",
+    "it": "Per gli utenti V0:"
+  },
+  "forV0UsersBenefit": {
+    "ru": "то же AI, но полные приложения, а не отдельные компоненты",
+    "en": "the same AI, but full applications, not individual components",
+    "es": "la misma IA, pero aplicaciones completas, no componentes individuales",
+    "de": "dieselbe KI, aber vollständige Anwendungen, nicht einzelne Komponenten",
+    "fr": "la même IA, mais des applications complètes, pas des composants individuels",
+    "it": "la stessa IA, ma applicazioni complete, non singoli componenti"
+  },
+  "forBeginners": {
+    "ru": "Для новичков:",
+    "en": "For beginners:",
+    "es": "Para principiantes:",
+    "de": "Für Anfänger:",
+    "fr": "Pour les débutants :",
+    "it": "Per i principianti:"
+  },
+  "forBeginnersBenefit": {
+    "ru": "не требует кодинга, дизайна, может работать сразу",
+    "en": "no coding or design required, works out of the box",
+    "es": "no requiere codificación ni diseño, funciona de inmediato",
+    "de": "keine Codierung oder Design erforderlich, funktioniert sofort",
+    "fr": "aucun codage ni design requis, fonctionne immédiatement",
+    "it": "non richiede codifica o progettazione, funziona subito"
+  },
+  "vsClassicBuilders": {
+    "ru": "Против классических конструкторов:",
+    "en": "Versus classic builders:",
+    "es": "Frente a los constructores clásicos:",
+    "de": "Gegenüber klassischen Buildern:",
+    "fr": "Contre les constructeurs classiques :",
+    "it": "Rispetto ai costruttori classici:"
+  },
+  "vsClassicBuildersBenefit": {
+    "ru": "AI-чат, интеллектуальный контент, масштабируемость",
+    "en": "AI chat, intelligent content, scalability",
+    "es": "Chat con IA, contenido inteligente, escalabilidad",
+    "de": "KI-Chat, intelligenter Inhalt, Skalierbarkeit",
+    "fr": "Chat IA, contenu intelligent, évolutivité",
+    "it": "Chat AI, contenuti intelligenti, scalabilità"
+  },
+  "vsCustomDev": {
+    "ru": "Против кастомной разработки:",
+    "en": "Versus custom development:",
+    "es": "Frente al desarrollo a medida:",
+    "de": "Gegenüber kundenspezifischer Entwicklung:",
+    "fr": "Contre le développement personnalisé :",
+    "it": "Rispetto allo sviluppo personalizzato:"
+  },
+  "vsCustomDevBenefit": {
+    "ru": "часы вместо месяцев, нет технических забот",
+    "en": "hours instead of months, no technical worries",
+    "es": "horas en lugar de meses, sin preocupaciones técnicas",
+    "de": "Stunden statt Monate, keine technischen Sorgen",
+    "fr": "des heures au lieu de mois, pas de soucis techniques",
+    "it": "ore invece di mesi, nessuna preoccupazione tecnica"
+  },
+  "vsSaaS": {
+    "ru": "Против SaaS:",
+    "en": "Versus SaaS:",
+    "es": "Frente a SaaS:",
+    "de": "Gegenüber SaaS:",
+    "fr": "Contre le SaaS :",
+    "it": "Rispetto al SaaS:"
+  },
+  "vsSaaSBenefit": {
+    "ru": "контроль всех данных и инфраструктуры без плат за подписки",
+    "en": "control of all data and infrastructure without subscription fees",
+    "es": "control de todos los datos y la infraestructura sin cuotas de suscripción",
+    "de": "Kontrolle über alle Daten und Infrastrukturen ohne Abonnementgebühren",
+    "fr": "contrôle de toutes les données et de l'infrastructure sans frais d'abonnement",
+    "it": "controllo di tutti i dati e dell'infrastruttura senza canoni di abbonamento"
+  },
+  "idealForAllProductsTitle": {
+    "ru": "Идеально подходит для всех продуктов",
+    "en": "Perfectly Suited for All Products",
+    "es": "Perfectamente adecuado para todos los productos",
+    "de": "Perfekt geeignet für alle Produkte",
+    "fr": "Parfaitement adapté à tous les produits",
+    "it": "Perfettamente adatto a tutti i prodotti"
+  },
+  "useCaseContent": {
+    "ru": "Контент и образование:",
+    "en": "Content and Education:",
+    "es": "Contenido y educación:",
+    "de": "Inhalt und Bildung:",
+    "fr": "Contenu et éducation :",
+    "it": "Contenuti e istruzione:"
+  },
+  "useCaseContentDesc": {
+    "ru": "блоги, курсы, викторины, базы знаний с AI поиском",
+    "en": "blogs, courses, quizzes, knowledge bases with AI search",
+    "es": "blogs, cursos, cuestionarios, bases de conocimiento con búsqueda por IA",
+    "de": "Blogs, Kurse, Quizze, Wissensdatenbanken mit KI-Suche",
+    "fr": "blogs, cours, quiz, bases de connaissances avec recherche par IA",
+    "it": "blog, corsi, quiz, basi di conoscenza con ricerca AI"
+  },
+  "useCaseECommerce": {
+    "ru": "eCommerce и маркетплейсы:",
+    "en": "eCommerce and Marketplaces:",
+    "es": "Comercio electrónico y mercados:",
+    "de": "E-Commerce und Marktplätze:",
+    "fr": "eCommerce et places de marché :",
+    "it": "eCommerce e marketplace:"
+  },
+  "useCaseECommerceDesc": {
+    "ru": "каталоги, сервисы, подписки, доставка",
+    "en": "catalogs, services, subscriptions, delivery",
+    "es": "catálogos, servicios, suscripciones, entrega",
+    "de": "Kataloge, Dienstleistungen, Abonnements, Lieferung",
+    "fr": "catalogues, services, abonnements, livraison",
+    "it": "cataloghi, servizi, abbonamenti, consegna"
+  },
+  "useCaseCommunities": {
+    "ru": "Сообщества и соцсети:",
+    "en": "Communities and Social Networks:",
+    "es": "Comunidades y redes sociales:",
+    "de": "Gemeinschaften und soziale Netzwerke:",
+    "fr": "Communautés et réseaux sociaux :",
+    "it": "Comunità e social network:"
+  },
+  "useCaseCommunitiesDesc": {
+    "ru": "знакомства, профессиональные сети, модерация AI",
+    "en": "dating, professional networks, AI moderation",
+    "es": "citas, redes profesionales, moderación por IA",
+    "de": "Dating, professionelle Netzwerke, KI-Moderation",
+    "fr": "rencontres, réseaux professionnels, modération par l'IA",
+    "it": "incontri, reti professionali, moderazione AI"
+  },
+  "useCaseBusiness": {
+    "ru": "Бизнес и услуги:",
+    "en": "Business and Services:",
+    "es": "Negocios y servicios:",
+    "de": "Geschäft und Dienstleistungen:",
+    "fr": "Entreprises et services :",
+    "it": "Affari e servizi:"
+  },
+  "useCaseBusinessDesc": {
+    "ru": "Консалтинг, бронирование, портфолио, агентства",
+    "en": "Consulting, booking, portfolios, agencies",
+    "es": "Consultoría, reservas, portafolios, agencias",
+    "de": "Beratung, Buchung, Portfolios, Agenturen",
+    "fr": "Conseil, réservation, portfolios, agences",
+    "it": "Consulenza, prenotazioni, portfolio, agenzie"
+  },
+  "aifaAdvantageTitle": {
+    "ru": "Преимущество AIFA: настоящий контроль и владение",
+    "en": "The AIFA Advantage: True Control and Ownership",
+    "es": "La ventaja de AIFA: verdadero control y propiedad",
+    "de": "Der AIFA-Vorteil: Echte Kontrolle und Eigentum",
+    "fr": "L'avantage AIFA : un véritable contrôle et une véritable propriété",
+    "it": "Il vantaggio di AIFA: vero controllo e proprietà"
+  },
+  "dataTitle": {
+    "ru": "Данные:",
+    "en": "Data:",
+    "es": "Datos:",
+    "de": "Daten:",
+    "fr": "Données :",
+    "it": "Dati:"
+  },
+  "dataDesc": {
+    "ru": "в вашей базе, GDPR, экспорт",
+    "en": "in your database, GDPR, export",
+    "es": "en tu base de datos, GDPR, exportación",
+    "de": "in Ihrer Datenbank, DSGVO, Export",
+    "fr": "dans votre base de données, RGPD, exportation",
+    "it": "nel tuo database, GDPR, esportazione"
+  },
+  "financesTitle": {
+    "ru": "Финансы:",
+    "en": "Finances:",
+    "es": "Finanzas:",
+    "de": "Finanzen:",
+    "fr": "Finances :",
+    "it": "Finanze:"
+  },
+  "financesDesc": {
+    "ru": "прямые платежи и прозрачность",
+    "en": "direct payments and transparency",
+    "es": "pagos directos y transparencia",
+    "de": "direkte Zahlungen und Transparenz",
+    "fr": "paiements directs et transparence",
+    "it": "pagamenti diretti e trasparenza"
+  },
+  "technologyTitle": {
+    "ru": "Технологии:",
+    "en": "Technology:",
+    "es": "Tecnología:",
+    "de": "Technologie:",
+    "fr": "Technologie :",
+    "it": "Tecnologia:"
+  },
+  "technologyDesc": {
+    "ru": "исходники в GitHub, никаких вендор-локов",
+    "en": "source code in GitHub, no vendor lock-in",
+    "es": "código fuente en GitHub, sin dependencia de proveedores",
+    "de": "Quellcode in GitHub, keine Anbieterbindung",
+    "fr": "code source sur GitHub, pas de verrouillage fournisseur",
+    "it": "codice sorgente su GitHub, nessun vincolo del fornitore"
+  },
+  "howToStartTitle": {
+    "ru": "Как начать: от идеи до дохода за день",
+    "en": "How to Start: From Idea to Income in a Day",
+    "es": "Cómo empezar: de la idea a los ingresos en un día",
+    "de": "So starten Sie: Von der Idee zum Einkommen an einem Tag",
+    "fr": "Comment commencer : de l'idée au revenu en une journée",
+    "it": "Come iniziare: dall'idea al reddito in un giorno"
+  },
+  "startStep1": {
+    "ru": "Опишите идею и получите структуру приложения",
+    "en": "Describe your idea and get the application structure",
+    "es": "Describe tu idea y obtén la estructura de la aplicación",
+    "de": "Beschreiben Sie Ihre Idee und erhalten Sie die Anwendungsstruktur",
+    "fr": "Décrivez votre idée et obtenez la structure de l'application",
+    "it": "Descrivi la tua idea e ottieni la struttura dell'applicazione"
+  },
+  "startStep2": {
+    "ru": "Одним кликом задеплойте проект",
+    "en": "Deploy the project with one click",
+    "es": "Despliega el proyecto con un solo clic",
+    "de": "Stellen Sie das Projekt mit einem Klick bereit",
+    "fr": "Déployez le projet en un clic",
+    "it": "Distribuisci il progetto con un clic"
+  },
+  "startStep3": {
+    "ru": "Создайте контент и настройте монетизацию",
+    "en": "Create content and set up monetization",
+    "es": "Crea contenido y configura la monetización",
+    "de": "Erstellen Sie Inhalte und richten Sie die Monetarisierung ein",
+    "fr": "Créez du contenu et configurez la monétisation",
+    "it": "Crea contenuti e imposta la monetizzazione"
+  },
+  "startStep4": {
+    "ru": "Непрерывно улучшайте с аналитикой и AI",
+    "en": "Continuously improve with analytics and AI",
+    "es": "Mejora continuamente con análisis e IA",
+    "de": "Verbessern Sie sich kontinuierlich mit Analytik und KI",
+    "fr": "Améliorez continuellement avec l'analyse et l'IA",
+    "it": "Migliora continuamente con l'analisi e l'IA"
+  },
+  "costTitle": {
+    "ru": "Стоимость",
+    "en": "Cost",
+    "es": "Costo",
+    "de": "Kosten",
+    "fr": "Coût",
+    "it": "Costo"
+  },
+  "aifaSubscription": {
+    "ru": "AIFA подписка:",
+    "en": "AIFA Subscription:",
+    "es": "Suscripción a AIFA:",
+    "de": "AIFA-Abonnement:",
+    "fr": "Abonnement AIFA :",
+    "it": "Abbonamento AIFA:"
+  },
+  "aifaSubscriptionDesc": {
+    "ru": "SaaS цена + оплата за AI генерацию, хостинг и всё включено",
+    "en": "SaaS price + payment for AI generation, hosting, and all-inclusive",
+    "es": "Precio de SaaS + pago por generación de IA, alojamiento y todo incluido",
+    "de": "SaaS-Preis + Zahlung für KI-Generierung, Hosting und alles inklusive",
+    "fr": "Prix SaaS + paiement pour la génération d'IA, l'hébergement et tout compris",
+    "it": "Prezzo SaaS + pagamento per la generazione di IA, l'hosting e tutto compreso"
+  },
+  "traditionalDev": {
+    "ru": "Традиционная разработка:",
+    "en": "Traditional Development:",
+    "es": "Desarrollo tradicional:",
+    "de": "Traditionelle Entwicklung:",
+    "fr": "Développement traditionnel :",
+    "it": "Sviluppo tradizionale:"
+  },
+  "traditionalDevDesc": {
+    "ru": "команды, инфраструктура, инструменты, месяцы и десятки тысяч $",
+    "en": "teams, infrastructure, tools, months, and tens of thousands of $",
+    "es": "equipos, infraestructura, herramientas, meses y decenas de miles de $",
+    "de": "Teams, Infrastruktur, Tools, Monate und Zehntausende von $",
+    "fr": "équipes, infrastructure, outils, mois et des dizaines de milliers de $",
+    "it": "team, infrastruttura, strumenti, mesi e decine di migliaia di $"
+  },
+  "aifaRoi": {
+    "ru": "Возврат инвестиций AIFA:",
+    "en": "AIFA Return on Investment:",
+    "es": "Retorno de la inversión de AIFA:",
+    "de": "AIFA Return on Investment:",
+    "fr": "Retour sur investissement d'AIFA :",
+    "it": "Ritorno sull'investimento di AIFA:"
+  },
+  "aifaRoiDesc": {
+    "ru": "быстро и дешево с минимальным риском",
+    "en": "fast and cheap with minimal risk",
+    "es": "rápido y barato con un riesgo mínimo",
+    "de": "schnell und günstig mit minimalem Risiko",
+    "fr": "rapide et bon marché avec un risque minimal",
+    "it": "veloce ed economico con un rischio minimo"
+  },
+  "futureIsDialogsTitle": {
+    "ru": "Будущее цифровых продуктов — в AI-диалогах",
+    "en": "The Future of Digital Products is in AI Dialogues",
+    "es": "El futuro de los productos digitales está en los diálogos de IA",
+    "de": "Die Zukunft digitaler Produkte liegt in KI-Dialogen",
+    "fr": "L'avenir des produits numériques réside dans les dialogues d'IA",
+    "it": "Il futuro dei prodotti digitali è nei dialoghi AI"
+  },
+  "futureIsDialogsDesc": {
+    "ru": "AIFA — это не просто инструмент, а взгляд в будущее, где человек общается напрямую с интеллектуальными системами, создавая вместе уникальные впечатления.",
+    "en": "AIFA is not just a tool, but a glimpse into the future where humans communicate directly with intelligent systems, co-creating unique experiences.",
+    "es": "AIFA no es solo una herramienta, sino un vistazo al futuro donde los humanos se comunican directamente con sistemas inteligentes, co-creando experiencias únicas.",
+    "de": "AIFA ist nicht nur ein Werkzeug, sondern ein Blick in die Zukunft, in der Menschen direkt mit intelligenten Systemen kommunizieren und gemeinsam einzigartige Erlebnisse schaffen.",
+    "fr": "AIFA n'est pas seulement un outil, mais un aperçu de l'avenir où les humains communiquent directement avec des systèmes intelligents, co-créant des expériences uniques.",
+    "it": "AIFA non è solo uno strumento, ma uno sguardo al futuro in cui gli esseri umani comunicano direttamente con sistemi intelligenti, co-creando esperienze uniche."
+  },
+  "transformationLeaderQuestion": {
+    "ru": "Вопрос не в том, станет ли AI-первичный интерфейс стандартом, а в том, будете ли именно вы лидером этой трансформации.",
+    "en": "The question is not whether the AI-first interface will become the standard, but whether you will be the leader of this transformation.",
+    "es": "La pregunta no es si la interfaz AI-first se convertirá en el estándar, sino si serás el líder de esta transformación.",
+    "de": "Die Frage ist nicht, ob die AI-First-Schnittstelle zum Standard wird, sondern ob Sie der Anführer dieser Transformation sein werden.",
+    "fr": "La question n'est pas de savoir si l'interface AI-first deviendra la norme, mais si vous serez le leader de cette transformation.",
+    "it": "La domanda non è se l'interfaccia AI-first diventerà lo standard, ma se sarai tu il leader di questa trasformazione."
+  },
+  "readyToBuildTitle": {
+    "ru": "Готовы строить будущее?",
+    "en": "Ready to build the future?",
+    "es": "¿Listo para construir el futuro?",
+    "de": "Bereit, die Zukunft zu bauen?",
+    "fr": "Prêt à construire l'avenir ?",
+    "it": "Pronto a costruire il futuro?"
+  },
+  "readyToBuildDesc": {
+    "ru": "AIFA уже доступен для смелых предпринимателей, разработчиков и бизнесов, готовых к революции AI-первичных приложений.",
+    "en": "AIFA is now available for bold entrepreneurs, developers, and businesses ready for the AI-first application revolution.",
+    "es": "AIFA ya está disponible para emprendedores, desarrolladores y empresas audaces listos para la revolución de las aplicaciones AI-first.",
+    "de": "AIFA ist jetzt für mutige Unternehmer, Entwickler und Unternehmen verfügbar, die für die Revolution der AI-First-Anwendungen bereit sind.",
+    "fr": "AIFA est maintenant disponible pour les entrepreneurs, les développeurs et les entreprises audacieux prêts pour la révolution des applications AI-first.",
+    "it": "AIFA è ora disponibile per imprenditori, sviluppatori e aziende audaci pronti per la rivoluzione delle applicazioni AI-first."
+  },
+  "joinCommunity": {
+    "ru": "Присоединяйтесь к сообществу AIFA и создавайте интеллектуальные приложения, которые полюбят пользователи, которым будут завидовать конкуренты и на которых вы будете зарабатывать.",
+    "en": "Join the AIFA community and create intelligent applications that users will love, competitors will envy, and you will profit from.",
+    "es": "Únete a la comunidad de AIFA y crea aplicaciones inteligentes que los usuarios amarán, los competidores envidiarán y de las que te beneficiarás.",
+    "de": "Treten Sie der AIFA-Community bei und erstellen Sie intelligente Anwendungen, die Benutzer lieben, Konkurrenten beneiden und von denen Sie profitieren werden.",
+    "fr": "Rejoignez la communauté AIFA et créez des applications intelligentes que les utilisateurs adoreront, que les concurrents envieront et dont vous profiterez.",
+    "it": "Unisciti alla community di AIFA e crea applicazioni intelligenti che gli utenti adoreranno, i concorrenti invidieranno e da cui trarrai profitto."
+  },
+  "smartExperiencesWin": {
+    "ru": "В мире, где у всех есть сайт, победят те, кто создаёт умные впечатления.",
+    "en": "In a world where everyone has a website, those who create smart experiences will win.",
+    "es": "En un mundo donde todos tienen un sitio web, ganarán aquellos que creen experiencias inteligentes.",
+    "de": "In einer Welt, in der jeder eine Website hat, werden diejenigen gewinnen, die intelligente Erlebnisse schaffen.",
+    "fr": "Dans un monde où tout le monde a un site web, ceux qui créent des expériences intelligentes gagneront.",
+    "it": "In un mondo in cui tutti hanno un sito web, vinceranno coloro che creano esperienze intelligenti."
+  },
+  "finalTagline": {
+    "ru": "AIFA: там, где искусственный интеллект встречает бесконечные возможности.",
+    "en": "AIFA: where artificial intelligence meets endless possibilities.",
+    "es": "AIFA: donde la inteligencia artificial se encuentra con infinitas posibilidades.",
+    "de": "AIFA: wo künstliche Intelligenz auf endlose Möglichkeiten trifft.",
+    "fr": "AIFA : là où l'intelligence artificielle rencontre des possibilités infinies.",
+    "it": "AIFA: dove l'intelligenza artificiale incontra infinite possibilità."
+  },
+  "startYourJourney": {
+    "ru": "Начинайте свой путь AI-первичности уже сегодня. Ваши будущие клиенты готовы к разговору.",
+    "en": "Start your AI-first journey today. Your future customers are ready to talk.",
+    "es": "Comienza tu viaje AI-first hoy. Tus futuros clientes están listos para hablar.",
+    "de": "Starten Sie Ihre AI-First-Reise noch heute. Ihre zukünftigen Kunden sind bereit zu reden.",
+    "fr": "Commencez votre voyage AI-first dès aujourd'hui. Vos futurs clients sont prêts à discuter.",
+    "it": "Inizia oggi il tuo viaggio AI-first. I tuoi futuri clienti sono pronti a parlare."
+  }
+}

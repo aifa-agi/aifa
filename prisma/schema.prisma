@@ -1,0 +1,173 @@
+// @/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Visibility {
+  private
+  unlisted
+  public
+}
+
+enum ArtifactKind {
+  text
+  code
+  image
+  sheet
+}
+
+enum UserType {
+  guest
+  architect
+  admin
+  editor
+  authUser
+  subscriber
+  customer
+  apiUser
+}
+
+// Модели для NextAuth/Auth.js
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Обновленная модель User
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  password      String? // Оставляем для Credentials провайдера, если нужно
+  image         String?
+  type          UserType  @default(authUser)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Связи с NextAuth моделями
+  accounts Account[]
+  sessions Session[]
+
+  // Ваши существующие связи
+  files      File[]
+  Chat       Chat[]
+  Document   Document[]
+  Suggestion Suggestion[]
+}
+
+// Ваши существующие модели (без изменений)
+model Chat {
+  id         String     @id @default(cuid())
+  createdAt  DateTime   @default(now())
+  userId     String
+  title      String
+  visibility Visibility @default(private)
+  User       User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Message    Message[]
+  Stream     Stream[]
+  Vote       Vote[]
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  chatId      String
+  role        String   @db.VarChar
+  content     Json?
+  parts       Json?
+  attachments Json?
+  createdAt   DateTime @default(now())
+  Chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Vote        Vote[]
+}
+
+model Vote {
+  chatId    String
+  messageId String
+  isUpvoted Boolean @default(false)
+  Chat      Chat    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  Message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@id([chatId, messageId], map: "Vote_chatId_messageId_pk")
+}
+
+model Stream {
+  id        String   @id @default(cuid()) @map("Stream_id_pk")
+  chatId    String
+  createdAt DateTime @default(now())
+  Chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Document {
+  id         String       @default(cuid())
+  createdAt  DateTime
+  title      String
+  content    String?
+  userId     String
+  kind       ArtifactKind @default(text)
+  User       User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Suggestion Suggestion[]
+
+  @@id([id, createdAt])
+}
+
+model Suggestion {
+  id                String   @id @default(cuid())
+  documentId        String
+  documentCreatedAt DateTime
+  originalText      String
+  suggestedText     String
+  description       String?
+  isResolved        Boolean  @default(false)
+  userId            String
+  createdAt         DateTime
+  Document          Document @relation(fields: [documentId, documentCreatedAt], references: [id, createdAt], onDelete: NoAction, onUpdate: NoAction)
+  User              User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model File {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  name        String
+  contentType String
+  size        Int
+  userId      String
+  createdAt   DateTime @default(now())
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

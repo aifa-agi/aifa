@@ -1,0 +1,479 @@
+{
+  "Use your email and password to log in": {
+    "en": "Use your email and password to log in",
+    "es": "Usa tu correo electrónico y contraseña para iniciar sesión",
+    "de": "Verwenden Sie Ihre E-Mail-Adresse und Ihr Passwort, um sich anzumelden",
+    "fr": "Utilisez votre e-mail et votre mot de passe pour vous connecter",
+    "it": "Usa la tua email e password per accedere",
+    "ru": "Используйте email и пароль для входа"
+  },
+  "AI-Chatbot": {
+    "en": "AI-Chatbot",
+    "es": "Chatbot IA",
+    "de": "KI-Chatbot",
+    "fr": "Chatbot IA",
+    "it": "Chatbot IA",
+    "ru": "AI-Чатбот"
+  },
+  "New Chat": {
+    "en": "New Chat",
+    "es": "Nuevo chat",
+    "de": "Neuer Chat",
+    "fr": "Nouveau chat",
+    "it": "Nuova chat",
+    "ru": "Новый чат"
+  },
+  "Saving changes...": {
+    "en": "Saving changes...",
+    "es": "Guardando cambios...",
+    "de": "Änderungen werden gespeichert...",
+    "fr": "Enregistrement des modifications...",
+    "it": "Salvataggio delle modifiche...",
+    "ru": "Сохранение изменений..."
+  },
+  "Sign out": {
+    "en": "Sign out",        
+    "es": "Cerrar sesión",   
+    "de": "Abmelden",        
+    "fr": "Se déconnecter",  
+    "it": "Esci",            
+    "ru": "Выйти"           
+  },
+   "Console": {
+    "en": "Console",
+    "es": "Consola",
+    "de": "Konsole",
+    "fr": "Console",
+    "it": "Console",
+    "ru": "Консоль"
+  },
+  "Let's ask about it in an artificial intelligence chat.": {
+    "en": "Let's ask about it in an artificial intelligence chat.",
+    "es": "Preguntemos sobre esto en un chat de inteligencia artificial.",
+    "de": "Lassen Sie uns dazu einen KI-Chat befragen.",
+    "fr": "Demandons à un chat d'intelligence artificielle.",
+    "it": "Chiediamolo in una chat di intelligenza artificiale.",
+    "ru": "Давайте спросим об этом в чате с искусственным интеллектом."
+  },
+  
+  "Viewing files in shared chats is currently not supported.": {
+    "en": "Viewing files in shared chats is currently not supported.",
+    "es": "Actualmente no se admite la visualización de archivos en chats compartidos.",
+    "de": "Das Anzeigen von Dateien in geteilten Chats wird derzeit nicht unterstützt.",
+    "fr": "La visualisation des fichiers dans les chats partagés n'est actuellement pas prise en charge.",
+    "it": "La visualizzazione dei file nelle chat condivise non è attualmente supportata.",
+    "ru": "Просмотр файлов в общих чатах в настоящее время не поддерживается."
+  },
+  "Hello there!": {
+    "en": "Hello there!",
+    "es": "¡Hola!",
+    "de": "Hallo!",
+    "fr": "Bonjour !",
+    "it": "Ciao!",
+    "ru": "Привет!"
+  },
+  "How can I help you today?": {
+    "en": "How can I help you today?",
+    "es": "¿En qué puedo ayudarte hoy?",
+    "de": "Wie kann ich Ihnen heute helfen?",
+    "fr": "Comment puis-je vous aider aujourd'hui ?",
+    "it": "Come posso aiutarti oggi?",
+    "ru": "Чем я могу помочь вам сегодня?"
+  },
+  "Generating Image...": {
+    "en": "Generating Image...",
+    "es": "Generando imagen...",
+    "de": "Bild wird generiert...",
+    "fr": "Génération de l'image...",
+    "it": "Generazione dell'immagine...",
+    "ru": "Генерация изображения..."
+  },
+  "There's no text to copy!": {
+    "en": "There's no text to copy!",
+    "es": "¡No hay texto para copiar!",
+    "de": "Kein Text zum Kopieren vorhanden!",
+    "fr": "Il n'y a pas de texte à copier !",
+    "it": "Non c'è testo da copiare!",
+    "ru": "Нет текста для копирования!"
+  },
+  "Copied to clipboard!": {
+    "en": "Copied to clipboard!",
+    "es": "¡Copiado al portapapeles!",
+    "de": "In die Zwischenablage kopiert!",
+    "fr": "Copié dans le presse-papiers !",
+    "it": "Copiato negli appunti!",
+    "ru": "Скопировано в буфер обмена!"
+  },
+  "Copy": {
+    "en": "Copy",
+    "es": "Copiar",
+    "de": "Kopieren",
+    "fr": "Copier",
+    "it": "Copia",
+    "ru": "Копировать"
+  },
+  "Upvoting Response...": {
+    "en": "Upvoting Response...",
+    "es": "Votando positivamente la respuesta...",
+    "de": "Antwort wird positiv bewertet...",
+    "fr": "Vote positif en cours...",
+    "it": "Votazione positiva in corso...",
+    "ru": "Положительная оценка ответа..."
+  },
+  "Upvoted Response!": {
+    "en": "Upvoted Response!",
+    "es": "¡Respuesta votada positivamente!",
+    "de": "Antwort positiv bewertet!",
+    "fr": "Réponse votée positivement !",
+    "it": "Risposta votata positivamente!",
+    "ru": "Ответ оценён положительно!"
+  },
+  "Failed to upvote response.": {
+    "en": "Failed to upvote response.",
+    "es": "No se pudo votar positivamente la respuesta.",
+    "de": "Antwort konnte nicht positiv bewertet werden.",
+    "fr": "Échec du vote positif.",
+    "it": "Impossibile votare positivamente la risposta.",
+    "ru": "Не удалось поставить положительную оценку."
+  },
+  "Downvoting Response...": {
+    "en": "Downvoting Response...",
+    "es": "Votando negativamente la respuesta...",
+    "de": "Antwort wird negativ bewertet...",
+    "fr": "Vote négatif en cours...",
+    "it": "Votazione negativa in corso...",
+    "ru": "Отрицательная оценка ответа..."
+  },
+  "Downvoted Response!": {
+    "en": "Downvoted Response!",
+    "es": "¡Respuesta votada negativamente!",
+    "de": "Antwort negativ bewertet!",
+    "fr": "Réponse votée négativement !",
+    "it": "Risposta votata negativamente!",
+    "ru": "Ответ оценён отрицательно!"
+  },
+  "Failed to downvote response.": {
+    "en": "Failed to downvote response.",
+    "es": "No se pudo votar negativamente la respuesta.",
+    "de": "Antwort konnte nicht negativ bewertet werden.",
+    "fr": "Échec du vote négatif.",
+    "it": "Impossibile votare negativamente la risposta.",
+    "ru": "Не удалось поставить отрицательную оценку."
+  },
+  
+  "Cancel": {
+    "en": "Cancel",
+    "es": "Cancelar",
+    "de": "Abbrechen",
+    "fr": "Annuler",
+    "it": "Annulla",
+    "ru": "Отмена"
+  },
+  "Sending...": {
+    "en": "Sending...",
+    "es": "Enviando...",
+    "de": "Senden...",
+    "fr": "Envoi...",
+    "it": "Invio...",
+    "ru": "Отправка..."
+  },
+  "Send": {
+    "en": "Send",
+    "es": "Enviar",
+    "de": "Senden",
+    "fr": "Envoyer",
+    "it": "Invia",
+    "ru": "Отправить"
+  },
+  "Edit message": {
+    "en": "Edit message",
+    "es": "Editar mensaje",
+    "de": "Nachricht bearbeiten",
+    "fr": "Modifier le message",
+    "it": "Modifica messaggio",
+    "ru": "Редактировать сообщение"
+  },
+  "Now I'm going to explore the knowledge base. I need some time...": {
+    "en": "Now I'm going to explore the knowledge base. I need some time...",
+    "es": "Ahora voy a explorar la base de conocimientos. Necesito algo de tiempo...",
+    "de": "Jetzt werde ich die Wissensdatenbank durchsuchen. Ich brauche etwas Zeit...",
+    "fr": "Je vais maintenant explorer la base de connaissances. J'ai besoin d'un peu de temps...",
+    "it": "Ora esplorerò la base di conoscenza. Mi serve un po' di tempo...",
+    "ru": "Сейчас я изучаю базу знаний. Мне нужно немного времени..."
+  },
+  "One more moment, and the answer will be ready in a second...": {
+    "en": "One more moment, and the answer will be ready in a second...",
+    "es": "Un momento más y la respuesta estará lista en un segundo...",
+    "de": "Noch einen Moment, und die Antwort ist gleich fertig...",
+    "fr": "Encore un instant, et la réponse sera prête dans une seconde...",
+    "it": "Ancora un attimo e la risposta sarà pronta tra un secondo...",
+    "ru": "Ещё немного, и ответ будет готов через секунду..."
+  },
+  "In process...": {
+    "en": "In process...",
+    "es": "En proceso...",
+    "de": "In Bearbeitung...",
+    "fr": "En cours...",
+    "it": "In corso...",
+    "ru": "В процессе..."
+  },
+  "Login to save and revisit previous chats!": {
+    "en": "Login to save and revisit previous chats!",
+    "es": "Inicia sesión para guardar y volver a tus chats anteriores.",
+    "de": "Melde dich an, um frühere Chats zu speichern und erneut aufzurufen.",
+    "fr": "Connectez-vous pour enregistrer et retrouver vos discussions précédentes.",
+    "it": "Accedi per salvare e rivedere le chat precedenti.",
+    "ru": "Войдите, чтобы сохранять и просматривать предыдущие чаты!"
+  },
+  "Today": {
+    "en": "Today",
+    "es": "Hoy",
+    "de": "Heute",
+    "fr": "Aujourd'hui",
+    "it": "Oggi",
+    "ru": "Сегодня"
+  },
+  "Your conversations will appear here once you start chatting!": {
+    "en": "Your conversations will appear here once you start chatting!",
+    "es": "Tus conversaciones aparecerán aquí cuando comiences a chatear.",
+    "de": "Deine Unterhaltungen erscheinen hier, sobald du zu chatten beginnst.",
+    "fr": "Vos conversations apparaîtront ici lorsque vous commencerez à discuter.",
+    "it": "Le tue conversazioni appariranno qui quando inizierai a chattare.",
+    "ru": "Ваши беседы появятся здесь, когда вы начнёте чатить!"
+  },
+  "Yesterday": {
+    "en": "Yesterday",
+    "es": "Ayer",
+    "de": "Gestern",
+    "fr": "Hier",
+    "it": "Ieri",
+    "ru": "Вчера"
+  },
+  "Last 7 days": {
+    "en": "Last 7 days",
+    "es": "Últimos 7 días",
+    "de": "Letzte 7 Tage",
+    "fr": "7 derniers jours",
+    "it": "Ultimi 7 giorni",
+    "ru": "Последние 7 дней"
+  },
+  "Last 30 days": {
+    "en": "Last 30 days",
+    "es": "Últimos 30 días",
+    "de": "Letzte 30 Tage",
+    "fr": "30 derniers jours",
+    "it": "Ultimi 30 giorni",
+    "ru": "Последние 30 дней"
+  },
+  "Older than last month": {
+    "en": "Older than last month",
+    "es": "Anterior al mes pasado",
+    "de": "Älter als letzter Monat",
+    "fr": "Plus ancien que le mois dernier",
+    "it": "Più vecchio del mese scorso",
+    "ru": "Старше, чем прошлый месяц"
+  },
+  "You have reached the end of your chat history.": {
+    "en": "You have reached the end of your chat history.",
+    "es": "Has llegado al final de tu historial de chat.",
+    "de": "Du hast das Ende deines Chatverlaufs erreicht.",
+    "fr": "Vous avez atteint la fin de votre historique de chat.",
+    "it": "Hai raggiunto la fine della cronologia chat.",
+    "ru": "Вы дошли до конца истории чатов."
+  },
+  "Loading Chats...": {
+    "en": "Loading Chats...",
+    "es": "Cargando chats...",
+    "de": "Chats werden geladen...",
+    "fr": "Chargement des discussions...",
+    "it": "Caricamento chat...",
+    "ru": "Загрузка чатов..."
+  },
+  "Are you absolutely sure?": {
+    "en": "Are you absolutely sure?",
+    "es": "¿Estás absolutamente seguro?",
+    "de": "Bist du dir ganz sicher?",
+    "fr": "Êtes-vous absolument sûr ?",
+    "it": "Sei assolutamente sicuro?",
+    "ru": "Вы уверены?"
+  },
+  "This action cannot be undone. This will permanently delete your chat and remove it from our servers.": {
+    "en": "This action cannot be undone. This will permanently delete your chat and remove it from our servers.",
+    "es": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu chat y lo eliminará de nuestros servidores.",
+    "de": "Diese Aktion kann nicht rückgängig gemacht werden. Dadurch wird dein Chat dauerhaft gelöscht und von unseren Servern entfernt.",
+    "fr": "Cette action est irréversible. Cela supprimera définitivement votre discussion de nos serveurs.",
+    "it": "Questa azione non può essere annullata. Questo eliminerà definitivamente la tua chat dai nostri server.",
+    "ru": "Это действие необратимо. Чат будет удалён без возможности восстановления."
+  },
+  
+  "Continue": {
+    "en": "Continue",
+    "es": "Continuar",
+    "de": "Fortfahren",
+    "fr": "Continuer",
+    "it": "Continua",
+    "ru": "Продолжить"
+  },
+  "Deleting chat...": {
+    "en": "Deleting chat...",
+    "es": "Eliminando chat...",
+    "de": "Chat wird gelöscht...",
+    "fr": "Suppression du chat...",
+    "it": "Eliminazione della chat...",
+    "ru": "Удаление чата..."
+  },
+  "Chat deleted successfully": {
+    "en": "Chat deleted successfully",
+    "es": "Chat eliminado con éxito",
+    "de": "Chat erfolgreich gelöscht",
+    "fr": "Discussion supprimée avec succès",
+    "it": "Chat eliminata con successo",
+    "ru": "Чат успешно удалён"
+  },
+  "Failed to delete chat": {
+    "en": "Failed to delete chat",
+    "es": "No se pudo eliminar el chat",
+    "de": "Chat konnte nicht gelöscht werden",
+    "fr": "Échec de la suppression du chat",
+    "it": "Impossibile eliminare la chat",
+    "ru": "Не удалось удалить чат"
+  },
+  "Toggle Sidebar": {
+    "en": "Toggle Sidebar",
+    "es": "Mostrar/Ocultar barra lateral",
+    "de": "Seitenleiste umschalten",
+    "fr": "Afficher/Masquer la barre latérale",
+    "it": "Attiva/disattiva barra laterale",
+    "ru": "Показать/скрыть боковую панель"
+  },
+  "Loading": {
+    "en": "Loading",
+    "es": "Cargando",
+    "de": "Laden",
+    "fr": "Chargement",
+    "it": "Caricamento",
+    "ru": "Загрузка"
+  },
+  "Submit form": {
+    "en": "Submit form",
+    "es": "Enviar formulario",
+    "de": "Formular absenden",
+    "fr": "Soumettre le formulaire",
+    "it": "Invia modulo",
+    "ru": "Отправить форму"
+  },
+  "Assistant": {
+    "en": "Assistant",
+    "es": "Asistente",
+    "de": "Assistent",
+    "fr": "Assistant",
+    "it": "Assistente",
+    "ru": "Ассистент"
+  },
+  "Apply": {
+    "en": "Apply",
+    "es": "Aplicar",
+    "de": "Anwenden",
+    "fr": "Appliquer",
+    "it": "Applica",
+    "ru": "Применить"
+  },
+  
+  "You are viewing a previous version": {
+    "en": "You are viewing a previous version",
+    "es": "Estás viendo una versión anterior",
+    "de": "Sie sehen eine frühere Version",
+    "fr": "Vous visualisez une version précédente",
+    "it": "Stai visualizzando una versione precedente",
+    "ru": "Вы просматриваете предыдущую версию"
+  },
+  "Restore this version to make edits": {
+    "en": "Restore this version to make edits",
+    "es": "Restaura esta versión para hacer ediciones",
+    "de": "Stellen Sie diese Version wieder her, um Änderungen vorzunehmen",
+    "fr": "Restaurez cette version pour apporter des modifications",
+    "it": "Ripristina questa versione per apportare modifiche",
+    "ru": "Восстановите эту версию для внесения изменений"
+  },
+  "Restore this version": {
+    "en": "Restore this version",
+    "es": "Restaurar esta versión",
+    "de": "Diese Version wiederherstellen",
+    "fr": "Restaurer cette version",
+    "it": "Ripristina questa versione",
+    "ru": "Восстановить эту версию"
+  },
+  "Back to latest version": {
+    "en": "Back to latest version",
+    "es": "Volver a la última versión",
+    "de": "Zurück zur neuesten Version",
+    "fr": "Retour à la dernière version",
+    "it": "Torna all'ultima versione",
+    "ru": "Вернуться к последней версии"
+  },
+  "Checking authentication status, please try again!": {
+    "en": "Checking authentication status, please try again!",
+    "es": "Verificando el estado de autenticación, ¡por favor inténtalo de nuevo!",
+    "de": "Authentifizierungsstatus wird überprüft, bitte versuchen Sie es erneut!",
+    "fr": "Vérification du statut d'authentification, veuillez réessayer !",
+    "it": "Controllo dello stato di autenticazione, riprova!",
+    "ru": "Ошибка проверки статуса аутентификации, пожалуйста, попробуйте еще раз!"
+  },
+  "Login to your account": {
+    "en": "Login to your account",
+    "es": "Inicia sesión en tu cuenta",
+    "de": "Melden Sie sich bei Ihrem Konto an",
+    "fr": "Connectez-vous à votre compte",
+    "it": "Accedi al tuo account",
+    "ru": "Войдите в свой аккаунт"
+  },
+  "light": {
+    "en": "Light",
+    "es": "Claro",
+    "de": "Hell",
+    "fr": "Clair",
+    "it": "Chiaro",
+    "ru": "Светлая"
+  },
+  "dark": {
+    "en": "Dark",
+    "es": "Oscuro",
+    "de": "Dunkel",
+    "fr": "Sombre",
+    "it": "Scuro",
+    "ru": "Темная"
+  },
+  "Toggle": {
+    "en": "Toggle theme",
+    "es": "Cambiar tema",
+    "de": "Theme wechseln",
+    "fr": "Changer de thème",
+    "it": "Cambia tema",
+    "ru": "Переключить тему"
+  },
+  "Guest": {
+    "en": "Guest",
+    "es": "Invitado",
+    "de": "Gast",
+    "fr": "Invité",
+    "it": "Ospite",
+    "ru": "Гость"
+  },
+  "Loading auth status...": {
+    "en": "Loading auth status...",
+    "es": "Cargando estado de autenticación...",
+    "de": "Authentifizierungsstatus wird geladen...",
+    "fr": "Chargement du statut d'authentification...",
+    "it": "Caricamento dello stato di autenticazione...",
+    "ru": "Загрузка статуса аутентификации..."
+  }  ,
+  "mode": {
+    "en": "Mode",
+    "es": "Modo",
+    "de": "Modus",
+    "fr": "Mode",
+    "it": "Modalità",
+    "ru": "Режим"
+  }
+
+}
