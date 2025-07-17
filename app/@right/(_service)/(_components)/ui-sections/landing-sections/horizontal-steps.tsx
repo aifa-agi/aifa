@@ -111,14 +111,14 @@ export const HorizontalSteps: React.FC<HorizontalStepsProps> = ({
   return (
     <section className="w-full mt-20 ">
       <div className="flex flex-col items-center px-4">
-        <h2 className="mb-6 max-w-3xl font-serif text-xl font-bold leading-tight md:text-2xl lg:text-4xl ">
+        <h2 className="mb-6 max-w-3xl font-serif text-center text-xl font-bold leading-tight md:text-2xl lg:text-4xl ">
           {title}
         </h2>
-        <p className="mb-12 max-w-xl text-base text-muted-foreground md:text-lg">
+        <p className="mb-12 max-w-xl text-base text-center text-muted-foreground md:text-lg">
           {description}
         </p>
       </div>
-      <div className={cn("w-full   py-8", className)}>
+      <div className={cn("w-full  py-8", className)}>
         {/* Top Image Section */}
         <div className="relative w-full aspect-[16/9] max-w-4xl mx-auto mb-8 rounded-lg overflow-hidden border border-gray-800">
           {steps.map((step, index) => (

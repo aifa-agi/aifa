@@ -61,7 +61,7 @@ export default function HeroSection({
           {featureBlocks.map((block, index) => (
             <div
               key={index}
-              className="flex flex-col items-center text-center md:items-start md:text-left" // Centered on mobile, left-aligned on md+
+              className="flex flex-col items-center text-center md:items-start md:text-left"
             >
               <h3 className="text-2xl font-bold text-foreground line-clamp-1">
                 {block.title}

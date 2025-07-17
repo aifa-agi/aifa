@@ -42,7 +42,7 @@ export default function DoublePresentation({
     "mb-12 max-w-xl text-lg text-muted-foreground md:text-xl text-center";
   return isMobile ? (
     <section className="w-full  pt-20 ">
-      <div className="container mx-auto px-4 flex flex-col items-center gap-12">
+      <div className="container mx-auto px-4 flex flex-col items-center ">
         <div className={metaBlockClass}>
           <h2 className="text-xl font-bold  mb-4">{metaData.metaTitle}</h2>
           <p className={descriptionClass}>{metaData.metaDescription}</p>

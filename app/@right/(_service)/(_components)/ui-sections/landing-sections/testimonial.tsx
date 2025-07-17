@@ -25,15 +25,15 @@ export const Testimonial: React.FC<TestimonialProps> = ({
     <div className={cn("testimonial-new safe-paddings mt-20", className)}>
       <div className="relative mx-auto lg:max-w-none lg:px-8 md:px-4 max-w-[960px]  flex flex-col items-center px-16 ">
         {/* Quote Icon Container */}
-        <div className="h-[68px] w-full lg:h-[60px] md:h-[52px] relative flex items-center justify-center mb-10">
-          <div className="absolute left-1/2 top-0 -ml-2.5 -mt-7 -translate-x-1/2 lg:h-20 lg:w-auto md:h-[72px]">
+        <div className="h-[68px] w-full  relative flex items-center justify-center mb-10">
+          <div className="absolute left-1/2 top-0 -ml-2.5 -mt-7 -translate-x-1/2  lg:w-auto h-[72px]">
             <div className="mb-6 flex justify-center">
               <Image
                 src="/_static/images/blockquote.svg"
                 alt="Quote"
                 width={96}
                 height={96}
-                className="w-24 h-24 max-md:w-12 max-md:h-12"
+                className="w-24 h-24"
                 priority
               />
             </div>
