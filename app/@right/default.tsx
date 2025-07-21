@@ -13,7 +13,7 @@ const homePageConfig = getHomePage();
 export const metadata = constructMetadata();
 
 export default function Default() {
-  if (!homePageConfig) return <div>Home page not found</div>;
+  // if (!homePageConfig) return <div>Home page not found</div>;
   return (
     <>
       <div className="flex flex-col h-svh pb-6">
