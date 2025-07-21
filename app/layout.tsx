@@ -64,11 +64,10 @@ const THEME_COLOR_SCRIPT = `
 export default async function RootLayout({
   left,
   right,
-}: Readonly<{
+}: {
   left: React.ReactNode;
   right: React.ReactNode;
-}>) {
-  // We no longer call the hook here.
+}) {
   return (
     <html
       lang="en"

@@ -10,11 +10,5 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-
-  if (session && session?.user.type === UserType.subscriber) {
-    redirect("/subscriber");
-  }
-
   return <>{children}</>;
 }

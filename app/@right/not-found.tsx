@@ -1,3 +1,5 @@
+// @/app/@right/not-found.tsx
+
 import Image from "next/image";
 import Link from "next/link";
 import { __ } from "@/lib/translation"; // Importing translation function
@@ -14,9 +16,12 @@ export default function NotFound() {
         className="pointer-events-none mb-5 mt-6 dark:invert"
       />
       <p className="text-balance px-4 text-center text-2xl font-medium">
-        {__( "Страница не найдена. Вернуться на главную страницу." )} {/* Using translation function */}
-    
-        <Link href="/" className="text-muted-foreground underline underline-offset-4 hover:text-purple-500">
+        {__("Страница не найдена. Вернуться на главную страницу.")}{" "}
+        {/* Using translation function */}
+        <Link
+          href="/"
+          className="text-muted-foreground underline underline-offset-4 hover:text-purple-500"
+        >
           {__("Homepage")} {/* Adding translation for "Homepage" */}
         </Link>
       </p>

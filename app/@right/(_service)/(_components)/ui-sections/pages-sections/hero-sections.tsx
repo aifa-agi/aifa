@@ -48,7 +48,7 @@ export default function HeroSection({
           <div className="mb-4 rounded-full border border-primary px-4 py-1 text-sm text-muted-foreground">
             {welcomeText} {/* Using the new welcomeText prop */}
           </div>
-          <h1 className="mb-6 max-w-3xl font-serif text-4xl font-bold leading-tight md:text-6xl lg:text-7xl ">
+          <h1 className="mb-6 max-w-3xl  text-4xl font-bold leading-tight font-serif md:text-6xl lg:text-7xl ">
             {title}
           </h1>
           <p className="mb-12 max-w-xl text-lg text-muted-foreground md:text-xl">

@@ -3,18 +3,18 @@
 
 import { useTranslation } from "../(_libs)/translation";
 import AifaPromo from "./aifa-promo";
-import { FaqAccordion } from "./ui-sections/faq-accordion";
-import { AifaHelps } from "./ui-sections/landing-sections/aifa-helps";
-import DoublePresentation from "./ui-sections/landing-sections/double-presentation/double-presentation";
-import { FeaturesGrid } from "./ui-sections/landing-sections/features-grid";
-import HeroSection from "./ui-sections/landing-sections/hero-sections";
+import { FaqAccordion } from "./ui-sections/pages-sections/faq-accordion";
+import { AifaHelps } from "./ui-sections/pages-sections/aifa-helps";
+import DoublePresentation from "./ui-sections/pages-sections/double-prsentation";
+import { FeaturesGrid } from "./ui-sections/pages-sections/features-grid";
+import HeroSection from "./ui-sections/pages-sections/hero-sections";
 import {
   HorizontalStepData,
   HorizontalSteps,
-} from "./ui-sections/landing-sections/horizontal-steps";
-import Impacts from "./ui-sections/landing-sections/impacts";
-import { Testimonial } from "./ui-sections/landing-sections/testimonial";
-import VideoContainerTypeOne from "./ui-sections/landing-sections/video-container-type-one";
+} from "./ui-sections/pages-sections/horizontal-steps";
+import Impacts from "./ui-sections/pages-sections/impacts";
+import { Testimonial } from "./ui-sections/pages-sections/testimonial";
+import VideoContainerTypeOne from "./ui-sections/pages-sections/video-container-type-one";
 
 export default function HomePage() {
   const HeroFeatureBlocks = [
@@ -325,7 +325,7 @@ export default function HomePage() {
     <>
       <div className=" w-full   ">
         <HeroSection
-          title="Build Enterprise-Grade AI"
+          title="Enterprise-Grade AI Next.js starter"
           description="Free Open-Source starter kit to build, deploy, and scale intelligent AI applications. Artifacts Feature, features secure multi-provider auth, Stripe payments, vector knowledge bases, deep-research agents, and a unique fractal architecture designed for the future of AI."
           welcomeText="Thanks for the AI-SDK V5 & Vercel AI"
           featureBlocks={HeroFeatureBlocks}
