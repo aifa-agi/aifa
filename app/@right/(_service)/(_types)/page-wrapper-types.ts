@@ -1,7 +1,4 @@
-// @app/@right/(_service)/(_types)/page-config-types/types/page-wrapper-types.ts
-
-import { HeroSectionConfig } from "./page-config-types/types/hero-section/hero-section-types";
-import { CtaSectionConfig } from "./page-config-types/types/cta-section/cta-section-types";
+// app/@right/(_service)/(_types)/page-wrapper-types.ts
 
 // 1. Типы для метаданных
 export interface MetadataConfig {
