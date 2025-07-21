@@ -1,15 +1,14 @@
 // app/@right/(_service)/(_types)/page-wrapper-types.ts
 
-// 1. Типы для метаданных
 export interface MetadataConfig {
   title?: string;
   description?: string;
-  // Добавьте другие поля метаданных по необходимости
 }
 
-// 1. NEW: PageMetadata as specified by the user
+export type CuidString = string;
+
 export interface PageMetadata {
-  id: string;
+  id: CuidString;
   title: string;
   description: string;
   image?: string;
@@ -91,5 +90,4 @@ export interface PageConfig {
   sections: Section[];
 }
 
-// NEW: SlugType for getPageBySlug
 export type SlugType = string[];
