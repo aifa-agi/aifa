@@ -13,6 +13,7 @@ import { HeaderSection } from "./header-sections-components/header-section";
 import { useTheme } from "next-themes";
 import { FullScreenWrapper } from "./wrappers/full-screen-wrapper";
 import { Wrapper } from "./wrappers/wrapper";
+import DoublePresentation from "./custom-sections/custom-double-prsentation";
 
 interface PageHtmlTransformerProps {
   data: PageConfig;
@@ -57,6 +58,15 @@ export function PageHtmlTransformer({ data }: PageHtmlTransformerProps) {
               </FullScreenWrapper>
             );
           }
+          case "double-presentation-section":
+            return (
+              <DoublePresentation
+                key={section.id}
+                metaData={section.customComponentsAnyTypeData.metaData}
+                leftItem={section.customComponentsAnyTypeData.leftItem}
+                rightItem={section.customComponentsAnyTypeData.rightItem}
+              />
+            );
           // ...другие case без изменений
           default: {
             const config = section as any;

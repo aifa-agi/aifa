@@ -1,3 +1,5 @@
+// @/app/@right/(_service)/(_components)/page-transformer-components/custom-sections/custom-double-prsentation.tsx
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -6,7 +8,6 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
-// Interfaces for component props
 interface PresentationMeta {
   metaTitle: string;
   metaDescription: string;

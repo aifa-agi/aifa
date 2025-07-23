@@ -39,7 +39,8 @@ export type SectionType =
   | "changelog-section"
   | "comparison-two-column-section"
   | "comparison-three-column-section"
-  | "feature-showcase-section";
+  | "feature-showcase-section"
+  | "double-presentation-section";
 
 export interface BaseSection {
   id: string;
@@ -81,6 +82,7 @@ export interface SectionConfig extends BaseSection {
   imageUrl?: string;
   sectionClassName?: string;
   contentWrapperClassName?: string;
+  customComponentsAnyTypeData?: any;
 }
 
 export type Section = SectionConfig;

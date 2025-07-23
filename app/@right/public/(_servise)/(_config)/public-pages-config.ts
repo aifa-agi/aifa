@@ -47,5 +47,39 @@ export const PublicPagesConfig = {
         } as SectionConfig,
       ],
     },
+    {
+      metadata: {
+        id: "interactive-ai",
+        title: "Interactive AI Demo",
+        description: "Demo: DoublePresentation custom case",
+        slug: ["public", "example"],
+        type: "double-presentation-section",
+      },
+
+      sections: [
+        {
+          id: "double-presentation-demo",
+          type: "double-presentation-section",
+          customComponentsAnyTypeData: {
+            metaData: {
+              metaTitle: "Interactive AI: Where Conversation Builds the UI",
+              metaDescription: "Discover what makes AIFA revolutionary...",
+            },
+            leftItem: {
+              mediaUrl: "/_static/illustrations/ai-chat.png",
+              title: "Ai Artifacts Chatbot",
+              description:
+                "As the AI chatbot speaks, it highlights elements...",
+            },
+            rightItem: {
+              mediaUrl: "/_static/illustrations/ai-web.png",
+              title: "Related Pages",
+              description:
+                "Click any UI element, and the AI provides instant context...",
+            },
+          },
+        } as SectionConfig,
+      ],
+    },
   ] as PageConfig[],
 };

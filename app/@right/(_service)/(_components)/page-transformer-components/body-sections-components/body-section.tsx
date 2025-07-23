@@ -1,3 +1,5 @@
+// @app/@right/(_service)/(_components)/page-transformer-components/body-sections-components/body-section.tsx
+
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { SectionType } from "../../../(_types)/page-wrapper-types";
