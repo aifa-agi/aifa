@@ -1,12 +1,12 @@
 // @/app/@right/public/(_routing)/[[...slug]]/page.tsx
 
 import { PageHtmlTransformer } from "@/app/@right/(_service)/(_components)/page-transformer-components/page-html-transformer";
-import {
-  getPageBySlug,
-  getAllPublicPages,
-} from "@/app/@right/(_service)/(_config)/pages-config";
 import { constructMetadata } from "@/lib/construct-metadata";
-import type { PageConfig } from "@/app/@right/(_service)/(_types)/page-wrapper-types";
+import {
+  getAllPublicPages,
+  getPageBySlug,
+} from "../../(_servise)/(_libs)/utils";
+import { PageConfig } from "@/app/@right/(_service)/(_types)/page-wrapper-types";
 
 interface Props {
   params: Promise<{ slug?: string[] }>;
@@ -23,20 +23,20 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props) {
   const resolvedParams = await params;
   const slugArr = resolvedParams.slug ?? [];
-  const pageConfig = getPageBySlug(["public", ...slugArr]);
+  const publicPageConfig = getPageBySlug(["public", ...slugArr]);
 
-  if (!pageConfig) return {};
-  return constructMetadata(pageConfig.metadata);
+  if (!publicPageConfig) return {};
+  return constructMetadata(publicPageConfig.metadata);
 }
 
 export default async function PublicDynamicSlugPage({ params }: Props) {
   const resolvedParams = await params;
   const slugArr = resolvedParams.slug ?? [];
-  const pageConfig = getPageBySlug(["public", ...slugArr]);
+  const publicPageConfig = getPageBySlug(["public", ...slugArr]);
 
-  if (!pageConfig) {
+  if (!publicPageConfig) {
     return <div>Page not found</div>;
   }
 
-  return <PageHtmlTransformer data={pageConfig} />;
+  return <PageHtmlTransformer data={publicPageConfig} />;
 }

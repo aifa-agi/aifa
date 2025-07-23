@@ -304,13 +304,13 @@ export default function HomePage() {
       id: "faq-4",
       question: "Can you customize this project for my business needs?",
       answer:
-        "I'm very interested in reviewing your requirements to include them in the development roadmap. Please reach out via Telegram @bolshiyanov to discuss your specific business needs.",
+        "I'm very interested in reviewing your requirements to include them in the development roadmap. Please reach out via Telegram @roma_armstrong to discuss your specific business needs.",
     },
     {
       id: "faq-5",
       question: "Who maintains this project?",
       answer:
-        "I'm currently developing this project independently. If you're interested in joining, supporting, or funding the project, I'm grateful to discuss any opportunity. Please contact me via Telegram @bolshiyanov.",
+        "I'm currently developing this project independently. If you're interested in joining, supporting, or funding the project, I'm grateful to discuss any opportunity. Please contact me via Telegram @roma_armstrong .",
     },
     {
       id: "faq-6",
@@ -377,10 +377,10 @@ export default function HomePage() {
 
         <Testimonial
           quote="Be so involved they can’t tell if you’re crazy or a genius. To do AIFA-AGI"
-          authorName="Roman Bolshiyanov"
+          authorName="Roma Armstrong"
           authorTitle="Founder "
           authorCompany="aifa.dev"
-          authorImage="/_static/images/bolshiyanov.jpg"
+          authorImage="/_static/images/roma_armstrong.jpg"
         />
 
         {/* <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl">

@@ -1,9 +1,9 @@
 
 
 {
-  "name": "AI-First Architecture",
+  "name": "Enterprise-Grade AI Next.js starter",
   "short_name": "AIFA",
-  "description": "AI Agents in an Evolving and Self-Replicating Architecture for full stack web app development",
+  "description": "Free Open-Source starter kit to build, deploy, and scale intelligent AI applications. Artifacts Feature, features secure multi-provider auth, Stripe payments, vector knowledge bases, deep-research agents, and a unique fractal architecture designed for the future of AI.",
   "icons": [
     {
       "src": "./favicons/android-chrome-192x192.png",

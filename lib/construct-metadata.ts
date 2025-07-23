@@ -47,7 +47,7 @@ export function constructMetadata({
     ],
     authors: [
       {
-        name: "Roman Bolshiyanov",
+        name: "Roma Armstrong",
         url: "https://github.com/aifa-agi/aifa",
       },
     ],
