@@ -11,13 +11,13 @@
   <!-- Note: Make sure the image path is correct relative to your repository root -->
 </p>
 
- 
-## ⭐ Star Us
-
-If you love what we're building, please star this project on GitHub! It helps us grow and reach more developers.
+<p align="center">
+  <a href="https://github.com/aifa-agi/aifa/stargazers" target="_blank">
+    <img alt="Star the AIFA repo on GitHub to support the project" src="./public/_static/images/git-star-us.gif" width="50%">
+  </a>
+</p>
 
 [![Star AIFA on GitHub](https://img.shields.io/github/stars/aifa-agi/aifa?style=social)](https://github.com/aifa-agi/aifa/stargazers)
-
 
 ## 🚀 About The Project
 
