@@ -11,6 +11,26 @@
   <!-- Note: Make sure the image path is correct relative to your repository root -->
 </p>
 
+<p align="center">
+  <a href="https://github.com/aifa-agi/aifa/stargazers" target="_blank">
+    <div style="display: flex; align-items: center; justify-content: center; font-family: sans-serif; text-align: center; background-color: #1a202c; padding: 20px 30px; border-radius: 12px; border: 1px solid #2d3748;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px; transition: transform 0.3s ease, filter 0.3s ease; color: #cbd5e0;">
+        <style>
+          .star-svg:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.8));
+            color: #4ade80;
+          }
+        </style>
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" class="star-svg"/>
+      </svg>
+      <span style="font-size: 18px; font-weight: 600; color: #e2e8f0;">
+        If you like this project, please <strong style="color: #4ade80;">give it a star!</strong>
+      </span>
+    </div>
+  </a>
+</p>
+
 ## 🚀 About The Project
 
 **AIFA (AI Fractal Agents)** is more than just a starter kit; it's a foundation for building the next generation of intelligent, scalable AI applications. It provides a robust, enterprise-grade architecture using Next.js 15, designed for developers who want to move fast without sacrificing quality or scalability.
