@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="./public/favicons/1024.png" alt="AIFA Logo" width="120" height="120" style="border-radius:50%; box-shadow:0 2px 12px #00000022;">
+</p>
+
+<h1 align="center">AIFA — Enterprise-Grade AI Next.js Starter</h1>
+
 # AIFA - Enterprise-Grade AI Next.js Starter
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
@@ -16,8 +22,6 @@
     <img alt="Star the AIFA repo on GitHub to support the project" src="./public/_static/images/git-star-us.gif" width="50%">
   </a>
 </p>
-
-[![Star AIFA on GitHub](https://img.shields.io/github/stars/aifa-agi/aifa?style=social)](https://github.com/aifa-agi/aifa/stargazers)
 
 ## 🚀 About The Project
 
