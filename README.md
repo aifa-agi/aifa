@@ -31,6 +31,7 @@
   </a>
 </p>
 
+
 ## 🚀 About The Project
 
 **AIFA (AI Fractal Agents)** is more than just a starter kit; it's a foundation for building the next generation of intelligent, scalable AI applications. It provides a robust, enterprise-grade architecture using Next.js 15, designed for developers who want to move fast without sacrificing quality or scalability.
