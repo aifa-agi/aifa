@@ -1,12 +1,12 @@
 {
-  "name": "AIFA",
+  "name": "AIFA- Enterprise-Grade AI Next.js starter ",
   "version": "0.0.01",
   "private": false,
-  "description": "AI Agents in an Evolving and Self-Replicating Architecture for developing full-featured web applications, open source",
+  "description": "Free Open-Source starter kit to build, deploy, and scale intelligent AI applications. Artifacts Feature, features secure multi-provider auth, Stripe payments, vector knowledge bases, deep-research agents, and a unique fractal architecture designed for the future of AI.",
   "author": {
-    "name": "Roman Bolshiyanov",
-    "email": "bolshiyanov@gmail.com",
-    "telegram": "@bolshiyanov",
+    "name": "Roma Armstrong",
+    "email": "r672442261@gmail.com",
+    "telegram": "@roma_armstrong",
     "x": "https://x.com/aifa_agi"
   },
   "license": "GPL-3.0-or-later",
