@@ -12,25 +12,37 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/aifa-agi/aifa/stargazers" target="_blank">
-    <div style="display: flex; align-items: center; justify-content: center; font-family: sans-serif; text-align: center; background-color: #1a202c; padding: 20px 30px; border-radius: 12px; border: 1px solid #2d3748;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px; transition: transform 0.3s ease, filter 0.3s ease; color: #cbd5e0;">
+  <!-- The link wraps the entire block, making the whole banner clickable -->
+  <a href="https://github.com/aifa-agi/aifa/stargazers" target="_blank" style="text-decoration: none;">
+    <!-- Main container for styling the banner -->
+    <div style="display: flex; align-items: center; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'; text-align: center; background-color: #0d1117; padding: 18px 25px; border-radius: 12px; border: 1px solid #30363d; width: fit-content; margin: auto; transition: background-color 0.3s ease;">
+      
+  
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" style="margin-right: 12px;">
         <style>
-          .star-svg:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.8));
-            color: #4ade80;
+          /* Define base styles and transition for the star path */
+          .star-path {
+            fill: #8b949e; /* Default GitHub icon color */
+            transition: all 0.3s ease-in-out;
+          }
+          /* On hover of the parent SVG element, apply transformations to the star path */
+          svg:hover .star-path {
+            fill: #58a6ff; /* A bright blue highlight color */
+            transform: scale(1.25) rotate(15deg);
           }
         </style>
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" class="star-svg"/>
+        <!-- This is the standard SVG path for GitHub's star icon -->
+        <path class="star-path" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
       </svg>
-      <span style="font-size: 18px; font-weight: 600; color: #e2e8f0;">
-        If you like this project, please <strong style="color: #4ade80;">give it a star!</strong>
+      
+      <!-- The text part of the banner -->
+      <span style="font-size: 16px; font-weight: 600; color: #c9d1d9;">
+        If this project helps you, please <strong style="color: #58a6ff;">give it a star!</strong>
       </span>
+
     </div>
   </a>
 </p>
-<!-- КОНЕЦ АНИМИРОВАННОГО БЛОКА -->
 
 
 ## 🚀 About The Project
