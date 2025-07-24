@@ -4,10 +4,17 @@
 
 <h1 align="center">AIFA — Enterprise-Grade AI Next.js Starter</h1>
 <p align="center">
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
-[![GitHub stars](https://img.shields.io/github/stars/aifa-agi/aifa?style=for-the-badge&logo=github)](https://github.com/aifa-agi/aifa/stargazers)
-[![Follow on X](https://img.shields.io/twitter/follow/aifa_agi?style=for-the-badge&logo=x)](https://x.com/aifa_agi)
+  <a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank">
+    <img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge">
+  </a>
+  <a href="https://github.com/aifa-agi/aifa/stargazers" target="_blank">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/aifa-agi/aifa?style=for-the-badge&logo=github">
+  </a>
+  <a href="https://x.com/aifa_agi" target="_blank">
+    <img alt="Follow on X" src="https://img.shields.io/twitter/follow/aifa_agi?style=for-the-badge&logo=x">
+  </a>
 </p>
+
 > Free Open-Source starter kit to build, deploy, and scale intelligent AI applications. Features secure multi-provider auth, Stripe payments, vector knowledge bases, deep-research agents, and a unique fractal architecture designed for the future of AI.
 
 <p align="center">
