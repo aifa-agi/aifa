@@ -56,5 +56,5 @@ _The future is not written in corporate data centers, but in code that lives and
 
 ## 🏋️‍♀️ Author
 
-Roman Bolshiynov,
-telegram contact: **@bolshiyanov**
+Roma Armstrong
+telegram contact: **@roma_armstrong**
