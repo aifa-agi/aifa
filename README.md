@@ -11,38 +11,12 @@
   <!-- Note: Make sure the image path is correct relative to your repository root -->
 </p>
 
-<p align="center">
-  <!-- The link wraps the entire block, making the whole banner clickable -->
-  <a href="https://github.com/aifa-agi/aifa/stargazers" target="_blank" style="text-decoration: none;">
-    <!-- Main container for styling the banner -->
-    <div style="display: flex; align-items: center; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'; text-align: center; background-color: #0d1117; padding: 18px 25px; border-radius: 12px; border: 1px solid #30363d; width: fit-content; margin: auto; transition: background-color 0.3s ease;">
-      
-  
-      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" style="margin-right: 12px;">
-        <style>
-          /* Define base styles and transition for the star path */
-          .star-path {
-            fill: #8b949e; /* Default GitHub icon color */
-            transition: all 0.3s ease-in-out;
-          }
-          /* On hover of the parent SVG element, apply transformations to the star path */
-          svg:hover .star-path {
-            fill: #58a6ff; /* A bright blue highlight color */
-            transform: scale(1.25) rotate(15deg);
-          }
-        </style>
-        <!-- This is the standard SVG path for GitHub's star icon -->
-        <path class="star-path" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-      </svg>
-      
-      <!-- The text part of the banner -->
-      <span style="font-size: 16px; font-weight: 600; color: #c9d1d9;">
-        If this project helps you, please <strong style="color: #58a6ff;">give it a star!</strong>
-      </span>
+ 
+## ⭐ Star Us
 
-    </div>
-  </a>
-</p>
+If you love what we're building, please star this project on GitHub! It helps us grow and reach more developers.
+
+[![Star AIFA on GitHub](https://img.shields.io/github/stars/aifa-agi/aifa?style=social)](https://github.com/aifa-agi/aifa/stargazers)
 
 
 ## 🚀 About The Project
