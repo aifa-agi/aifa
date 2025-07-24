@@ -74,11 +74,11 @@ Ensure you have [Node.js](https://nodejs.org/) (v18.x or newer) and [pnpm](https
 
 This project is distributed under the AGPL-3.0 license to ensure openness of all derivative works.
 
----
-
-_The future is not written in corporate data centers, but in code that lives and evolves on millions of servers around the world._
-
 ## 🏋️‍♀️ Author
 
 Roma Armstrong
 telegram contact: **@roma_armstrong**
+
+---
+
+_The future is not written in corporate data centers, but in code that lives and evolves on millions of servers around the world._
