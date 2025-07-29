@@ -1,5 +1,3 @@
-// @/app/@right/(_service)/(_components)/navigation-menu/wide-menu.tsx
-
 "use client";
 
 import React, { useState, useEffect, JSX } from "react";
@@ -25,10 +23,7 @@ const isSmallCategory = (category: MenuCategory) => category.links.length <= 5;
 const greenDotClass = "bg-emerald-500";
 
 export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
-  // Use the session hook to get user data. It's the source of truth for the user's role.
   const { data: session } = useSession();
-  // Determine user role. Fallback to 'guest' if the user is not authenticated.
-  // This seamlessly handles both authenticated and unauthenticated states.
   const userRole = session?.user?.type || UserType.guest;
 
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
@@ -36,8 +31,7 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
     null
   );
 
-  // Effect to reset menu state when it's closed.
-  // This ensures a clean state every time the menu is opened.
+  // Сброс состояний при закрытии меню
   useEffect(() => {
     if (!isOpen) {
       setActiveCategoryTitle(null);
@@ -45,13 +39,9 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
     }
   }, [isOpen]);
 
-  // Filter links based on the current user's role.
-  // This is the core logic for role-based access control in the menu.
   const getFilteredLinks = (links: MenuLink[]) =>
     links.filter((link) => link.roles.includes(userRole));
 
-  // Filter the categories themselves. If a category has no visible links for the current role,
-  // it is removed from the menu entirely.
   const roleFilteredCategories = menuData.categories
     .map((category) => ({
       ...category,
@@ -85,7 +75,6 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
               >
                 {link.name}
               </span>
-              {/* This logic ensures a smooth transition between badge and arrow on hover */}
               {link.hasBadge && link.badgeName && !isHovered && (
                 <Badge className="shadow-none rounded-full px-2.5 py-0.5 text-xs font-semibold h-6 flex items-center">
                   <div
@@ -120,12 +109,10 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
     ? roleFilteredCategories.find((cat) => cat.title === activeCategoryTitle)
     : null;
 
-  // Logic to build columns for the default view (all categories visible)
   const defaultColumns: JSX.Element[] = [];
   for (let i = 0; i < roleFilteredCategories.length; ) {
     const current = roleFilteredCategories[i];
     const next = roleFilteredCategories[i + 1];
-    // Combine two small categories into a single column to save space.
     if (isSmallCategory(current) && next && isSmallCategory(next)) {
       defaultColumns.push(
         <div key={`col-group-${i}`} className="w-[180px] shrink-0 pr-4">
@@ -154,7 +141,6 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
     }
   }
 
-  // Logic to build columns for the active category view (when user clicks a category)
   const activeColumns: JSX.Element[] = [];
   if (activeCategory) {
     const numColumns = Math.ceil(
@@ -182,7 +168,7 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-x-0 max-w-[90%] mx-auto bg-secondary  rounded-lg shadow-2xl overflow-hidden z-50 border border-primary"
+            className="fixed inset-x-0 max-w-[90%] mx-auto bg-secondary rounded-lg shadow-2xl overflow-hidden z-50 border border-primary"
             style={{ top: "120px", height: "432px" }}
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
@@ -207,7 +193,11 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
                             ? "ring-2 ring-white"
                             : ""
                         )}
-                        onClick={() => setActiveCategoryTitle(category.title)}
+                        onClick={() =>
+                          setActiveCategoryTitle((prev) =>
+                            prev === category.title ? null : category.title
+                          )
+                        }
                       >
                         <CardContent className="flex items-center justify-start p-0">
                           <h4 className="text-white font-semibold text-base line-clamp-1 whitespace-nowrap overflow-hidden">
