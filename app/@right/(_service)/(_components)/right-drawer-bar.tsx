@@ -35,7 +35,7 @@ export default function RightDrawerBar({
         <SheetTrigger asChild>
           <Button
             aria-label="AIFA content"
-            className="fixed top-2 right-4 z-50 flex items-center justify-center md:hidden h-[34px]"
+            className="fixed top-3 right-4 z-50 flex items-center justify-center md:hidden h-[34px]"
           >
             <GlobeIcon size={16} />
           </Button>
@@ -54,7 +54,7 @@ export default function RightDrawerBar({
           <SheetClose asChild>
             <Button
               size="sm"
-              className="absolute top-2 right-2 h-[34px]"
+              className="absolute top-3 right-2 h-[34px]"
               aria-label="Close"
             >
               <MessageIcon size={16} />

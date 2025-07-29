@@ -18,6 +18,7 @@ const pwaConfig = withPWA({
 
 /** @type {import('next').NextConfig} */
 // This is your original configuration from the next.config.ts file.
+const isImageOptimizationOn = process.env.IMAGE_OPTIMIZATION_ON === 'true';
 const nextConfig = {
   experimental: {
     ppr: true, // Enables Partial Prerendering (PPR).
@@ -28,6 +29,7 @@ const nextConfig = {
         hostname: 'avatar.vercel.sh', // Allows images from this hostname.
       },
     ],
+    unoptimized: !isImageOptimizationOn,
   },
 };
 

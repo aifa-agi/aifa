@@ -39,7 +39,7 @@ const geistMono = Geist_Mono({
   display: "swap",
   variable: "--font-geist-mono",
 });
-
+const THEME_MODE = process.env.THEME_MODE || "dark";
 const LIGHT_THEME_COLOR = "hsl(0 0% 100%)";
 const DARK_THEME_COLOR = "hsl(240deg 10% 3.92%)";
 const THEME_COLOR_SCRIPT = `
@@ -84,7 +84,7 @@ export default async function RootLayout({
       <body className="antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme={THEME_MODE}
           disableTransitionOnChange
         >
           <Toaster position="top-center" />

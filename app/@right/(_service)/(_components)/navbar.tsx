@@ -2,85 +2,113 @@
 
 "use client";
 
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSelectedLayoutSegment } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { ChevronDown, MoreVertical } from "lucide-react";
 import { useScroll } from "@/hooks/use-scroll";
-import {
-  navBarConfigs,
-  navBarPublicConfig,
-  NavBarLayout,
-} from "../(_config)/nav-bar-config";
 import { appConfig } from "@/config/appConfig";
-import { useSession } from "next-auth/react";
-import { UserType } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import WideMenu from "./navigation-menu/wide-menu";
+import MobileMenu from "./navigation-menu/mobile-menu";
 
 interface NavBarProps {
   scroll?: boolean;
-  large?: boolean;
 }
 
 export function NavBar({ scroll = false }: NavBarProps) {
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const scrolled = useScroll(50);
-  const selectedLayout = useSelectedLayoutSegment();
 
-  console.log(" selectedLayout NavBar", selectedLayout);
+  useEffect(() => {
+    const handleResize = () => setIsLargeScreen(window.innerWidth >= 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  const { data: session } = useSession();
-  const userType: UserType = session?.user?.type || "guest";
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
 
-  const links =
-    selectedLayout &&
-    Object.prototype.hasOwnProperty.call(navBarConfigs, selectedLayout)
-      ? navBarConfigs[selectedLayout as NavBarLayout]
-      : navBarPublicConfig.mainNav;
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
-  const filteredLinks = links.filter(
-    (item) => !item.roles || item.roles.includes(userType)
-  );
+  const handleButtonClick = () => setIsOpen((v) => !v);
+  const handleOverlayClick = () => setIsOpen(false);
 
   return (
-    <header
-      className={`sticky top-0 z-40 flex w-20 md:w-full justify-start px-2 bg-background/60 backdrop-blur-xl mr-12 transition-all ${
-        scroll ? (scrolled ? "border-b" : "bg-transparent") : "border-b"
-      }`}
-    >
-      <div className="flex h-14 items-center justify-between py-4">
-        <div className="flex gap-4 ">
+    <>
+      <header
+        className={cn(
+          "sticky top-0 flex w-[calc(100%_-_48px)] md:w-full justify-start px-2 bg-black/20 backdrop-blur-xl transition-all z-50",
+          scroll ? (scrolled ? "border-b" : "bg-transparent") : "border-b"
+        )}
+      >
+        <div className="flex h-14  w-full items-center justify-between py-4 z-51 ">
           <Link href="/" className="flex items-center space-x-1.5">
             <Image
               src="/favicons/logo.png"
               alt={appConfig.name}
               width={32}
               height={32}
-              className="rounded-md min-size-8 min-w-8"
+              className="min-h-8 min-w-8 rounded-md"
               priority
             />
           </Link>
 
-          {filteredLinks && filteredLinks.length > 0 ? (
-            <nav className="hidden gap-6 md:flex">
-              {filteredLinks.map((item, index) => (
-                <Link
-                  key={index}
-                  href={item.disabled ? "#" : item.href}
-                  prefetch={true}
-                  className={cn(
-                    "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
-                    item.href.startsWith(`/${selectedLayout}`)
-                      ? "text-foreground"
-                      : "text-foreground/60",
-                    item.disabled && "cursor-not-allowed opacity-80"
-                  )}
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </nav>
-          ) : null}
+          {isLargeScreen ? (
+            <Button
+              onClick={handleButtonClick}
+              size="sm"
+              className="flex items-center gap-2 whitespace-nowrap px-4"
+            >
+              <span>{isOpen ? "Close Menu" : "Open Menu"}</span>
+              <ChevronDown
+                className={cn(
+                  "size-4 transition-transform duration-300",
+                  isOpen && "rotate-180"
+                )}
+              />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleButtonClick}
+              variant="outline"
+              size="sm"
+              className="flex items-center justify-center "
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+            >
+              <MoreVertical className="size-5" />
+            </Button>
+          )}
         </div>
-      </div>
-    </header>
+
+        {isLargeScreen ? (
+          <WideMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+        ) : (
+          <MobileMenu
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            topOffset={"56px"}
+          />
+        )}
+      </header>
+
+      {isOpen && (
+        <div
+          className="absolute  size-full top-[56px] bg-black/50 backdrop-blur-sm z-20"
+          onClick={handleOverlayClick}
+          aria-hidden="true"
+        />
+      )}
+    </>
   );
 }

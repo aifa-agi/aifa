@@ -5,12 +5,14 @@ export function constructMetadata({
   title = appConfig.name,
   description = appConfig.description,
   image = appConfig.ogImage,
-  icons = "/favicon.ico",
+
+  icons = "/logo.png",
   noIndex = false,
 }: {
   title?: string;
   description?: string;
   image?: string;
+  generator?: string;
   icons?: string;
   noIndex?: boolean;
 } = {}): Metadata {
@@ -63,13 +65,14 @@ export function constructMetadata({
           url: image,
           width: 1200,
           height: 630,
-          alt: "AIFA - Build Enterprise-Grade AI",
+          alt: "AIFA - Build Enterprise-Grade AI nextjs strater",
         },
       ],
+
       type: "website",
       locale: "en_US",
     },
-
+    generator: "aifa.dev",
     twitter: {
       card: "summary_large_image",
       title,
