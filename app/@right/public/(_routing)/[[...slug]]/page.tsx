@@ -8,12 +8,10 @@ import {
   menuData,
   MenuLink,
 } from "@/app/@right/(_service)/(_config)/menu-data";
-// Type guard для проверки формы resolvedParams
 function isUsableParams(obj: any): obj is { slug?: string[] } {
   return obj && Array.isArray(obj.slug);
 }
 
-// Помощник для капитализации
 function capitalizeWord(str: string) {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -25,7 +23,7 @@ function findCategoryAndPage(
   role: UserType
 ): { category?: MenuCategory; link?: MenuLink } {
   if (!slug || slug.length === 0) return {};
-  const href = "/" + slug.join("-");
+  const href = "/public/" + slug.join("-");
 
   for (const category of menuData.categories) {
     for (const link of category.links) {
