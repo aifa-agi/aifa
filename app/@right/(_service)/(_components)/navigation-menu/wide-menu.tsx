@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, JSX } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { ArrowRight } from "lucide-react";
@@ -23,6 +24,7 @@ const isSmallCategory = (category: MenuCategory) => category.links.length <= 5;
 const greenDotClass = "bg-emerald-500";
 
 export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
+  const router = useRouter();
   const { data: session } = useSession();
   const userRole = session?.user?.type || UserType.guest;
 
@@ -31,7 +33,7 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
     null
   );
 
-  // Сброс состояний при закрытии меню
+  // Сбрасываем состояния при закрытии меню
   useEffect(() => {
     if (!isOpen) {
       setActiveCategoryTitle(null);
@@ -39,9 +41,11 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
     }
   }, [isOpen]);
 
+  // Фильтрация ссылок по роли пользователя
   const getFilteredLinks = (links: MenuLink[]) =>
     links.filter((link) => link.roles.includes(userRole));
 
+  // Категории с отфильтрованными ссылками и удалением пустых
   const roleFilteredCategories = menuData.categories
     .map((category) => ({
       ...category,
@@ -49,6 +53,15 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
     }))
     .filter((category) => category.links.length > 0);
 
+  // Обработчик клика по ссылке с мягкой навигацией и закрытием меню
+  const handleLinkClick = (href: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!href || href === "#") return;
+    router.push(href);
+    setIsOpen(false);
+  };
+
+  // Рендер списка ссылок категории (с мягкой навигацией)
   const renderCategoryLinks = (links: MenuLink[], maxLinks: number) => (
     <ul className="space-y-3">
       {links.slice(0, maxLinks).map((link, idx) => {
@@ -59,6 +72,7 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
           <li key={link.name} style={{ height: 24, marginTop: 12 }}>
             <a
               href={link.href || "#"}
+              onClick={handleLinkClick(link.href || "#")}
               className="group flex items-center justify-between text-white hover:text-gray-300 transition-colors duration-200 relative"
               onMouseEnter={() => setHoveredLink(hoverKey)}
               onMouseLeave={() => setHoveredLink(null)}
@@ -69,12 +83,11 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
                   "flex-grow overflow-hidden text-ellipsis whitespace-nowrap flex items-center gap-2",
                   link.hasBadge && link.badgeName && !isHovered ? "mr-2" : ""
                 )}
-                style={{
-                  transition: "margin 0.2s",
-                }}
+                style={{ transition: "margin 0.2s" }}
               >
                 {link.name}
               </span>
+
               {link.hasBadge && link.badgeName && !isHovered && (
                 <Badge className="shadow-none rounded-full px-2.5 py-0.5 text-xs font-semibold h-6 flex items-center">
                   <div
@@ -86,6 +99,7 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
                   {link.badgeName}
                 </Badge>
               )}
+
               {isHovered && (
                 <motion.span
                   initial={{ opacity: 0, scale: 0.85 }}
@@ -105,6 +119,7 @@ export default function WideMenu({ isOpen, setIsOpen }: WideMenuProps) {
     </ul>
   );
 
+  // Рендер колонок категорий для активной категории
   const activeCategory = activeCategoryTitle
     ? roleFilteredCategories.find((cat) => cat.title === activeCategoryTitle)
     : null;

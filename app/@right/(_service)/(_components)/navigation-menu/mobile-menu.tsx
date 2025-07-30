@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Accordion,
@@ -13,6 +14,8 @@ import { useSession } from "next-auth/react";
 import { UserType } from "@prisma/client";
 import { menuData, MenuLink } from "../../(_config)/menu-data";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "../../(_libs)/translation";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -22,7 +25,13 @@ interface MobileMenuProps {
 
 const greenDotClass = "bg-emerald-500";
 
-export default function MobileMenu({ isOpen, topOffset }: MobileMenuProps) {
+export default function MobileMenu({
+  isOpen,
+  setIsOpen,
+  topOffset,
+}: MobileMenuProps) {
+  const { t } = useTranslation();
+  const router = useRouter();
   const { data: session } = useSession();
   const userRole: UserType = session?.user?.type || UserType.guest;
 
@@ -35,6 +44,13 @@ export default function MobileMenu({ isOpen, topOffset }: MobileMenuProps) {
       links: getFilteredLinks(category.links),
     }))
     .filter((category) => category.links.length > 0);
+  const handleLinkClick =
+    (href: string | undefined) => (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (!href || href === "#") return;
+      router.push(href);
+      setIsOpen(false);
+    };
 
   const renderCategoryLinks = (categoryLinks: MenuLink[]) => (
     <ul className="space-y-3 py-2">
@@ -42,6 +58,7 @@ export default function MobileMenu({ isOpen, topOffset }: MobileMenuProps) {
         <li key={link.name}>
           <a
             href={link.href ?? "#"}
+            onClick={handleLinkClick(link.href)}
             className="flex items-center bg-black text-white transition-colors duration-200 relative"
           >
             {link.hasBadge && link.badgeName ? (
@@ -86,10 +103,12 @@ export default function MobileMenu({ isOpen, topOffset }: MobileMenuProps) {
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           <div
-            className="bg-black text-white   p-6  mb-6 w-full max-w-full flex flex-col"
+            className="bg-black text-white p-6 mb-6 w-full max-w-full flex flex-col"
             style={{ height: `calc(100dvh - ${topOffset})` }}
           >
-            <h2 className="text-2xl font-bold mb-4 text-left">Mobile Menu</h2>
+            <h2 className="text-2xl font-bold mb-4 text-left">
+              {t("Mobile Menu")}
+            </h2>
             <div className="flex-1 overflow-y-auto scrollbar-hide">
               <Accordion type="single" collapsible className="w-full">
                 {roleFilteredCategories.map((category, index) => (

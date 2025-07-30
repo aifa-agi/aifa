@@ -12,12 +12,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import WideMenu from "./navigation-menu/wide-menu";
 import MobileMenu from "./navigation-menu/mobile-menu";
+import { useTranslation } from "../(_libs)/translation";
 
 interface NavBarProps {
   scroll?: boolean;
 }
 
 export function NavBar({ scroll = false }: NavBarProps) {
+  const { t } = useTranslation();
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const scrolled = useScroll(50);
@@ -48,7 +50,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
     <>
       <header
         className={cn(
-          "sticky top-0 flex w-[calc(100%_-_48px)] md:w-full justify-start px-2 bg-black/20 backdrop-blur-xl transition-all z-50",
+          "sticky top-0 flex w-[calc(100%_-_52px)] md:w-full justify-start px-2 bg-black/20 backdrop-blur-xl transition-all z-50",
           scroll ? (scrolled ? "border-b" : "bg-transparent") : "border-b"
         )}
       >
@@ -70,7 +72,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
               size="sm"
               className="flex items-center gap-2 whitespace-nowrap px-4"
             >
-              <span>{isOpen ? "Close Menu" : "Open Menu"}</span>
+              <span>{isOpen ? t("Close Menu") : t("Open Menu")}</span>
               <ChevronDown
                 className={cn(
                   "size-4 transition-transform duration-300",
@@ -81,10 +83,10 @@ export function NavBar({ scroll = false }: NavBarProps) {
           ) : (
             <Button
               onClick={handleButtonClick}
-              variant="outline"
+              variant="ghost"
               size="sm"
               className="flex items-center justify-center "
-              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-label={isOpen ? t("Close Menu") : t("Open Menu")}
             >
               <MoreVertical className="size-5" />
             </Button>
