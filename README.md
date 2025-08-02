@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/favicons/1024.png" alt="AIFA Logo" width="120" height="120" style="border-radius:50%; box-shadow:0 2px 12px #00000022;">
+  <img src="./public/1024.png" alt="AIFA Logo" width="120" height="120" style="border-radius:50%; box-shadow:0 2px 12px #00000022;">
 </p>
 
 <h1 align="center">AIFA — Enterprise-Grade AI Next.js Starter</h1>
