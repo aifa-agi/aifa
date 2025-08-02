@@ -171,3 +171,48 @@ model File {
   createdAt   DateTime @default(now())
   User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Page {
+  id          String        @id @default(cuid())
+  slug        String[]      @db.Text
+  title       String
+  description String
+  type        String
+  image       String?
+  design      String?
+  sections    PageSection[]
+  settings    PageSetting[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model PageSection {
+  id                          String   @id @default(cuid())
+  pageId                      String
+  order                       Int
+  name                        String
+  sectionPath                 String[] @db.Text
+  summary                     String?  @db.Text
+  type                        String
+  className                   String?
+  headerContent               Json?    @db.JsonB
+  bodyContent                 Json?    @db.JsonB
+  footerContent               Json?    @db.JsonB
+  videoUrl                    String?
+  imageUrl                    String?
+  sectionClassName            String?
+  contentWrapperClassName     String?
+  customComponentsAnyTypeData Json?    @db.JsonB
+  page                        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+}
+
+model PageSetting {
+  id        String   @id @default(cuid())
+  pageId    String
+  settings  Json?    @db.JsonB
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId])
+}

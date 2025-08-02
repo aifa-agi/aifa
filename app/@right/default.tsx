@@ -3,7 +3,7 @@
 import type { Metadata } from "next";
 import { constructMetadata } from "@/lib/construct-metadata";
 import { NavBar } from "./(_service)/(_components)/navbar";
-import HomePage from "./(_service)/(_components)/home-page";
+import HomePage from "./(_service)/(_components)/home-page/home-page";
 import { Footer } from "./(_service)/(_components)/footer";
 
 export const metadata: Metadata = constructMetadata();

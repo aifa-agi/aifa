@@ -14,6 +14,7 @@ export interface PageMetadata {
   image?: string;
   slug?: string[];
   type: SectionType;
+  design?: string;
 }
 
 export type SectionType =
@@ -75,6 +76,7 @@ export interface FooterContentConfig {
 }
 export interface SectionConfig extends BaseSection {
   type: SectionType;
+  summary?: string;
   headerContent: HeaderContentConfig;
   bodyContent?: React.ReactNode;
   footerContent?: FooterContentConfig;

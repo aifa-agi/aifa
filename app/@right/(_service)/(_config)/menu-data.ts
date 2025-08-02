@@ -1,4 +1,4 @@
-// app/menu-data.ts
+// @/app/@right/(_service)/(_config)/menu-data.ts
 
 export type UserRole =
   | "guest"
@@ -54,7 +54,17 @@ export const menuData = {
       links: [
         {
           name: "Test",
-          href: "/public/test",
+          href: "/public/test/man",
+          roles: ["guest", "customer"],
+        },
+        {
+          name: "Test2",
+          href: "/public/test/",
+          roles: ["guest", "customer"],
+        },
+        {
+          name: "Test3",
+          href: "/public/test/man/young",
           roles: ["guest", "customer"],
         },
         {
