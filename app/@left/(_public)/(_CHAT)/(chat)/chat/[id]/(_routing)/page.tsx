@@ -22,6 +22,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     const { id } = params;
 
+    console.log("Page const { id } = params; ", id);
+
     chat = await getChatById(id);
 
     if (!chat) {
