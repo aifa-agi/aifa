@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
       message: {
         id: messageId,
         createdAt: new Date().toISOString(),
-        role: "assistant",
+        role: "user",
         content: systemMessage,
         parts: [
           {
@@ -111,6 +111,8 @@ export async function POST(req: NextRequest) {
       selectedChatModel: "chat-model",
       selectedVisibilityType: "public",
     };
+
+    console.log("chatRequestBody ", chatRequestBody);
 
     const chatApiRes = await fetch(`${getNextAuthUrl()}/api/chat`, {
       method: "POST",

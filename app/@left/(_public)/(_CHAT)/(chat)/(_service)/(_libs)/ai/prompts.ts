@@ -107,9 +107,10 @@ export const systemPrompt = (options: {
   } else {
     console.log(
       "// @/lib/ai/prompts.ts prompt for search:",
-      `${basePromptWithSearch}\n\n${requestPrompt}\n\n${artifactsPrompt}`
+      `${requestPrompt}`
     );
-    return `${basePromptWithSearch}\n\n${requestPrompt}\n\n${artifactsPrompt}`;
+    return `${requestPrompt}`;
+    //return `${basePromptWithSearch}\n\n${requestPrompt}\n\n${artifactsPrompt}`;
   }
 };
 

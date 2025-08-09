@@ -1,6 +1,6 @@
 // @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_libs)/ai/models.ts
 
-export const DEFAULT_CHAT_MODEL: string = "chat-model";
+export const DEFAULT_CHAT_MODEL: string = "api-chat-support";
 
 export interface ChatModel {
   id: string;
@@ -18,5 +18,10 @@ export const chatModels: Array<ChatModel> = [
     id: "chat-model-reasoning",
     name: "Reasoning model",
     description: "Uses advanced reasoning",
+  },
+  {
+    id: "api-chat-support",
+    name: "Api support model",
+    description: "Support model",
   },
 ];
