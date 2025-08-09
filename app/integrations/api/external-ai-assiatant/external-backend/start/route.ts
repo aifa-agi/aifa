@@ -5,7 +5,7 @@ import { getNextAuthUrl } from "@/lib/utils/get-next-auth-url";
 import { Redis } from "@upstash/redis";
 import { StartSessionSchema } from "../../_types/session";
 import { apiResponse } from "@/app/integrations/lib/api/response";
-import { createId } from "@paralleldrive/cuid2"; // Для генерации CUID2
+import { createId } from "@paralleldrive/cuid2";
 import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
 
 const redis = new Redis({
