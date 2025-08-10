@@ -33,10 +33,10 @@ interface InternalChatRequest {
 }
 
 /**
- * Standard response format for external API according to documentation
+ * AI SDK v5 compatible streaming message format
  */
-interface StandardApiResponse {
-  type: "append-message";
+interface StreamingMessage {
+  type: "append-message" | "update-message";
   message: {
     id: string;
     role: "assistant";
@@ -49,9 +49,9 @@ interface StandardApiResponse {
 }
 
 /**
- * Add CORS headers to response
+ * Add CORS headers for streaming response
  */
-function addCorsHeaders(response: NextResponse) {
+function addStreamingCorsHeaders(response: Response): Response {
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set(
     "Access-Control-Allow-Methods",
@@ -67,12 +67,29 @@ function addCorsHeaders(response: NextResponse) {
 }
 
 /**
- * Parse streaming chunk and extract text content
+ * Create a streaming response with proper headers
  */
-function parseStreamingChunk(line: string): {
+function createStreamingResponse(stream: ReadableStream): Response {
+  const response = new Response(stream, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+      "Transfer-Encoding": "chunked",
+    },
+  });
+
+  return addStreamingCorsHeaders(response);
+}
+
+/**
+ * Parse internal streaming chunk to extract text content
+ */
+function parseInternalChunk(line: string): {
   text?: string;
-  data?: any;
   messageId?: string;
+  isComplete?: boolean;
 } {
   try {
     // Handle numbered prefix format (0:"text", 1:"text", etc.)
@@ -91,238 +108,42 @@ function parseStreamingChunk(line: string): {
     if (metadataMatch) {
       const jsonStr = line.substring(line.indexOf(":") + 1);
       const data = JSON.parse(jsonStr);
-      return { data, messageId: data.messageId };
+      return { messageId: data.messageId };
     }
 
-    // Handle Server-Sent Events format (data: {...})
-    if (line.startsWith("data: ")) {
-      const jsonStr = line.substring(6);
-      if (jsonStr === "[DONE]") return {};
-      const data = JSON.parse(jsonStr);
-      return { data };
-    }
-
-    // Handle streaming format with type prefix (8:{"type":"text-delta","textDelta":"Hello"})
-    if (line.includes(':{"')) {
-      const colonIndex = line.indexOf(":");
-      const jsonStr = line.substring(colonIndex + 1);
-      const data = JSON.parse(jsonStr);
-
-      if (data.type === "text-delta" && data.textDelta) {
-        return { text: data.textDelta };
-      }
-      if (data.type === "text" && data.text) {
-        return { text: data.text };
-      }
-      return { data };
-    }
-
-    // Handle plain JSON objects
-    if (line.startsWith("{") && line.endsWith("}")) {
-      const data = JSON.parse(line);
-
-      // Extract text from various formats
-      if (data.type === "text-delta" && data.textDelta) {
-        return { text: data.textDelta };
-      }
-      if (data.type === "text" && data.text) {
-        return { text: data.text };
-      }
-      if (data.type === "append-message" && data.message) {
-        return { data };
-      }
-      if (data.role === "assistant" && data.parts) {
-        return { data };
-      }
-
-      return { data };
+    // Handle completion signals
+    if (line.includes("finishReason") || line.includes('"usage"')) {
+      return { isComplete: true };
     }
 
     return {};
   } catch (error) {
-    console.log(
-      "Failed to parse chunk:",
-      line.substring(0, 100),
-      "Error:",
-      error
-    );
+    console.log("Failed to parse internal chunk:", line.substring(0, 100));
     return {};
   }
 }
 
 /**
- * Extract AI response text and format according to documentation standard
+ * Create Server-Sent Event formatted message
  */
-function extractAndFormatResponse(
-  streamData: string
-): StandardApiResponse | { error: string; rawData?: string } {
-  console.log("Extracting and formatting AI response from stream data...");
-
-  try {
-    // Split stream data into lines and clean them
-    const lines = streamData
-      .split("\n")
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0);
-
-    console.log(`Processing ${lines.length} lines from stream`);
-
-    let assistantText = "";
-    let assistantId = "";
-    let createdAt = "";
-    let messageId = "";
-    let foundParts: Array<{ type: "text"; text: string }> = [];
-
-    // Process each line to extract content
-    for (const line of lines) {
-      const parsed = parseStreamingChunk(line);
-
-      // Accumulate text chunks
-      if (parsed.text) {
-        assistantText += parsed.text;
-        console.log("Added text chunk:", parsed.text.substring(0, 50));
-      }
-
-      // Extract message metadata
-      if (parsed.messageId) {
-        messageId = parsed.messageId;
-        console.log("Found messageId:", messageId);
-      }
-
-      // Process structured data
-      if (parsed.data) {
-        const data = parsed.data;
-
-        // Handle append-message format
-        if (data.type === "append-message" && data.message) {
-          let messageData = data.message;
-
-          if (typeof messageData === "string") {
-            messageData = JSON.parse(messageData);
-          }
-
-          if (messageData.role === "assistant") {
-            assistantId = messageData.id || assistantId;
-            createdAt = messageData.createdAt || createdAt;
-
-            if (messageData.parts && Array.isArray(messageData.parts)) {
-              const textParts = messageData.parts.filter(
-                (part: any) => part.type === "text"
-              );
-              if (textParts.length > 0) {
-                foundParts = textParts;
-                // Don't override accumulated text unless it's empty
-                if (!assistantText.trim()) {
-                  assistantText = textParts
-                    .map((part: any) => part.text)
-                    .join("");
-                }
-                console.log("Found complete assistant message with parts");
-              }
-            }
-          }
-        }
-
-        // Handle direct assistant message format
-        if (data.role === "assistant") {
-          assistantId = data.id || assistantId;
-          createdAt = data.createdAt || createdAt;
-
-          if (data.parts && Array.isArray(data.parts)) {
-            const textParts = data.parts.filter(
-              (part: any) => part.type === "text"
-            );
-            if (textParts.length > 0) {
-              foundParts = textParts;
-              if (!assistantText.trim()) {
-                assistantText = textParts
-                  .map((part: any) => part.text)
-                  .join("");
-              }
-            }
-          }
-        }
-      }
-    }
-
-    // Clean up accumulated text
-    assistantText = assistantText.trim();
-
-    console.log("Extraction results:", {
-      textLength: assistantText.length,
-      hasText: !!assistantText,
-      partsCount: foundParts.length,
-      hasId: !!assistantId,
-      hasMessageId: !!messageId,
-      hasTimestamp: !!createdAt,
-    });
-
-    // Check if we have any meaningful content
-    if (assistantText || foundParts.length > 0) {
-      // Create final parts array
-      const finalParts =
-        foundParts.length > 0
-          ? foundParts
-          : [{ type: "text" as const, text: assistantText }];
-
-      // Use the best available ID
-      const finalId = assistantId || messageId || generateCuid();
-
-      const response: StandardApiResponse = {
-        type: "append-message",
-        message: {
-          id: finalId,
-          role: "assistant",
-          createdAt: createdAt || new Date().toISOString(),
-          parts: finalParts,
-        },
-      };
-
-      console.log("Successfully created response:", {
-        id: finalId,
-        textLength: finalParts.reduce((sum, part) => sum + part.text.length, 0),
-        partsCount: finalParts.length,
-      });
-
-      return response;
-    }
-
-    // If no meaningful content found, return detailed error
-    console.log("No assistant content found in stream data");
-
-    // Try to find any text patterns for debugging
-    const debugInfo = lines
-      .filter((line) => line.includes('"') || line.includes("text"))
-      .slice(0, 5)
-      .join(" | ");
-
-    return {
-      error: "No AI response text found in stream",
-      rawData: debugInfo || streamData.substring(0, 500),
-    };
-  } catch (error) {
-    console.error("Error extracting AI response:", error);
-    return {
-      error: `Failed to parse AI response: ${error instanceof Error ? error.message : "Unknown error"}`,
-      rawData: streamData.substring(0, 500),
-    };
-  }
+function createSSEMessage(data: StreamingMessage): string {
+  return `data: ${JSON.stringify(data)}\n\n`;
 }
 
 /**
  * Handle OPTIONS preflight request
  */
 export async function OPTIONS(req: NextRequest) {
-  console.log("OPTIONS preflight request received");
+  console.log("Stream API OPTIONS preflight request received");
   const response = new NextResponse(null, { status: 200 });
-  return addCorsHeaders(response);
+  return addStreamingCorsHeaders(response);
 }
 
 /**
- * Handle POST request
+ * Handle POST request with real-time streaming
  */
 export async function POST(req: NextRequest) {
-  console.log("POST request received to external chat API");
+  console.log("POST request received to external stream chat API");
 
   // Authorization validation
   const authHeader = req.headers.get("authorization");
@@ -332,7 +153,7 @@ export async function POST(req: NextRequest) {
       { error: "Missing or invalid Authorization header" },
       { status: 401 }
     );
-    return addCorsHeaders(response);
+    return addStreamingCorsHeaders(response);
   }
   const token = authHeader.replace("Bearer ", "").trim();
 
@@ -346,21 +167,21 @@ export async function POST(req: NextRequest) {
       { error: "Invalid or expired token" },
       { status: 401 }
     );
-    return addCorsHeaders(response);
+    return addStreamingCorsHeaders(response);
   }
 
   // Parse external request body
   let externalBody: ExternalChatRequest;
   try {
     externalBody = await req.json();
-    console.log("External request body:", externalBody);
+    console.log("External stream request body:", externalBody);
   } catch (e) {
     console.log("Invalid JSON format:", e);
     const response = NextResponse.json(
       { error: "Invalid JSON format" },
       { status: 400 }
     );
-    return addCorsHeaders(response);
+    return addStreamingCorsHeaders(response);
   }
 
   // Validate required fields
@@ -370,7 +191,7 @@ export async function POST(req: NextRequest) {
       { error: "Missing required fields: chat_id and text" },
       { status: 400 }
     );
-    return addCorsHeaders(response);
+    return addStreamingCorsHeaders(response);
   }
 
   // Transform external format to internal format
@@ -392,10 +213,10 @@ export async function POST(req: NextRequest) {
     selectedVisibilityType: "private",
   };
 
-  console.log("Transformed internal body:", internalBody);
+  console.log("Transformed internal body for streaming:", internalBody);
 
-  // Proxy request to internal chat API with comprehensive streaming handling
   try {
+    // Make request to internal chat API
     const chatApiRes = await fetch(`${getNextAuthUrl()}/api/chat`, {
       method: "POST",
       headers: {
@@ -405,7 +226,10 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify(internalBody),
     });
 
-    console.log("Internal chat API response status:", chatApiRes.status);
+    console.log(
+      "Internal chat API streaming response status:",
+      chatApiRes.status
+    );
 
     // Handle error responses
     if (!chatApiRes.ok) {
@@ -417,28 +241,29 @@ export async function POST(req: NextRequest) {
         const response = NextResponse.json(errorData, {
           status: chatApiRes.status,
         });
-        return addCorsHeaders(response);
+        return addStreamingCorsHeaders(response);
       } catch (parseError) {
         console.error("Failed to parse error response:", parseError);
         const response = NextResponse.json(
           { error: "Internal server error" },
           { status: 500 }
         );
-        return addCorsHeaders(response);
+        return addStreamingCorsHeaders(response);
       }
     }
 
+    // Check if response is streaming
     const contentType = chatApiRes.headers.get("content-type");
-    console.log("Response Content-Type:", contentType);
+    console.log("Internal API Response Content-Type:", contentType);
 
-    // Handle JSON responses
     if (contentType?.includes("application/json")) {
-      console.log("Handling JSON response");
+      // Handle non-streaming JSON responses
+      console.log("Handling non-streaming JSON response");
       const data = await chatApiRes.json();
-      console.log("Internal chat API JSON data:", data);
 
       if (data.message && data.message.parts) {
-        const standardResponse: StandardApiResponse = {
+        // Convert JSON response to streaming format
+        const streamingMessage: StreamingMessage = {
           type: "append-message",
           message: {
             id: data.message.id || generateCuid(),
@@ -447,16 +272,24 @@ export async function POST(req: NextRequest) {
             parts: data.message.parts,
           },
         };
-        const response = NextResponse.json(standardResponse);
-        return addCorsHeaders(response);
-      }
 
-      const response = NextResponse.json(data, { status: chatApiRes.status });
-      return addCorsHeaders(response);
+        // Create a simple stream with single message
+        const encoder = new TextEncoder();
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(
+              encoder.encode(createSSEMessage(streamingMessage))
+            );
+            controller.close();
+          },
+        });
+
+        return createStreamingResponse(stream);
+      }
     }
 
-    // Handle streaming responses
-    console.log("Handling streaming response...");
+    // Handle streaming response - create transform stream
+    console.log("Processing streaming response from internal API...");
 
     const reader = chatApiRes.body?.getReader();
     if (!reader) {
@@ -464,71 +297,119 @@ export async function POST(req: NextRequest) {
     }
 
     const decoder = new TextDecoder();
-    let fullResponse = "";
+    const encoder = new TextEncoder();
+
+    let accumulatedText = "";
+    let messageId = generateCuid();
+    let createdAt = new Date().toISOString();
+    let isFirstChunk = true;
     let chunkCount = 0;
 
-    try {
-      console.log("Starting to read streaming chunks...");
+    const transformStream = new ReadableStream({
+      async start(controller) {
+        console.log("Starting streaming transformation...");
 
-      while (true) {
-        const { done, value } = await reader.read();
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
 
-        if (done) {
-          console.log(`Stream completed after ${chunkCount} chunks`);
-          break;
-        }
+            if (done) {
+              console.log(`Streaming completed after ${chunkCount} chunks`);
+              break;
+            }
 
-        const chunk = decoder.decode(value, { stream: true });
-        fullResponse += chunk;
-        chunkCount++;
+            const chunk = decoder.decode(value, { stream: true });
+            chunkCount++;
 
-        // Log every 20th chunk to monitor progress
-        if (chunkCount % 20 === 0) {
+            // Parse each line in the chunk
+            const lines = chunk.split("\n");
+
+            for (const line of lines) {
+              if (!line.trim()) continue;
+
+              const parsed = parseInternalChunk(line);
+
+              // Handle text content
+              if (parsed.text) {
+                accumulatedText += parsed.text;
+
+                // Create streaming message
+                const streamingMessage: StreamingMessage = {
+                  type: isFirstChunk ? "append-message" : "update-message",
+                  message: {
+                    id: messageId,
+                    role: "assistant",
+                    createdAt: createdAt,
+                    parts: [
+                      {
+                        type: "text",
+                        text: accumulatedText,
+                      },
+                    ],
+                  },
+                };
+
+                // Send chunk to client
+                const sseMessage = createSSEMessage(streamingMessage);
+                controller.enqueue(encoder.encode(sseMessage));
+
+                if (isFirstChunk) {
+                  isFirstChunk = false;
+                  console.log("Sent first streaming chunk to client");
+                }
+
+                // Log progress every 10 text chunks
+                if (chunkCount % 10 === 0) {
+                  console.log(
+                    `Streamed ${chunkCount} chunks, total text length: ${accumulatedText.length}`
+                  );
+                }
+              }
+
+              // Handle metadata
+              if (parsed.messageId) {
+                messageId = parsed.messageId;
+                console.log("Updated messageId:", messageId);
+              }
+
+              // Handle completion
+              if (parsed.isComplete) {
+                console.log("Stream completion detected");
+                break;
+              }
+            }
+          }
+
           console.log(
-            `Received chunk ${chunkCount}, total length: ${fullResponse.length}`
+            `Final streaming result: ${accumulatedText.length} characters sent in ${chunkCount} chunks`
           );
+          controller.close();
+        } catch (error) {
+          console.error("Error during streaming transformation:", error);
+
+          // Send error as SSE
+          const errorMessage = {
+            type: "error",
+            error: "Streaming error occurred",
+            details: error instanceof Error ? error.message : "Unknown error",
+          };
+
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`)
+          );
+          controller.close();
+        } finally {
+          reader.releaseLock();
+          console.log("Stream reader released");
         }
-      }
+      },
+    });
 
-      console.log(`Full response collected: ${fullResponse.length} characters`);
-      console.log("Sample from response:", fullResponse.substring(0, 200));
-
-      // Extract and format the AI response
-      const formattedResponse = extractAndFormatResponse(fullResponse);
-
-      if ("error" in formattedResponse) {
-        console.error(
-          "Failed to extract AI response:",
-          formattedResponse.error
-        );
-
-        // Provide more debugging information
-        const lines = fullResponse.split("\n").slice(0, 10);
-        console.log("First 10 lines for debugging:", lines);
-
-        const response = NextResponse.json(
-          {
-            error: "Failed to extract AI response",
-            details: formattedResponse.error,
-            debug: formattedResponse.rawData,
-            sampleLines: lines,
-          },
-          { status: 500 }
-        );
-        return addCorsHeaders(response);
-      }
-
-      console.log("Successfully formatted response");
-
-      const response = NextResponse.json(formattedResponse);
-      return addCorsHeaders(response);
-    } finally {
-      reader.releaseLock();
-      console.log("Stream reader released");
-    }
+    return createStreamingResponse(transformStream);
   } catch (error) {
-    console.error("Error calling internal chat API:", error);
+    console.error("Error in stream chat API:", error);
 
+    // Return error as JSON for non-streaming errors
     const response = NextResponse.json(
       {
         error: "Internal server error",
@@ -536,6 +417,6 @@ export async function POST(req: NextRequest) {
       },
       { status: 500 }
     );
-    return addCorsHeaders(response);
+    return addStreamingCorsHeaders(response);
   }
 }

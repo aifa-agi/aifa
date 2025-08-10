@@ -1,422 +1,456 @@
-// @/app/integrations/api/external-ai-assiatant/external-frontend/stream-chat/route.ts
+// @/app/@left/(chat)/api/chat/route.ts
 
-import { NextRequest, NextResponse } from "next/server";
-import { verify } from "jsonwebtoken";
-import { getNextAuthUrl } from "@/lib/utils/get-next-auth-url";
+import {
+  appendClientMessage,
+  appendResponseMessages,
+  createDataStream,
+  smoothStream,
+  streamText,
+} from "ai";
+import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
+import {
+  type RequestHints,
+  systemPrompt,
+} from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/prompts";
+import { getTrailingMessageId } from "@/lib/utils";
+import { generateTitleFromUserMessage } from "../../../(_service)/(_actions)/actions";
+import { createDocument } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/create-document";
+import { updateDocument } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/update-document";
+import { requestSuggestions } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/request-suggestions";
+import { getWeather } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/get-weather";
+import { fileSearchVectorStore } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/file-search-vector-store";
+import { isProductionEnvironment } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_constants)/constants";
+import { myProvider } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/providers";
+import { entitlementsByUserType } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/entitlements";
+import { postRequestBodySchema, type PostRequestBody } from "./schema";
+import { geolocation } from "@vercel/functions";
+import {
+  createResumableStreamContext,
+  type ResumableStreamContext,
+} from "resumable-stream";
+import { after, NextResponse } from "next/server";
+import { differenceInSeconds } from "date-fns";
+import { prisma } from "@/lib/db";
+
+import { Chat, Message, Prisma, UserType } from "@prisma/client";
+import { openai } from "@ai-sdk/openai";
 import { generateCuid } from "@/lib/utils/generateCuid";
+import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
+
+export const maxDuration = 60;
+
+let globalStreamContext: ResumableStreamContext | null = null;
 
 /**
- * External partner request format
+ * Get or create a global resumable stream context for data streaming.
  */
-interface ExternalChatRequest {
-  chat_id: string;
-  text: string;
+function getStreamContext() {
+  if (!globalStreamContext) {
+    try {
+      globalStreamContext = createResumableStreamContext({ waitUntil: after });
+    } catch (error: any) {
+      if (error.message.includes("REDIS_URL")) {
+        console.log(
+          " > Resumable streams are disabled due to missing REDIS_URL"
+        );
+      } else {
+        console.error(error);
+      }
+    }
+  }
+  return globalStreamContext;
 }
 
 /**
- * Internal chat API format
+ * Handle POST requests to create or append messages to chats,
+ * and stream AI-generated responses.
  */
-interface InternalChatRequest {
-  id: string;
-  message: {
-    id: string;
-    createdAt: string;
-    role: "user";
-    content: string;
-    parts: Array<{
-      type: "text";
-      text: string;
-    }>;
-  };
-  selectedChatModel: string;
-  selectedVisibilityType: string;
+export async function POST(request: Request) {
+  const authHeader = request.headers.get("authorization");
+
+  let requestBody: PostRequestBody;
+  try {
+    const json = await request.json();
+
+    requestBody = postRequestBodySchema.parse(json);
+  } catch (e) {
+    return new Response("Invalid request body", { status: 400 });
+  }
+
+  try {
+    const {
+      id: chatId,
+      message,
+      selectedChatModel,
+      selectedVisibilityType,
+    } = requestBody;
+
+    let session = await auth();
+
+    let token = request.headers.get("authorization");
+    const expires = new Date(Date.now() + 60 * 60 * 4000).toISOString();
+
+    if (!session && token) {
+      const sub = extractSubFromJWT(token);
+      session = {
+        user: {
+          id: sub || "",
+          type: "apiUser",
+        },
+        expires,
+      };
+    }
+
+    if (!session || session.user.id === "") {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const userId = session.user.id;
+    const userType = session.user.type;
+
+    // Теперь session всегда определён и его можно безопасно использовать далее
+
+    // Count how many user messages they sent in last 24 hours
+    const messageCount = await prisma.message.count({
+      where: {
+        role: "user",
+        createdAt: {
+          gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
+        },
+        Chat: {
+          userId,
+        },
+      },
+    });
+
+    if (messageCount >= entitlementsByUserType[userType].maxMessagesPerDay) {
+      return NextResponse.json(
+        {
+          error:
+            "You’ve reached your daily limit. Sign up to get 5× more messages per day!",
+          redirectTo: "/register",
+          delay: 3000,
+        },
+        { status: 429 }
+      );
+    }
+
+    // Check if chat exists
+    let chat = await prisma.chat.findUnique({ where: { id: chatId } });
+    console.log(
+      "consile: // @/app/@left/(chat)/api/chat/route.ts chat:  ",
+      chat
+    );
+    console.log(
+      "consile: // @/app/@left/(chat)/api/chat/route.ts message:  ",
+      message
+    );
+    if (!chat) {
+      // Create new chat with title generated from first user message
+      const title = await generateTitleFromUserMessage({ message });
+      chat = await prisma.chat.create({
+        data: {
+          id: chatId,
+          userId: userId ? userId : "12345qwert",
+          title,
+          visibility: selectedVisibilityType,
+          createdAt: new Date(),
+        },
+      });
+      console.log(
+        "consile: // @/app/@left/(chat)/api/chat/route.ts chat:  ",
+        chat
+      );
+    } else {
+      // Prevent users from accessing others' chats
+      if (chat.userId !== userId) {
+        return new Response("Forbidden", { status: 403 });
+      }
+    }
+
+    // Fetch previous messages (Message_v2 model) ordered by creation time
+    const previousMessages = await prisma.message.findMany({
+      where: { chatId },
+      orderBy: { createdAt: "asc" },
+    });
+
+    // Map DB model to UI-friendly message format for AI processing
+    const previousUImessages = previousMessages.map(
+      ({ id, role, parts, attachments, createdAt }: Message) => ({
+        id,
+        role,
+        parts,
+        experimental_attachments: attachments,
+        createdAt,
+      })
+    );
+    // Append new user message to list for AI input
+    const messages = appendClientMessage({
+      // @ts-expect-error: todo add type conversion from DBMessage[] to UIMessage[]
+      messages: previousUImessages,
+      message,
+    });
+
+    // Obtain geolocation metadata from request for hints
+    const { longitude, latitude, city, country } = geolocation(request);
+    const requestHints: RequestHints = { longitude, latitude, city, country };
+
+    // Save user's new message to DB
+    await prisma.message.create({
+      data: {
+        id: message.id,
+        chatId,
+        role: "user",
+        parts: message.parts,
+        attachments: message.experimental_attachments ?? [],
+        createdAt: new Date(),
+      },
+    });
+
+    // Create a new stream ID and associate to chat
+    const streamId = generateCuid();
+    await prisma.stream.create({
+      data: {
+        id: streamId,
+        chatId,
+        createdAt: new Date(),
+      },
+    });
+
+    // Compose data stream with AI text generation and tools usage
+    const stream = createDataStream({
+      execute: (dataStream) => {
+        const result = streamText({
+          model: myProvider.languageModel(selectedChatModel),
+          system: systemPrompt({ selectedChatModel, requestHints }),
+          messages,
+          maxSteps: 5,
+          experimental_activeTools:
+            selectedChatModel === "chat-model-reasoning"
+              ? []
+              : [
+                  "web_search_preview",
+                  "getWeather",
+                  "createDocument",
+                  "updateDocument",
+                  "requestSuggestions",
+                  "web_search_preview",
+                  "fileSearchVectorStore",
+                ],
+          experimental_transform: smoothStream({ chunking: "word" }),
+          experimental_generateMessageId: generateCuid,
+          tools: {
+            web_search_preview: openai.tools.webSearchPreview({
+              // optional configuration:
+              searchContextSize: "high",
+              userLocation: {
+                type: "approximate",
+                city: "San Francisco",
+                region: "California",
+              },
+            }),
+            fileSearchVectorStore,
+            getWeather,
+            createDocument: createDocument({ session, dataStream }),
+            updateDocument: updateDocument({ session, dataStream }),
+            requestSuggestions: requestSuggestions({ session, dataStream }),
+          },
+          onFinish: async ({ response }) => {
+            if (!session.user?.id) return;
+
+            try {
+              const assistantId = getTrailingMessageId({
+                messages: response.messages.filter(
+                  (m) => m.role === "assistant"
+                ),
+              });
+              if (!assistantId) throw new Error("No assistant message found!");
+
+              const [, assistantMessage] = appendResponseMessages({
+                messages: [message],
+                responseMessages: response.messages,
+              });
+
+              await prisma.message.create({
+                data: {
+                  id: assistantId,
+                  chatId,
+                  role: assistantMessage.role,
+                  parts: assistantMessage.parts
+                    ? JSON.parse(JSON.stringify(assistantMessage.parts))
+                    : undefined,
+                  attachments: (assistantMessage.experimental_attachments ??
+                    []) as unknown as Prisma.InputJsonValue,
+                  createdAt: new Date(),
+                },
+              });
+            } catch (error) {
+              console.error("Failed to save assistant message:", error);
+            }
+          },
+          experimental_telemetry: {
+            isEnabled: isProductionEnvironment,
+            functionId: "stream-text",
+          },
+        });
+
+        result.consumeStream();
+        result.mergeIntoDataStream(dataStream, { sendReasoning: true });
+      },
+      onError: () => "Oops, an error occurred!",
+    });
+
+    // Return streaming response (supports resumable streams if available)
+    const streamContext = getStreamContext();
+    if (streamContext) {
+      return new Response(
+        await streamContext.resumableStream(streamId, () => stream)
+      );
+    }
+
+    return new Response(stream);
+  } catch (error) {
+    console.error("POST /chat error:", error);
+    return new Response("An error occurred while processing your request!", {
+      status: 500,
+    });
+  }
 }
 
 /**
- * AI SDK v5 compatible streaming message format
+ * Handle GET requests to stream last AI response or resume
+ * unfinished streams related to a chat.
  */
-interface StreamingMessage {
-  type: "append-message" | "update-message";
-  message: {
-    id: string;
-    role: "assistant";
-    createdAt: string;
-    parts: Array<{
-      type: "text";
-      text: string;
-    }>;
-  };
-}
+export async function GET(request: Request) {
+  const streamContext = getStreamContext();
+  const resumeRequestedAt = new Date();
 
-/**
- * Add CORS headers for streaming response
- */
-function addStreamingCorsHeaders(response: Response): Response {
-  response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  response.headers.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With"
-  );
-  response.headers.set("Access-Control-Allow-Credentials", "true");
-  response.headers.set("Access-Control-Max-Age", "86400");
-  return response;
-}
+  if (!streamContext) {
+    return new Response(null, { status: 204 });
+  }
 
-/**
- * Create a streaming response with proper headers
- */
-function createStreamingResponse(stream: ReadableStream): Response {
-  const response = new Response(stream, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-      "Transfer-Encoding": "chunked",
-    },
+  const { searchParams } = new URL(request.url);
+  const chatId = searchParams.get("chatId");
+
+  if (!chatId) {
+    return new Response("id is required", { status: 400 });
+  }
+
+  const session = await auth();
+  if (!session?.user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  let chat: Chat | null = null;
+  try {
+    chat = await prisma.chat.findUnique({ where: { id: chatId } });
+  } catch {
+    return new Response("Not found", { status: 404 });
+  }
+
+  if (!chat) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  if (chat.visibility === "private" && chat.userId !== session.user.id) {
+    return new Response("Forbidden", { status: 403 });
+  }
+
+  // Retrieve all stream IDs for chat ordered by creation ascending
+  const streams = await prisma.stream.findMany({
+    where: { chatId },
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
   });
 
-  return addStreamingCorsHeaders(response);
-}
-
-/**
- * Parse internal streaming chunk to extract text content
- */
-function parseInternalChunk(line: string): {
-  text?: string;
-  messageId?: string;
-  isComplete?: boolean;
-} {
-  try {
-    // Handle numbered prefix format (0:"text", 1:"text", etc.)
-    const numberedMatch = line.match(/^(\d+):"(.*)"/);
-    if (numberedMatch) {
-      const text = numberedMatch[2]
-        .replace(/\\"/g, '"') // Unescape quotes
-        .replace(/\\n/g, "\n") // Unescape newlines
-        .replace(/\\t/g, "\t") // Unescape tabs
-        .replace(/\\\\/g, "\\"); // Unescape backslashes
-      return { text };
-    }
-
-    // Handle metadata prefix format (f:{"messageId":"..."})
-    const metadataMatch = line.match(/^[a-z]:\{.*\}$/);
-    if (metadataMatch) {
-      const jsonStr = line.substring(line.indexOf(":") + 1);
-      const data = JSON.parse(jsonStr);
-      return { messageId: data.messageId };
-    }
-
-    // Handle completion signals
-    if (line.includes("finishReason") || line.includes('"usage"')) {
-      return { isComplete: true };
-    }
-
-    return {};
-  } catch (error) {
-    console.log("Failed to parse internal chunk:", line.substring(0, 100));
-    return {};
-  }
-}
-
-/**
- * Create Server-Sent Event formatted message
- */
-function createSSEMessage(data: StreamingMessage): string {
-  return `data: ${JSON.stringify(data)}\n\n`;
-}
-
-/**
- * Handle OPTIONS preflight request
- */
-export async function OPTIONS(req: NextRequest) {
-  console.log("Stream API OPTIONS preflight request received");
-  const response = new NextResponse(null, { status: 200 });
-  return addStreamingCorsHeaders(response);
-}
-
-/**
- * Handle POST request with real-time streaming
- */
-export async function POST(req: NextRequest) {
-  console.log("POST request received to external stream chat API");
-
-  // Authorization validation
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.log("Missing or invalid Authorization header");
-    const response = NextResponse.json(
-      { error: "Missing or invalid Authorization header" },
-      { status: 401 }
-    );
-    return addStreamingCorsHeaders(response);
-  }
-  const token = authHeader.replace("Bearer ", "").trim();
-
-  // Token validation
-  try {
-    verify(token, process.env.NEXTAUTH_SECRET!);
-    console.log("Token validated successfully");
-  } catch (e) {
-    console.log("Invalid or expired token:", e);
-    const response = NextResponse.json(
-      { error: "Invalid or expired token" },
-      { status: 401 }
-    );
-    return addStreamingCorsHeaders(response);
+  if (streams.length === 0) {
+    return new Response("No streams found", { status: 404 });
   }
 
-  // Parse external request body
-  let externalBody: ExternalChatRequest;
-  try {
-    externalBody = await req.json();
-    console.log("External stream request body:", externalBody);
-  } catch (e) {
-    console.log("Invalid JSON format:", e);
-    const response = NextResponse.json(
-      { error: "Invalid JSON format" },
-      { status: 400 }
-    );
-    return addStreamingCorsHeaders(response);
+  const recentStreamId = streams.at(-1)?.id;
+  if (!recentStreamId) {
+    return new Response("No recent stream found", { status: 404 });
   }
 
-  // Validate required fields
-  if (!externalBody.chat_id || !externalBody.text) {
-    console.log("Missing required fields");
-    const response = NextResponse.json(
-      { error: "Missing required fields: chat_id and text" },
-      { status: 400 }
-    );
-    return addStreamingCorsHeaders(response);
-  }
+  const emptyDataStream = createDataStream({ execute: () => {} });
 
-  // Transform external format to internal format
-  const internalBody: InternalChatRequest = {
-    id: externalBody.chat_id,
-    message: {
-      id: generateCuid(),
-      createdAt: new Date().toISOString(),
-      role: "user",
-      content: externalBody.text,
-      parts: [
-        {
-          type: "text",
-          text: externalBody.text,
-        },
-      ],
-    },
-    selectedChatModel: "api-chat-support",
-    selectedVisibilityType: "private",
-  };
+  // Try to get resumable stream from stored context
+  const stream = await streamContext.resumableStream(
+    recentStreamId,
+    () => emptyDataStream
+  );
 
-  console.log("Transformed internal body for streaming:", internalBody);
-
-  try {
-    // Make request to internal chat API
-    const chatApiRes = await fetch(`${getNextAuthUrl()}/api/chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(internalBody),
+  if (!stream) {
+    // Stream ended during SSR, restore last assistant message if very recent (<15s)
+    const messages = await prisma.message.findMany({
+      where: { chatId },
+      orderBy: { createdAt: "asc" },
     });
 
-    console.log(
-      "Internal chat API streaming response status:",
-      chatApiRes.status
-    );
-
-    // Handle error responses
-    if (!chatApiRes.ok) {
-      console.log("Internal API returned error status:", chatApiRes.status);
-
-      try {
-        const errorData = await chatApiRes.json();
-        console.log("Internal chat API error data:", errorData);
-        const response = NextResponse.json(errorData, {
-          status: chatApiRes.status,
-        });
-        return addStreamingCorsHeaders(response);
-      } catch (parseError) {
-        console.error("Failed to parse error response:", parseError);
-        const response = NextResponse.json(
-          { error: "Internal server error" },
-          { status: 500 }
-        );
-        return addStreamingCorsHeaders(response);
-      }
+    const mostRecentMessage = messages.at(-1);
+    if (!mostRecentMessage || mostRecentMessage.role !== "assistant") {
+      return new Response(emptyDataStream, { status: 200 });
     }
 
-    // Check if response is streaming
-    const contentType = chatApiRes.headers.get("content-type");
-    console.log("Internal API Response Content-Type:", contentType);
+    const messageCreatedAt = new Date(mostRecentMessage.createdAt);
+    if (differenceInSeconds(resumeRequestedAt, messageCreatedAt) > 15) {
+      return new Response(emptyDataStream, { status: 200 });
+    }
 
-    if (contentType?.includes("application/json")) {
-      // Handle non-streaming JSON responses
-      console.log("Handling non-streaming JSON response");
-      const data = await chatApiRes.json();
-
-      if (data.message && data.message.parts) {
-        // Convert JSON response to streaming format
-        const streamingMessage: StreamingMessage = {
+    const restoredStream = createDataStream({
+      execute: (buffer) => {
+        buffer.writeData({
           type: "append-message",
-          message: {
-            id: data.message.id || generateCuid(),
-            role: "assistant",
-            createdAt: data.message.createdAt || new Date().toISOString(),
-            parts: data.message.parts,
-          },
-        };
-
-        // Create a simple stream with single message
-        const encoder = new TextEncoder();
-        const stream = new ReadableStream({
-          start(controller) {
-            controller.enqueue(
-              encoder.encode(createSSEMessage(streamingMessage))
-            );
-            controller.close();
-          },
+          message: JSON.stringify(mostRecentMessage),
         });
-
-        return createStreamingResponse(stream);
-      }
-    }
-
-    // Handle streaming response - create transform stream
-    console.log("Processing streaming response from internal API...");
-
-    const reader = chatApiRes.body?.getReader();
-    if (!reader) {
-      throw new Error("No readable stream available from internal API");
-    }
-
-    const decoder = new TextDecoder();
-    const encoder = new TextEncoder();
-
-    let accumulatedText = "";
-    let messageId = generateCuid();
-    let createdAt = new Date().toISOString();
-    let isFirstChunk = true;
-    let chunkCount = 0;
-
-    const transformStream = new ReadableStream({
-      async start(controller) {
-        console.log("Starting streaming transformation...");
-
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-
-            if (done) {
-              console.log(`Streaming completed after ${chunkCount} chunks`);
-              break;
-            }
-
-            const chunk = decoder.decode(value, { stream: true });
-            chunkCount++;
-
-            // Parse each line in the chunk
-            const lines = chunk.split("\n");
-
-            for (const line of lines) {
-              if (!line.trim()) continue;
-
-              const parsed = parseInternalChunk(line);
-
-              // Handle text content
-              if (parsed.text) {
-                accumulatedText += parsed.text;
-
-                // Create streaming message
-                const streamingMessage: StreamingMessage = {
-                  type: isFirstChunk ? "append-message" : "update-message",
-                  message: {
-                    id: messageId,
-                    role: "assistant",
-                    createdAt: createdAt,
-                    parts: [
-                      {
-                        type: "text",
-                        text: accumulatedText,
-                      },
-                    ],
-                  },
-                };
-
-                // Send chunk to client
-                const sseMessage = createSSEMessage(streamingMessage);
-                controller.enqueue(encoder.encode(sseMessage));
-
-                if (isFirstChunk) {
-                  isFirstChunk = false;
-                  console.log("Sent first streaming chunk to client");
-                }
-
-                // Log progress every 10 text chunks
-                if (chunkCount % 10 === 0) {
-                  console.log(
-                    `Streamed ${chunkCount} chunks, total text length: ${accumulatedText.length}`
-                  );
-                }
-              }
-
-              // Handle metadata
-              if (parsed.messageId) {
-                messageId = parsed.messageId;
-                console.log("Updated messageId:", messageId);
-              }
-
-              // Handle completion
-              if (parsed.isComplete) {
-                console.log("Stream completion detected");
-                break;
-              }
-            }
-          }
-
-          console.log(
-            `Final streaming result: ${accumulatedText.length} characters sent in ${chunkCount} chunks`
-          );
-          controller.close();
-        } catch (error) {
-          console.error("Error during streaming transformation:", error);
-
-          // Send error as SSE
-          const errorMessage = {
-            type: "error",
-            error: "Streaming error occurred",
-            details: error instanceof Error ? error.message : "Unknown error",
-          };
-
-          controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`)
-          );
-          controller.close();
-        } finally {
-          reader.releaseLock();
-          console.log("Stream reader released");
-        }
       },
     });
 
-    return createStreamingResponse(transformStream);
-  } catch (error) {
-    console.error("Error in stream chat API:", error);
+    return new Response(restoredStream, { status: 200 });
+  }
 
-    // Return error as JSON for non-streaming errors
-    const response = NextResponse.json(
-      {
-        error: "Internal server error",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 }
-    );
-    return addStreamingCorsHeaders(response);
+  return new Response(stream, { status: 200 });
+}
+
+/**
+ * Handle DELETE requests to delete a chat by its ID
+ * with proper authorization.
+ */
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return new Response("Not Found", { status: 404 });
+  }
+
+  const session = await auth();
+  if (!session?.user?.id) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  try {
+    const chat = await prisma.chat.findUnique({ where: { id } });
+
+    if (!chat) {
+      return new Response("Not Found", { status: 404 });
+    }
+
+    if (chat.userId !== session.user.id) {
+      return new Response("Forbidden", { status: 403 });
+    }
+
+    // Delete chat (cascading deletes of related entities depend on Prisma schema cascade settings)
+    const deletedChat = await prisma.chat.delete({ where: { id } });
+
+    return new Response(JSON.stringify(deletedChat), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("DELETE /chat error:", error);
+    return new Response("An error occurred while processing your request!", {
+      status: 500,
+    });
   }
 }
