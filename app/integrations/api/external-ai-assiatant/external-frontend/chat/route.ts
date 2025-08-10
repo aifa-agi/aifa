@@ -3,109 +3,111 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verify } from "jsonwebtoken";
 import { getNextAuthUrl } from "@/lib/utils/get-next-auth-url";
+import { generateCuid } from "@/lib/utils/generateCuid";
 
-// CORS configuration for external clients
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*", // Разрешаем все origins для внешних клиентов
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers":
-    "Content-Type, Authorization, X-Requested-With",
-  "Access-Control-Max-Age": "86400", // Кешируем preflight на 24 часа
-  "Access-Control-Allow-Credentials": "false", // Для публичного API
-};
-
-// Handle preflight OPTIONS request - ОБЯЗАТЕЛЬНО для CORS
-export async function OPTIONS(req: NextRequest) {
-  console.log("🔍 OPTIONS preflight request received");
-  console.log("Origin:", req.headers.get("origin"));
-  console.log(
-    "Request Method:",
-    req.headers.get("access-control-request-method")
-  );
-  console.log(
-    "Request Headers:",
-    req.headers.get("access-control-request-headers")
-  );
-
-  return new NextResponse(null, {
-    status: 200,
-    headers: corsHeaders,
-  });
+/**
+ * External partner request format
+ */
+interface ExternalChatRequest {
+  chat_id: string;
+  text: string;
 }
 
-// Handle actual POST request
-export async function POST(req: NextRequest) {
-  console.log("📡 POST request received");
-  console.log("Origin:", req.headers.get("origin"));
+/**
+ * Internal chat API format
+ */
+interface InternalChatRequest {
+  id: string;
+  message: {
+    id: string;
+    createdAt: string;
+    role: "user";
+    content: string;
+    parts: Array<{
+      type: "text";
+      text: string;
+    }>;
+  };
+  selectedChatModel: string;
+  selectedVisibilityType: string;
+}
 
-  // Проверка заголовка авторизации
+export async function POST(req: NextRequest) {
+  // Authorization validation
   const authHeader = req.headers.get("authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.log("❌ Missing or invalid Authorization header");
     return NextResponse.json(
       { error: "Missing or invalid Authorization header" },
-      {
-        status: 401,
-        headers: corsHeaders, // ВАЖНО: добавляем CORS заголовки к ошибкам
-      }
+      { status: 401 }
     );
   }
-
   const token = authHeader.replace("Bearer ", "").trim();
-  console.log("🔑 Token received, length:", token.length);
 
-  // Валидация токена
+  // Token validation
   try {
-    const decoded = verify(token, process.env.NEXTAUTH_SECRET!);
-    console.log("✅ Token validated successfully");
+    verify(token, process.env.NEXTAUTH_SECRET!);
   } catch (e) {
-    console.log("❌ Token validation failed:", e);
     return NextResponse.json(
       { error: "Invalid or expired token" },
-      {
-        status: 401,
-        headers: corsHeaders,
-      }
+      { status: 401 }
     );
   }
 
-  // Прокси-запрос на основной чат API
+  // Parse external request body
+  let externalBody: ExternalChatRequest;
   try {
-    const body = await req.json();
-    console.log("📦 Request body:", body);
+    externalBody = await req.json();
+  } catch (e) {
+    return NextResponse.json({ error: "Invalid JSON format" }, { status: 400 });
+  }
 
+  // Validate required fields
+  if (!externalBody.chat_id || !externalBody.text) {
+    return NextResponse.json(
+      { error: "Missing required fields: chat_id and text" },
+      { status: 400 }
+    );
+  }
+
+  // Transform external format to internal format
+  const internalBody: InternalChatRequest = {
+    id: externalBody.chat_id,
+    message: {
+      id: generateCuid(),
+      createdAt: new Date().toISOString(),
+      role: "user",
+      content: externalBody.text,
+      parts: [
+        {
+          type: "text",
+          text: externalBody.text,
+        },
+      ],
+    },
+    selectedChatModel: "api-chat-support", // Default model for external integrations
+    selectedVisibilityType: "private", // Default visibility for external integrations
+  };
+
+  // Proxy request to internal chat API
+  try {
     const chatApiRes = await fetch(`${getNextAuthUrl()}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(internalBody),
     });
 
     const data = await chatApiRes.json();
-    console.log("✅ Internal API response:", chatApiRes.status);
+    console.log("Internal chat API response:", data);
 
-    return NextResponse.json(data, {
-      status: chatApiRes.status,
-      headers: corsHeaders, // ВАЖНО: добавляем CORS заголовки к успешным ответам
-    });
+    return NextResponse.json(data, { status: chatApiRes.status });
   } catch (error) {
-    console.error("❌ Internal server error:", error);
+    console.error("Error calling internal chat API:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      {
-        status: 500,
-        headers: corsHeaders,
-      }
+      { status: 500 }
     );
   }
-}
-
-// Обработка других HTTP методов (GET, PUT, DELETE) - возвращаем 405
-export async function GET() {
-  return NextResponse.json(
-    { error: "Method not allowed" },
-    { status: 405, headers: corsHeaders }
-  );
 }

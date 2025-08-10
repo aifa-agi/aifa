@@ -67,11 +67,16 @@ function getStreamContext() {
  */
 export async function POST(request: Request) {
   const authHeader = request.headers.get("authorization");
-  console.log("Authorization header:", authHeader);
+  console.log("chat route Authorization header:", authHeader);
 
   let requestBody: PostRequestBody;
   try {
     const json = await request.json();
+    console.log("chat route const json = await request.json(); ", json);
+    console.log(
+      "chat route const json = await request.json() message.parts; ",
+      json.message.parts
+    );
     requestBody = postRequestBodySchema.parse(json);
   } catch (e) {
     console.error("Zod parse error:", e);
