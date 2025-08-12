@@ -37,7 +37,7 @@ export const UpdateSessionSchema = z.object({
   user_info: UserInfoSchema.optional(),
   purchase_history: PurchaseHistorySchema.optional(),
   available_products: z.array(z.string()).optional(),
-  available_items: z.string().max(60).optional().nullable(),
+  available_items: z.string().optional().nullable(),
   events: z.array(EventItemSchema).optional(),
   auth_secret: z.string().min(1),
 });
