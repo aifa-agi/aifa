@@ -98,7 +98,11 @@ export default function RealTimeUsers() {
             </TableRow>
           ) : (
             sessions.map((session, idx) => (
-              <TableRow key={session.user_id || idx}>
+              <TableRow
+                key={session.user_id || idx}
+                className="h-[150px] max-h-[150px]"
+                style={{ height: "150px", maxHeight: "150px" }}
+              >
                 {columns.map((col) => {
                   let value = session[col];
                   if (col === "createdAt" && value) {
@@ -106,22 +110,53 @@ export default function RealTimeUsers() {
                   } else if (Array.isArray(value)) {
                     // Render arrays as comma-separated or list
                     value = (
-                      <ul className="list-disc list-inside">
-                        {value.map((item: any, i: number) => (
-                          <li key={i}>
-                            {typeof item === "object"
-                              ? JSON.stringify(item)
-                              : String(item)}
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="h-full overflow-y-auto pr-2">
+                        <ul className="list-disc list-inside space-y-1">
+                          {value.map((item: any, i: number) => (
+                            <li key={i} className="text-sm break-words">
+                              {typeof item === "object"
+                                ? JSON.stringify(item)
+                                : String(item)}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     );
                   } else if (typeof value === "object" && value !== null) {
-                    value = JSON.stringify(value);
+                    value = (
+                      <div className="h-full overflow-y-auto pr-2">
+                        <pre className="text-sm whitespace-pre-wrap break-words">
+                          {JSON.stringify(value, null, 2)}
+                        </pre>
+                      </div>
+                    );
                   } else if (value === undefined || value === null) {
                     value = "-";
+                  } else {
+                    // For string values, wrap in scrollable div if content is long
+                    const stringValue = String(value);
+                    if (stringValue.length > 100) {
+                      value = (
+                        <div className="h-full overflow-y-auto pr-2">
+                          <div className="text-sm break-words whitespace-pre-wrap">
+                            {stringValue}
+                          </div>
+                        </div>
+                      );
+                    } else {
+                      value = stringValue;
+                    }
                   }
-                  return <TableCell key={col}>{value}</TableCell>;
+
+                  return (
+                    <TableCell
+                      key={col}
+                      className="h-[150px] max-h-[150px] p-2 align-top overflow-hidden max-w-xs"
+                      style={{ height: "150px", maxHeight: "150px" }}
+                    >
+                      {value}
+                    </TableCell>
+                  );
                 })}
               </TableRow>
             ))
