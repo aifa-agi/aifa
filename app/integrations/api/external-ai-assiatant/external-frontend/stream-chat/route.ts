@@ -33,7 +33,26 @@ interface InternalChatRequest {
 }
 
 /**
- * AI SDK v5 compatible streaming message format
+ * Custom data part types for AI SDK v5 compatibility
+ */
+type CustomDataPart =
+  | {
+      type: "data-product";
+      id: string;
+      data: {
+        product_id: string;
+      };
+    }
+  | {
+      type: "data-suggestion";
+      id: string;
+      data: {
+        suggestion_id: string;
+      };
+    };
+
+/**
+ * AI SDK v5 compatible streaming message format with custom parts
  */
 interface StreamingMessage {
   type: "append-message" | "update-message";
@@ -41,10 +60,13 @@ interface StreamingMessage {
     id: string;
     role: "assistant";
     createdAt: string;
-    parts: Array<{
-      type: "text";
-      text: string;
-    }>;
+    parts: Array<
+      | {
+          type: "text";
+          text: string;
+        }
+      | CustomDataPart
+    >;
   };
 }
 
@@ -128,6 +150,42 @@ function parseInternalChunk(line: string): {
  */
 function createSSEMessage(data: StreamingMessage): string {
   return `data: ${JSON.stringify(data)}\n\n`;
+}
+
+/**
+ * Generate custom data parts for final message
+ */
+function generateCustomDataParts(): CustomDataPart[] {
+  return [
+    {
+      type: "data-product",
+      id: "product-1",
+      data: {
+        product_id: "4901950180232",
+      },
+    },
+    {
+      type: "data-suggestion",
+      id: "suggestion-1",
+      data: {
+        suggestion_id: "Сладкое",
+      },
+    },
+    {
+      type: "data-suggestion",
+      id: "suggestion-2",
+      data: {
+        suggestion_id: "Соленое",
+      },
+    },
+    {
+      type: "data-suggestion",
+      id: "suggestion-3",
+      data: {
+        suggestion_id: "Нет спасибо",
+      },
+    },
+  ];
 }
 
 /**
@@ -262,14 +320,16 @@ export async function POST(req: NextRequest) {
       const data = await chatApiRes.json();
 
       if (data.message && data.message.parts) {
-        // Convert JSON response to streaming format
+        // Convert JSON response to streaming format with custom parts
+        const customParts = generateCustomDataParts();
+
         const streamingMessage: StreamingMessage = {
           type: "append-message",
           message: {
             id: data.message.id || generateCuid(),
             role: "assistant",
             createdAt: data.message.createdAt || new Date().toISOString(),
-            parts: data.message.parts,
+            parts: [...data.message.parts, ...customParts],
           },
         };
 
@@ -304,6 +364,7 @@ export async function POST(req: NextRequest) {
     let createdAt = new Date().toISOString();
     let isFirstChunk = true;
     let chunkCount = 0;
+    let isStreamComplete = false;
 
     const transformStream = new ReadableStream({
       async start(controller) {
@@ -315,6 +376,34 @@ export async function POST(req: NextRequest) {
 
             if (done) {
               console.log(`Streaming completed after ${chunkCount} chunks`);
+
+              // Send final message with custom parts only when stream is complete
+              if (accumulatedText && !isStreamComplete) {
+                const customParts = generateCustomDataParts();
+
+                const finalStreamingMessage: StreamingMessage = {
+                  type: "update-message",
+                  message: {
+                    id: messageId,
+                    role: "assistant",
+                    createdAt: createdAt,
+                    parts: [
+                      {
+                        type: "text",
+                        text: accumulatedText,
+                      },
+                      ...customParts,
+                    ],
+                  },
+                };
+
+                const finalSSEMessage = createSSEMessage(finalStreamingMessage);
+                controller.enqueue(encoder.encode(finalSSEMessage));
+                console.log(
+                  "Sent final message with custom parts (product + suggestions)"
+                );
+              }
+
               break;
             }
 
@@ -333,7 +422,7 @@ export async function POST(req: NextRequest) {
               if (parsed.text) {
                 accumulatedText += parsed.text;
 
-                // Create streaming message
+                // Create streaming message WITHOUT custom parts during streaming
                 const streamingMessage: StreamingMessage = {
                   type: isFirstChunk ? "append-message" : "update-message",
                   message: {
@@ -375,6 +464,32 @@ export async function POST(req: NextRequest) {
               // Handle completion
               if (parsed.isComplete) {
                 console.log("Stream completion detected");
+                isStreamComplete = true;
+
+                // Send final message with custom parts immediately when completion detected
+                const customParts = generateCustomDataParts();
+
+                const finalStreamingMessage: StreamingMessage = {
+                  type: "update-message",
+                  message: {
+                    id: messageId,
+                    role: "assistant",
+                    createdAt: createdAt,
+                    parts: [
+                      {
+                        type: "text",
+                        text: accumulatedText,
+                      },
+                      ...customParts,
+                    ],
+                  },
+                };
+
+                const finalSSEMessage = createSSEMessage(finalStreamingMessage);
+                controller.enqueue(encoder.encode(finalSSEMessage));
+                console.log(
+                  "Sent final message with custom parts (product + suggestions)"
+                );
                 break;
               }
             }
