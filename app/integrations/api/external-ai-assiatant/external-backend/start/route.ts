@@ -8,6 +8,15 @@ import { apiResponse } from "@/app/integrations/lib/api/response";
 import { createId } from "@paralleldrive/cuid2";
 import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
 
+// Import utility functions
+import { analyzePurchasePreferences } from "../../utils/analyze-purchase-history";
+import { analyzeTagPreferences } from "../../utils/analyze-tag-preferences";
+import { buildAvailableMenu } from "../../utils/build-available-menu";
+import {
+  createSystemPrompt,
+  type SystemPromptData,
+} from "../../utils/create-system-prompt";
+
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
@@ -28,7 +37,7 @@ export async function POST(req: NextRequest) {
   try {
     const json = await req.json();
 
-    // Валидация через zod
+    // Валидация через zod (НЕ ИЗМЕНЯЕТСЯ)
     const parse = StartSessionSchema.safeParse(json);
     if (!parse.success) {
       return apiResponse({
@@ -38,6 +47,7 @@ export async function POST(req: NextRequest) {
         status: 400,
       });
     }
+
     const {
       user_id,
       name,
@@ -50,6 +60,7 @@ export async function POST(req: NextRequest) {
       auth_secret,
     } = parse.data;
 
+    // Проверка авторизации (НЕ ИЗМЕНЯЕТСЯ)
     if (auth_secret !== process.env.NEXTAUTH_SECRET) {
       return apiResponse({
         success: false,
@@ -61,6 +72,7 @@ export async function POST(req: NextRequest) {
     const chatId = createId();
     const messageId = createId();
 
+    // Создание токена через NextAuth (НЕ ИЗМЕНЯЕТСЯ)
     const nextAuthRes = await fetch(
       `${getNextAuthUrl()}/integrations/api/external-ai-assiatant/auth/signin/api`,
       {
@@ -90,10 +102,63 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // НОВАЯ ЛОГИКА: Анализ данных пользователя и создание персонализированного промта
     const availableItemsArray = parseAvailableItems(available_items);
 
-    const systemMessage = `ты ассистент искусственного интеллекта в ресторане который должен будет помогать пользователю по имени ${name || "Гость"}. Когда в следующий раз к тебе обратиться пользователь приветствуй его по этому имени.`;
+    console.log("Starting user data analysis...");
 
+    // Parallel execution of analysis functions for better performance
+    const [purchasePreferencesDoc, tagPreferencesDoc, availableMenuDoc] =
+      await Promise.all([
+        // Анализ истории покупок
+        analyzePurchasePreferences(purchase_history, availableItemsArray).catch(
+          (error) => {
+            console.error("Purchase preferences analysis failed:", error);
+            return "";
+          }
+        ),
+
+        // Анализ предпочтений по тегам
+        analyzeTagPreferences(purchase_history, availableItemsArray).catch(
+          (error) => {
+            console.error("Tag preferences analysis failed:", error);
+            return "";
+          }
+        ),
+
+        // Создание актуального меню
+        buildAvailableMenu(available_items).catch((error) => {
+          console.error("Menu building failed:", error);
+          return "";
+        }),
+      ]);
+
+    console.log("Analysis results:");
+    console.log(
+      "- Purchase preferences length:",
+      purchasePreferencesDoc.length
+    );
+    console.log("- Tag preferences length:", tagPreferencesDoc.length);
+    console.log("- Available menu length:", availableMenuDoc.length);
+
+    // Создание улучшенного системного сообщения с использованием отдельного компонента
+    const systemPromptData: SystemPromptData = {
+      name: name ?? null,
+      city: city ?? null,
+      purchaseHistory: purchase_history,
+      purchasePreferencesDoc,
+      tagPreferencesDoc,
+      availableMenuDoc,
+    };
+
+    const systemMessage = createSystemPrompt(systemPromptData);
+
+    console.log(
+      "Enhanced system message created, length:",
+      systemMessage.length
+    );
+
+    // Создание запроса к чату (СТРУКТУРА НЕ ИЗМЕНЯЕТСЯ)
     const chatRequestBody = {
       id: chatId,
       message: {
@@ -112,7 +177,7 @@ export async function POST(req: NextRequest) {
       selectedVisibilityType: "public",
     };
 
-    console.log("chatRequestBody ", chatRequestBody);
+    console.log("Sending request to chat API...");
 
     const chatApiRes = await fetch(`${getNextAuthUrl()}/api/chat`, {
       method: "POST",
@@ -144,7 +209,9 @@ export async function POST(req: NextRequest) {
       aiResponse = await chatApiRes.text();
     }
 
-    // 6. Сохраняем сессию в Redis
+    console.log("Chat API response received");
+
+    // Сохранение сессии в Redis (РАСШИРЕННАЯ ИНФОРМАЦИЯ)
     const sessionData = {
       user_id,
       name,
@@ -156,11 +223,22 @@ export async function POST(req: NextRequest) {
       available_items: availableItemsArray,
       createdAt: new Date().toISOString(),
       chatId,
+
+      // Новые поля для аналитики и отладки
+      analysis: {
+        hasPurchaseHistory: !!purchase_history && purchase_history.length > 0,
+        hasTagPreferences: tagPreferencesDoc.length > 0,
+        hasAvailableMenu: availableMenuDoc.length > 0,
+        systemMessageLength: systemMessage.length,
+        analyzedAt: new Date().toISOString(),
+      },
     };
 
     await redis.set(`session:${sub}`, sessionData, {
       ex: SESSION_TTL_SECONDS,
     });
+
+    console.log("Session saved to Redis with enhanced data");
 
     return apiResponse({
       success: true,
@@ -173,6 +251,8 @@ export async function POST(req: NextRequest) {
       status: 200,
     });
   } catch (error) {
+    console.error("Error in enhanced start endpoint:", error);
+
     return apiResponse({
       success: false,
       error: error instanceof Error ? error.message : String(error),
