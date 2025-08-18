@@ -7,15 +7,9 @@ import { StartSessionSchema } from "../../_types/session";
 import { apiResponse } from "@/app/integrations/lib/api/response";
 import { createId } from "@paralleldrive/cuid2";
 import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
-
-// Import utility functions
 import { analyzePurchasePreferences } from "../../utils/analyze-purchase-history";
 import { analyzeTagPreferences } from "../../utils/analyze-tag-preferences";
 import { buildAvailableMenu } from "../../utils/build-available-menu";
-import {
-  createSystemPrompt,
-  type SystemPromptData,
-} from "../../utils/create-system-prompt";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -31,6 +25,67 @@ function parseAvailableItems(
     .split(",")
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
+}
+
+/**
+ * Creates enhanced system message with personalized information
+ * @param name - User's name
+ * @param city - User's city (optional)
+ * @param purchasePreferencesDoc - Markdown document with purchase history analysis
+ * @param tagPreferencesDoc - Markdown document with tag preferences analysis
+ * @param availableMenuDoc - Markdown document with current menu
+ * @returns Enhanced system message string
+ */
+function createEnhancedSystemMessage(
+  name: string | null,
+  city: string | null,
+  purchasePreferencesDoc: string,
+  tagPreferencesDoc: string,
+  availableMenuDoc: string
+): string {
+  const userName = name || "Гость";
+  const userCity = city ? ` из города ${city}` : "";
+
+  let systemMessage = `Ты AI-ассистент ресторана. Твоя основная задача - помогать пользователю выбирать блюда и отвечать на вопросы о меню.
+
+ИНФОРМАЦИЯ О КЛИЕНТЕ:
+- Имя: ${userName}${userCity}
+
+`;
+
+  // Add purchase preferences if available
+  if (purchasePreferencesDoc.trim()) {
+    systemMessage += `${purchasePreferencesDoc}\n`;
+  }
+
+  // Add tag preferences if available
+  if (tagPreferencesDoc.trim()) {
+    systemMessage += `${tagPreferencesDoc}\n`;
+  }
+
+  // Add current menu if available
+  if (availableMenuDoc.trim()) {
+    systemMessage += `${availableMenuDoc}\n`;
+  }
+
+  // Add instructions
+  systemMessage += `ТВОИ ЗАДАЧИ:
+- Рекомендуй блюда на основе предыдущих предпочтений клиента
+- Помогай с выбором, объясняй особенности блюд и их состав
+- Учитывай популярные характеристики продуктов при рекомендациях
+- Отвечай дружелюбно и профессионально
+- Если клиент спрашивает о блюдах, которых нет в меню - предложи альтернативы
+
+ПРАВИЛА:
+- Всегда обращайся к клиенту по имени (${userName})
+- Рекомендуй только те блюда, которые есть в актуальном меню
+- При рекомендациях указывай цену и основные характеристики
+- Если у клиента есть предпочтения из истории покупок - учитывай их приоритетно
+- В следующем сообщении порекомендуй до 3 блюда из того, что пользователь покупал раньше, если есть история покупок. Отправляй сообщения как рекомендации, успользуй suggestions тип сообщений.
+
+Начни общение с приветствия по имени и предложи помочь с выбором блюд.`;
+
+  return systemMessage;
 }
 
 export async function POST(req: NextRequest) {
@@ -141,17 +196,14 @@ export async function POST(req: NextRequest) {
     console.log("- Tag preferences length:", tagPreferencesDoc.length);
     console.log("- Available menu length:", availableMenuDoc.length);
 
-    // Создание улучшенного системного сообщения с использованием отдельного компонента
-    const systemPromptData: SystemPromptData = {
-      name: name ?? null,
-      city: city ?? null,
-      purchaseHistory: purchase_history,
+    // Создание улучшенного системного сообщения
+    const systemMessage = createEnhancedSystemMessage(
+      name ?? null,
+      city ?? null,
       purchasePreferencesDoc,
       tagPreferencesDoc,
-      availableMenuDoc,
-    };
-
-    const systemMessage = createSystemPrompt(systemPromptData);
+      availableMenuDoc
+    );
 
     console.log(
       "Enhanced system message created, length:",

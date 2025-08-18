@@ -378,7 +378,7 @@ export async function getMenuStatistics(
 }> {
   try {
     const productIds = parseAvailableItems(availableItems);
-
+    console.log(" productIds", productIds);
     if (productIds.length === 0) {
       return {
         totalProducts: 0,
