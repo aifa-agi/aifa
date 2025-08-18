@@ -42,6 +42,54 @@ export const maxDuration = 60;
 let globalStreamContext: ResumableStreamContext | null = null;
 
 /**
+ * Logs token usage with detailed information and correct GPT-4 Mini pricing
+ * @param prefix - Prefix for source identification
+ * @param usage - Object with token usage information
+ * @param chatId - Chat ID for context
+ * @param userId - User ID for context
+ */
+function logTokenUsage(
+  prefix: string,
+  usage: any,
+  chatId?: string,
+  userId?: string
+) {
+  if (!usage) {
+    console.log(`${prefix} - Token usage data not available`);
+    return;
+  }
+
+  const { promptTokens, completionTokens, totalTokens } = usage;
+
+  console.log(`\n🔢 ===== ${prefix.toUpperCase()} TOKEN USAGE =====`);
+  console.log(`📊 Chat ID: ${chatId || "unknown"}`);
+  console.log(`👤 User ID: ${userId || "unknown"}`);
+  console.log(`📥 Input tokens (Prompt): ${promptTokens ?? "unknown"}`);
+  console.log(
+    `📤 Output tokens (Completion): ${completionTokens ?? "unknown"}`
+  );
+  console.log(`🔄 Total tokens: ${totalTokens ?? "unknown"}`);
+
+  // GPT-4 Mini pricing calculation: Input $0.15/1M, Output $0.60/1M
+  if (promptTokens && completionTokens) {
+    const inputCost = (promptTokens / 1000000) * 0.15; // $0.15 per 1M tokens
+    const outputCost = (completionTokens / 1000000) * 0.6; // $0.60 per 1M tokens
+    const totalCost = inputCost + outputCost;
+
+    console.log(
+      `💰 GPT-4 Mini cost: $${totalCost.toFixed(8)} (Input: $${inputCost.toFixed(8)}, Output: $${outputCost.toFixed(8)})`
+    );
+
+    // Additionally show cost in cents for clarity
+    const totalCostCents = totalCost * 100;
+    console.log(`💸 Cost in cents: ${totalCostCents.toFixed(6)}¢`);
+  }
+
+  console.log(`⏰ Logged at: ${new Date().toISOString()}`);
+  console.log(`🔢 ===== END TOKEN USAGE =====\n`);
+}
+
+/**
  * Get or create a global resumable stream context for data streaming.
  */
 function getStreamContext() {
@@ -108,7 +156,7 @@ export async function POST(request: Request) {
     const userId = session.user.id;
     const userType = session.user.type;
 
-    // Теперь session всегда определён и его можно безопасно использовать далее
+    // Now session is always defined and can be safely used further
 
     // Count how many user messages they sent in last 24 hours
     const messageCount = await prisma.message.count({
@@ -127,7 +175,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "You’ve reached your daily limit. Sign up to get 5× more messages per day!",
+            "You've reached your daily limit. Sign up to get 5× more messages per day!",
           redirectTo: "/register",
           delay: 3000,
         },
@@ -138,11 +186,11 @@ export async function POST(request: Request) {
     // Check if chat exists
     let chat = await prisma.chat.findUnique({ where: { id: chatId } });
     console.log(
-      "consile: // @/app/@left/(chat)/api/chat/route.ts chat:  ",
+      "console: // @/app/@left/(chat)/api/chat/route.ts chat:  ",
       chat
     );
     console.log(
-      "consile: // @/app/@left/(chat)/api/chat/route.ts message:  ",
+      "console: // @/app/@left/(chat)/api/chat/route.ts message:  ",
       message
     );
     if (!chat) {
@@ -158,7 +206,7 @@ export async function POST(request: Request) {
         },
       });
       console.log(
-        "consile: // @/app/@left/(chat)/api/chat/route.ts chat:  ",
+        "console: // @/app/@left/(chat)/api/chat/route.ts chat:  ",
         chat
       );
     } else {
@@ -255,8 +303,11 @@ export async function POST(request: Request) {
             updateDocument: updateDocument({ session, dataStream }),
             requestSuggestions: requestSuggestions({ session, dataStream }),
           },
-          onFinish: async ({ response }) => {
+          onFinish: async ({ response, usage }) => {
             if (!session.user?.id) return;
+
+            // Log token usage with GPT-4 Mini pricing
+            logTokenUsage("AI Response", usage, chatId, userId);
 
             try {
               const assistantId = getTrailingMessageId({
@@ -284,8 +335,18 @@ export async function POST(request: Request) {
                   createdAt: new Date(),
                 },
               });
+
+              // Additional logging for successful message saving
+              console.log(
+                `✅ Assistant message saved successfully for chat ${chatId}`
+              );
             } catch (error) {
               console.error("Failed to save assistant message:", error);
+
+              // Error logging with context
+              console.error(
+                `❌ Error context - Chat ID: ${chatId}, User ID: ${userId}`
+              );
             }
           },
           experimental_telemetry: {

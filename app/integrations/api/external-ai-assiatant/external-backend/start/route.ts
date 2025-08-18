@@ -7,9 +7,15 @@ import { StartSessionSchema } from "../../_types/session";
 import { apiResponse } from "@/app/integrations/lib/api/response";
 import { createId } from "@paralleldrive/cuid2";
 import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
+
+// Import utility functions
 import { analyzePurchasePreferences } from "../../utils/analyze-purchase-history";
 import { analyzeTagPreferences } from "../../utils/analyze-tag-preferences";
 import { buildAvailableMenu } from "../../utils/build-available-menu";
+import {
+  createSystemPrompt,
+  type SystemPromptData,
+} from "../../utils/create-system-prompt";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -17,75 +23,15 @@ const redis = new Redis({
 });
 const SESSION_TTL_SECONDS = 60 * 60 * 4;
 
-function parseAvailableItems(
-  available_items: string | null | undefined
-): string[] | undefined {
-  if (!available_items) return undefined;
-  return available_items
-    .split(",")
-    .map((item) => item.trim())
-    .filter((item) => item.length > 0);
-}
+// Функция для обработки events
+function processEvents(events: any[] | null | undefined): string {
+  if (!events || events.length === 0) return "";
 
-/**
- * Creates enhanced system message with personalized information
- * @param name - User's name
- * @param city - User's city (optional)
- * @param purchasePreferencesDoc - Markdown document with purchase history analysis
- * @param tagPreferencesDoc - Markdown document with tag preferences analysis
- * @param availableMenuDoc - Markdown document with current menu
- * @returns Enhanced system message string
- */
-function createEnhancedSystemMessage(
-  name: string | null,
-  city: string | null,
-  purchasePreferencesDoc: string,
-  tagPreferencesDoc: string,
-  availableMenuDoc: string
-): string {
-  const userName = name || "Гость";
-  const userCity = city ? ` из города ${city}` : "";
+  const eventsText = events
+    .map((event, index) => `${index + 1}. ${event.text}`)
+    .join("\n");
 
-  let systemMessage = `Ты AI-ассистент ресторана. Твоя основная задача - помогать пользователю выбирать блюда и отвечать на вопросы о меню.
-
-ИНФОРМАЦИЯ О КЛИЕНТЕ:
-- Имя: ${userName}${userCity}
-
-`;
-
-  // Add purchase preferences if available
-  if (purchasePreferencesDoc.trim()) {
-    systemMessage += `${purchasePreferencesDoc}\n`;
-  }
-
-  // Add tag preferences if available
-  if (tagPreferencesDoc.trim()) {
-    systemMessage += `${tagPreferencesDoc}\n`;
-  }
-
-  // Add current menu if available
-  if (availableMenuDoc.trim()) {
-    systemMessage += `${availableMenuDoc}\n`;
-  }
-
-  // Add instructions
-  systemMessage += `ТВОИ ЗАДАЧИ:
-- Рекомендуй блюда на основе предыдущих предпочтений клиента
-- Помогай с выбором, объясняй особенности блюд и их состав
-- Учитывай популярные характеристики продуктов при рекомендациях
-- Отвечай дружелюбно и профессионально
-- Если клиент спрашивает о блюдах, которых нет в меню - предложи альтернативы
-
-ПРАВИЛА:
-- Всегда обращайся к клиенту по имени (${userName})
-- Рекомендуй только те блюда, которые есть в актуальном меню
-- При рекомендациях указывай цену и основные характеристики
-- Если у клиента есть предпочтения из истории покупок - учитывай их приоритетно
-- В следующем сообщении порекомендуй до 3 блюда из того, что пользователь покупал раньше, если есть история покупок. Отправляй сообщения как рекомендации, успользуй suggestions тип сообщений.
-
-Начни общение с приветствия по имени и предложи помочь с выбором блюд.`;
-
-  return systemMessage;
+  return `Прими к сведению ещё одну важную информацию о текущих событиях и популярных позициях:\n${eventsText}\n\n`;
 }
 
 export async function POST(req: NextRequest) {
@@ -110,8 +56,8 @@ export async function POST(req: NextRequest) {
       events,
       user_info,
       purchase_history,
-      available_products,
-      available_items,
+      available_products, // Используем available_products как массив
+      available_items, // Оставляем для совместимости
       auth_secret,
     } = parse.data;
 
@@ -157,36 +103,37 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // НОВАЯ ЛОГИКА: Анализ данных пользователя и создание персонализированного промта
-    const availableItemsArray = parseAvailableItems(available_items);
-
+    // ОБНОВЛЕННАЯ ЛОГИКА: Анализ данных пользователя и создание персонализированного промта
     console.log("Starting user data analysis...");
 
-    // Parallel execution of analysis functions for better performance
+    // Параллельное выполнение функций анализа для лучшей производительности
     const [purchasePreferencesDoc, tagPreferencesDoc, availableMenuDoc] =
       await Promise.all([
-        // Анализ истории покупок
-        analyzePurchasePreferences(purchase_history, availableItemsArray).catch(
+        // Анализ истории покупок - передаем available_products
+        analyzePurchasePreferences(purchase_history, available_products).catch(
           (error) => {
             console.error("Purchase preferences analysis failed:", error);
             return "";
           }
         ),
 
-        // Анализ предпочтений по тегам
-        analyzeTagPreferences(purchase_history, availableItemsArray).catch(
+        // Анализ предпочтений по тегам - передаем available_products
+        analyzeTagPreferences(purchase_history, available_products).catch(
           (error) => {
             console.error("Tag preferences analysis failed:", error);
             return "";
           }
         ),
 
-        // Создание актуального меню
-        buildAvailableMenu(available_items).catch((error) => {
+        // Создание актуального меню - КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: передаем available_products
+        buildAvailableMenu(available_products).catch((error) => {
           console.error("Menu building failed:", error);
           return "";
         }),
       ]);
+
+    // Обработка events
+    const eventsInfo = processEvents(events);
 
     console.log("Analysis results:");
     console.log(
@@ -195,20 +142,21 @@ export async function POST(req: NextRequest) {
     );
     console.log("- Tag preferences length:", tagPreferencesDoc.length);
     console.log("- Available menu length:", availableMenuDoc.length);
+    console.log("- Events info length:", eventsInfo.length);
 
-    // Создание улучшенного системного сообщения
-    const systemMessage = createEnhancedSystemMessage(
-      name ?? null,
-      city ?? null,
+    // Создание улучшенного системного сообщения с использованием отдельного компонента
+    const systemPromptData: SystemPromptData = {
+      name: name ?? null,
+      city: city ?? null,
+      purchaseHistory: purchase_history,
       purchasePreferencesDoc,
       tagPreferencesDoc,
-      availableMenuDoc
-    );
+      availableMenuDoc,
+      eventsInfo,
+    };
 
-    console.log(
-      "Enhanced system message created, length:",
-      systemMessage.length
-    );
+    const systemMessage = createSystemPrompt(systemPromptData);
+    //const systemMessage = "hello";
 
     // Создание запроса к чату (СТРУКТУРА НЕ ИЗМЕНЯЕТСЯ)
     const chatRequestBody = {
@@ -271,8 +219,8 @@ export async function POST(req: NextRequest) {
       events,
       user_info,
       purchase_history,
-      available_products,
-      available_items: availableItemsArray,
+      available_products, // Сохраняем available_products как массив
+      available_items, // Оставляем для совместимости
       createdAt: new Date().toISOString(),
       chatId,
 
@@ -281,6 +229,8 @@ export async function POST(req: NextRequest) {
         hasPurchaseHistory: !!purchase_history && purchase_history.length > 0,
         hasTagPreferences: tagPreferencesDoc.length > 0,
         hasAvailableMenu: availableMenuDoc.length > 0,
+        hasEvents: !!events && events.length > 0,
+        availableProductsCount: available_products?.length || 0, // Добавляем счетчик доступных продуктов
         systemMessageLength: systemMessage.length,
         analyzedAt: new Date().toISOString(),
       },

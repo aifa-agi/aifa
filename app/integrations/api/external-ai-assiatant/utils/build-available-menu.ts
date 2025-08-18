@@ -18,7 +18,7 @@ interface MenuProduct {
   productId: string;
   name: string;
   description?: string;
-  price?: number; // undefined, не null
+  price?: number;
   calories?: number;
   weight?: string;
   tags: string[];
@@ -85,7 +85,7 @@ function getProductPrice(productInfo: any): number | undefined {
       return productInfo.cost;
     }
   }
-  return undefined; // Изменено с null на undefined
+  return undefined;
 }
 
 /**
@@ -100,7 +100,7 @@ function getProductCalories(productInfo: any): number | undefined {
       return productInfo.kcal;
     }
   }
-  return undefined; // Изменено с null на undefined
+  return undefined;
 }
 
 /**
@@ -118,7 +118,7 @@ function getProductWeight(productInfo: any): string | undefined {
       return productInfo.size;
     }
   }
-  return undefined; // Изменено с пустой строки на undefined
+  return undefined;
 }
 
 /**
@@ -161,23 +161,25 @@ function getProductOrder(productInfo: any): number {
 }
 
 /**
- * Parses available items string into array
- * @param availableItems - Comma-separated string or array of product IDs
+ * ОБНОВЛЕННАЯ ФУНКЦИЯ: Парсит available_products как массив строк
+ * @param availableProducts - Массив ID продуктов или строка разделенная запятыми
  * @returns Array of product IDs
  */
-function parseAvailableItems(
-  availableItems: string | string[] | null | undefined
+function parseAvailableProducts(
+  availableProducts: string[] | string | null | undefined
 ): string[] {
-  if (!availableItems) return [];
+  if (!availableProducts) return [];
 
-  if (Array.isArray(availableItems)) {
-    return availableItems.filter(
+  // Если уже массив - возвращаем отфильтрованный массив
+  if (Array.isArray(availableProducts)) {
+    return availableProducts.filter(
       (item) => typeof item === "string" && item.trim().length > 0
     );
   }
 
-  if (typeof availableItems === "string") {
-    return availableItems
+  // Если строка - парсим через запятую (для совместимости)
+  if (typeof availableProducts === "string") {
+    return availableProducts
       .split(",")
       .map((item) => item.trim())
       .filter((item) => item.length > 0);
@@ -187,28 +189,29 @@ function parseAvailableItems(
 }
 
 /**
- * Builds available menu markdown document from database products
- * filtered by available product IDs
+ * ГЛАВНАЯ ФУНКЦИЯ: Построение меню на основе доступных продуктов из базы данных
+ * Фильтрует продукты по массиву available_products
  *
- * @param availableItems - Comma-separated string or array of available product IDs
- * @returns Promise<string> - Markdown formatted menu document
+ * @param availableProducts - Массив ID доступных продуктов
+ * @returns Promise<string> - Markdown форматированный документ меню
  */
 export async function buildAvailableMenu(
-  availableItems: string | string[] | null | undefined
+  availableProducts: string[] | string | null | undefined
 ): Promise<string> {
   try {
-    // Parse available items
-    const productIds = parseAvailableItems(availableItems);
+    // Парсим доступные продукты
+    const productIds = parseAvailableProducts(availableProducts);
+    console.log("Available product IDs:", productIds);
 
     if (productIds.length === 0) {
       return "";
     }
 
-    // Get available products from database
-    const availableProducts = await prisma.product.findMany({
+    // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: Получаем только продукты, которые есть в available_products
+    const availableProductsFromDb = await prisma.product.findMany({
       where: {
         productId: {
-          in: productIds,
+          in: productIds, // Фильтруем по available_products
         },
       },
       select: {
@@ -218,28 +221,38 @@ export async function buildAvailableMenu(
       },
     });
 
-    if (availableProducts.length === 0) {
-      return "";
+    console.log(
+      "Products found in database:",
+      availableProductsFromDb.length,
+      "out of",
+      productIds.length,
+      "requested"
+    );
+
+    if (availableProductsFromDb.length === 0) {
+      return "АКТУАЛЬНОЕ МЕНЮ: запрашиваемые продукты не найдены в базе данных\n\n";
     }
 
-    // Transform database products into menu products
-    const menuProducts: MenuProduct[] = availableProducts.map((dbProduct) => {
-      const productInfo = dbProduct.productInfo;
+    // Трансформируем продукты из базы данных в продукты меню
+    const menuProducts: MenuProduct[] = availableProductsFromDb.map(
+      (dbProduct) => {
+        const productInfo = dbProduct.productInfo;
 
-      return {
-        productId: dbProduct.productId,
-        name: getProductName(productInfo, dbProduct.productId),
-        description: getProductDescription(productInfo) || undefined,
-        price: getProductPrice(productInfo), // Теперь возвращает undefined, не null
-        calories: getProductCalories(productInfo),
-        weight: getProductWeight(productInfo),
-        tags: dbProduct.tags || [],
-        category: getProductCategory(productInfo),
-        order: getProductOrder(productInfo),
-      };
-    });
+        return {
+          productId: dbProduct.productId,
+          name: getProductName(productInfo, dbProduct.productId),
+          description: getProductDescription(productInfo) || undefined,
+          price: getProductPrice(productInfo),
+          calories: getProductCalories(productInfo),
+          weight: getProductWeight(productInfo),
+          tags: dbProduct.tags || [],
+          category: getProductCategory(productInfo),
+          order: getProductOrder(productInfo),
+        };
+      }
+    );
 
-    // Group products by category
+    // Группируем продукты по категориям
     const categoriesMap = new Map<string, MenuProduct[]>();
 
     menuProducts.forEach((product) => {
@@ -250,10 +263,10 @@ export async function buildAvailableMenu(
       categoriesMap.get(category)!.push(product);
     });
 
-    // Sort products within each category
+    // Сортируем продукты внутри каждой категории
     categoriesMap.forEach((products) => {
       products.sort((a, b) => {
-        // First by order, then by name
+        // Сначала по order, затем по имени
         if (a.order !== b.order) {
           return (a.order || 999) - (b.order || 999);
         }
@@ -261,7 +274,7 @@ export async function buildAvailableMenu(
       });
     });
 
-    // Convert to array and sort categories
+    // Конвертируем в массив и сортируем категории
     const categories = Array.from(categoriesMap.entries()).map(
       ([name, products]) => ({
         name,
@@ -269,7 +282,7 @@ export async function buildAvailableMenu(
       })
     );
 
-    // Sort categories (you can customize this logic)
+    // Сортируем категории
     const categoryOrder = [
       "Закуски",
       "Салаты",
@@ -302,27 +315,27 @@ export async function buildAvailableMenu(
       }
     });
 
-    // Build markdown document
+    // Строим markdown документ
     let markdown = "АКТУАЛЬНОЕ МЕНЮ РЕСТОРАНА:\n\n";
 
     categories.forEach((category) => {
-      // Category header
+      // Заголовок категории
       markdown += `## ${category.name}\n\n`;
 
       category.products.forEach((product) => {
-        // Product name and ID
+        // Название продукта и ID
         markdown += `### ${product.name}`;
         if (product.productId !== product.name) {
           markdown += ` (${product.productId})`;
         }
         markdown += `\n`;
 
-        // Description
+        // Описание
         if (product.description) {
           markdown += `*${product.description}*\n\n`;
         }
 
-        // Product details
+        // Детали продукта
         const details: string[] = [];
 
         if (product.price !== undefined) {
@@ -349,7 +362,7 @@ export async function buildAvailableMenu(
       });
     });
 
-    // Add summary statistics
+    // Добавляем сводную статистику
     const totalProducts = menuProducts.length;
     const totalCategories = categories.length;
 
@@ -361,24 +374,25 @@ export async function buildAvailableMenu(
   } catch (error) {
     console.error("Error building available menu:", error);
 
-    // Return fallback message on error
+    // Возвращаем fallback сообщение при ошибке
     return "АКТУАЛЬНОЕ МЕНЮ: информация временно недоступна\n\n";
   }
 }
 
 /**
- * Helper function to get menu statistics
+ * ОБНОВЛЕННАЯ функция для получения статистики меню
  */
 export async function getMenuStatistics(
-  availableItems: string | string[] | null | undefined
+  availableProducts: string[] | string | null | undefined
 ): Promise<{
   totalProducts: number;
   totalCategories: number;
   categoriesBreakdown: Record<string, number>;
 }> {
   try {
-    const productIds = parseAvailableItems(availableItems);
-    console.log(" productIds", productIds);
+    const productIds = parseAvailableProducts(availableProducts);
+    console.log("Product IDs for statistics:", productIds);
+
     if (productIds.length === 0) {
       return {
         totalProducts: 0,
@@ -387,10 +401,10 @@ export async function getMenuStatistics(
       };
     }
 
-    const availableProducts = await prisma.product.findMany({
+    const availableProductsFromDb = await prisma.product.findMany({
       where: {
         productId: {
-          in: productIds,
+          in: productIds, // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: фильтруем по available_products
         },
       },
       select: {
@@ -400,13 +414,13 @@ export async function getMenuStatistics(
 
     const categoriesBreakdown: Record<string, number> = {};
 
-    availableProducts.forEach((product) => {
+    availableProductsFromDb.forEach((product) => {
       const category = getProductCategory(product.productInfo);
       categoriesBreakdown[category] = (categoriesBreakdown[category] || 0) + 1;
     });
 
     return {
-      totalProducts: availableProducts.length,
+      totalProducts: availableProductsFromDb.length,
       totalCategories: Object.keys(categoriesBreakdown).length,
       categoriesBreakdown,
     };
@@ -421,16 +435,16 @@ export async function getMenuStatistics(
 }
 
 /**
- * Helper function to validate that all requested products exist in database
+ * ОБНОВЛЕННАЯ функция для валидации доступных продуктов
  */
 export async function validateAvailableProducts(
-  availableItems: string | string[] | null | undefined
+  availableProducts: string[] | string | null | undefined
 ): Promise<{
   existingProducts: string[];
   missingProducts: string[];
 }> {
   try {
-    const requestedIds = parseAvailableItems(availableItems);
+    const requestedIds = parseAvailableProducts(availableProducts);
 
     if (requestedIds.length === 0) {
       return {
