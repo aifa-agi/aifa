@@ -164,7 +164,7 @@ export async function POST(req: NextRequest) {
       message: {
         id: messageId,
         createdAt: new Date().toISOString(),
-        role: "user",
+        role: "system",
         content: systemMessage,
         parts: [
           {

@@ -36,6 +36,8 @@ import { Chat, Message, Prisma, UserType } from "@prisma/client";
 import { openai } from "@ai-sdk/openai";
 import { generateCuid } from "@/lib/utils/generateCuid";
 import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
+import { apiSuggestionsGenerator } from "../../../(_service)/(_libs)/ai/tools/api-suggestions-generator";
+import { apiProductRecommendations } from "../../../(_service)/(_libs)/ai/tools/api-product-recommendations";
 
 export const maxDuration = 60;
 
@@ -156,8 +158,6 @@ export async function POST(request: Request) {
     const userId = session.user.id;
     const userType = session.user.type;
 
-    // Now session is always defined and can be safely used further
-
     // Count how many user messages they sent in last 24 hours
     const messageCount = await prisma.message.count({
       where: {
@@ -273,36 +273,56 @@ export async function POST(request: Request) {
           system: systemPrompt({ selectedChatModel, requestHints }),
           messages,
           maxSteps: 5,
+          // FIXED: Updated tool activation logic
           experimental_activeTools:
             selectedChatModel === "chat-model-reasoning"
               ? []
-              : [
-                  "web_search_preview",
-                  "getWeather",
-                  "createDocument",
-                  "updateDocument",
-                  "requestSuggestions",
-                  "web_search_preview",
-                  "fileSearchVectorStore",
-                ],
+              : selectedChatModel === "api-chat-support"
+                ? ["apiProductRecommendations", "apiSuggestionsGenerator"]
+                : [
+                    "web_search_preview",
+                    "getWeather",
+                    "createDocument",
+                    "updateDocument",
+                    "requestSuggestions",
+                    "fileSearchVectorStore",
+                  ],
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateCuid,
-          tools: {
-            web_search_preview: openai.tools.webSearchPreview({
-              // optional configuration:
-              searchContextSize: "high",
-              userLocation: {
-                type: "approximate",
-                city: "San Francisco",
-                region: "California",
-              },
-            }),
-            fileSearchVectorStore,
-            getWeather,
-            createDocument: createDocument({ session, dataStream }),
-            updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({ session, dataStream }),
-          },
+          // FIXED: Tools configuration with proper dataStream access
+          tools:
+            selectedChatModel === "api-chat-support"
+              ? {
+                  // Only API-specific tools for external clients
+                  apiProductRecommendations: apiProductRecommendations({
+                    session,
+                    dataStream,
+                  }),
+                  apiSuggestionsGenerator: apiSuggestionsGenerator({
+                    session,
+                    dataStream,
+                  }),
+                }
+              : {
+                  // All standard tools for internal users
+                  web_search_preview: openai.tools.webSearchPreview({
+                    // optional configuration:
+                    searchContextSize: "high",
+                    userLocation: {
+                      type: "approximate",
+                      city: "San Francisco",
+                      region: "California",
+                    },
+                  }),
+                  fileSearchVectorStore,
+                  getWeather,
+                  createDocument: createDocument({ session, dataStream }),
+                  updateDocument: updateDocument({ session, dataStream }),
+                  requestSuggestions: requestSuggestions({
+                    session,
+                    dataStream,
+                  }),
+                },
           onFinish: async ({ response, usage }) => {
             if (!session.user?.id) return;
 
