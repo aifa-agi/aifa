@@ -146,46 +146,73 @@ function parseInternalChunk(line: string): {
 }
 
 /**
+ * Extract custom data parts from text and return cleaned text
+ */
+function extractCustomDataParts(text: string): {
+  cleanText: string;
+  products: CustomDataPart[];
+  suggestions: CustomDataPart[];
+} {
+  const products: CustomDataPart[] = [];
+  const suggestions: CustomDataPart[] = [];
+
+  // Регулярные выражения для поиска JSON объектов
+  const productRegex = /\{"type":\s*"data-product"[^}]+\}/g;
+  const suggestionRegex = /\{"type":\s*"data-suggestion"[^}]+\}/g;
+
+  let cleanText = text;
+
+  // Извлечение продуктов
+  const productMatches = text.match(productRegex);
+  if (productMatches) {
+    productMatches.forEach((match, index) => {
+      try {
+        const parsed = JSON.parse(match);
+        products.push({
+          type: "data-product",
+          id: parsed.id || `product-${index + 1}`,
+          data: {
+            product_id: parsed.data?.product_id || "",
+          },
+        });
+        cleanText = cleanText.replace(match, "");
+      } catch (e) {
+        console.log("Failed to parse product JSON:", match);
+      }
+    });
+  }
+
+  // Извлечение предложений
+  const suggestionMatches = text.match(suggestionRegex);
+  if (suggestionMatches) {
+    suggestionMatches.forEach((match, index) => {
+      try {
+        const parsed = JSON.parse(match);
+        suggestions.push({
+          type: "data-suggestion",
+          id: parsed.id || `suggestion-${index + 1}`,
+          data: {
+            suggestion_id: parsed.data?.suggestion_id || "",
+          },
+        });
+        cleanText = cleanText.replace(match, "");
+      } catch (e) {
+        console.log("Failed to parse suggestion JSON:", match);
+      }
+    });
+  }
+
+  // Очистка лишних пробелов и переносов строк
+  cleanText = cleanText.replace(/\s+/g, " ").trim();
+
+  return { cleanText, products, suggestions };
+}
+
+/**
  * Create Server-Sent Event formatted message
  */
 function createSSEMessage(data: StreamingMessage): string {
   return `data: ${JSON.stringify(data)}\n\n`;
-}
-
-/**
- * Generate custom data parts for final message
- */
-function generateCustomDataParts(): CustomDataPart[] {
-  return [
-    {
-      type: "data-product",
-      id: "product-1",
-      data: {
-        product_id: "4901950180232",
-      },
-    },
-    {
-      type: "data-suggestion",
-      id: "suggestion-1",
-      data: {
-        suggestion_id: "Сладкое",
-      },
-    },
-    {
-      type: "data-suggestion",
-      id: "suggestion-2",
-      data: {
-        suggestion_id: "Соленое",
-      },
-    },
-    {
-      type: "data-suggestion",
-      id: "suggestion-3",
-      data: {
-        suggestion_id: "Нет спасибо",
-      },
-    },
-  ];
 }
 
 /**
@@ -320,16 +347,36 @@ export async function POST(req: NextRequest) {
       const data = await chatApiRes.json();
 
       if (data.message && data.message.parts) {
-        // Convert JSON response to streaming format with custom parts
-        const customParts = generateCustomDataParts();
+        // Extract custom parts from text content
+        const textPart = data.message.parts.find(
+          (part: any) => part.type === "text"
+        );
+        let customProducts: CustomDataPart[] = [];
+        let customSuggestions: CustomDataPart[] = [];
+        let cleanText = "";
 
+        if (textPart?.text) {
+          const extracted = extractCustomDataParts(textPart.text);
+          customProducts = extracted.products;
+          customSuggestions = extracted.suggestions;
+          cleanText = extracted.cleanText;
+        }
+
+        // Convert JSON response to streaming format with extracted custom parts
         const streamingMessage: StreamingMessage = {
           type: "append-message",
           message: {
             id: data.message.id || generateCuid(),
             role: "assistant",
             createdAt: data.message.createdAt || new Date().toISOString(),
-            parts: [...data.message.parts, ...customParts],
+            parts: [
+              {
+                type: "text",
+                text: cleanText,
+              },
+              ...customProducts,
+              ...customSuggestions,
+            ],
           },
         };
 
@@ -366,6 +413,10 @@ export async function POST(req: NextRequest) {
     let chunkCount = 0;
     let isStreamComplete = false;
 
+    // Накопители для custom data parts
+    let allProducts: CustomDataPart[] = [];
+    let allSuggestions: CustomDataPart[] = [];
+
     const transformStream = new ReadableStream({
       async start(controller) {
         console.log("Starting streaming transformation...");
@@ -377,9 +428,26 @@ export async function POST(req: NextRequest) {
             if (done) {
               console.log(`Streaming completed after ${chunkCount} chunks`);
 
-              // Send final message with custom parts only when stream is complete
+              // Send final message with all custom parts when stream is complete
               if (accumulatedText && !isStreamComplete) {
-                const customParts = generateCustomDataParts();
+                // Extract any remaining data from final accumulated text
+                const finalExtracted = extractCustomDataParts(accumulatedText);
+
+                // Merge with accumulated parts (avoid duplicates by checking IDs)
+                const existingProductIds = allProducts.map((p) => p.id);
+                const existingSuggestionIds = allSuggestions.map((s) => s.id);
+
+                finalExtracted.products.forEach((product) => {
+                  if (!existingProductIds.includes(product.id)) {
+                    allProducts.push(product);
+                  }
+                });
+
+                finalExtracted.suggestions.forEach((suggestion) => {
+                  if (!existingSuggestionIds.includes(suggestion.id)) {
+                    allSuggestions.push(suggestion);
+                  }
+                });
 
                 const finalStreamingMessage: StreamingMessage = {
                   type: "update-message",
@@ -390,9 +458,10 @@ export async function POST(req: NextRequest) {
                     parts: [
                       {
                         type: "text",
-                        text: accumulatedText,
+                        text: finalExtracted.cleanText,
                       },
-                      ...customParts,
+                      ...allProducts,
+                      ...allSuggestions, // Suggestions только в финальном сообщении
                     ],
                   },
                 };
@@ -400,7 +469,7 @@ export async function POST(req: NextRequest) {
                 const finalSSEMessage = createSSEMessage(finalStreamingMessage);
                 controller.enqueue(encoder.encode(finalSSEMessage));
                 console.log(
-                  "Sent final message with custom parts (product + suggestions)"
+                  `Sent final message with ${allProducts.length} products and ${allSuggestions.length} suggestions`
                 );
               }
 
@@ -422,7 +491,26 @@ export async function POST(req: NextRequest) {
               if (parsed.text) {
                 accumulatedText += parsed.text;
 
-                // Create streaming message WITHOUT custom parts during streaming
+                // Extract custom data parts from current accumulated text
+                const extracted = extractCustomDataParts(accumulatedText);
+
+                // Update accumulated products (add new ones only)
+                const existingProductIds = allProducts.map((p) => p.id);
+                extracted.products.forEach((product) => {
+                  if (!existingProductIds.includes(product.id)) {
+                    allProducts.push(product);
+                  }
+                });
+
+                // Accumulate suggestions for final message only
+                const existingSuggestionIds = allSuggestions.map((s) => s.id);
+                extracted.suggestions.forEach((suggestion) => {
+                  if (!existingSuggestionIds.includes(suggestion.id)) {
+                    allSuggestions.push(suggestion);
+                  }
+                });
+
+                // Create streaming message with clean text and current products (NO suggestions during streaming)
                 const streamingMessage: StreamingMessage = {
                   type: isFirstChunk ? "append-message" : "update-message",
                   message: {
@@ -432,8 +520,9 @@ export async function POST(req: NextRequest) {
                     parts: [
                       {
                         type: "text",
-                        text: accumulatedText,
+                        text: extracted.cleanText,
                       },
+                      ...allProducts, // Продукты добавляем сразу
                     ],
                   },
                 };
@@ -450,7 +539,7 @@ export async function POST(req: NextRequest) {
                 // Log progress every 10 text chunks
                 if (chunkCount % 10 === 0) {
                   console.log(
-                    `Streamed ${chunkCount} chunks, total text length: ${accumulatedText.length}`
+                    `Streamed ${chunkCount} chunks, total text length: ${extracted.cleanText.length}, products: ${allProducts.length}, suggestions: ${allSuggestions.length}`
                   );
                 }
               }
@@ -466,9 +555,26 @@ export async function POST(req: NextRequest) {
                 console.log("Stream completion detected");
                 isStreamComplete = true;
 
-                // Send final message with custom parts immediately when completion detected
-                const customParts = generateCustomDataParts();
+                // Extract final data parts from accumulated text
+                const finalExtracted = extractCustomDataParts(accumulatedText);
 
+                // Merge any remaining data
+                const existingProductIds = allProducts.map((p) => p.id);
+                const existingSuggestionIds = allSuggestions.map((s) => s.id);
+
+                finalExtracted.products.forEach((product) => {
+                  if (!existingProductIds.includes(product.id)) {
+                    allProducts.push(product);
+                  }
+                });
+
+                finalExtracted.suggestions.forEach((suggestion) => {
+                  if (!existingSuggestionIds.includes(suggestion.id)) {
+                    allSuggestions.push(suggestion);
+                  }
+                });
+
+                // Send final message with ALL custom parts including suggestions
                 const finalStreamingMessage: StreamingMessage = {
                   type: "update-message",
                   message: {
@@ -478,9 +584,10 @@ export async function POST(req: NextRequest) {
                     parts: [
                       {
                         type: "text",
-                        text: accumulatedText,
+                        text: finalExtracted.cleanText,
                       },
-                      ...customParts,
+                      ...allProducts,
+                      ...allSuggestions, // Suggestions только в финальном сообщении
                     ],
                   },
                 };
@@ -488,7 +595,7 @@ export async function POST(req: NextRequest) {
                 const finalSSEMessage = createSSEMessage(finalStreamingMessage);
                 controller.enqueue(encoder.encode(finalSSEMessage));
                 console.log(
-                  "Sent final message with custom parts (product + suggestions)"
+                  `Sent final message with ${allProducts.length} products and ${allSuggestions.length} suggestions`
                 );
                 break;
               }
@@ -496,7 +603,7 @@ export async function POST(req: NextRequest) {
           }
 
           console.log(
-            `Final streaming result: ${accumulatedText.length} characters sent in ${chunkCount} chunks`
+            `Final streaming result: ${accumulatedText.length} characters sent in ${chunkCount} chunks with ${allProducts.length} products and ${allSuggestions.length} suggestions`
           );
           controller.close();
         } catch (error) {
