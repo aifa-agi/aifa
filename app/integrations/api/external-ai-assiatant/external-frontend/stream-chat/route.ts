@@ -106,13 +106,12 @@ function createStreamingResponse(stream: ReadableStream): Response {
 }
 
 /**
- * Parse internal streaming chunk to extract text content and data parts
+ * Parse internal streaming chunk to extract text content
  */
 function parseInternalChunk(line: string): {
   text?: string;
   messageId?: string;
   isComplete?: boolean;
-  dataPart?: CustomDataPart;
 } {
   try {
     // Handle numbered prefix format (0:"text", 1:"text", etc.)
@@ -134,25 +133,6 @@ function parseInternalChunk(line: string): {
       return { messageId: data.messageId };
     }
 
-    // NEW: Handle data stream parts from AI tools
-    const dataMatch = line.match(/^[a-z]:\["data","(.+)"\]$/);
-    if (dataMatch) {
-      try {
-        const dataStr = dataMatch[1];
-        const decodedData = JSON.parse(dataStr);
-
-        // Check if it's a custom data part from our AI tools
-        if (
-          decodedData.type === "data-product" ||
-          decodedData.type === "data-suggestion"
-        ) {
-          return { dataPart: decodedData as CustomDataPart };
-        }
-      } catch (parseError) {
-        console.log("Failed to parse data part:", parseError);
-      }
-    }
-
     // Handle completion signals
     if (line.includes("finishReason") || line.includes('"usage"')) {
       return { isComplete: true };
@@ -170,6 +150,42 @@ function parseInternalChunk(line: string): {
  */
 function createSSEMessage(data: StreamingMessage): string {
   return `data: ${JSON.stringify(data)}\n\n`;
+}
+
+/**
+ * Generate custom data parts for final message
+ */
+function generateCustomDataParts(): CustomDataPart[] {
+  return [
+    {
+      type: "data-product",
+      id: "product-1",
+      data: {
+        product_id: "4901950180232",
+      },
+    },
+    {
+      type: "data-suggestion",
+      id: "suggestion-1",
+      data: {
+        suggestion_id: "Сладкое",
+      },
+    },
+    {
+      type: "data-suggestion",
+      id: "suggestion-2",
+      data: {
+        suggestion_id: "Соленое",
+      },
+    },
+    {
+      type: "data-suggestion",
+      id: "suggestion-3",
+      data: {
+        suggestion_id: "Нет спасибо",
+      },
+    },
+  ];
 }
 
 /**
@@ -304,14 +320,16 @@ export async function POST(req: NextRequest) {
       const data = await chatApiRes.json();
 
       if (data.message && data.message.parts) {
-        // UPDATED: No hardcoded custom parts - use only what comes from AI tools
+        // Convert JSON response to streaming format with custom parts
+        const customParts = generateCustomDataParts();
+
         const streamingMessage: StreamingMessage = {
           type: "append-message",
           message: {
             id: data.message.id || generateCuid(),
             role: "assistant",
             createdAt: data.message.createdAt || new Date().toISOString(),
-            parts: data.message.parts, // Only actual parts from AI response
+            parts: [...data.message.parts, ...customParts],
           },
         };
 
@@ -342,11 +360,11 @@ export async function POST(req: NextRequest) {
     const encoder = new TextEncoder();
 
     let accumulatedText = "";
-    let customParts: CustomDataPart[] = []; // NEW: Collect custom parts from AI tools
     let messageId = generateCuid();
     let createdAt = new Date().toISOString();
     let isFirstChunk = true;
     let chunkCount = 0;
+    let isStreamComplete = false;
 
     const transformStream = new ReadableStream({
       async start(controller) {
@@ -359,17 +377,9 @@ export async function POST(req: NextRequest) {
             if (done) {
               console.log(`Streaming completed after ${chunkCount} chunks`);
 
-              // UPDATED: Send final message with all parts (text + AI-generated custom parts)
-              if (accumulatedText) {
-                const allParts: Array<
-                  { type: "text"; text: string } | CustomDataPart
-                > = [
-                  {
-                    type: "text",
-                    text: accumulatedText,
-                  },
-                  ...customParts, // Only AI-generated custom parts, no hardcode
-                ];
+              // Send final message with custom parts only when stream is complete
+              if (accumulatedText && !isStreamComplete) {
+                const customParts = generateCustomDataParts();
 
                 const finalStreamingMessage: StreamingMessage = {
                   type: "update-message",
@@ -377,22 +387,21 @@ export async function POST(req: NextRequest) {
                     id: messageId,
                     role: "assistant",
                     createdAt: createdAt,
-                    parts: allParts,
+                    parts: [
+                      {
+                        type: "text",
+                        text: accumulatedText,
+                      },
+                      ...customParts,
+                    ],
                   },
                 };
 
                 const finalSSEMessage = createSSEMessage(finalStreamingMessage);
                 controller.enqueue(encoder.encode(finalSSEMessage));
-
-                if (customParts.length > 0) {
-                  console.log(
-                    `Sent final message with ${customParts.length} AI-generated custom parts`
-                  );
-                } else {
-                  console.log(
-                    "Sent final message with text only (no custom parts from AI tools)"
-                  );
-                }
+                console.log(
+                  "Sent final message with custom parts (product + suggestions)"
+                );
               }
 
               break;
@@ -413,7 +422,7 @@ export async function POST(req: NextRequest) {
               if (parsed.text) {
                 accumulatedText += parsed.text;
 
-                // Create streaming message with only text during streaming
+                // Create streaming message WITHOUT custom parts during streaming
                 const streamingMessage: StreamingMessage = {
                   type: isFirstChunk ? "append-message" : "update-message",
                   message: {
@@ -446,24 +455,48 @@ export async function POST(req: NextRequest) {
                 }
               }
 
-              // NEW: Handle custom data parts from AI tools
-              if (parsed.dataPart) {
-                customParts.push(parsed.dataPart);
-                console.log(
-                  `Collected AI-generated custom part: ${parsed.dataPart.type}`
-                );
-              }
-
               // Handle metadata
               if (parsed.messageId) {
                 messageId = parsed.messageId;
                 console.log("Updated messageId:", messageId);
               }
+
+              // Handle completion
+              if (parsed.isComplete) {
+                console.log("Stream completion detected");
+                isStreamComplete = true;
+
+                // Send final message with custom parts immediately when completion detected
+                const customParts = generateCustomDataParts();
+
+                const finalStreamingMessage: StreamingMessage = {
+                  type: "update-message",
+                  message: {
+                    id: messageId,
+                    role: "assistant",
+                    createdAt: createdAt,
+                    parts: [
+                      {
+                        type: "text",
+                        text: accumulatedText,
+                      },
+                      ...customParts,
+                    ],
+                  },
+                };
+
+                const finalSSEMessage = createSSEMessage(finalStreamingMessage);
+                controller.enqueue(encoder.encode(finalSSEMessage));
+                console.log(
+                  "Sent final message with custom parts (product + suggestions)"
+                );
+                break;
+              }
             }
           }
 
           console.log(
-            `Final streaming result: ${accumulatedText.length} characters sent in ${chunkCount} chunks with ${customParts.length} custom parts`
+            `Final streaming result: ${accumulatedText.length} characters sent in ${chunkCount} chunks`
           );
           controller.close();
         } catch (error) {
