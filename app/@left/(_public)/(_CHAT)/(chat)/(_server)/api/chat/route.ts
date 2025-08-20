@@ -6,6 +6,7 @@ import {
   createDataStream,
   smoothStream,
   streamText,
+  tool,
 } from "ai";
 import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import {
@@ -36,6 +37,8 @@ import { Chat, Message, Prisma, UserType } from "@prisma/client";
 import { openai } from "@ai-sdk/openai";
 import { generateCuid } from "@/lib/utils/generateCuid";
 import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
+import { z } from "zod";
+import { createProductIdAnswer } from "../../../(_service)/(_libs)/ai/tools/create-product-is-answer";
 
 export const maxDuration = 60;
 
@@ -280,9 +283,9 @@ export async function POST(request: Request) {
                   "web_search_preview",
                   "getWeather",
                   "createDocument",
+                  "createProductIdAnswer",
                   "updateDocument",
                   "requestSuggestions",
-                  "web_search_preview",
                   "fileSearchVectorStore",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
@@ -300,6 +303,10 @@ export async function POST(request: Request) {
             fileSearchVectorStore,
             getWeather,
             createDocument: createDocument({ session, dataStream }),
+            createProductIdAnswer: createProductIdAnswer({
+              session,
+              dataStream,
+            }),
             updateDocument: updateDocument({ session, dataStream }),
             requestSuggestions: requestSuggestions({ session, dataStream }),
           },

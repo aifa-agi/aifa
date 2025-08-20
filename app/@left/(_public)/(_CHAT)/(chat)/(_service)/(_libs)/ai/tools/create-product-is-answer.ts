@@ -10,8 +10,8 @@ interface CreateProductIdAnswerProps {
   dataStream: DataStreamWriter;
 }
 
-// Интерфейс для возвращаемого результата tool
-interface ProductResult {
+// Минимальные TypeScript интерфейсы для ProductPart
+interface ProductPart {
   type: "data-product";
   id: string;
   data: {
@@ -24,7 +24,8 @@ export const createProductIdAnswer = ({
   dataStream,
 }: CreateProductIdAnswerProps) =>
   tool({
-    description: "Create product recommendation with hardcoded product ID",
+    description:
+      "Create product recommendation which return custom data-parts for chat",
     parameters: z.object({
       title: z.string().describe("Title for the product recommendation"),
     }),
@@ -33,8 +34,8 @@ export const createProductIdAnswer = ({
 
       console.log("createProductIdAnswer executing");
 
-      // Создаем product data
-      const productResult: ProductResult = {
+      // Жестко закодированные данные продукта
+      const productPart: ProductPart = {
         type: "data-product",
         id: `product-${id}`,
         data: {
@@ -42,15 +43,20 @@ export const createProductIdAnswer = ({
         },
       };
 
-      console.log("Product recommendation: ", productResult);
+      console.log("Product recommendation: ", productPart);
 
-      // ✅ НОВЫЙ ПОДХОД: Возвращаем данные через tool result
-      // AI SDK v5 автоматически обработает это
+      // ✅ КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: Записываем данные в dataStream
+      dataStream.writeData({
+        type: "data", // Важно: тип должен быть "data"
+        content: JSON.stringify(productPart), // Отправляем как JSON строку
+      });
+
+      // Возвращаем результат (этот результат не попадает в поток напрямую)
       return {
         id,
         title,
         content: `Product recommendation: ${title}`,
-        productData: productResult, // Возвращаем как часть результата
+        // parts здесь не нужны, так как мы уже записали в dataStream
       };
     },
   });
