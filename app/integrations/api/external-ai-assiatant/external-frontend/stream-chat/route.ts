@@ -119,6 +119,12 @@ function parseInternalChunk(line: string): {
           console.log("🎯 Найден кастомный data-product:", parsedData);
           return { customData: parsedData as CustomDataPart };
         }
+
+        // ✅ НОВОЕ: Добавляем парсинг data-suggestion
+        if (parsedData.type === "data-suggestion") {
+          console.log("💡 Найден кастомный data-suggestion:", parsedData);
+          return { customData: parsedData as CustomDataPart };
+        }
       } catch (parseError) {
         console.log("❌ Ошибка парсинга кастомных данных:", parseError);
       }
@@ -147,31 +153,20 @@ function createSSEMessage(data: StreamingMessage): string {
   return `data: ${JSON.stringify(data)}\n\n`;
 }
 
-function generateCustomDataParts(): CustomDataPart[] {
-  return [
-    {
-      type: "data-suggestion",
-      id: "suggestion-1",
-      data: {
-        suggestion_id: "Сладкое",
-      },
-    },
-    {
-      type: "data-suggestion",
-      id: "suggestion-2",
-      data: {
-        suggestion_id: "Соленое",
-      },
-    },
-    {
-      type: "data-suggestion",
-      id: "suggestion-3",
-      data: {
-        suggestion_id: "Нет спасибо",
-      },
-    },
-  ];
-}
+// ❌ УДАЛЯЕМ: Хардкод функцию для suggestions
+// Оставляем только для продуктов, если она нужна где-то еще
+// function generateCustomDataParts(): CustomDataPart[] {
+//   return [
+//     {
+//       type: "data-suggestion",
+//       id: "suggestion-1",
+//       data: {
+//         suggestion_id: "Сладкое",
+//       },
+//     },
+//     // ... остальные
+//   ];
+// }
 
 export async function OPTIONS(req: NextRequest) {
   const response = new NextResponse(null, { status: 200 });
@@ -237,7 +232,8 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    const chatApiRes = await fetch(`${getNextAuthUrl()}/api/chat`, {
+    // ✅ ИСПРАВЛЯЕМ: Правильный endpoint
+    const chatApiRes = await fetch(`${getNextAuthUrl()}/api/api-chat-stream`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -268,7 +264,8 @@ export async function POST(req: NextRequest) {
       const data = await chatApiRes.json();
 
       if (data.message && data.message.parts) {
-        const customParts = generateCustomDataParts();
+        // ❌ УБИРАЕМ: Хардкод кастомных частей для suggestions
+        // const customParts = generateCustomDataParts();
 
         const streamingMessage: StreamingMessage = {
           type: "append-message",
@@ -276,7 +273,7 @@ export async function POST(req: NextRequest) {
             id: data.message.id || generateCuid(),
             role: "assistant",
             createdAt: data.message.createdAt || new Date().toISOString(),
-            parts: [...data.message.parts, ...customParts],
+            parts: data.message.parts, // ✅ Только оригинальные части
           },
         };
 
@@ -317,7 +314,8 @@ export async function POST(req: NextRequest) {
 
             if (done) {
               if (accumulatedText && !isStreamComplete) {
-                const customParts = generateCustomDataParts();
+                // ❌ УБИРАЕМ: Хардкод кастомных частей для suggestions
+                // const customParts = generateCustomDataParts();
 
                 const finalStreamingMessage: StreamingMessage = {
                   type: "update-message",
@@ -330,8 +328,7 @@ export async function POST(req: NextRequest) {
                         type: "text",
                         text: accumulatedText,
                       },
-                      ...collectedCustomData,
-                      ...customParts,
+                      ...collectedCustomData, // ✅ Только реальные кастомные данные
                     ],
                   },
                 };
@@ -384,6 +381,28 @@ export async function POST(req: NextRequest) {
                   "📋 Добавлен кастомный data-part:",
                   parsed.customData
                 );
+
+                // ✅ НОВОЕ: Немедленная отправка обновления с новыми кастомными данными
+                const updatedStreamingMessage: StreamingMessage = {
+                  type: "update-message",
+                  message: {
+                    id: messageId,
+                    role: "assistant",
+                    createdAt: createdAt,
+                    parts: [
+                      {
+                        type: "text",
+                        text: accumulatedText,
+                      },
+                      ...collectedCustomData,
+                    ],
+                  },
+                };
+
+                const updatedSSEMessage = createSSEMessage(
+                  updatedStreamingMessage
+                );
+                controller.enqueue(encoder.encode(updatedSSEMessage));
               }
 
               if (parsed.messageId) {
@@ -393,7 +412,8 @@ export async function POST(req: NextRequest) {
               if (parsed.isComplete) {
                 isStreamComplete = true;
 
-                const customParts = generateCustomDataParts();
+                // ❌ УБИРАЕМ: Хардкод кастомных частей для suggestions
+                // const customParts = generateCustomDataParts();
 
                 const finalStreamingMessage: StreamingMessage = {
                   type: "update-message",
@@ -406,8 +426,7 @@ export async function POST(req: NextRequest) {
                         type: "text",
                         text: accumulatedText,
                       },
-                      ...collectedCustomData,
-                      ...customParts,
+                      ...collectedCustomData, // ✅ Только реальные кастомные данные
                     ],
                   },
                 };

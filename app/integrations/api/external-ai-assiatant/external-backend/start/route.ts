@@ -179,7 +179,7 @@ export async function POST(req: NextRequest) {
 
     console.log("Sending request to chat API...");
 
-    const chatApiRes = await fetch(`${getNextAuthUrl()}/api/chat`, {
+    const chatApiRes = await fetch(`${getNextAuthUrl()}/api/api-chat-start`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
