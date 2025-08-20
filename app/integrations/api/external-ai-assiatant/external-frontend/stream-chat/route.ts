@@ -146,6 +146,84 @@ function parseInternalChunk(line: string): {
 }
 
 /**
+ * Extract JSON objects from text with proper nesting support
+ */
+function findJsonObjects(
+  text: string,
+  targetType: string
+): Array<{ match: string; start: number; end: number }> {
+  const results = [];
+  const searchPattern = `"type":"${targetType}"`;
+  let searchStart = 0;
+
+  while (true) {
+    const typeIndex = text.indexOf(searchPattern, searchStart);
+    if (typeIndex === -1) break;
+
+    // Найти начало JSON объекта (ищем { перед "type")
+    let jsonStart = typeIndex;
+    while (jsonStart > 0 && text[jsonStart] !== "{") {
+      jsonStart--;
+    }
+
+    if (jsonStart === 0 && text[jsonStart] !== "{") {
+      searchStart = typeIndex + searchPattern.length;
+      continue;
+    }
+
+    // Найти конец JSON объекта с учетом вложенности
+    let braceCount = 0;
+    let jsonEnd = jsonStart;
+    let inString = false;
+    let escaped = false;
+
+    for (let i = jsonStart; i < text.length; i++) {
+      const char = text[i];
+
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+
+      if (char === "\\") {
+        escaped = true;
+        continue;
+      }
+
+      if (char === '"') {
+        inString = !inString;
+        continue;
+      }
+
+      if (!inString) {
+        if (char === "{") {
+          braceCount++;
+        } else if (char === "}") {
+          braceCount--;
+          if (braceCount === 0) {
+            jsonEnd = i;
+            break;
+          }
+        }
+      }
+    }
+
+    if (braceCount === 0) {
+      const jsonStr = text.substring(jsonStart, jsonEnd + 1);
+      results.push({
+        match: jsonStr,
+        start: jsonStart,
+        end: jsonEnd + 1,
+      });
+    }
+
+    searchStart = jsonEnd + 1;
+  }
+
+  return results;
+}
+
+/**
  * Extract custom data parts from text and return cleaned text
  */
 function extractCustomDataParts(text: string): {
@@ -156,54 +234,79 @@ function extractCustomDataParts(text: string): {
   const products: CustomDataPart[] = [];
   const suggestions: CustomDataPart[] = [];
 
-  // Регулярные выражения для поиска JSON объектов
-  const productRegex = /\{"type":\s*"data-product"[^}]+\}/g;
-  const suggestionRegex = /\{"type":\s*"data-suggestion"[^}]+\}/g;
+  console.log(
+    "🔍 Extracting from text (first 200 chars):",
+    text.substring(0, 200)
+  );
+
+  // Найти все JSON объекты продуктов
+  const productObjects = findJsonObjects(text, "data-product");
+  console.log("📦 Found product objects:", productObjects.length);
+
+  // Найти все JSON объекты предложений
+  const suggestionObjects = findJsonObjects(text, "data-suggestion");
+  console.log("💡 Found suggestion objects:", suggestionObjects.length);
+
+  // Собрать все объекты для удаления
+  const allObjects = [...productObjects, ...suggestionObjects].sort(
+    (a, b) => b.start - a.start
+  ); // Сортируем в обратном порядке для корректного удаления
 
   let cleanText = text;
 
-  // Извлечение продуктов
-  const productMatches = text.match(productRegex);
-  if (productMatches) {
-    productMatches.forEach((match, index) => {
-      try {
-        const parsed = JSON.parse(match);
-        products.push({
-          type: "data-product",
-          id: parsed.id || `product-${index + 1}`,
-          data: {
-            product_id: parsed.data?.product_id || "",
-          },
-        });
-        cleanText = cleanText.replace(match, "");
-      } catch (e) {
-        console.log("Failed to parse product JSON:", match);
-      }
-    });
+  // Удалить все JSON объекты из текста
+  for (const obj of allObjects) {
+    cleanText =
+      cleanText.substring(0, obj.start) + cleanText.substring(obj.end);
   }
 
-  // Извлечение предложений
-  const suggestionMatches = text.match(suggestionRegex);
-  if (suggestionMatches) {
-    suggestionMatches.forEach((match, index) => {
-      try {
-        const parsed = JSON.parse(match);
-        suggestions.push({
-          type: "data-suggestion",
-          id: parsed.id || `suggestion-${index + 1}`,
-          data: {
-            suggestion_id: parsed.data?.suggestion_id || "",
-          },
-        });
-        cleanText = cleanText.replace(match, "");
-      } catch (e) {
-        console.log("Failed to parse suggestion JSON:", match);
-      }
-    });
-  }
+  // Парсить продукты
+  productObjects.forEach((obj, index) => {
+    try {
+      const parsed = JSON.parse(obj.match);
+      products.push({
+        type: "data-product",
+        id: parsed.id || `product-${index + 1}`,
+        data: {
+          product_id: parsed.data?.product_id || "",
+        },
+      });
+      console.log("✅ Parsed product:", parsed.data?.product_id);
+    } catch (e) {
+      console.log("❌ Failed to parse product JSON:", obj.match);
+    }
+  });
 
-  // Очистка лишних пробелов и переносов строк
-  cleanText = cleanText.replace(/\s+/g, " ").trim();
+  // Парсить предложения
+  suggestionObjects.forEach((obj, index) => {
+    try {
+      const parsed = JSON.parse(obj.match);
+      suggestions.push({
+        type: "data-suggestion",
+        id: parsed.id || `suggestion-${index + 1}`,
+        data: {
+          suggestion_id: parsed.data?.suggestion_id || "",
+        },
+      });
+      console.log("✅ Parsed suggestion:", parsed.data?.suggestion_id);
+    } catch (e) {
+      console.log("❌ Failed to parse suggestion JSON:", obj.match);
+    }
+  });
+
+  // Очистка лишних пробелов
+  cleanText = cleanText
+    .replace(/\s+/g, " ")
+    .replace(/\s+([.!?])/g, "$1")
+    .trim();
+
+  console.log("🧹 Clean text (first 200 chars):", cleanText.substring(0, 200));
+  console.log("📊 Extraction results:", {
+    products: products.length,
+    suggestions: suggestions.length,
+    originalLength: text.length,
+    cleanLength: cleanText.length,
+  });
 
   return { cleanText, products, suggestions };
 }
@@ -469,7 +572,7 @@ export async function POST(req: NextRequest) {
                 const finalSSEMessage = createSSEMessage(finalStreamingMessage);
                 controller.enqueue(encoder.encode(finalSSEMessage));
                 console.log(
-                  `Sent final message with ${allProducts.length} products and ${allSuggestions.length} suggestions`
+                  `✅ Sent final message with ${allProducts.length} products and ${allSuggestions.length} suggestions`
                 );
               }
 
@@ -533,13 +636,13 @@ export async function POST(req: NextRequest) {
 
                 if (isFirstChunk) {
                   isFirstChunk = false;
-                  console.log("Sent first streaming chunk to client");
+                  console.log("✅ Sent first streaming chunk to client");
                 }
 
                 // Log progress every 10 text chunks
                 if (chunkCount % 10 === 0) {
                   console.log(
-                    `Streamed ${chunkCount} chunks, total text length: ${extracted.cleanText.length}, products: ${allProducts.length}, suggestions: ${allSuggestions.length}`
+                    `📊 Streamed ${chunkCount} chunks, clean text length: ${extracted.cleanText.length}, products: ${allProducts.length}, suggestions: ${allSuggestions.length}`
                   );
                 }
               }
@@ -552,7 +655,7 @@ export async function POST(req: NextRequest) {
 
               // Handle completion
               if (parsed.isComplete) {
-                console.log("Stream completion detected");
+                console.log("✅ Stream completion detected");
                 isStreamComplete = true;
 
                 // Extract final data parts from accumulated text
@@ -595,7 +698,7 @@ export async function POST(req: NextRequest) {
                 const finalSSEMessage = createSSEMessage(finalStreamingMessage);
                 controller.enqueue(encoder.encode(finalSSEMessage));
                 console.log(
-                  `Sent final message with ${allProducts.length} products and ${allSuggestions.length} suggestions`
+                  `✅ Sent completion message with ${allProducts.length} products and ${allSuggestions.length} suggestions`
                 );
                 break;
               }
@@ -603,11 +706,11 @@ export async function POST(req: NextRequest) {
           }
 
           console.log(
-            `Final streaming result: ${accumulatedText.length} characters sent in ${chunkCount} chunks with ${allProducts.length} products and ${allSuggestions.length} suggestions`
+            `🎯 Final streaming result: clean text length: ${accumulatedText.length} characters sent in ${chunkCount} chunks with ${allProducts.length} products and ${allSuggestions.length} suggestions`
           );
           controller.close();
         } catch (error) {
-          console.error("Error during streaming transformation:", error);
+          console.error("❌ Error during streaming transformation:", error);
 
           // Send error as SSE
           const errorMessage = {
@@ -622,14 +725,14 @@ export async function POST(req: NextRequest) {
           controller.close();
         } finally {
           reader.releaseLock();
-          console.log("Stream reader released");
+          console.log("🔓 Stream reader released");
         }
       },
     });
 
     return createStreamingResponse(transformStream);
   } catch (error) {
-    console.error("Error in stream chat API:", error);
+    console.error("❌ Error in stream chat API:", error);
 
     // Return error as JSON for non-streaming errors
     const response = NextResponse.json(
