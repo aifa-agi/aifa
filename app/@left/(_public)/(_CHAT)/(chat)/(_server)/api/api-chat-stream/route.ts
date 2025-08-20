@@ -32,13 +32,7 @@ export const maxDuration = 60;
  * Enhanced system prompt for API chat with structured responses
  */
 const API_SYSTEM_PROMPT = `
-Ты дружелюбный ассистент в кафе. Твоя задача:
-- Отвечать на вопросы о меню, блюдах и напитках
-- Помогать с выбором еды и напитков
-- Быть вежливым и профессиональным
-- Предлагать рекомендации когда уместно
-
-Отвечай естественно и дружелюбно, как настоящий сотрудник кафе.
+Продолжай легко и уверену беседа с клиентом, рекомендуй блюда и напитки на основании ранее полученные инструкции
 `;
 
 // Interface definitions for custom parts
@@ -70,20 +64,14 @@ async function analyzeForProducts(textContent: string): Promise<{
 }> {
   try {
     const analysisPrompt = `
-Проанализируй ответ ассистента кафе и определи, нужно ли рекомендовать продукты.
+Проанализируй ответ ассистента определи какой продукт он рекомендует: "${textContent}"
 
-Ответ ассистента: "${textContent}"
 
-Ключевые слова для рекомендаций:
-- Десерты: торт, пирожное, чизкейк, тирамису, мороженое, сладкое
-- Напитки: кофе, чай, латте, капучино, сок, лимонад
-- Закуски: сэндвич, салат, паста, суп, основное блюдо
 
-Если в ответе упоминается еда/напитки или есть рекомендации, верни JSON:
-{"recommend_products": true, "category": "desserts", "confidence": 0.8}
+Зачем ранее загруженное меню и найди идентификатор для продукта которые предложил ассистент.
 
 Если продукты не нужны:
-{"recommend_products": false, "confidence": 0.1}
+{"recommend_products": false, "confidence": 0.2}
 
 Отвечай только JSON без дополнительного текста.
 `;
@@ -115,7 +103,7 @@ async function generateSuggestions(textContent: string): Promise<string[]> {
 
 Ответ ассистента: "${textContent}"
 
-Создай логичные варианты ответов, которые пользователь может выбрать:
+Генерируй произвольные но релевантные предложения для  мягкого, аккуратного вовлечения пользователя. Предложение может содержать от 1 до 6 слов. Вот примеры которые следует использовать только в качестве идеи, добавляя или изменяя их.
 - Если говорили о еде: "Хочу заказать", "Что еще посоветуете?", "А что с напитками?"
 - Если о напитках: "Буду брать", "Покрепче есть?", "А десерт к этому?"
 - Общие: "Спасибо", "Расскажите подробнее", "Нет, спасибо"
@@ -146,30 +134,6 @@ async function generateSuggestions(textContent: string): Promise<string[]> {
  * @param category - Product category
  * @returns Array of product IDs
  */
-async function getRelevantProducts(category: string): Promise<string[]> {
-  // Mock product database - replace with actual DB query
-  const productDatabase: Record<string, string[]> = {
-    desserts: [
-      "58c9bc26-b411-47cc-ae4d-dd2bfb4207da", // Чизкейк
-      "4901950180232", // Тирамису
-      "dessert-ice-cream-001", // Мороженое
-    ],
-    drinks: [
-      "drink-coffee-latte-001",
-      "drink-tea-earl-grey-001",
-      "drink-juice-orange-001",
-    ],
-    snacks: [
-      "snack-sandwich-club-001",
-      "snack-salad-caesar-001",
-      "snack-soup-tomato-001",
-    ],
-  };
-
-  const products = productDatabase[category] || [];
-  // Return 1-2 most relevant products to avoid overwhelming
-  return products.slice(0, 2);
-}
 
 /**
  * Send product part to data stream
@@ -438,14 +402,6 @@ export async function POST(request: Request) {
                 console.log(
                   `📦 Recommending products for category: ${productAnalysis.category}`
                 );
-                const productIds = await getRelevantProducts(
-                  productAnalysis.category
-                );
-
-                // Send product parts to stream
-                productIds.forEach((productId) => {
-                  sendProductPart(dataStream, productId);
-                });
               }
 
               // STAGE 3: Generate contextual suggestions
@@ -509,7 +465,7 @@ export async function POST(request: Request) {
 
     return new Response(stream);
   } catch (error) {
-    console.error("POST /api-chat ошибка:", error);
+    console.error("POST /api-chat-stream ошибка:", error);
     return new Response("Произошла ошибка при обработке вашего запроса!", {
       status: 500,
     });
