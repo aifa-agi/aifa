@@ -148,17 +148,21 @@ function parseInternalChunk(line: string): {
 /**
  * Extract JSON objects from text with proper nesting support
  */
+/**
+ * Extract JSON objects from text with proper nesting support and flexible spacing
+ */
 function findJsonObjects(
   text: string,
   targetType: string
 ): Array<{ match: string; start: number; end: number }> {
   const results = [];
-  const searchPattern = `"type":"${targetType}"`;
-  let searchStart = 0;
 
-  while (true) {
-    const typeIndex = text.indexOf(searchPattern, searchStart);
-    if (typeIndex === -1) break;
+  // Более гибкий паттерн поиска с учетом возможных пробелов
+  const searchPattern = new RegExp(`"type"\\s*:\\s*"${targetType}"`, "g");
+  let match;
+
+  while ((match = searchPattern.exec(text)) !== null) {
+    const typeIndex = match.index;
 
     // Найти начало JSON объекта (ищем { перед "type")
     let jsonStart = typeIndex;
@@ -167,7 +171,6 @@ function findJsonObjects(
     }
 
     if (jsonStart === 0 && text[jsonStart] !== "{") {
-      searchStart = typeIndex + searchPattern.length;
       continue;
     }
 
@@ -216,8 +219,6 @@ function findJsonObjects(
         end: jsonEnd + 1,
       });
     }
-
-    searchStart = jsonEnd + 1;
   }
 
   return results;
@@ -294,10 +295,11 @@ function extractCustomDataParts(text: string): {
     }
   });
 
-  // Очистка лишних пробелов
+  // Очистка лишних пробелов и переносов строк
   cleanText = cleanText
     .replace(/\s+/g, " ")
-    .replace(/\s+([.!?])/g, "$1")
+    .replace(/\s+([.!?,:;])/g, "$1")
+    .replace(/\s*-\s*/g, " - ")
     .trim();
 
   console.log("🧹 Clean text (first 200 chars):", cleanText.substring(0, 200));
@@ -306,6 +308,7 @@ function extractCustomDataParts(text: string): {
     suggestions: suggestions.length,
     originalLength: text.length,
     cleanLength: cleanText.length,
+    removedChars: text.length - cleanText.length,
   });
 
   return { cleanText, products, suggestions };
