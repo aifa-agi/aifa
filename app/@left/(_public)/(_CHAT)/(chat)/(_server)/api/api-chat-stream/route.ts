@@ -53,28 +53,96 @@ interface SuggestionPart {
 }
 
 /**
+ * Utility function for safe error logging with TypeScript
+ * @param error - Error of unknown type
+ * @param context - Additional context for debugging
+ */
+function logError(error: unknown, context: string = ""): void {
+  console.error(`❌ ===== ${context.toUpperCase()} ОШИБКА =====`);
+
+  if (error instanceof Error) {
+    console.error("💥 Тип ошибки:", error.constructor.name);
+    console.error("📝 Сообщение ошибки:", error.message);
+    console.error("🔍 Stack trace:", error.stack);
+  } else if (typeof error === "string") {
+    console.error("📝 Строковая ошибка:", error);
+  } else {
+    console.error("❓ Неизвестная ошибка:", error);
+  }
+
+  console.error(`❌ ===== КОНЕЦ ${context.toUpperCase()} ОШИБКИ =====`);
+}
+
+/**
  * Analyze text response to determine if product recommendations are needed
  * @param textContent - The assistant's text response
+ * @param systemInstruction - Full system instruction containing menu data
+ * @param conversationHistory - Recent conversation for context
  * @returns Promise with analysis result
  */
-async function analyzeForProducts(textContent: string): Promise<{
+async function analyzeForProducts(
+  textContent: string,
+  systemInstruction: string,
+  conversationHistory: string = ""
+): Promise<{
   recommend_products: boolean;
   category?: string;
   confidence?: number;
+  product_ids?: string[];
 }> {
   try {
+    console.log("🔍 ===== НАЧАЛО АНАЛИЗА ПРОДУКТОВ =====");
+    console.log("📝 Анализируемый текст ассистента:", textContent);
+    console.log(
+      "💬 История разговора:",
+      conversationHistory.slice(0, 500) + "..."
+    );
+    console.log("📋 Длина системной инструкции:", systemInstruction.length);
+
     const analysisPrompt = `
-Проанализируй ответ ассистента определи какой продукт он рекомендует: "${textContent}"
+СИСТЕМНАЯ ИНСТРУКЦИЯ С МЕНЮ:
+${systemInstruction}
 
+ИСТОРИЯ РАЗГОВОРА:
+${conversationHistory}
 
+ОТВЕТ АССИСТЕНТА ДЛЯ АНАЛИЗА:
+"${textContent}"
 
-Изучи ранее загруженное меню и найди идентификатор для продукта которые предложил ассистент.
+ЗАДАЧА:
+1. Проанализируй ответ ассистента и определи, рекомендует ли он конкретные блюда или напитки
+2. Найди в СИСТЕМНОЙ ИНСТРУКЦИИ точные идентификаторы (ID) продуктов, которые упоминает ассистент
+3. Сопоставь названия блюд/напитков из ответа с записями в меню
 
-Если продукты не нужны:
-{"recommend_products": false, "confidence": 0.2}
+ПРАВИЛА АНАЛИЗА:
+- Если ассистент упоминает конкретные названия блюд/напитков - это рекомендация
+- Если только общие фразы ("что-то вкусное", "наши блюда") - это НЕ рекомендация
+- Ищи ТОЧНОЕ совпадение названий или близкие варианты
+- Извлеки ID продуктов из системной инструкции
 
-Отвечай только JSON без дополнительного текста.
+ФОРМАТ ОТВЕТА (только JSON):
+Если есть рекомендации:
+{
+  "recommend_products": true,
+  "category": "найденная категория",
+  "confidence": 0.8,
+  "product_ids": ["id1", "id2"],
+  "found_products": ["Название продукта 1", "Название продукта 2"],
+  "reasoning": "почему эти продукты подходят"
+}
+
+Если рекомендаций нет:
+{
+  "recommend_products": false,
+  "confidence": 0.2,
+  "reasoning": "почему рекомендаций нет"
+}
+
+Отвечай ТОЛЬКО JSON без дополнительного текста.
 `;
+
+    console.log("🤖 Отправляем промпт для анализа продуктов...");
+    console.log("📤 Длина промпта:", analysisPrompt.length);
 
     const result = await generateText({
       model: myProvider.languageModel("api-chat-support"),
@@ -82,11 +150,39 @@ async function analyzeForProducts(textContent: string): Promise<{
       temperature: 0.1,
     });
 
-    const analysis = JSON.parse(result.text);
-    console.log("🔍 Product analysis result:", analysis);
+    console.log("📥 Сырой ответ анализа:", result.text);
+
+    let analysis;
+    try {
+      analysis = JSON.parse(result.text);
+      console.log("✅ Успешно распарсен JSON анализа:", analysis);
+    } catch (parseError: unknown) {
+      console.error("❌ Ошибка парсинга JSON анализа:");
+      logError(parseError, "ПАРСИНГ JSON АНАЛИЗА");
+      console.error("🔍 Проблемный текст:", result.text);
+      return { recommend_products: false, confidence: 0 };
+    }
+
+    // Дополнительная валидация результата
+    if (analysis.recommend_products && analysis.product_ids) {
+      console.log("🎯 Найденные продукты:", analysis.found_products);
+      console.log("🆔 ID продуктов:", analysis.product_ids);
+      console.log("📊 Уровень уверенности:", analysis.confidence);
+      console.log("💭 Обоснование:", analysis.reasoning);
+    } else {
+      console.log("❌ Продукты не найдены или не рекомендуются");
+      console.log("💭 Обоснование:", analysis.reasoning);
+    }
+
+    console.log("🔍 ===== КОНЕЦ АНАЛИЗА ПРОДУКТОВ =====");
     return analysis;
-  } catch (error) {
-    console.error("❌ Error in product analysis:", error);
+  } catch (error: unknown) {
+    logError(error, "КРИТИЧЕСКАЯ ОШИБКА В АНАЛИЗЕ ПРОДУКТОВ");
+    console.error("📊 Контекст - длина текста:", textContent.length);
+    console.error(
+      "📋 Контекст - длина системной инструкции:",
+      systemInstruction.length
+    );
     return { recommend_products: false, confidence: 0 };
   }
 }
@@ -98,12 +194,15 @@ async function analyzeForProducts(textContent: string): Promise<{
  */
 async function generateSuggestions(textContent: string): Promise<string[]> {
   try {
+    console.log("💡 ===== ГЕНЕРАЦИЯ ПРЕДЛОЖЕНИЙ =====");
+    console.log("📝 Текст для анализа:", textContent);
+
     const suggestionPrompt = `
 На основе ответа ассистента кафе создай 2-4 варианта продолжения разговора для пользователя.
 
 Ответ ассистента: "${textContent}"
 
-Генерируй произвольные но релевантные предложения для  мягкого, аккуратного вовлечения пользователя. Предложение может содержать от 1 до 6 слов. Вот примеры которые следует использовать только в качестве идеи, добавляя или изменяя их.
+Генерируй произвольные но релевантные предложения для мягкого, аккуратного вовлечения пользователя. Предложение может содержать от 1 до 6 слов. Вот примеры которые следует использовать только в качестве идеи, добавляя или изменяя их.
 - Если говорили о еде: "Хочу заказать", "Что еще посоветуете?", "А что с напитками?"
 - Если о напитках: "Буду брать", "Покрепче есть?", "А десерт к этому?"
 - Общие: "Спасибо", "Расскажите подробнее", "Нет, спасибо"
@@ -120,20 +219,25 @@ async function generateSuggestions(textContent: string): Promise<string[]> {
       temperature: 0.3,
     });
 
-    const suggestions = JSON.parse(result.text);
-    console.log("💡 Generated suggestions:", suggestions);
+    console.log("📥 Сырой ответ для предложений:", result.text);
+
+    let suggestions;
+    try {
+      suggestions = JSON.parse(result.text);
+      console.log("✅ Сгенерированные предложения:", suggestions);
+    } catch (parseError: unknown) {
+      console.error("❌ Ошибка парсинга предложений:");
+      logError(parseError, "ПАРСИНГ ПРЕДЛОЖЕНИЙ");
+      suggestions = ["Спасибо", "Расскажите подробнее", "Нет, спасибо"];
+    }
+
+    console.log("💡 ===== КОНЕЦ ГЕНЕРАЦИИ ПРЕДЛОЖЕНИЙ =====");
     return Array.isArray(suggestions) ? suggestions : [];
-  } catch (error) {
-    console.error("❌ Error generating suggestions:", error);
+  } catch (error: unknown) {
+    logError(error, "ГЕНЕРАЦИЯ ПРЕДЛОЖЕНИЙ");
     return ["Спасибо", "Расскажите подробнее", "Нет, спасибо"];
   }
 }
-
-/**
- * Get relevant product IDs based on category
- * @param category - Product category
- * @returns Array of product IDs
- */
 
 /**
  * Send product part to data stream
@@ -152,7 +256,7 @@ function sendProductPart(
     },
   };
 
-  console.log("📦 Sending product part:", productPart);
+  console.log("📦 Отправка части продукта:", productPart);
 
   dataStream.writeData({
     type: "data",
@@ -169,6 +273,8 @@ function sendSuggestionParts(
   dataStream: DataStreamWriter,
   suggestions: string[]
 ): void {
+  console.log("💬 Отправка предложений:", suggestions);
+
   suggestions.forEach((suggestion, index) => {
     const suggestionPart: SuggestionPart = {
       type: "data-suggestion",
@@ -178,7 +284,7 @@ function sendSuggestionParts(
       },
     };
 
-    console.log(`💬 Sending suggestion ${index + 1}:`, suggestionPart);
+    console.log(`💬 Отправка предложения ${index + 1}:`, suggestionPart);
 
     dataStream.writeData({
       type: "data",
@@ -232,6 +338,22 @@ function logTokenUsage(
 
   console.log(`⏰ Время логирования: ${new Date().toISOString()}`);
   console.log(`🔢 ===== КОНЕЦ ИСПОЛЬЗОВАНИЯ ТОКЕНОВ =====\n`);
+}
+
+/**
+ * Build conversation history for context
+ * @param messages - Array of messages
+ * @returns Formatted conversation string
+ */
+function buildConversationHistory(messages: any[]): string {
+  return messages
+    .slice(-6) // Последние 6 сообщений для контекста
+    .map((msg) => {
+      const content =
+        msg.parts?.find((part: any) => part.type === "text")?.text || "";
+      return `${msg.role}: ${content}`;
+    })
+    .join("\n");
 }
 
 /**
@@ -366,10 +488,17 @@ export async function POST(request: Request) {
       },
     });
 
+    // Build conversation history for context
+    const conversationHistory = buildConversationHistory(messages);
+    console.log(
+      "📚 Контекст разговора подготовлен, длина:",
+      conversationHistory.length
+    );
+
     // Create data stream with three-stage custom parts generation
     const stream = createDataStream({
       execute: async (dataStream) => {
-        console.log("🚀 Starting three-stage response generation...");
+        console.log("🚀 Начинаем трехэтапную генерацию ответа...");
 
         // STAGE 1: Generate basic text response
         const result = streamText({
@@ -387,25 +516,40 @@ export async function POST(request: Request) {
             logTokenUsage("API Chat Main Response", usage, chatId, userId);
 
             try {
-              console.log("📝 Generated text response:", text);
+              console.log("📝 Сгенерированный текстовый ответ:", text);
 
-              // STAGE 2: Analyze for product recommendations
+              // STAGE 2: Analyze for product recommendations with enhanced debugging
               console.log(
-                "🔍 Stage 2: Analyzing for product recommendations..."
+                "🔍 Этап 2: Анализ рекомендаций продуктов с расширенной отладкой..."
               );
-              const productAnalysis = await analyzeForProducts(text);
+
+              const productAnalysis = await analyzeForProducts(
+                text,
+                API_SYSTEM_PROMPT, // Передаем системную инструкцию
+                conversationHistory // Передаем историю разговора для контекста
+              );
 
               if (
                 productAnalysis.recommend_products &&
-                productAnalysis.category
+                productAnalysis.product_ids &&
+                productAnalysis.product_ids.length > 0
               ) {
                 console.log(
-                  `📦 Recommending products for category: ${productAnalysis.category}`
+                  `📦 Рекомендуем продукты: ${productAnalysis.product_ids.join(", ")}`
+                );
+
+                // Send product parts for each found product
+                productAnalysis.product_ids.forEach((productId) => {
+                  sendProductPart(dataStream, productId);
+                });
+              } else {
+                console.log(
+                  "❌ Продукты не найдены или анализ не выявил рекомендаций"
                 );
               }
 
               // STAGE 3: Generate contextual suggestions
-              console.log("💡 Stage 3: Generating contextual suggestions...");
+              console.log("💡 Этап 3: Генерация контекстных предложений...");
               const suggestions = await generateSuggestions(text);
 
               if (suggestions.length > 0) {
@@ -444,10 +588,10 @@ export async function POST(request: Request) {
               console.log(
                 `✅ Трехступенчатый ответ успешно сгенерирован и сохранен для чата ${chatId}`
               );
-            } catch (error) {
-              console.error("❌ Ошибка в трехступенчатой обработке:", error);
+            } catch (error: unknown) {
+              logError(error, "ТРЕХСТУПЕНЧАТАЯ ОБРАБОТКА");
               console.error(
-                `❌ Контекст ошибки - ID чата: ${chatId}, ID пользователя: ${userId}`
+                `📊 Контекст ошибки - ID чата: ${chatId}, ID пользователя: ${userId}`
               );
             }
           },
@@ -464,8 +608,8 @@ export async function POST(request: Request) {
     });
 
     return new Response(stream);
-  } catch (error) {
-    console.error("POST /api-chat-stream ошибка:", error);
+  } catch (error: unknown) {
+    logError(error, "POST /API-CHAT-STREAM");
     return new Response("Произошла ошибка при обработке вашего запроса!", {
       status: 500,
     });
