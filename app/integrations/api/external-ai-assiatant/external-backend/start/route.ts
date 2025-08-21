@@ -10,12 +10,12 @@ import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
 
 // Import utility functions
 import { analyzePurchasePreferences } from "../../utils/analyze-purchase-history";
-import { analyzeTagPreferences } from "../../utils/analyze-tag-preferences";
 import { buildAvailableMenu } from "../../utils/build-available-menu";
 import {
   createSystemPrompt,
   type SystemPromptData,
 } from "../../utils/create-system-prompt";
+import { analyzeTagPreferences } from "../../utils/analyze-tag-preferences";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,

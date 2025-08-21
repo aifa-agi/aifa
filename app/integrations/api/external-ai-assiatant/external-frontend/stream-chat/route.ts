@@ -4,6 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { verify } from "jsonwebtoken";
 import { getNextAuthUrl } from "@/lib/utils/get-next-auth-url";
 import { generateCuid } from "@/lib/utils/generateCuid";
+import {
+  parseAccumulatedText,
+  removeAllJsonFragments,
+  type CustomDataPart,
+} from "@/app/integrations/lib/api/adapters/ai-response-parser";
 
 /**
  * External partner request format
@@ -31,25 +36,6 @@ interface InternalChatRequest {
   selectedChatModel: string;
   selectedVisibilityType: string;
 }
-
-/**
- * Custom data part types for AI SDK v5 compatibility
- */
-type CustomDataPart =
-  | {
-      type: "data-product";
-      id: string;
-      data: {
-        product_id: string;
-      };
-    }
-  | {
-      type: "data-suggestion";
-      id: string;
-      data: {
-        suggestion_id: string;
-      };
-    };
 
 /**
  * AI SDK v5 compatible streaming message format with custom parts
@@ -122,6 +108,10 @@ function parseInternalChunk(line: string): {
         .replace(/\\n/g, "\n") // Unescape newlines
         .replace(/\\t/g, "\t") // Unescape tabs
         .replace(/\\\\/g, "\\"); // Unescape backslashes
+
+      console.log(
+        `📝 Parsed text chunk: "${text.substring(0, 50)}${text.length > 50 ? "..." : ""}"`
+      );
       return { text };
     }
 
@@ -140,7 +130,7 @@ function parseInternalChunk(line: string): {
 
     return {};
   } catch (error) {
-    console.log("Failed to parse internal chunk:", line.substring(0, 100));
+    console.log("❌ Failed to parse internal chunk:", line.substring(0, 100));
     return {};
   }
 }
@@ -156,7 +146,7 @@ function createSSEMessage(data: StreamingMessage): string {
  * Handle OPTIONS preflight request
  */
 export async function OPTIONS(req: NextRequest) {
-  console.log("Stream API OPTIONS preflight request received");
+  console.log("🔧 Stream API OPTIONS preflight request received");
   const response = new NextResponse(null, { status: 200 });
   return addStreamingCorsHeaders(response);
 }
@@ -165,12 +155,12 @@ export async function OPTIONS(req: NextRequest) {
  * Handle POST request with real-time streaming
  */
 export async function POST(req: NextRequest) {
-  console.log("POST request received to external stream chat API");
+  console.log("🚀 POST request received to external stream chat API");
 
   // Authorization validation
   const authHeader = req.headers.get("authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.log("Missing or invalid Authorization header");
+    console.log("❌ Missing or invalid Authorization header");
     const response = NextResponse.json(
       { error: "Missing or invalid Authorization header" },
       { status: 401 }
@@ -182,9 +172,9 @@ export async function POST(req: NextRequest) {
   // Token validation
   try {
     verify(token, process.env.NEXTAUTH_SECRET!);
-    console.log("Token validated successfully");
+    console.log("✅ Token validated successfully");
   } catch (e) {
-    console.log("Invalid or expired token:", e);
+    console.log("❌ Invalid or expired token:", e);
     const response = NextResponse.json(
       { error: "Invalid or expired token" },
       { status: 401 }
@@ -196,9 +186,9 @@ export async function POST(req: NextRequest) {
   let externalBody: ExternalChatRequest;
   try {
     externalBody = await req.json();
-    console.log("External stream request body:", externalBody);
+    console.log("📥 External stream request body:", externalBody);
   } catch (e) {
-    console.log("Invalid JSON format:", e);
+    console.log("❌ Invalid JSON format:", e);
     const response = NextResponse.json(
       { error: "Invalid JSON format" },
       { status: 400 }
@@ -208,7 +198,7 @@ export async function POST(req: NextRequest) {
 
   // Validate required fields
   if (!externalBody.chat_id || !externalBody.text) {
-    console.log("Missing required fields");
+    console.log("❌ Missing required fields");
     const response = NextResponse.json(
       { error: "Missing required fields: chat_id and text" },
       { status: 400 }
@@ -235,7 +225,7 @@ export async function POST(req: NextRequest) {
     selectedVisibilityType: "private",
   };
 
-  console.log("Transformed internal body for streaming:", internalBody);
+  console.log("🔄 Transformed internal body for streaming:", internalBody);
 
   try {
     // Make request to internal chat API
@@ -249,23 +239,23 @@ export async function POST(req: NextRequest) {
     });
 
     console.log(
-      "Internal chat API streaming response status:",
+      "📡 Internal chat API streaming response status:",
       chatApiRes.status
     );
 
     // Handle error responses
     if (!chatApiRes.ok) {
-      console.log("Internal API returned error status:", chatApiRes.status);
+      console.log("❌ Internal API returned error status:", chatApiRes.status);
 
       try {
         const errorData = await chatApiRes.json();
-        console.log("Internal chat API error data:", errorData);
+        console.log("❌ Internal chat API error data:", errorData);
         const response = NextResponse.json(errorData, {
           status: chatApiRes.status,
         });
         return addStreamingCorsHeaders(response);
       } catch (parseError) {
-        console.error("Failed to parse error response:", parseError);
+        console.error("❌ Failed to parse error response:", parseError);
         const response = NextResponse.json(
           { error: "Internal server error" },
           { status: 500 }
@@ -276,15 +266,44 @@ export async function POST(req: NextRequest) {
 
     // Check if response is streaming
     const contentType = chatApiRes.headers.get("content-type");
-    console.log("Internal API Response Content-Type:", contentType);
+    console.log("🔍 Internal API Response Content-Type:", contentType);
 
     if (contentType?.includes("application/json")) {
       // Handle non-streaming JSON responses
-      console.log("Handling non-streaming JSON response");
+      console.log("📦 Handling non-streaming JSON response");
       const data = await chatApiRes.json();
 
       if (data.message && data.message.parts) {
         // Convert JSON response to streaming format with custom parts
+        let parts = [...data.message.parts];
+
+        // Parse the text content for JSON fragments if it exists
+        const textPart = parts.find((part) => part.type === "text");
+        if (textPart) {
+          console.log(
+            "🔍 Parsing non-streaming text part for JSON fragments..."
+          );
+          const parseResult = parseAccumulatedText(textPart.text);
+
+          console.log(`✨ Non-streaming parsing results:`, {
+            originalTextLength: textPart.text.length,
+            cleanTextLength: parseResult.cleanText.length,
+            dataPartsFound: parseResult.dataParts.length,
+            dataPartTypes: parseResult.dataParts.map((p) => p.type),
+          });
+
+          // Replace text part with clean text and add data parts
+          parts = parts.filter((part) => part.type !== "text");
+
+          if (parseResult.cleanText) {
+            parts.unshift({
+              type: "text",
+              text: parseResult.cleanText,
+            });
+          }
+
+          parts.push(...parseResult.dataParts);
+        }
 
         const streamingMessage: StreamingMessage = {
           type: "append-message",
@@ -292,7 +311,7 @@ export async function POST(req: NextRequest) {
             id: data.message.id || generateCuid(),
             role: "assistant",
             createdAt: data.message.createdAt || new Date().toISOString(),
-            parts: [...data.message.parts],
+            parts: parts,
           },
         };
 
@@ -307,12 +326,15 @@ export async function POST(req: NextRequest) {
           },
         });
 
+        console.log(
+          "✅ Non-streaming response processed and converted to stream"
+        );
         return createStreamingResponse(stream);
       }
     }
 
     // Handle streaming response - create transform stream
-    console.log("Processing streaming response from internal API...");
+    console.log("🌊 Processing streaming response with clean-text strategy...");
 
     const reader = chatApiRes.body?.getReader();
     if (!reader) {
@@ -331,36 +353,69 @@ export async function POST(req: NextRequest) {
 
     const transformStream = new ReadableStream({
       async start(controller) {
-        console.log("Starting streaming transformation...");
+        console.log(
+          "🔄 Starting streaming with clean-text strategy (JSON removed from intermediate chunks)..."
+        );
 
         try {
           while (true) {
             const { done, value } = await reader.read();
 
             if (done) {
-              console.log(`Streaming completed after ${chunkCount} chunks`);
+              console.log(`🏁 Streaming completed after ${chunkCount} chunks`);
+              console.log(
+                `📊 Total accumulated text length: ${accumulatedText.length}`
+              );
 
-              // Send final message with custom parts only when stream is complete
+              // Send final message with complete parsing and data parts
               if (accumulatedText && !isStreamComplete) {
+                console.log(
+                  "🔍 Processing final accumulated text with complete parsing..."
+                );
+                const parseResult = parseAccumulatedText(accumulatedText);
+
+                console.log(`✨ Final parsing results:`, {
+                  originalTextLength: accumulatedText.length,
+                  cleanTextLength: parseResult.cleanText.length,
+                  dataPartsFound: parseResult.dataParts.length,
+                  dataPartTypes: parseResult.dataParts.map((p) => p.type),
+                  dataPartDetails: parseResult.dataParts.map((p) => ({
+                    type: p.type,
+                    id: p.id,
+                    dataKeys: Object.keys(p.data),
+                  })),
+                });
+
+                const parts: Array<
+                  { type: "text"; text: string } | CustomDataPart
+                > = [];
+
+                // Add text part if there's clean text
+                if (parseResult.cleanText) {
+                  parts.push({
+                    type: "text",
+                    text: parseResult.cleanText,
+                  });
+                }
+
+                // Add validated data parts
+                parts.push(...parseResult.dataParts);
+
                 const finalStreamingMessage: StreamingMessage = {
                   type: "update-message",
                   message: {
                     id: messageId,
                     role: "assistant",
                     createdAt: createdAt,
-                    parts: [
-                      {
-                        type: "text",
-                        text: accumulatedText,
-                      },
-                    ],
+                    parts: parts,
                   },
                 };
 
                 const finalSSEMessage = createSSEMessage(finalStreamingMessage);
                 controller.enqueue(encoder.encode(finalSSEMessage));
+
                 console.log(
-                  "Sent final message with custom parts (product + suggestions)"
+                  `✅ Final message sent with ${parseResult.dataParts.length} validated data parts`
                 );
               }
 
@@ -382,7 +437,12 @@ export async function POST(req: NextRequest) {
               if (parsed.text) {
                 accumulatedText += parsed.text;
 
-                // Create streaming message WITHOUT custom parts during streaming
+                // FOR INTERMEDIATE MESSAGES: Remove ALL JSON fragments (including incomplete)
+                const cleanTextForStreaming =
+                  removeAllJsonFragments(accumulatedText);
+
+                // Create streaming message WITHOUT data parts during streaming
+                // Send ONLY clean text, remove all JSON fragments (even incomplete)
                 const streamingMessage: StreamingMessage = {
                   type: isFirstChunk ? "append-message" : "update-message",
                   message: {
@@ -392,7 +452,7 @@ export async function POST(req: NextRequest) {
                     parts: [
                       {
                         type: "text",
-                        text: accumulatedText,
+                        text: cleanTextForStreaming, // Clean text WITHOUT any JSON
                       },
                     ],
                   },
@@ -404,13 +464,15 @@ export async function POST(req: NextRequest) {
 
                 if (isFirstChunk) {
                   isFirstChunk = false;
-                  console.log("Sent first streaming chunk to client");
+                  console.log(
+                    "📤 Sent first streaming chunk with clean text (JSON fragments removed)"
+                  );
                 }
 
                 // Log progress every 10 text chunks
                 if (chunkCount % 10 === 0) {
                   console.log(
-                    `Streamed ${chunkCount} chunks, total text length: ${accumulatedText.length}`
+                    `📊 Streamed ${chunkCount} chunks, original: ${accumulatedText.length} chars, clean: ${cleanTextForStreaming.length} chars`
                   );
                 }
               }
@@ -418,15 +480,49 @@ export async function POST(req: NextRequest) {
               // Handle metadata
               if (parsed.messageId) {
                 messageId = parsed.messageId;
-                console.log("Updated messageId:", messageId);
+                console.log("🆔 Updated messageId:", messageId);
               }
 
               // Handle completion
               if (parsed.isComplete) {
-                console.log("Stream completion detected");
+                console.log(
+                  "🏁 Stream completion detected, processing final parsing..."
+                );
+                console.log(
+                  `📊 Total accumulated text length: ${accumulatedText.length}`
+                );
+
                 isStreamComplete = true;
 
-                // Send final message with custom parts immediately when completion detected
+                // Parse final accumulated text and send complete message with data parts
+                const parseResult = parseAccumulatedText(accumulatedText);
+
+                console.log(`✨ Completion parsing results:`, {
+                  originalTextLength: accumulatedText.length,
+                  cleanTextLength: parseResult.cleanText.length,
+                  dataPartsFound: parseResult.dataParts.length,
+                  dataPartTypes: parseResult.dataParts.map((p) => p.type),
+                  dataPartDetails: parseResult.dataParts.map((p) => ({
+                    type: p.type,
+                    id: p.id,
+                    dataKeys: Object.keys(p.data),
+                  })),
+                });
+
+                const parts: Array<
+                  { type: "text"; text: string } | CustomDataPart
+                > = [];
+
+                // Add text part if there's clean text
+                if (parseResult.cleanText) {
+                  parts.push({
+                    type: "text",
+                    text: parseResult.cleanText,
+                  });
+                }
+
+                // Add validated data parts
+                parts.push(...parseResult.dataParts);
 
                 const finalStreamingMessage: StreamingMessage = {
                   type: "update-message",
@@ -434,17 +530,16 @@ export async function POST(req: NextRequest) {
                     id: messageId,
                     role: "assistant",
                     createdAt: createdAt,
-                    parts: [
-                      {
-                        type: "text",
-                        text: accumulatedText,
-                      },
-                    ],
+                    parts: parts,
                   },
                 };
 
                 const finalSSEMessage = createSSEMessage(finalStreamingMessage);
                 controller.enqueue(encoder.encode(finalSSEMessage));
+
+                console.log(
+                  `✅ Completion message sent with ${parseResult.dataParts.length} validated data parts`
+                );
 
                 break;
               }
@@ -452,11 +547,11 @@ export async function POST(req: NextRequest) {
           }
 
           console.log(
-            `Final streaming result: ${accumulatedText.length} characters sent in ${chunkCount} chunks`
+            `📈 Final streaming result: ${accumulatedText.length} characters processed in ${chunkCount} chunks`
           );
           controller.close();
         } catch (error) {
-          console.error("Error during streaming transformation:", error);
+          console.error("❌ Error during streaming transformation:", error);
 
           // Send error as SSE
           const errorMessage = {
@@ -471,14 +566,14 @@ export async function POST(req: NextRequest) {
           controller.close();
         } finally {
           reader.releaseLock();
-          console.log("Stream reader released");
+          console.log("🔓 Stream reader released");
         }
       },
     });
 
     return createStreamingResponse(transformStream);
   } catch (error) {
-    console.error("Error in stream chat API:", error);
+    console.error("❌ Error in stream chat API:", error);
 
     // Return error as JSON for non-streaming errors
     const response = NextResponse.json(
