@@ -26,14 +26,14 @@ export const myProvider = isTestEnvironment
     })
   : customProvider({
       languageModels: {
-        "chat-model": openai.responses("gpt-4.1-nano-2025-04-14"),
-        "api-chat-support": openai.responses("gpt-4.1-nano-2025-04-14"),
+        "chat-model": openai.responses("gpt-4.1-mini-2025-04-14"),
+        "api-chat-support": openai.responses("gpt-4.1-mini-2025-04-14"),
         "chat-model-reasoning": wrapLanguageModel({
           model: openai.responses("o4-mini-2025-04-16"),
           middleware: extractReasoningMiddleware({ tagName: "think" }),
         }),
-        "title-model": openai.responses("gpt-4.1-nano-2025-04-14"),
-        "artifact-model": openai.responses("gpt-4.1-nano-2025-04-14"),
+        "title-model": openai.responses("gpt-4.1-mini-2025-04-14"),
+        "artifact-model": openai.responses("gpt-4.1-mini-2025-04-14"),
       },
       imageModels: {
         "small-model": xai.image("grok-2-image"),
