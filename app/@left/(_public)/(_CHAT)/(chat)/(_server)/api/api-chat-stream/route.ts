@@ -1,4 +1,4 @@
-// @/app/api/api-chat/route.ts
+// @/app/@left/(chat)/api/chat/route.ts
 
 import {
   appendClientMessage,
@@ -6,8 +6,7 @@ import {
   createDataStream,
   smoothStream,
   streamText,
-  generateText,
-  DataStreamWriter,
+  tool,
 } from "ai";
 import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import {
@@ -15,288 +14,40 @@ import {
   systemPrompt,
 } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/prompts";
 import { getTrailingMessageId } from "@/lib/utils";
+import { generateTitleFromUserMessage } from "../../../(_service)/(_actions)/actions";
+import { createDocument } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/create-document";
+import { updateDocument } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/update-document";
+import { requestSuggestions } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/request-suggestions";
+import { getWeather } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/get-weather";
+import { fileSearchVectorStore } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/tools/file-search-vector-store";
 import { isProductionEnvironment } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_constants)/constants";
 import { myProvider } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/providers";
 import { entitlementsByUserType } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_libs)/ai/entitlements";
-import { postRequestBodySchema, type PostRequestBody } from "../chat/schema";
+import { postRequestBodySchema, type PostRequestBody } from "./schema";
 import { geolocation } from "@vercel/functions";
-import { NextResponse } from "next/server";
+import {
+  createResumableStreamContext,
+  type ResumableStreamContext,
+} from "resumable-stream";
+import { after, NextResponse } from "next/server";
+import { differenceInSeconds } from "date-fns";
 import { prisma } from "@/lib/db";
-import { Message, Prisma } from "@prisma/client";
+
+import { Chat, Message, Prisma, UserType } from "@prisma/client";
+import { openai } from "@ai-sdk/openai";
 import { generateCuid } from "@/lib/utils/generateCuid";
 import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
+import { z } from "zod";
+import { createProductIdAnswer } from "../../../(_service)/(_libs)/ai/tools/create-product-is-answer";
 
 export const maxDuration = 60;
 
-/**
- * Enhanced system prompt for API chat with structured responses
- */
-const API_SYSTEM_PROMPT = `
-Продолжай легко и уверену беседа с клиентом, рекомендуй блюда и напитки на основании ранее полученные инструкции
-`;
-
-// Interface definitions for custom parts
-interface ProductPart {
-  type: "data-product";
-  id: string;
-  data: {
-    product_id: string;
-  };
-}
-
-interface SuggestionPart {
-  type: "data-suggestion";
-  id: string;
-  data: {
-    suggestion_id: string;
-  };
-}
+let globalStreamContext: ResumableStreamContext | null = null;
 
 /**
- * Utility function for safe error logging with TypeScript
- * @param error - Error of unknown type
- * @param context - Additional context for debugging
- */
-function logError(error: unknown, context: string = ""): void {
-  console.error(`❌ ===== ${context.toUpperCase()} ОШИБКА =====`);
-
-  if (error instanceof Error) {
-    console.error("💥 Тип ошибки:", error.constructor.name);
-    console.error("📝 Сообщение ошибки:", error.message);
-    console.error("🔍 Stack trace:", error.stack);
-  } else if (typeof error === "string") {
-    console.error("📝 Строковая ошибка:", error);
-  } else {
-    console.error("❓ Неизвестная ошибка:", error);
-  }
-
-  console.error(`❌ ===== КОНЕЦ ${context.toUpperCase()} ОШИБКИ =====`);
-}
-
-/**
- * Analyze text response to determine if product recommendations are needed
- * @param textContent - The assistant's text response
- * @param systemInstruction - Full system instruction containing menu data
- * @param conversationHistory - Recent conversation for context
- * @returns Promise with analysis result
- */
-async function analyzeForProducts(
-  textContent: string,
-  systemInstruction: string,
-  conversationHistory: string = ""
-): Promise<{
-  recommend_products: boolean;
-  category?: string;
-  confidence?: number;
-  product_ids?: string[];
-}> {
-  try {
-    console.log("🔍 ===== НАЧАЛО АНАЛИЗА ПРОДУКТОВ =====");
-    console.log("📝 Анализируемый текст ассистента:", textContent);
-    console.log(
-      "💬 История разговора:",
-      conversationHistory.slice(0, 500) + "..."
-    );
-    console.log("📋 Длина системной инструкции:", systemInstruction.length);
-
-    const analysisPrompt = `
-СИСТЕМНАЯ ИНСТРУКЦИЯ С МЕНЮ:
-${systemInstruction}
-
-ИСТОРИЯ РАЗГОВОРА:
-${conversationHistory}
-
-ОТВЕТ АССИСТЕНТА ДЛЯ АНАЛИЗА:
-"${textContent}"
-
-ЗАДАЧА:
-1. Проанализируй ответ ассистента и определи, рекомендует ли он конкретные блюда или напитки
-2. Найди в СИСТЕМНОЙ ИНСТРУКЦИИ точные идентификаторы (ID) продуктов, которые упоминает ассистент
-3. Сопоставь названия блюд/напитков из ответа с записями в меню
-
-ПРАВИЛА АНАЛИЗА:
-- Если ассистент упоминает конкретные названия блюд/напитков - это рекомендация
-- Если только общие фразы ("что-то вкусное", "наши блюда") - это НЕ рекомендация
-- Ищи ТОЧНОЕ совпадение названий или близкие варианты
-- Извлеки ID продуктов из системной инструкции
-
-ФОРМАТ ОТВЕТА (только JSON):
-Если есть рекомендации:
-{
-  "recommend_products": true,
-  "category": "найденная категория",
-  "confidence": 0.8,
-  "product_ids": ["id1", "id2"],
-  "found_products": ["Название продукта 1", "Название продукта 2"],
-  "reasoning": "почему эти продукты подходят"
-}
-
-Если рекомендаций нет:
-{
-  "recommend_products": false,
-  "confidence": 0.2,
-  "reasoning": "почему рекомендаций нет"
-}
-
-Отвечай ТОЛЬКО JSON без дополнительного текста.
-`;
-
-    console.log("🤖 Отправляем промпт для анализа продуктов...");
-    console.log("📤 Длина промпта:", analysisPrompt.length);
-
-    const result = await generateText({
-      model: myProvider.languageModel("api-chat-support"),
-      prompt: analysisPrompt,
-      temperature: 0.1,
-    });
-
-    console.log("📥 Сырой ответ анализа:", result.text);
-
-    let analysis;
-    try {
-      analysis = JSON.parse(result.text);
-      console.log("✅ Успешно распарсен JSON анализа:", analysis);
-    } catch (parseError: unknown) {
-      console.error("❌ Ошибка парсинга JSON анализа:");
-      logError(parseError, "ПАРСИНГ JSON АНАЛИЗА");
-      console.error("🔍 Проблемный текст:", result.text);
-      return { recommend_products: false, confidence: 0 };
-    }
-
-    // Дополнительная валидация результата
-    if (analysis.recommend_products && analysis.product_ids) {
-      console.log("🎯 Найденные продукты:", analysis.found_products);
-      console.log("🆔 ID продуктов:", analysis.product_ids);
-      console.log("📊 Уровень уверенности:", analysis.confidence);
-      console.log("💭 Обоснование:", analysis.reasoning);
-    } else {
-      console.log("❌ Продукты не найдены или не рекомендуются");
-      console.log("💭 Обоснование:", analysis.reasoning);
-    }
-
-    console.log("🔍 ===== КОНЕЦ АНАЛИЗА ПРОДУКТОВ =====");
-    return analysis;
-  } catch (error: unknown) {
-    logError(error, "КРИТИЧЕСКАЯ ОШИБКА В АНАЛИЗЕ ПРОДУКТОВ");
-    console.error("📊 Контекст - длина текста:", textContent.length);
-    console.error(
-      "📋 Контекст - длина системной инструкции:",
-      systemInstruction.length
-    );
-    return { recommend_products: false, confidence: 0 };
-  }
-}
-
-/**
- * Generate contextual suggestions based on assistant's response
- * @param textContent - The assistant's text response
- * @returns Promise with array of suggestions
- */
-async function generateSuggestions(textContent: string): Promise<string[]> {
-  try {
-    console.log("💡 ===== ГЕНЕРАЦИЯ ПРЕДЛОЖЕНИЙ =====");
-    console.log("📝 Текст для анализа:", textContent);
-
-    const suggestionPrompt = `
-На основе ответа ассистента кафе создай 2-4 варианта продолжения разговора для пользователя.
-
-Ответ ассистента: "${textContent}"
-
-Генерируй произвольные но релевантные предложения для мягкого, аккуратного вовлечения пользователя. Предложение может содержать от 1 до 6 слов. Вот примеры которые следует использовать только в качестве идеи, добавляя или изменяя их.
-- Если говорили о еде: "Хочу заказать", "Что еще посоветуете?", "А что с напитками?"
-- Если о напитках: "Буду брать", "Покрепче есть?", "А десерт к этому?"
-- Общие: "Спасибо", "Расскажите подробнее", "Нет, спасибо"
-
-Верни JSON массив из 2-4 коротких фраз:
-["Вариант 1", "Вариант 2", "Вариант 3"]
-
-Отвечай только JSON массив без дополнительного текста.
-`;
-
-    const result = await generateText({
-      model: myProvider.languageModel("api-chat-support"),
-      prompt: suggestionPrompt,
-      temperature: 0.3,
-    });
-
-    console.log("📥 Сырой ответ для предложений:", result.text);
-
-    let suggestions;
-    try {
-      suggestions = JSON.parse(result.text);
-      console.log("✅ Сгенерированные предложения:", suggestions);
-    } catch (parseError: unknown) {
-      console.error("❌ Ошибка парсинга предложений:");
-      logError(parseError, "ПАРСИНГ ПРЕДЛОЖЕНИЙ");
-      suggestions = ["Спасибо", "Расскажите подробнее", "Нет, спасибо"];
-    }
-
-    console.log("💡 ===== КОНЕЦ ГЕНЕРАЦИИ ПРЕДЛОЖЕНИЙ =====");
-    return Array.isArray(suggestions) ? suggestions : [];
-  } catch (error: unknown) {
-    logError(error, "ГЕНЕРАЦИЯ ПРЕДЛОЖЕНИЙ");
-    return ["Спасибо", "Расскажите подробнее", "Нет, спасибо"];
-  }
-}
-
-/**
- * Send product part to data stream
- * @param dataStream - Data stream writer
- * @param productId - Product ID to recommend
- */
-function sendProductPart(
-  dataStream: DataStreamWriter,
-  productId: string
-): void {
-  const productPart: ProductPart = {
-    type: "data-product",
-    id: `product-${generateCuid()}`,
-    data: {
-      product_id: productId,
-    },
-  };
-
-  console.log("📦 Отправка части продукта:", productPart);
-
-  dataStream.writeData({
-    type: "data",
-    content: JSON.stringify(productPart),
-  });
-}
-
-/**
- * Send suggestion parts to data stream
- * @param dataStream - Data stream writer
- * @param suggestions - Array of suggestion strings
- */
-function sendSuggestionParts(
-  dataStream: DataStreamWriter,
-  suggestions: string[]
-): void {
-  console.log("💬 Отправка предложений:", suggestions);
-
-  suggestions.forEach((suggestion, index) => {
-    const suggestionPart: SuggestionPart = {
-      type: "data-suggestion",
-      id: `suggestion-${generateCuid()}`,
-      data: {
-        suggestion_id: suggestion,
-      },
-    };
-
-    console.log(`💬 Отправка предложения ${index + 1}:`, suggestionPart);
-
-    dataStream.writeData({
-      type: "data",
-      content: JSON.stringify(suggestionPart),
-    });
-  });
-}
-
-/**
- * Token usage logging with cost calculation for GPT-4 Mini
- * @param prefix - Prefix for identifying source
- * @param usage - Token usage information object
+ * Logs token usage with detailed information and correct GPT-4 Mini pricing
+ * @param prefix - Prefix for source identification
+ * @param usage - Object with token usage information
  * @param chatId - Chat ID for context
  * @param userId - User ID for context
  */
@@ -307,66 +58,74 @@ function logTokenUsage(
   userId?: string
 ) {
   if (!usage) {
-    console.log(`${prefix} - Данные об использовании токенов недоступны`);
+    console.log(`${prefix} - Token usage data not available`);
     return;
   }
 
   const { promptTokens, completionTokens, totalTokens } = usage;
 
-  console.log(`\n🔢 ===== ${prefix.toUpperCase()} ИСПОЛЬЗОВАНИЕ ТОКЕНОВ =====`);
-  console.log(`📊 ID чата: ${chatId || "неизвестно"}`);
-  console.log(`👤 ID пользователя: ${userId || "неизвестно"}`);
-  console.log(`📥 Входящие токены (Промпт): ${promptTokens ?? "неизвестно"}`);
+  console.log(`\n🔢 ===== ${prefix.toUpperCase()} TOKEN USAGE =====`);
+  console.log(`📊 Chat ID: ${chatId || "unknown"}`);
+  console.log(`👤 User ID: ${userId || "unknown"}`);
+  console.log(`📥 Input tokens (Prompt): ${promptTokens ?? "unknown"}`);
   console.log(
-    `📤 Исходящие токены (Ответ): ${completionTokens ?? "неизвестно"}`
+    `📤 Output tokens (Completion): ${completionTokens ?? "unknown"}`
   );
-  console.log(`🔄 Всего токенов: ${totalTokens ?? "неизвестно"}`);
+  console.log(`🔄 Total tokens: ${totalTokens ?? "unknown"}`);
 
-  // Cost calculation for GPT-4 Mini: Input $0.15/1M, Output $0.60/1M
+  // GPT-4 Mini pricing calculation: Input $0.15/1M, Output $0.60/1M
   if (promptTokens && completionTokens) {
-    const inputCost = (promptTokens / 1000000) * 0.15;
-    const outputCost = (completionTokens / 1000000) * 0.6;
+    const inputCost = (promptTokens / 1000000) * 0.15; // $0.15 per 1M tokens
+    const outputCost = (completionTokens / 1000000) * 0.6; // $0.60 per 1M tokens
     const totalCost = inputCost + outputCost;
 
     console.log(
-      `💰 Стоимость GPT-4 Mini: $${totalCost.toFixed(8)} (Вход: $${inputCost.toFixed(8)}, Выход: $${outputCost.toFixed(8)})`
+      `💰 GPT-4 Mini cost: $${totalCost.toFixed(8)} (Input: $${inputCost.toFixed(8)}, Output: $${outputCost.toFixed(8)})`
     );
 
+    // Additionally show cost in cents for clarity
     const totalCostCents = totalCost * 100;
-    console.log(`💸 Стоимость в центах: ${totalCostCents.toFixed(6)}¢`);
+    console.log(`💸 Cost in cents: ${totalCostCents.toFixed(6)}¢`);
   }
 
-  console.log(`⏰ Время логирования: ${new Date().toISOString()}`);
-  console.log(`🔢 ===== КОНЕЦ ИСПОЛЬЗОВАНИЯ ТОКЕНОВ =====\n`);
+  console.log(`⏰ Logged at: ${new Date().toISOString()}`);
+  console.log(`🔢 ===== END TOKEN USAGE =====\n`);
 }
 
 /**
- * Build conversation history for context
- * @param messages - Array of messages
- * @returns Formatted conversation string
+ * Get or create a global resumable stream context for data streaming.
  */
-function buildConversationHistory(messages: any[]): string {
-  return messages
-    .slice(-6) // Последние 6 сообщений для контекста
-    .map((msg) => {
-      const content =
-        msg.parts?.find((part: any) => part.type === "text")?.text || "";
-      return `${msg.role}: ${content}`;
-    })
-    .join("\n");
+function getStreamContext() {
+  if (!globalStreamContext) {
+    try {
+      globalStreamContext = createResumableStreamContext({ waitUntil: after });
+    } catch (error: any) {
+      if (error.message.includes("REDIS_URL")) {
+        console.log(
+          " > Resumable streams are disabled due to missing REDIS_URL"
+        );
+      } else {
+        console.error(error);
+      }
+    }
+  }
+  return globalStreamContext;
 }
 
 /**
- * Handle POST requests for creating or adding messages to chats
- * and streaming AI-generated responses with custom parts (three-stage approach)
+ * Handle POST requests to create or append messages to chats,
+ * and stream AI-generated responses.
  */
 export async function POST(request: Request) {
+  const authHeader = request.headers.get("authorization");
+
   let requestBody: PostRequestBody;
   try {
     const json = await request.json();
+
     requestBody = postRequestBodySchema.parse(json);
   } catch (e) {
-    return new Response("Неверное тело запроса", { status: 400 });
+    return new Response("Invalid request body", { status: 400 });
   }
 
   try {
@@ -379,7 +138,6 @@ export async function POST(request: Request) {
 
     let session = await auth();
 
-    // Handle API token if no session
     let token = request.headers.get("authorization");
     const expires = new Date(Date.now() + 60 * 60 * 4000).toISOString();
 
@@ -395,13 +153,15 @@ export async function POST(request: Request) {
     }
 
     if (!session || session.user.id === "") {
-      return new Response("Неавторизован", { status: 401 });
+      return new Response("Unauthorized", { status: 401 });
     }
 
     const userId = session.user.id;
     const userType = session.user.type;
 
-    // Check 24-hour message limit
+    // Now session is always defined and can be safely used further
+
+    // Count how many user messages they sent in last 24 hours
     const messageCount = await prisma.message.count({
       where: {
         role: "user",
@@ -418,7 +178,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "Вы достигли дневного лимита. Зарегистрируйтесь для получения в 5 раз больше сообщений в день!",
+            "You've reached your daily limit. Sign up to get 5× more messages per day!",
           redirectTo: "/register",
           delay: 3000,
         },
@@ -428,10 +188,17 @@ export async function POST(request: Request) {
 
     // Check if chat exists
     let chat = await prisma.chat.findUnique({ where: { id: chatId } });
-
+    console.log(
+      "console: // @/app/@left/(chat)/api/chat/route.ts chat:  ",
+      chat
+    );
+    console.log(
+      "console: // @/app/@left/(chat)/api/chat/route.ts message:  ",
+      message
+    );
     if (!chat) {
-      // Create new chat with title generated from first message
-      const title = "Api Chat";
+      // Create new chat with title generated from first user message
+      const title = await generateTitleFromUserMessage({ message });
       chat = await prisma.chat.create({
         data: {
           id: chatId,
@@ -441,20 +208,24 @@ export async function POST(request: Request) {
           createdAt: new Date(),
         },
       });
+      console.log(
+        "console: // @/app/@left/(chat)/api/chat/route.ts chat:  ",
+        chat
+      );
     } else {
-      // Prevent access to other users' chats
+      // Prevent users from accessing others' chats
       if (chat.userId !== userId) {
-        return new Response("Запрещено", { status: 403 });
+        return new Response("Forbidden", { status: 403 });
       }
     }
 
-    // Get previous messages ordered by creation time
+    // Fetch previous messages (Message_v2 model) ordered by creation time
     const previousMessages = await prisma.message.findMany({
       where: { chatId },
       orderBy: { createdAt: "asc" },
     });
 
-    // Map DB model to AI processing format
+    // Map DB model to UI-friendly message format for AI processing
     const previousUImessages = previousMessages.map(
       ({ id, role, parts, attachments, createdAt }: Message) => ({
         id,
@@ -464,19 +235,18 @@ export async function POST(request: Request) {
         createdAt,
       })
     );
-
-    // Add new user message to list for AI
+    // Append new user message to list for AI input
     const messages = appendClientMessage({
       // @ts-expect-error: todo add type conversion from DBMessage[] to UIMessage[]
       messages: previousUImessages,
       message,
     });
 
-    // Get geolocation from request for hints
+    // Obtain geolocation metadata from request for hints
     const { longitude, latitude, city, country } = geolocation(request);
     const requestHints: RequestHints = { longitude, latitude, city, country };
 
-    // Save new user message to DB
+    // Save user's new message to DB
     await prisma.message.create({
       data: {
         id: message.id,
@@ -488,83 +258,41 @@ export async function POST(request: Request) {
       },
     });
 
-    // Build conversation history for context
-    const conversationHistory = buildConversationHistory(messages);
-    console.log(
-      "📚 Контекст разговора подготовлен, длина:",
-      conversationHistory.length
-    );
+    // Create a new stream ID and associate to chat
+    const streamId = generateCuid();
+    await prisma.stream.create({
+      data: {
+        id: streamId,
+        chatId,
+        createdAt: new Date(),
+      },
+    });
 
-    // Create data stream with three-stage custom parts generation
+    // Compose data stream with AI text generation and tools usage
     const stream = createDataStream({
-      execute: async (dataStream) => {
-        console.log("🚀 Начинаем трехэтапную генерацию ответа...");
-
-        // STAGE 1: Generate basic text response
+      execute: (dataStream) => {
         const result = streamText({
-          model: myProvider.languageModel("api-chat-support"),
-          system: API_SYSTEM_PROMPT,
+          model: myProvider.languageModel(selectedChatModel),
+          system: "",
           messages,
-          maxSteps: 1,
+          maxSteps: 5,
+
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateCuid,
-          tools: {}, // No tools - using post-processing approach
-          onFinish: async ({ response, usage, text }) => {
+          tools: {},
+          onFinish: async ({ response, usage }) => {
             if (!session.user?.id) return;
 
-            // Log token usage for main response
-            logTokenUsage("API Chat Main Response", usage, chatId, userId);
+            // Log token usage with GPT-4 Mini pricing
+            logTokenUsage("AI Response", usage, chatId, userId);
 
             try {
-              console.log("📝 Сгенерированный текстовый ответ:", text);
-
-              // STAGE 2: Analyze for product recommendations with enhanced debugging
-              console.log(
-                "🔍 Этап 2: Анализ рекомендаций продуктов с расширенной отладкой..."
-              );
-
-              const productAnalysis = await analyzeForProducts(
-                text,
-                API_SYSTEM_PROMPT, // Передаем системную инструкцию
-                conversationHistory // Передаем историю разговора для контекста
-              );
-
-              if (
-                productAnalysis.recommend_products &&
-                productAnalysis.product_ids &&
-                productAnalysis.product_ids.length > 0
-              ) {
-                console.log(
-                  `📦 Рекомендуем продукты: ${productAnalysis.product_ids.join(", ")}`
-                );
-
-                // Send product parts for each found product
-                productAnalysis.product_ids.forEach((productId) => {
-                  sendProductPart(dataStream, productId);
-                });
-              } else {
-                console.log(
-                  "❌ Продукты не найдены или анализ не выявил рекомендаций"
-                );
-              }
-
-              // STAGE 3: Generate contextual suggestions
-              console.log("💡 Этап 3: Генерация контекстных предложений...");
-              const suggestions = await generateSuggestions(text);
-
-              if (suggestions.length > 0) {
-                sendSuggestionParts(dataStream, suggestions);
-              }
-
-              // Save assistant message to database
               const assistantId = getTrailingMessageId({
                 messages: response.messages.filter(
                   (m) => m.role === "assistant"
                 ),
               });
-
-              if (!assistantId)
-                throw new Error("Сообщение ассистента не найдено!");
+              if (!assistantId) throw new Error("No assistant message found!");
 
               const [, assistantMessage] = appendResponseMessages({
                 messages: [message],
@@ -585,32 +313,181 @@ export async function POST(request: Request) {
                 },
               });
 
+              // Additional logging for successful message saving
               console.log(
-                `✅ Трехступенчатый ответ успешно сгенерирован и сохранен для чата ${chatId}`
+                `✅ Assistant message saved successfully for chat ${chatId}`
               );
-            } catch (error: unknown) {
-              logError(error, "ТРЕХСТУПЕНЧАТАЯ ОБРАБОТКА");
+            } catch (error) {
+              console.error("Failed to save assistant message:", error);
+
+              // Error logging with context
               console.error(
-                `📊 Контекст ошибки - ID чата: ${chatId}, ID пользователя: ${userId}`
+                `❌ Error context - Chat ID: ${chatId}, User ID: ${userId}`
               );
             }
           },
           experimental_telemetry: {
             isEnabled: isProductionEnvironment,
-            functionId: "api-stream-text",
+            functionId: "stream-text",
           },
         });
 
         result.consumeStream();
-        result.mergeIntoDataStream(dataStream);
+        result.mergeIntoDataStream(dataStream, { sendReasoning: true });
       },
-      onError: () => "Упс, произошла ошибка!",
+      onError: () => "Oops, an error occurred!",
     });
 
+    // Return streaming response (supports resumable streams if available)
+    const streamContext = getStreamContext();
+    if (streamContext) {
+      return new Response(
+        await streamContext.resumableStream(streamId, () => stream)
+      );
+    }
+
     return new Response(stream);
-  } catch (error: unknown) {
-    logError(error, "POST /API-CHAT-STREAM");
-    return new Response("Произошла ошибка при обработке вашего запроса!", {
+  } catch (error) {
+    console.error("POST /chat error:", error);
+    return new Response("An error occurred while processing your request!", {
+      status: 500,
+    });
+  }
+}
+
+/**
+ * Handle GET requests to stream last AI response or resume
+ * unfinished streams related to a chat.
+ */
+export async function GET(request: Request) {
+  const streamContext = getStreamContext();
+  const resumeRequestedAt = new Date();
+
+  if (!streamContext) {
+    return new Response(null, { status: 204 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const chatId = searchParams.get("chatId");
+
+  if (!chatId) {
+    return new Response("id is required", { status: 400 });
+  }
+
+  const session = await auth();
+  if (!session?.user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  let chat: Chat | null = null;
+  try {
+    chat = await prisma.chat.findUnique({ where: { id: chatId } });
+  } catch {
+    return new Response("Not found", { status: 404 });
+  }
+
+  if (!chat) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  if (chat.visibility === "private" && chat.userId !== session.user.id) {
+    return new Response("Forbidden", { status: 403 });
+  }
+
+  // Retrieve all stream IDs for chat ordered by creation ascending
+  const streams = await prisma.stream.findMany({
+    where: { chatId },
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
+  });
+
+  if (streams.length === 0) {
+    return new Response("No streams found", { status: 404 });
+  }
+
+  const recentStreamId = streams.at(-1)?.id;
+  if (!recentStreamId) {
+    return new Response("No recent stream found", { status: 404 });
+  }
+
+  const emptyDataStream = createDataStream({ execute: () => {} });
+
+  // Try to get resumable stream from stored context
+  const stream = await streamContext.resumableStream(
+    recentStreamId,
+    () => emptyDataStream
+  );
+
+  if (!stream) {
+    // Stream ended during SSR, restore last assistant message if very recent (<15s)
+    const messages = await prisma.message.findMany({
+      where: { chatId },
+      orderBy: { createdAt: "asc" },
+    });
+
+    const mostRecentMessage = messages.at(-1);
+    if (!mostRecentMessage || mostRecentMessage.role !== "assistant") {
+      return new Response(emptyDataStream, { status: 200 });
+    }
+
+    const messageCreatedAt = new Date(mostRecentMessage.createdAt);
+    if (differenceInSeconds(resumeRequestedAt, messageCreatedAt) > 15) {
+      return new Response(emptyDataStream, { status: 200 });
+    }
+
+    const restoredStream = createDataStream({
+      execute: (buffer) => {
+        buffer.writeData({
+          type: "append-message",
+          message: JSON.stringify(mostRecentMessage),
+        });
+      },
+    });
+
+    return new Response(restoredStream, { status: 200 });
+  }
+
+  return new Response(stream, { status: 200 });
+}
+
+/**
+ * Handle DELETE requests to delete a chat by its ID
+ * with proper authorization.
+ */
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return new Response("Not Found", { status: 404 });
+  }
+
+  const session = await auth();
+  if (!session?.user?.id) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  try {
+    const chat = await prisma.chat.findUnique({ where: { id } });
+
+    if (!chat) {
+      return new Response("Not Found", { status: 404 });
+    }
+
+    if (chat.userId !== session.user.id) {
+      return new Response("Forbidden", { status: 403 });
+    }
+
+    // Delete chat (cascading deletes of related entities depend on Prisma schema cascade settings)
+    const deletedChat = await prisma.chat.delete({ where: { id } });
+
+    return new Response(JSON.stringify(deletedChat), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("DELETE /chat error:", error);
+    return new Response("An error occurred while processing your request!", {
       status: 500,
     });
   }
