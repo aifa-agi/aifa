@@ -10,7 +10,7 @@ export const UserInfoSchema = z.any();
 
 // Тип для events (array of objects с text и date)
 export const EventItemSchema = z.object({
-  text: z.string().max(60),
+  text: z.string().max(600),
   createdAt: z.string().datetime(),
 });
 export type EventItem = z.infer<typeof EventItemSchema>;

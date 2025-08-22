@@ -16,11 +16,14 @@ import {
   type SystemPromptData,
 } from "../../utils/create-system-prompt";
 import { analyzeTagPreferences } from "../../utils/analyze-tag-preferences";
+import { Message, Prisma } from "@prisma/client";
+import { prisma } from "@/lib/db";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
+
 const SESSION_TTL_SECONDS = 60 * 60 * 4;
 
 // Функция для обработки events
@@ -31,7 +34,7 @@ function processEvents(events: any[] | null | undefined): string {
     .map((event, index) => `${index + 1}. ${event.text}`)
     .join("\n");
 
-  return `Прими к сведению ещё одну важную информацию о текущих событиях и популярных позициях:\n${eventsText}\n\n`;
+  return `Прими к сведению ещё одну важную информацию:\n${eventsText}\n\n`;
 }
 
 export async function POST(req: NextRequest) {
@@ -103,9 +106,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // ОБНОВЛЕННАЯ ЛОГИКА: Анализ данных пользователя и создание персонализированного промта
-    console.log("Starting user data analysis...");
-
     // Параллельное выполнение функций анализа для лучшей производительности
     const [purchasePreferencesDoc, tagPreferencesDoc, availableMenuDoc] =
       await Promise.all([
@@ -135,15 +135,6 @@ export async function POST(req: NextRequest) {
     // Обработка events
     const eventsInfo = processEvents(events);
 
-    console.log("Analysis results:");
-    console.log(
-      "- Purchase preferences length:",
-      purchasePreferencesDoc.length
-    );
-    console.log("- Tag preferences length:", tagPreferencesDoc.length);
-    console.log("- Available menu length:", availableMenuDoc.length);
-    console.log("- Events info length:", eventsInfo.length);
-
     // Создание улучшенного системного сообщения с использованием отдельного компонента
     const systemPromptData: SystemPromptData = {
       name: name ?? null,
@@ -156,60 +147,34 @@ export async function POST(req: NextRequest) {
     };
 
     const systemMessage = createSystemPrompt(systemPromptData);
-    //const systemMessage = "hello";
 
-    // Создание запроса к чату (СТРУКТУРА НЕ ИЗМЕНЯЕТСЯ)
-    const chatRequestBody = {
-      id: chatId,
-      message: {
+    let chat = await prisma.chat.findUnique({ where: { id: chatId } });
+
+    chat = await prisma.chat.create({
+      data: {
+        id: chatId,
+        userId: user_id,
+        title: "Api Chat",
+        visibility: "public",
+        createdAt: new Date(),
+      },
+    });
+
+    await prisma.message.create({
+      data: {
         id: messageId,
-        createdAt: new Date().toISOString(),
+        chatId,
         role: "user",
-        content: systemMessage,
         parts: [
           {
             text: systemMessage,
             type: "text",
           },
         ],
+        attachments: [],
+        createdAt: new Date(),
       },
-      selectedChatModel: "chat-model",
-      selectedVisibilityType: "public",
-    };
-
-    console.log("Sending request to chat API...");
-
-    const chatApiRes = await fetch(`${getNextAuthUrl()}/api/api-chat-start`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(chatRequestBody),
     });
-
-    let aiResponse: any = null;
-    const contentType = chatApiRes.headers.get("content-type");
-
-    if (!chatApiRes.ok) {
-      // Если ошибка, пробуем получить текст ошибки
-      const errorText = await chatApiRes.text();
-      return apiResponse({
-        success: false,
-        error: errorText,
-        message: "AI chat error",
-        status: 500,
-      });
-    }
-
-    if (contentType && contentType.includes("application/json")) {
-      aiResponse = await chatApiRes.json();
-    } else {
-      // Если не JSON, просто берём текст
-      aiResponse = await chatApiRes.text();
-    }
-
-    console.log("Chat API response received");
 
     // Сохранение сессии в Redis (РАСШИРЕННАЯ ИНФОРМАЦИЯ)
     const sessionData = {
@@ -242,15 +207,16 @@ export async function POST(req: NextRequest) {
 
     console.log("Session saved to Redis with enhanced data");
 
+    // ИСПРАВЛЕННЫЙ ОТВЕТ: точно соответствует документации
     return apiResponse({
       success: true,
-      data: {
-        session_id: sub,
-        jwt: token,
-        chatId,
-      },
-      message: "Session created and initial chat started",
       status: 200,
+      message: "Session created", // Изменено с "Session created and initial chat started"
+      data: {
+        session_id: sub, // Остается session_id как в документации
+        jwt: token,
+        chatId: chatId, // ИЗМЕНЕНО: было chatId, стало chat_id
+      },
     });
   } catch (error) {
     console.error("Error in enhanced start endpoint:", error);
