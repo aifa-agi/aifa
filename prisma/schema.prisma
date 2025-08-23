@@ -220,6 +220,7 @@ model PageSetting {
 model Product {
   id          String   @id @default(cuid())
   productId   String   @unique @map("product_id")
+  productName String?  @default("No named")
   tags        String[] @default([])
   productInfo Json     @map("product_info")
   createdAt   DateTime @default(now()) @map("created_at")

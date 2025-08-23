@@ -12,8 +12,53 @@ import {
   payloadTooLargeResponse,
 } from "@/app/integrations/lib/api/response";
 import { StoreRequestSchema } from "../../_types/store";
+import { normalizeProductName } from "../../utils/build-available-menu";
 
 const prisma = new PrismaClient();
+
+/**
+ * Type guard to check if a value is a non-null object
+ */
+function isObject(value: any): value is Record<string, any> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Helper function to safely extract product name from productInfo
+ * Применяет нормализацию к извлеченному названию
+ * @param productInfo - объект с информацией о продукте
+ * @param fallbackId - резервный ID для использования как название
+ * @returns нормализованное название продукта
+ */
+function extractAndNormalizeProductName(
+  productInfo: any,
+  fallbackId: string
+): string {
+  let rawName = "";
+
+  if (isObject(productInfo)) {
+    if (typeof productInfo.name === "string" && productInfo.name.trim()) {
+      rawName = productInfo.name;
+    } else if (
+      typeof productInfo.title === "string" &&
+      productInfo.title.trim()
+    ) {
+      rawName = productInfo.title;
+    } else if (
+      typeof productInfo.displayName === "string" &&
+      productInfo.displayName.trim()
+    ) {
+      rawName = productInfo.displayName;
+    }
+  }
+
+  if (!rawName) {
+    rawName = fallbackId;
+  }
+
+  // Применяем нормализацию к названию
+  return normalizeProductName(rawName);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -83,9 +128,13 @@ export async function POST(req: NextRequest) {
         deletedCount.count
       );
 
-      // Подготавливаем данные для массовой вставки
+      // ОБНОВЛЕНО: Подготавливаем данные для массовой вставки с нормализованными названиями
       const productsToCreate = products.map((product) => ({
         productId: product.product_id,
+        productName: extractAndNormalizeProductName(
+          product.product_info,
+          product.product_id
+        ), // НОВОЕ ПОЛЕ
         tags: product.tags || [], // Если tags не переданы, используем пустой массив
         productInfo: product.product_info,
       }));
@@ -157,12 +206,13 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET метод остается без изменений
+// ОБНОВЛЕН GET метод для возврата нового поля productName
 export async function GET(req: NextRequest) {
   try {
     const products = await prisma.product.findMany({
       select: {
         productId: true,
+        productName: true, // НОВОЕ ПОЛЕ
         tags: true,
         productInfo: true,
         updatedAt: true,
@@ -176,6 +226,7 @@ export async function GET(req: NextRequest) {
       {
         products: products.map((p) => ({
           product_id: p.productId,
+          product_name: p.productName, // НОВОЕ ПОЛЕ в ответе
           tags: p.tags,
           product_info: p.productInfo,
         })),

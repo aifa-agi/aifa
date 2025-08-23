@@ -15,7 +15,6 @@ interface MenuCategory {
  * Interface for menu product structure
  */
 interface MenuProduct {
-  productId: string;
   name: string;
   description?: string;
   price?: number;
@@ -37,21 +36,30 @@ function isObject(value: any): value is Record<string, any> {
  * Helper function to safely extract product name from productInfo
  */
 function getProductName(productInfo: any, fallbackId: string): string {
+  let rawName = "";
+
   if (isObject(productInfo)) {
     if (typeof productInfo.name === "string" && productInfo.name.trim()) {
-      return productInfo.name;
-    }
-    if (typeof productInfo.title === "string" && productInfo.title.trim()) {
-      return productInfo.title;
-    }
-    if (
+      rawName = productInfo.name;
+    } else if (
+      typeof productInfo.title === "string" &&
+      productInfo.title.trim()
+    ) {
+      rawName = productInfo.title;
+    } else if (
       typeof productInfo.displayName === "string" &&
       productInfo.displayName.trim()
     ) {
-      return productInfo.displayName;
+      rawName = productInfo.displayName;
     }
   }
-  return fallbackId;
+
+  if (!rawName) {
+    rawName = fallbackId;
+  }
+
+  // Применяем нормализацию к названию
+  return normalizeProductName(rawName);
 }
 
 /**
@@ -324,10 +332,8 @@ export async function buildAvailableMenu(
 
       category.products.forEach((product) => {
         // Название продукта и ID
-        markdown += `### ${product.name}`;
-        if (product.productId !== product.name) {
-          markdown += ` (${product.productId})`;
-        }
+        markdown += `### Product_Name: ${product.name}`;
+
         markdown += `\n`;
 
         // Описание
@@ -479,3 +485,24 @@ export async function validateAvailableProducts(
     };
   }
 }
+
+/**
+ * НОВАЯ ФУНКЦИЯ: Нормализация названий продуктов
+ * Приводит к нижнему регистру и заменяет специальные русские буквы
+ * @param name - Исходное название продукта
+ * @returns Нормализованное название
+ */
+function normalizeProductName(name: string): string {
+  if (!name || typeof name !== "string") {
+    return "";
+  }
+
+  return name
+    .toLowerCase() // Приводим к нижнему регистру
+    .replace(/ё/g, "е") // Заменяем ё на е
+    .replace(/Ё/g, "е") // Заменяем Ё на е (хотя после toLowerCase уже будет ё)
+    .trim(); // Убираем лишние пробелы по краям
+}
+
+// Экспортируем функцию нормализации для использования в других частях приложения
+export { normalizeProductName };

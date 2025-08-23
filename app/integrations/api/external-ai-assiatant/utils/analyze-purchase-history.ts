@@ -6,7 +6,6 @@ import { prisma } from "@/lib/db";
  * Interface for purchase history item from the API request
  */
 interface PurchaseHistoryItem {
-  product_id: string;
   quantity: number;
   price?: number;
   date?: string;

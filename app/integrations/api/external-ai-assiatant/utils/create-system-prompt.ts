@@ -1,12 +1,12 @@
 // @/app/integrations/api/external-ai-assiatant/utils/create-system-prompt.ts
 
 /**
- * Internal helper function to get most popular dish ID from purchase history
+ * Internal helper function to get most popular dish name from purchase history
  * Uses single pass algorithm instead of sorting to avoid tuple type issues
  * @param purchaseHistory - Purchase history array
- * @returns Most popular dish ID or empty string
+ * @returns Most popular dish  name or empty string
  */
-function getMostPopularDishId(
+function getMostPopularDishName(
   purchaseHistory: any[] | null | undefined
 ): string {
   try {
@@ -19,13 +19,14 @@ function getMostPopularDishId(
     // Count quantities for each product
     for (const item of purchaseHistory) {
       try {
-        const id = typeof item?.product_id === "string" ? item.product_id : "";
-        if (!id) continue;
+        const name =
+          typeof item?.product_name === "string" ? item.product_name : "";
+        if (!name) continue;
         const qty =
           typeof item?.quantity === "number" && item.quantity > 0
             ? item.quantity
             : 1;
-        counts.set(id, (counts.get(id) ?? 0) + qty);
+        counts.set(name, (counts.get(name) ?? 0) + qty);
       } catch (itemError) {
         console.warn("Error processing purchase history item:", itemError);
         continue;
@@ -35,19 +36,19 @@ function getMostPopularDishId(
     if (counts.size === 0) return "";
 
     // Find maximum in single pass
-    let maxId = "";
+    let maxName = "";
     let maxCount = -1;
 
-    for (const [id, count] of counts) {
+    for (const [name, count] of counts) {
       if (count > maxCount) {
         maxCount = count;
-        maxId = id;
+        maxName = name;
       }
     }
 
-    return maxId;
+    return maxName;
   } catch (error) {
-    console.error("Error in getMostPopularDishId:", error);
+    console.error("Error in getMostPopularDishName:", error);
     return "";
   }
 }
@@ -301,7 +302,7 @@ export function createMasterInstruction(
       availableMenuDoc,
     });
     const safeEventsInfo = processEventsInfo(eventsInfo);
-    const mostPopularDish = getMostPopularDishId(purchaseHistory);
+    const mostPopularDish = getMostPopularDishName(purchaseHistory);
     const menuAvailable = hasAvailableMenu(safeAvailableMenuDoc);
 
     // МАСТЕР-ИНСТРУКЦИЯ: Обучение модели правилам работы
@@ -356,7 +357,7 @@ export function createMasterInstruction(
 - в завершающем блоке передаем обязательную структуру каждого ответа.
 
 # ОБЯЗАТЕЛЬНАЯ СТРУКТУРА КАЖДОГО ОТВЕТА:
-Твой ответ должен содержать специальные интерактивные элементы в формате JSON:
+Твой ответ должен содержать специальные интерактивные элементы в формате JSON :
 
 1. SUGGESTIONS (кнопки-предложения):
    - Каждое предложение: МАКСИМУМ 3-5 слов
@@ -364,10 +365,10 @@ export function createMasterInstruction(
    - Формат: {"type": "data-suggestion", "id": "suggestion-X", "data": {"suggestion_id": "Текст кнопки"}}
    - Примеры хороших suggestions: "Токпокки","Роллы","Азиатский напиток-тренд","сладко-острое", "традиционное","блюда с рисом ","Сырное", "тёплый рамен", "Суп для души", "Лакомство для счастья", "Корн-дог с фри","Сладкое", "Острое", "Огненное", "Нет, спасибо"
 
-2. PRODUCT ID (идентификаторы продуктов):
+2. PRODUCT NAME (идентификаторы продуктов):
    - Используй ТОЛЬКО когда рекомендуешь конкретное блюдо из доступного меню
    - К каждому сообщению: НЕ БОЛЕЕ 1 PRODUCT 
-   - Формат: {"type": "data-product", "id": "product-X", "data": {"product_id": "реальный_id _as_uuid_продукта"}}
+   - Формат: {"type": "data-product", "id": "product-X", "data": {"product_name": "реальный_product_name"}}
    - НЕ используй если меню недоступно
 
 # ОБРАБОТКА ПОЛЬЗОВАТЕЛЬСКОГО ВВОДА:
@@ -378,7 +379,7 @@ export function createMasterInstruction(
 # СКРИПТЫ ВЫЯСНЕНИЯ ПРЕДПОЧТЕНИЙ - ОСНОВА ДЛЯ ГЕНЕРАЦИИ SUGGESTIONS
 - ранее сделанные предложения блюд не повторяем в suggestion;
 - suggestions для более частого повтора в сообщениях: хиты продаж, ново новинка, мне повезет ( показать случайное блюдо);
-- если были предложены блюда в перечислении в этом чате , значит перечисляем названия блюд из текущего ответа в suggestions, которые были представлены в перечислении, кроме главного блюда для которого уже сформировано product_id;
+- если были предложены блюда в перечислении в этом чате , значит перечисляем названия блюд из текущего ответа в suggestions, которые были представлены в перечислении, кроме главного блюда для которого уже сформировано product_name;
 - блюда из истории ранних покупок, которые еще не были показаны в чате;
 - блюда дополнения, которые традиционно дополняют друг друга, например к основным блюдам предложить закуски, к горячим напиткам предложить десерт.
 
@@ -623,7 +624,7 @@ ${mostPopularDish ? `- Можешь ненавязчиво предложить 
 - При рекомендациях указывай цену и основные характеристики
 - Если есть предпочтения из истории покупок - учитывай их приоритетно
 - ОБЯЗАТЕЛЬНО используй suggestions для интерактивности
-- ${menuAvailable ? "При рекомендации конкретных блюд прикрепляй product_id" : "НЕ используй product_id"}
+- ${menuAvailable && "При рекомендации конкретных блюд прикрепляй product_name"}
 
 ТОНАЛЬНОСТЬ И ПОДХОД:
 - Будь неформальной, но уважительной
@@ -636,8 +637,8 @@ ${
   !menuAvailable
     ? `- Поприветствуй ${userName}, извинись за отсутствие блюд, предложи вернуться позже и добавь 3 подходящих suggestions`
     : Array.isArray(purchaseHistory) && purchaseHistory.length > 0
-      ? `- Поприветствуй ${userName}, упомяни время с последнего посещения (${lastOrderInfo}), сделай 2-3 персональные рекомендации на основе истории покупок (ТОЛЬКО из доступного меню), используй product_id для конкретных блюд и добавь 3 релевантных suggestions`
-      : `- Поприветствуй нового клиента ${userName} и предложи популярные блюда из доступного меню, используя product_id и добавь 3 полезных suggestions для начала диалога`
+      ? `- Поприветствуй ${userName}, упомяни время с последнего посещения (${lastOrderInfo}), сделай 2-3 персональные рекомендации на основе истории покупок (ТОЛЬКО из доступного меню), используй product_name для конкретных блюд и добавь 3 релевантных suggestions`
+      : `- Поприветствуй нового клиента ${userName} и предложи популярные блюда из доступного меню, используя product_name и добавь 3 полезных suggestions для начала диалога`
 }
 
 `;
@@ -674,7 +675,7 @@ export function getDaysSinceLastOrder(
 export function getMostPopularDish(
   purchaseHistory: any[] | null | undefined
 ): string {
-  return getMostPopularDishId(purchaseHistory);
+  return getMostPopularDishName(purchaseHistory);
 }
 
 export function checkMenuAvailability(availableMenuDoc: string): boolean {

@@ -34,11 +34,8 @@ import { differenceInSeconds } from "date-fns";
 import { prisma } from "@/lib/db";
 
 import { Chat, Message, Prisma, UserType } from "@prisma/client";
-import { openai } from "@ai-sdk/openai";
 import { generateCuid } from "@/lib/utils/generateCuid";
 import { extractSubFromJWT } from "@/lib/utils/extract-sub-from-jwt";
-import { z } from "zod";
-import { createProductIdAnswer } from "../../../(_service)/(_libs)/ai/tools/create-product-is-answer";
 
 export const maxDuration = 60;
 
