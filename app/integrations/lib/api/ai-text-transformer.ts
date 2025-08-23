@@ -1,4 +1,4 @@
-// @/app/integrations/lib/ai-text-transformer.ts
+// @/app/integrations/lib/api/ai-text-transformer.ts
 
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
@@ -93,13 +93,28 @@ ${rawTextData}
 2. Найди и извлеки JSON фрагменты типа "data-product" и "data-suggestion"
 3. Преобразуй найденные данные в правильный формат parts
 
+🚨 СТРОГИЕ ПРАВИЛА ПОРЯДКА В МАССИВЕ PARTS:
+ОБЯЗАТЕЛЬНО СОБЛЮДАЙ СТРОГУЮ ПОСЛЕДОВАТЕЛЬНОСТЬ:
+1. ПЕРВЫМ всегда должен быть объект с type: "text" (основной текст)
+2. ВТОРЫМИ идут все объекты с type: "data-product" (если есть)
+3. ПОСЛЕДНИМИ идут все объекты с type: "data-suggestion" (если есть)
+
 ПРАВИЛА ПРЕОБРАЗОВАНИЯ:
-- Для data-product: создай объект с type: "data-product", уникальным id (например "product-1"), и в data.product_id значение из исходного JSON
+- Для data-product: создай объект с type: "data-product", уникальным id (например "product-1", "product-2"), и в data.product_id значение из исходного JSON
 - Для data-suggestion: создай объект с type: "data-suggestion", уникальным id (например "suggestion-1", "suggestion-2"), и в data.suggestion_id значение из исходного JSON
-- Основной текст помести в part с type: "text"
+- Основной текст помести в part с type: "text" - он должен быть ПЕРВЫМ в массиве
 - Сохрани исходные значения id, createdAt и type сообщения
 
-ПРИМЕР ЖЕЛАЕМОГО РЕЗУЛЬТАТА:
+ОБЯЗАТЕЛЬНАЯ СТРУКТУРА МАССИВА PARTS:
+[
+  { "type": "text", ... },           // ВСЕГДА ПЕРВЫЙ
+  { "type": "data-product", ... },   // ВТОРЫЕ (если есть)
+  { "type": "data-product", ... },   // (если несколько продуктов)
+  { "type": "data-suggestion", ... }, // ПОСЛЕДНИЕ (если есть)
+  { "type": "data-suggestion", ... }  // (если несколько предложений)
+]
+
+ПРИМЕР ПРАВИЛЬНОГО РЕЗУЛЬТАТА:
 {
   "type": "update-message",
   "message": {
@@ -124,12 +139,20 @@ ${rawTextData}
         "data": {
           "suggestion_id": "Сладкое"
         }
+      },
+      {
+        "type": "data-suggestion",
+        "id": "suggestion-2",
+        "data": {
+          "suggestion_id": "Напитки"
+        }
       }
     ]
   }
 }
 
 Верни только структурированный JSON результат без дополнительных комментариев.
+КРИТИЧЕСКИ ВАЖНО: Строго соблюдай порядок parts: text → data-product → data-suggestion
 `;
 
     const result = await generateObject({
@@ -139,6 +162,15 @@ ${rawTextData}
       temperature: 0.1, // Низкая температура для точности
     });
 
+    // Проверяем порядок parts после генерации AI
+    const isOrderCorrect = validatePartsOrder(result.object.message.parts);
+    if (!isOrderCorrect) {
+      console.warn(
+        "⚠️ AI сгенерировал неправильный порядок parts, исправляем..."
+      );
+      result.object.message.parts = reorderParts(result.object.message.parts);
+    }
+
     console.log(
       "✅ AI Text Transformer: успешно преобразовано в StreamingMessage"
     );
@@ -147,31 +179,41 @@ ${rawTextData}
   } catch (error) {
     console.error("❌ AI Text Transformer error:", error);
 
-    // Fallback: попытка простой обработки без AI
+    // Fallback: обработка без AI с правильным порядком
     try {
       const parsedData = JSON.parse(rawTextData);
       if (parsedData.message && parsedData.message.parts) {
-        // Простое преобразование без AI
-        const parts: MessagePart[] = [];
+        const textParts: MessagePart[] = [];
+        const productParts: MessagePart[] = [];
+        const suggestionParts: MessagePart[] = [];
 
         for (const part of parsedData.message.parts) {
           if (part.type === "text") {
-            // Удаляем JSON фрагменты из текста простым способом
             const cleanText = part.text
               .replace(/\{\"type\":\s*\"data-product\"[^}]*\}/g, "")
+              .replace(/\{\"type\":\s*\"data-suggestion\"[^}]*\}/g, "")
               .trim();
             if (cleanText) {
-              parts.push({
+              textParts.push({
                 type: "text",
                 text: cleanText,
               });
             }
-          } else if (part.type === "data-suggestion") {
-            parts.push(part as SuggestionPart);
           } else if (part.type === "data-product") {
-            parts.push(part as ProductPart);
+            productParts.push(part as ProductPart);
+          } else if (part.type === "data-suggestion") {
+            suggestionParts.push(part as SuggestionPart);
           }
         }
+
+        // Объединяем в правильном порядке: text → data-product → data-suggestion
+        const orderedParts = [
+          ...textParts,
+          ...productParts,
+          ...suggestionParts,
+        ];
+
+        console.log("✅ Fallback: применен правильный порядок parts");
 
         return {
           type: parsedData.type || "update-message",
@@ -179,7 +221,7 @@ ${rawTextData}
             id: parsedData.message.id,
             role: "assistant",
             createdAt: parsedData.message.createdAt,
-            parts: parts,
+            parts: orderedParts,
           },
         };
       }
@@ -189,6 +231,49 @@ ${rawTextData}
 
     return null;
   }
+}
+
+/**
+ * Validate that parts are in correct order: text → data-product → data-suggestion
+ */
+export function validatePartsOrder(parts: MessagePart[]): boolean {
+  let currentStage = 0; // 0: text, 1: data-product, 2: data-suggestion
+
+  for (const part of parts) {
+    if (part.type === "text" && currentStage > 0) {
+      return false; // text should come first
+    }
+    if (part.type === "data-product") {
+      if (currentStage === 0) currentStage = 1;
+      if (currentStage > 1) return false; // data-product after data-suggestion
+    }
+    if (part.type === "data-suggestion") {
+      currentStage = 2;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Reorder parts to correct sequence: text → data-product → data-suggestion
+ */
+export function reorderParts(parts: MessagePart[]): MessagePart[] {
+  const textParts: MessagePart[] = [];
+  const productParts: MessagePart[] = [];
+  const suggestionParts: MessagePart[] = [];
+
+  for (const part of parts) {
+    if (part.type === "text") {
+      textParts.push(part);
+    } else if (part.type === "data-product") {
+      productParts.push(part);
+    } else if (part.type === "data-suggestion") {
+      suggestionParts.push(part);
+    }
+  }
+
+  return [...textParts, ...productParts, ...suggestionParts];
 }
 
 /**
