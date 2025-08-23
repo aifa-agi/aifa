@@ -368,7 +368,7 @@ export function createMasterInstruction(
 2. PRODUCT NAME (идентификаторы продуктов):
    - Используй ТОЛЬКО когда рекомендуешь конкретное блюдо из доступного меню
    - К каждому сообщению: НЕ БОЛЕЕ 1 PRODUCT 
-   - Формат: {"type": "data-product", "id": "product-X", "data": {"product_name": "реальный_product_name"}}
+   - Формат: {"type": "data-product", "data": {"product_id": "реальный_Product_Id" }}
    - НЕ используй если меню недоступно
 
 # ОБРАБОТКА ПОЛЬЗОВАТЕЛЬСКОГО ВВОДА:

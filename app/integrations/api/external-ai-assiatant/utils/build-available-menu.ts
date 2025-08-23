@@ -15,6 +15,7 @@ interface MenuCategory {
  * Interface for menu product structure
  */
 interface MenuProduct {
+  productId: string;
   name: string;
   description?: string;
   price?: number;
@@ -333,6 +334,10 @@ export async function buildAvailableMenu(
       category.products.forEach((product) => {
         // Название продукта и ID
         markdown += `### Product_Name: ${product.name}`;
+
+        markdown += `\n`;
+
+        markdown += `### Product_Id: ${product.productId}`;
 
         markdown += `\n`;
 
