@@ -171,9 +171,6 @@ export function removeAllJsonFragmentsAggressive(text: string): string {
   return cleanedText.trim();
 }
 
-/**
- * Utility function to check if text contains JSON fragments
- */
 export function hasJsonFragments(text: string): boolean {
   return (
     text.includes("{") ||
