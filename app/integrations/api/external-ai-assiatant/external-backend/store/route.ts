@@ -212,7 +212,7 @@ export async function GET(req: NextRequest) {
     const products = await prisma.product.findMany({
       select: {
         productId: true,
-        productName: true, // НОВОЕ ПОЛЕ
+        productName: true,
         tags: true,
         productInfo: true,
         updatedAt: true,

@@ -34,6 +34,21 @@ function isObject(value: any): value is Record<string, any> {
 }
 
 /**
+ * НОВАЯ ФУНКЦИЯ: Получение короткого идентификатора для меню
+ * Использует первые 6 символов от product_id для компактного отображения
+ * @param productId - Полный идентификатор продукта
+ * @returns Короткий идентификатор (первые 6 символов)
+ */
+function getShortProductId(productId: string): string {
+  if (!productId || typeof productId !== "string") {
+    return "UNKNOWN";
+  }
+
+  // Возвращаем первые 6 символов, если длина меньше 6 - возвращаем как есть
+  return productId.length >= 6 ? productId.substring(0, 6) : productId;
+}
+
+/**
  * Helper function to safely extract product name from productInfo
  */
 function getProductName(productInfo: any, fallbackId: string): string {
@@ -200,6 +215,7 @@ function parseAvailableProducts(
 /**
  * ГЛАВНАЯ ФУНКЦИЯ: Построение меню на основе доступных продуктов из базы данных
  * Фильтрует продукты по массиву available_products
+ * ОБНОВЛЕНО: Использует короткие идентификаторы (первые 6 символов) для отображения в меню
  *
  * @param availableProducts - Массив ID доступных продуктов
  * @returns Promise<string> - Markdown форматированный документ меню
@@ -332,13 +348,12 @@ export async function buildAvailableMenu(
       markdown += `## ${category.name}\n\n`;
 
       category.products.forEach((product) => {
-        // Название продукта и ID
-        markdown += `### Product_Name: ${product.name}`;
-
+        // Название продукта
+        markdown += `### Name: ${product.name}`;
         markdown += `\n`;
 
-        markdown += `### Product_Id: ${product.productId}`;
-
+        // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: Используем короткий идентификатор (первые 6 символов)
+        markdown += `### Id: ${getShortProductId(product.productId)}`;
         markdown += `\n`;
 
         // Описание
@@ -380,6 +395,9 @@ export async function buildAvailableMenu(
     markdown += `---\n\n`;
     markdown += `**Всего позиций в меню:** ${totalProducts}  \n`;
     markdown += `**Категорий:** ${totalCategories}\n\n`;
+
+    // ДОБАВЛЯЕМ ПРИМЕЧАНИЕ О КОРОТКИХ ИДЕНТИФИКАТОРАХ
+    markdown += `*Примечание: Id показан в сокращенном виде (первые 6 символов) для удобства отображения*\n\n`;
 
     return markdown;
   } catch (error) {
@@ -453,6 +471,7 @@ export async function validateAvailableProducts(
 ): Promise<{
   existingProducts: string[];
   missingProducts: string[];
+  shortIdMapping: Record<string, string>; // Добавлено: маппинг коротких ID к полным
 }> {
   try {
     const requestedIds = parseAvailableProducts(availableProducts);
@@ -461,6 +480,7 @@ export async function validateAvailableProducts(
       return {
         existingProducts: [],
         missingProducts: [],
+        shortIdMapping: {},
       };
     }
 
@@ -478,16 +498,54 @@ export async function validateAvailableProducts(
     const existingIds = existingProducts.map((p) => p.productId);
     const missingIds = requestedIds.filter((id) => !existingIds.includes(id));
 
+    // НОВОЕ: Создаем маппинг коротких ID к полным
+    const shortIdMapping: Record<string, string> = {};
+    existingIds.forEach((fullId) => {
+      const shortId = getShortProductId(fullId);
+      shortIdMapping[shortId] = fullId;
+    });
+
     return {
       existingProducts: existingIds,
       missingProducts: missingIds,
+      shortIdMapping,
     };
   } catch (error) {
     console.error("Error validating available products:", error);
     return {
       existingProducts: [],
       missingProducts: [],
+      shortIdMapping: {},
     };
+  }
+}
+
+/**
+ * НОВАЯ ФУНКЦИЯ: Поиск полного ID продукта по короткому ID
+ * @param shortId - Короткий идентификатор (первые 6 символов)
+ * @param availableProducts - Массив доступных продуктов для поиска
+ * @returns Promise<string | null> - Полный ID продукта или null если не найден
+ */
+export async function findFullProductId(
+  shortId: string,
+  availableProducts: string[] | string | null | undefined
+): Promise<string | null> {
+  try {
+    const productIds = parseAvailableProducts(availableProducts);
+
+    if (productIds.length === 0 || !shortId) {
+      return null;
+    }
+
+    // Ищем полный ID, который начинается с короткого ID
+    const matchingId = productIds.find((fullId) =>
+      fullId.toLowerCase().startsWith(shortId.toLowerCase())
+    );
+
+    return matchingId || null;
+  } catch (error) {
+    console.error("Error finding full product ID:", error);
+    return null;
   }
 }
 
@@ -509,5 +567,5 @@ function normalizeProductName(name: string): string {
     .trim(); // Убираем лишние пробелы по краям
 }
 
-// Экспортируем функцию нормализации для использования в других частях приложения
-export { normalizeProductName };
+// Экспортируем функции для использования в других частях приложения
+export { normalizeProductName, getShortProductId };
