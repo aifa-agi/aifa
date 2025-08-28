@@ -21,6 +21,10 @@ export interface SectionInfo {
   id: string;
   summary?: SummaryData;
   linksData?: LinksData[];
+  keywords?: string[];
+  intent?: string;
+  taxonomy?: string;
+  attention?: string;
 }
 export interface SummaryData {
   id: string;
@@ -56,7 +60,10 @@ export interface PageData {
   title?: string;
   description?: string;
   images?: PageImages[];
-  keyWords?: string[];
+  keywords?: string[];
+  intent?: string;
+  taxonomy?: string;
+  attention?: string;
   href?: string;
   roles: UserType[];
   hasBadge?: boolean;

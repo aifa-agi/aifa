@@ -52,7 +52,7 @@ export function usePageData({
     () => ({
       hasTitleData: Boolean(currentPageData.title?.trim()),
       hasDescriptionData: Boolean(currentPageData.description?.trim()),
-      hasKeywordsData: Boolean(currentPageData.keyWords?.length),
+      hasKeywordsData: Boolean(currentPageData.keywords?.length),
       hasImagesData: Boolean(currentPageData.images?.length),
     }),
     [currentPageData]

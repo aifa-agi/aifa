@@ -112,21 +112,21 @@ export function usePageActions({
       const currentPage = getCurrentPageData();
 
       dialogs.show({
-        type: currentPage.keyWords?.length ? "edit" : "create",
+        type: currentPage.keywords?.length ? "edit" : "create",
         inputType: "keywords",
-        title: currentPage.keyWords?.length ? "Edit Keywords" : "Add Keywords",
-        description: currentPage.keyWords?.length
-          ? `Current keywords: ${currentPage.keyWords.length} keyword${currentPage.keyWords.length > 1 ? "s" : ""}`
+        title: currentPage.keywords?.length ? "Edit Keywords" : "Add Keywords",
+        description: currentPage.keywords?.length
+          ? `Current keywords: ${currentPage.keywords.length} keyword${currentPage.keywords.length > 1 ? "s" : ""}`
           : "Enter keywords for this page to improve SEO",
-        keywords: currentPage.keyWords?.length
-          ? [...currentPage.keyWords]
+        keywords: currentPage.keywords?.length
+          ? [...currentPage.keywords]
           : [""],
-        confirmLabel: currentPage.keyWords?.length
+        confirmLabel: currentPage.keywords?.length
           ? "Update Keywords"
           : "Add Keywords",
         onConfirm: (_, keywords) => {
           updatePageInCategories(singlePage.id, {
-            keyWords: keywords && keywords.length > 0 ? keywords : [],
+            keywords: keywords && keywords.length > 0 ? keywords : [],
           });
         },
       });

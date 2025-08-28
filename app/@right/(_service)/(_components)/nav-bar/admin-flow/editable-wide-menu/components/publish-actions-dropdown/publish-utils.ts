@@ -20,8 +20,8 @@ export function hasPageContent(page: PageData): boolean {
       page.description.trim().length > 0 &&
       page.images &&
       page.images.length > 0 &&
-      page.keyWords &&
-      page.keyWords.length > 0 &&
+      page.keywords &&
+      page.keywords.length > 0 &&
       page.sections &&
       page.sections.length > 0
   );

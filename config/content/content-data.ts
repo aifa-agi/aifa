@@ -24,7 +24,7 @@ export const contentData = {
           order: 1,
           title: "Паромы на Тенерифе",
           description: ": Полный гид по морским перевозкам 2025",
-          keyWords: ["Паромы на Тенерифе"],
+          keywords: ["Паромы на Тенерифе"],
           images: [
             {
               id: "uyto1jwjrxkkykis19o7w9jg",
@@ -269,7 +269,7 @@ export const contentData = {
           order: 2,
           title: "паром из Кадис",
           description: "Забронируйте паром из Кадис",
-          keyWords: ["паром из Кадис"],
+          keywords: ["паром из Кадис"],
           images: [
             {
               id: "r4qubk99cxtzrevmwpjjznfe",
@@ -319,7 +319,7 @@ export const contentData = {
               href: "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/logo-DdZf25dGZUGryUbrmCK29xtMK5w1cw.png",
             },
           ],
-          keyWords: ["Ai"],
+          keywords: ["Ai"],
         },
       ],
       order: 5,
@@ -399,7 +399,7 @@ export const contentData = {
               href: "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-11-12%20094730-uYZwK1JE32RlrVVJjkALvOK6OBH8uz.png",
             },
           ],
-          keyWords: ["About"],
+          keywords: ["About"],
         },
       ],
       order: 7,

@@ -26,7 +26,7 @@ export function hasPageContent(page: PageData): boolean {
   const hasImages = Boolean(page.images && page.images.length > 0);
 
   // Check keywords (must have at least one)
-  const hasKeywords = Boolean(page.keyWords && page.keyWords.length > 0);
+  const hasKeywords = Boolean(page.keywords && page.keywords.length > 0);
 
   // Check sections (must have at least one)
   const hasSections = Boolean(page.sections && page.sections.length > 0);
