@@ -186,7 +186,7 @@ export function AdminPageStructure({ slug }: AdminPageInfoProps) {
     const pageTitle = page.title || page.linkName || "Untitled Page";
     const pageDescription = page.description || "No description available";
     const pageImages = page.images || [];
-    const pageKeywords = page.keyWords || [];
+    const pageKeywords = page.keywords || [];
 
     // Get selected style and format details
     const selectedStyle = WRITING_STYLES.find(
@@ -927,7 +927,7 @@ export interface PageSections {
               <div>
                 <span className="text-muted-foreground">Keywords:</span>
                 <span className="ml-2">
-                  {page.keyWords?.length || 0} defined
+                  {page.keywords?.length || 0} defined
                 </span>
               </div>
               <div>
