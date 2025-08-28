@@ -116,6 +116,7 @@ export function useMenuOperations(
                       hasBadge: false,
                       type: "blog" as PageType,
                       isPublished: false,
+                      isAddedToPrompt: false,
                       isVectorConnected: false,
                       isChatSynchronized: false,
                       order:

@@ -65,6 +65,7 @@ export interface PageData {
   order?: number;
   isPublished: boolean;
   isVectorConnected: boolean;
+  isAddedToPrompt: boolean;
   isChatSynchronized: boolean;
   type: PageType;
   design?: string;

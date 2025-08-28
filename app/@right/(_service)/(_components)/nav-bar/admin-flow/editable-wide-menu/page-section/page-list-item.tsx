@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { humanize } from "@/app/@right/(_service)/(_libs)/humanize";
 import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
 import { Badge } from "@/components/ui/badge";
+import { AddToPromptActionsDropdown } from "../components/add-to-prompt-actions-dropdown";
 
 const greenDotClass = "bg-emerald-500";
 
@@ -121,6 +122,11 @@ export function PageListItem({
             setCategories={setCategories}
           />
           <VectorStoreActionsDropdown
+            singlePage={page}
+            categoryTitle={categoryTitle}
+            setCategories={setCategories}
+          />
+          <AddToPromptActionsDropdown
             singlePage={page}
             categoryTitle={categoryTitle}
             setCategories={setCategories}
