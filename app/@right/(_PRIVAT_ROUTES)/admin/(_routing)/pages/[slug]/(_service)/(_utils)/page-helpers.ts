@@ -1,7 +1,6 @@
-
 // @/app/(_routing)/admin/pages/[slug]/(_service)/(_components)/admin-pages/admin-page-sections/utils/page-helpers.ts
 
-import { MenuCategory } from "@/app/(_service)/types/menu-types";
+import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
 
 export const findPageBySlug = (
   categories: MenuCategory[],
