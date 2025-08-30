@@ -1,5 +1,4 @@
-// @/app/(_routing)/admin/pages/[slug]/(_service)/(_components)/admin-pages/components/page-not-found/page-not-found.tsx
-
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/page-not-found.tsx
 import React from "react";
 import { AlertCircle } from "lucide-react";
 

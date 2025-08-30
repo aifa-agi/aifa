@@ -1,3 +1,5 @@
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/admin-page-info.tsx
+
 "use client";
 
 import React from "react";

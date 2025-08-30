@@ -1,5 +1,4 @@
-// @/app/(_routing)/admin/pages/[slug]/(_service)/(_components)/admin-pages/admin-page-sections/utils/page-helpers.ts
-
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_utils)/page-helpers.ts
 import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
 
 export const findPageBySlug = (

@@ -6,7 +6,7 @@ import { AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { PageDataStatus, PageActionsHook } from "../types";
-import { StatusIndicator } from "./status-indicator";
+import { StatusIndicator } from "../status-indicator";
 import { usePageBodyStatus } from "../hooks/use-page-body-status";
 import { useEffect, useState } from "react";
 import {

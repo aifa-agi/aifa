@@ -1,6 +1,6 @@
 // @/app/(_service)/components/nav-bar/admin-flow/page-actions-dropdown/components/page-type-menu.tsx
 
-import { StatusIndicator } from "./status-indicator";
+import { StatusIndicator } from "../status-indicator";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,

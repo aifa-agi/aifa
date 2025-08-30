@@ -1,40 +1,90 @@
-// @/app/admin/pages/[slug]/(_service)/(_components)/admin-page-nav-bar.tsx
-
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-page-nav-bar.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { useAdminPagesNav } from "../(_context)/admin-pages-nav-context";
-import { ADMIN_PAGES_TABS } from "../(_config)/admin-pages-config";
+import {
+  ADMIN_PAGES_TABS,
+  IndicatorStatus,
+} from "../(_config)/admin-pages-config";
+import { AdminPageTab } from "../(_context)/admin-pages-nav-context";
 
-/**
- * Navigation bar component for admin pages
- * Uses centralized configuration for tab settings
- */
+const getIndicatorColor = (status: IndicatorStatus): string => {
+  switch (status) {
+    case "gray":
+      return "bg-gray-400";
+    case "orange":
+      return "bg-orange-500";
+    case "green":
+      return "bg-green-500";
+    default:
+      return "bg-gray-400";
+  }
+};
+
 export default function AdminPagesNavBar() {
-  const { activeTab, setActiveTab } = useAdminPagesNav();
+  const { activeTab, setActiveTab, getIndicatorStatus, canActivateStep } =
+    useAdminPagesNav();
+
+  const handleTabClick = (tabKey: AdminPageTab) => {
+    const indicatorStatus = getIndicatorStatus(tabKey);
+
+    // Allow click only if:
+    // 1. Tab is "info" (always accessible)
+    // 2. Tab has green indicator (completed)
+    // 3. Tab has orange indicator (ready to activate)
+    // Prevent click if tab has gray indicator (not ready)
+    if (
+      tabKey === "info" ||
+      indicatorStatus === "green" ||
+      indicatorStatus === "orange"
+    ) {
+      setActiveTab(tabKey);
+    }
+  };
 
   return (
     <div className="w-full max-w-full overflow-x-hidden">
       <div className="overflow-x-auto custom-scrollbar">
         <div className="flex justify-end flex-row gap-1 min-w-max pb-2">
-          {ADMIN_PAGES_TABS.map((tab) => (
-            <Button
-              key={tab.key}
-              variant={activeTab === tab.key ? "default" : "outline"}
-              onClick={() => setActiveTab(tab.key)}
-              title={tab.description} // Добавляем tooltip с описанием
-              className={`
-                whitespace-nowrap shrink-0
-                ${
-                  activeTab === tab.key
-                    ? "bg-primary text-primary-foreground"
-                    : ""
+          {ADMIN_PAGES_TABS.map((tab) => {
+            const indicatorStatus = getIndicatorStatus(tab.key);
+            const isClickable =
+              tab.key === "info" ||
+              indicatorStatus === "green" ||
+              indicatorStatus === "orange";
+
+            return (
+              <Button
+                key={tab.key}
+                variant={activeTab === tab.key ? "default" : "outline"}
+                onClick={() => handleTabClick(tab.key)}
+                disabled={!isClickable}
+                title={
+                  !isClickable
+                    ? `${tab.description} - Complete dependencies first to access`
+                    : tab.description
                 }
-              `}
-            >
-              {tab.label}
-            </Button>
-          ))}
+                className={`
+                  whitespace-nowrap shrink-0 relative
+                  ${tab.hasIndicator ? "pl-8" : ""}
+                  ${
+                    activeTab === tab.key
+                      ? "bg-primary text-primary-foreground"
+                      : ""
+                  }
+                  ${!isClickable ? "opacity-50 cursor-not-allowed" : ""}
+                `}
+              >
+                {tab.hasIndicator && indicatorStatus && (
+                  <div
+                    className={`absolute left-4 top-1/2 transform -translate-y-1/2 size-1 rounded-full ${getIndicatorColor(indicatorStatus)}`}
+                  />
+                )}
+                {tab.label}
+              </Button>
+            );
+          })}
         </div>
       </div>
     </div>

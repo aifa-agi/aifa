@@ -1,4 +1,4 @@
-// @/app/@right/admin/layout.tsx
+// @/app/@right/(_PRIVAT_ROUTES)/admin/layout.tsx
 
 import { auth } from "@/app/@left/(_public)/(_AUTH)/(_service)/(_actions)/auth";
 import { redirect } from "next/navigation";
