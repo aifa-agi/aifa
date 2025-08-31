@@ -91,7 +91,7 @@ async function getCurrentFileFromGitHub(): Promise<{
 
 function generateFileContent(categories: any[]): string {
   const timestamp = new Date().toISOString();
-  return `import { MenuCategory } from "@/app/(_service)/types/menu-types";
+  return `import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
 
 export const contentData = {
   categories: ${JSON.stringify(categories, null, 2)}
