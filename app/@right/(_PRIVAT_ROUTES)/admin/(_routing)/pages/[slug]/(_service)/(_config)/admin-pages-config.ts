@@ -1,5 +1,3 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_config)/admin-pages-config.ts
-
 import { AdminPageTab } from "../(_context)/admin-pages-nav-context";
 
 export type IndicatorStatus = "gray" | "orange" | "green";
@@ -15,6 +13,7 @@ export interface AdminPageTabConfig {
   etapNumber?: number;
   stepType: StepType;
   dependencies?: AdminPageTab[];
+  titleForRequired?: string; // Новое поле для отображения в режиме Required Only
 }
 
 export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
@@ -85,6 +84,7 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
     etapNumber: 5,
     stepType: "required",
     dependencies: [],
+    titleForRequired: "Step 1", // В режиме Required Only показывается как Step 1
   },
   {
     key: "step6",
@@ -97,6 +97,7 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
     etapNumber: 6,
     stepType: "required",
     dependencies: ["step5"],
+    titleForRequired: "Step 2", // В режиме Required Only показывается как Step 2
   },
   {
     key: "step7",
@@ -120,6 +121,7 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
     etapNumber: 8,
     stepType: "required",
     dependencies: ["step6"],
+    titleForRequired: "Step 3", // В режиме Required Only показывается как Step 3
   },
   {
     key: "step9",
@@ -153,8 +155,8 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
     hasIndicator: true,
     defaultIndicatorStatus: "gray",
     etapNumber: 11,
-    stepType: "required",
-    dependencies: ["step8"],
+    stepType: "optional",
+    dependencies: ["step10"],
   },
   {
     key: "preview",
@@ -164,7 +166,7 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
     hasIndicator: true,
     defaultIndicatorStatus: "gray",
     stepType: "required",
-    dependencies: ["step8"],
+    dependencies: ["step6"],
   },
   {
     key: "deploy",
@@ -175,7 +177,8 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
     hasIndicator: true,
     defaultIndicatorStatus: "gray",
     stepType: "required",
-    dependencies: ["preview"],
+    dependencies: ["step6"],
+    titleForRequired: "Deploy", // Остается Deploy в обоих режимах
   },
 ];
 

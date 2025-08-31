@@ -1,4 +1,3 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_context)/admin-pages-nav-context.tsx
 "use client";
 
 import {
@@ -31,6 +30,8 @@ export type AdminPageTab =
   | "preview"
   | "deploy";
 
+export type DisplayMode = "all" | "required";
+
 type IndicatorStatuses = {
   [K in AdminPageTab]?: IndicatorStatus;
 };
@@ -46,6 +47,8 @@ interface AdminPagesNavContextType {
   markStepAsCompleted: (step: AdminPageTab) => void;
   canActivateStep: (step: AdminPageTab) => boolean;
   isStepCompleted: (step: AdminPageTab) => boolean;
+  displayMode: DisplayMode;
+  setDisplayMode: (mode: DisplayMode) => void;
 }
 
 const AdminPagesNavContext = createContext<
@@ -65,6 +68,7 @@ export function AdminPagesNavBarProvider({
 }: AdminPagesNavBarProviderProps) {
   const [activeTab, setActiveTab] = useState<AdminPageTab>(defaultTab);
   const [completedSteps, setCompletedSteps] = useState<AdminPageTab[]>([]);
+  const [displayMode, setDisplayMode] = useState<DisplayMode>("required");
 
   // Инициализация начальных статусов
   const initialStatuses: IndicatorStatuses = {};
@@ -137,6 +141,8 @@ export function AdminPagesNavBarProvider({
     markStepAsCompleted,
     canActivateStep: canActivateStepLocal,
     isStepCompleted,
+    displayMode,
+    setDisplayMode,
   };
 
   return (

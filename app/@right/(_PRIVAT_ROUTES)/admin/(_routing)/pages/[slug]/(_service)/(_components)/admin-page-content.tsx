@@ -3,10 +3,12 @@
 "use client";
 
 import { useAdminPagesNav } from "../(_context)/admin-pages-nav-context";
+import { AdminPageDeploy } from "./admin-pages/admin-page-deploy";
 import { AdminPageInfo } from "./admin-pages/admin-page-info";
 import { AdminPagePreview } from "./admin-pages/admin-page-preview";
 import { AdminPageStep1 } from "./admin-pages/steps/step1/step1";
 import { AdminPageStep10 } from "./admin-pages/steps/step10/step10";
+import { AdminPageStep11 } from "./admin-pages/steps/step11/step11";
 import { AdminPageStep2 } from "./admin-pages/steps/step2/step2";
 import { AdminPageStep3 } from "./admin-pages/steps/step3/step3";
 import { AdminPageStep4 } from "./admin-pages/steps/step4/step4";
@@ -42,9 +44,12 @@ export function AdminPageContent() {
       return <AdminPageStep9 slug={slug} />;
     case "step10":
       return <AdminPageStep10 slug={slug} />;
-
+    case "step11":
+      return <AdminPageStep11 slug={slug} />;
     case "preview":
       return <AdminPagePreview slug={slug} />;
+    case "deploy":
+      return <AdminPageDeploy slug={slug} />;
     default:
       return <AdminPageInfo slug={slug} />;
   }

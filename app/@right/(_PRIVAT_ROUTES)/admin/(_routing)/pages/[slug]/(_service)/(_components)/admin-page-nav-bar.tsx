@@ -1,13 +1,14 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-page-nav-bar.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useAdminPagesNav } from "../(_context)/admin-pages-nav-context";
+import {
+  AdminPageTab,
+  useAdminPagesNav,
+} from "../(_context)/admin-pages-nav-context";
 import {
   ADMIN_PAGES_TABS,
   IndicatorStatus,
 } from "../(_config)/admin-pages-config";
-import { AdminPageTab } from "../(_context)/admin-pages-nav-context";
 
 const getIndicatorColor = (status: IndicatorStatus): string => {
   switch (status) {
@@ -23,8 +24,28 @@ const getIndicatorColor = (status: IndicatorStatus): string => {
 };
 
 export default function AdminPagesNavBar() {
-  const { activeTab, setActiveTab, getIndicatorStatus, canActivateStep } =
+  const { activeTab, setActiveTab, getIndicatorStatus, displayMode } =
     useAdminPagesNav();
+
+  // Фильтрация табов в зависимости от режима отображения
+  const getFilteredTabs = () => {
+    if (displayMode === "required") {
+      // Показать только Required шаги + Info
+      return ADMIN_PAGES_TABS.filter(
+        (tab) => tab.stepType === "required" || tab.key === "info"
+      );
+    }
+    // Показать все табы
+    return ADMIN_PAGES_TABS;
+  };
+
+  // Получение правильного label в зависимости от режима отображения
+  const getTabLabel = (tab: (typeof ADMIN_PAGES_TABS)[0]): string => {
+    if (displayMode === "required" && tab.titleForRequired) {
+      return tab.titleForRequired;
+    }
+    return tab.label;
+  };
 
   const handleTabClick = (tabKey: AdminPageTab) => {
     const indicatorStatus = getIndicatorStatus(tabKey);
@@ -43,16 +64,20 @@ export default function AdminPagesNavBar() {
     }
   };
 
+  const filteredTabs = getFilteredTabs();
+
   return (
     <div className="w-full max-w-full overflow-x-hidden">
       <div className="overflow-x-auto custom-scrollbar">
         <div className="flex justify-end flex-row gap-1 min-w-max pb-2">
-          {ADMIN_PAGES_TABS.map((tab) => {
+          {filteredTabs.map((tab) => {
             const indicatorStatus = getIndicatorStatus(tab.key);
             const isClickable =
               tab.key === "info" ||
               indicatorStatus === "green" ||
               indicatorStatus === "orange";
+
+            const tabLabel = getTabLabel(tab);
 
             return (
               <Button
@@ -81,7 +106,7 @@ export default function AdminPagesNavBar() {
                     className={`absolute left-4 top-1/2 transform -translate-y-1/2 size-1 rounded-full ${getIndicatorColor(indicatorStatus)}`}
                   />
                 )}
-                {tab.label}
+                {tabLabel}
               </Button>
             );
           })}

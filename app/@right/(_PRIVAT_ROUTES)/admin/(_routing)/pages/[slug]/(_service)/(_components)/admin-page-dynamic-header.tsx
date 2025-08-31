@@ -1,21 +1,25 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-page-dynamic-header.tsx
 "use client";
 
-import { useAdminPagesNav } from "../(_context)/admin-pages-nav-context";
+import {
+  DisplayMode,
+  useAdminPagesNav,
+} from "../(_context)/admin-pages-nav-context";
 import {
   ADMIN_PAGES_TABS,
   ADMIN_PAGES_CONFIG,
 } from "../(_config)/admin-pages-config";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
 
 /**
  * Component that displays dynamic title and description based on active tab
  * Updates both title and description when user switches between tabs
  * Also shows step type (required/optional) with appropriate styling
+ * Includes toggle for navigation display mode
  */
 export function AdminPageDynamicHeader() {
-  const { activeTab } = useAdminPagesNav();
+  const { activeTab, displayMode, setDisplayMode } = useAdminPagesNav();
 
   // Find the active tab configuration to get its title and description
   const activeTabConfig = ADMIN_PAGES_TABS.find((tab) => tab.key === activeTab);
@@ -56,6 +60,23 @@ export function AdminPageDynamicHeader() {
     );
   };
 
+  const handleDisplayModeToggle = () => {
+    const newMode: DisplayMode = displayMode === "all" ? "required" : "all";
+    setDisplayMode(newMode);
+  };
+
+  // Определяем variant и другие свойства кнопки
+  const isShowingAll = displayMode === "all";
+  const buttonIcon = isShowingAll ? (
+    <EyeOff className="size-4" />
+  ) : (
+    <Eye className="size-4" />
+  );
+  const buttonText = isShowingAll ? "light version" : "PRO version";
+  const buttonVariant: "outline" | "secondary" = isShowingAll
+    ? "outline"
+    : "secondary";
+
   return (
     <div className="mb-6 pb-4 border-b w-[450px] min-w-[250px]">
       <h1 className="text-2xl font-bold mb-2 line-clamp-1">{title}</h1>
@@ -63,6 +84,24 @@ export function AdminPageDynamicHeader() {
 
       {/* Step type information - displayed below description */}
       {getStepTypeDisplay()}
+
+      {/* Display mode toggle - displayed below step type */}
+      <div className="flex items-center gap-3 mt-4 pt-3 border-t border-border/30">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Content generator:
+          </span>
+          <Button
+            variant={buttonVariant}
+            size="sm"
+            onClick={handleDisplayModeToggle}
+            className="h-8 gap-2"
+          >
+            {buttonIcon}
+            {buttonText}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
