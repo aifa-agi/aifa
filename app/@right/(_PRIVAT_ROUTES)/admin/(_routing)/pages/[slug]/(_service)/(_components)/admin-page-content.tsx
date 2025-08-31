@@ -4,7 +4,7 @@
 
 import { useAdminPagesNav } from "../(_context)/admin-pages-nav-context";
 import { AdminPageDeploy } from "./admin-pages/admin-page-deploy";
-import { AdminPageInfo } from "./admin-pages/admin-page-info";
+import { AdminPageInfo } from "./admin-pages/admin-page-info/(_service)/(_components)/admin-page-info";
 import { AdminPagePreview } from "./admin-pages/admin-page-preview";
 import { AdminPageStep1 } from "./admin-pages/steps/step1/step1";
 import { AdminPageStep10 } from "./admin-pages/steps/step10/step10";

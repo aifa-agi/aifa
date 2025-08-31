@@ -21,10 +21,6 @@ export interface SectionInfo {
   id: string;
   summary?: SummaryData;
   linksData?: LinksData[];
-  keywords?: string[];
-  intent?: string;
-  taxonomy?: string;
-  attention?: string;
 }
 export interface SummaryData {
   id: string;

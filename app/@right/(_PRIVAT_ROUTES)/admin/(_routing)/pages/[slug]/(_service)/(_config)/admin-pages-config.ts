@@ -20,9 +20,9 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
   {
     key: "info",
     label: "Info",
-    title: "Project Information",
+    title: "Page Basics & Production Metadata ",
     description:
-      "Basic information and metadata for ContentCombine Pro project",
+      "Page’s core details and final-state SEO metadata ready for live deployment.",
     hasIndicator: false,
     stepType: "optional",
   },

@@ -15,7 +15,8 @@ interface AdminPageDetailsProps {
 
 /**
  * Server component that extracts slug from route parameters
- * and passes it to the client component for data processing
+ * Uses existing NavigationMenuProvider (available at app level) for data
+ * No need for additional data providers as NavigationMenuProvider already handles menu categories
  */
 export default async function AdminPageDetails({
   params,

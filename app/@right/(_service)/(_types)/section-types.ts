@@ -4,11 +4,9 @@ export interface Section {
   id: string;
   order?: number;
   pageType?: PageType;
-
   outgoingLinks?: string[];
   incomingLinks?: string[];
   externalLinks?: string[];
-
   summary?: string;
 
   selfPrompt?: string;

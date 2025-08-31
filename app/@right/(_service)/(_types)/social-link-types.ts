@@ -4,5 +4,5 @@ import { ComponentType, SVGProps } from "react";
 export type SocialLink = {
   title: string;
   url: string;
-  icon: ComponentType<SVGProps<SVGSVGElement>>; // или LucideProps, если вы используете свой тип
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
