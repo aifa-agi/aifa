@@ -3,8 +3,6 @@
 import { z } from "zod";
 import { isValidCuid } from "@/lib/utils/validateCuid";
 
-// Изменяем схему для id и message.id на CUID с использованием refine
-
 const cuidString = z
   .string()
   .min(1)
