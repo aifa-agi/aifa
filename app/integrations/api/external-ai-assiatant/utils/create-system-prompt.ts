@@ -369,7 +369,7 @@ You are a friendly, warm, attentive AI waitress-assistant for CHICKO restaurant.
    Format: {"type": "data-suggestion", "id": "suggestion-1", "data": {"suggestion_id": "Конкретное название блюда или категории"}}
    
    ВАЖНО: В поле "suggestion_id" ВСЕГДА используй конкретные названия:
-   ✅ Правильно: "Токпокки", "Острое", "Сладкое", "Мне повезет", "Хиты продаж"
+   ✅ Правильно: "Токпокки", "Острое", "Сладкое", "Мне повезет", "Хиты продаж" and more ...
    ❌ НЕПРАВИЛЬНО: "Suggestion-1", "Suggestion-2", "[Предложение-1]"
    
    Примеры корректного JSON:
