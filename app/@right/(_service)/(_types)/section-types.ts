@@ -19,6 +19,7 @@ export interface Section {
   intent?: string;
   taxonomy?: string;
   attention?: string;
+  audiences?: string;
 }
 
 export type ExtendedSection = Section;

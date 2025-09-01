@@ -49,6 +49,48 @@ interface PageImages {
   alt?: string;
   href?: string;
 }
+
+interface ContentStructure {
+  tag: ContentTag;
+  keywords?: string[];
+  intent?: string;
+  taxonomy?: string;
+  attention?: string;
+  audiences?: string;
+  selfPrompt?: string;
+  designDescription?: string;
+  connectedDesignSectionId?: string;
+  realContentStructure: ContentStructure[];
+}
+
+export type ContentTag =
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "p"
+  | "ul"
+  | "ol"
+  | "li"
+  | "blockquote"
+  | "pre"
+  | "code"
+  | "table"
+  | "thead"
+  | "tbody"
+  | "tr"
+  | "td"
+  | "th"
+  | "img"
+  | "a"
+  | "div"
+  | "section"
+  | "article"
+  | "strong"
+  | "em"
+  | "hr";
+
 export interface PageData {
   metadata?: Metadata;
   id: string;
@@ -60,8 +102,10 @@ export interface PageData {
   intent?: string;
   taxonomy?: string;
   attention?: string;
+  audiences?: string;
   href?: string;
   roles: UserType[];
+  realContentStructure?: ContentStructure[];
   hasBadge?: boolean;
   badgeName?: BadgeName;
   badgeLink?: string;
