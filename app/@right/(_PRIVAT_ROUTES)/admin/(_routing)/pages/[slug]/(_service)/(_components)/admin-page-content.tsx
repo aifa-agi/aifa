@@ -6,7 +6,8 @@ import { useAdminPagesNav } from "../(_context)/admin-pages-nav-context";
 import { AdminPageDeploy } from "./admin-pages/admin-page-deploy";
 import { AdminPageInfo } from "./admin-pages/admin-page-info/(_service)/(_components)/admin-page-info";
 import { AdminPagePreview } from "./admin-pages/admin-page-preview";
-import { AdminPageStep1 } from "./admin-pages/steps/step1/step1";
+import { CompetitorResearch } from "./admin-pages/steps/competitor-research/(_service)/(_components)/competitor-research";
+
 import { AdminPageStep10 } from "./admin-pages/steps/step10/step10";
 import { AdminPageStep11 } from "./admin-pages/steps/step11/step11";
 import { AdminPageStep2 } from "./admin-pages/steps/step2/step2";
@@ -25,7 +26,7 @@ export function AdminPageContent() {
     case "info":
       return <AdminPageInfo slug={slug} />;
     case "step1":
-      return <AdminPageStep1 slug={slug} />;
+      return <CompetitorResearch slug={slug} />;
     case "step2":
       return <AdminPageStep2 slug={slug} />;
     case "step3":

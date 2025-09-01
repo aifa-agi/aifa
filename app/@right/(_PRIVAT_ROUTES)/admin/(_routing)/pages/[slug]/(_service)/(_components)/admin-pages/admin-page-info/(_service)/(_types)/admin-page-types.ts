@@ -49,19 +49,6 @@ export interface KeywordsFieldUpdate {
 }
 
 /**
- * Hook return type for admin page data management
- */
-export interface UseAdminPageDataReturn {
-  slug: string;
-  page: PageData | null;
-  category: { title: string } | null;
-  loading: boolean;
-  initialized: boolean;
-  error: string | null;
-  userRole: string;
-}
-
-/**
  * Hook return type for system fields editing
  */
 export interface UseSystemFieldsReturn {

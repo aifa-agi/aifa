@@ -20,7 +20,6 @@ import { UserType } from "@prisma/client";
 
 import { PageNotFound } from "../../../../page-not-found";
 import { AdminPageInfoProps } from "../(_types)/admin-page-types";
-import { useAdminPageData } from "../(_hooks)/use-admin-page-data";
 import { useSystemFields } from "../(_hooks)/use-system-fields";
 import { useKeywordsField } from "../(_hooks)/use-keywords-field";
 import {
@@ -31,6 +30,7 @@ import {
 } from "../(_constants)/system-fields-config";
 import { EditableSystemFields } from "./editable-system-fields";
 import { EditableKeywordsField } from "./editable-keywords-field";
+import { useAdminPageData } from "../../../../../(_hooks)/use-admin-page-data";
 
 /**
  * Helper function to format category display name
