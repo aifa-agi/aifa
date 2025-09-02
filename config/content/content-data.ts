@@ -11,47 +11,6 @@ export const contentData = {
     "title": "canary-islands",
     "pages": [
       {
-        "id": "bft9sas1qpjtnp0dauhchecj",
-        "linkName": "paromy-to-cadiz",
-        "href": "/canary-islands/paromy-to-cadiz",
-        "roles": [
-          "guest"
-        ],
-        "hasBadge": false,
-        "type": "blog",
-        "isPublished": false,
-        "isAddedToPrompt": false,
-        "isVectorConnected": true,
-        "isChatSynchronized": false,
-        "order": 2,
-        "title": "паром из Кадис",
-        "description": "Забронируйте паром из Кадис",
-        "keywords": [
-          "паром из Кадис"
-        ],
-        "images": [
-          {
-            "id": "r4qubk99cxtzrevmwpjjznfe",
-            "alt": "Забронируйте паром из Кадис",
-            "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193738-2b9rzOUfoSrjgb3GhqV9ZEVP8UioDw.png"
-          }
-        ],
-        "sections": [
-          {
-            "id": "section-1"
-          },
-          {
-            "id": "section-2"
-          }
-        ],
-        "updatedAt": "2025-08-14T10:45:56.924Z",
-        "linkConfiguration": {
-          "outgoing": "active",
-          "incoming": "pending",
-          "external": "pending"
-        }
-      },
-      {
         "id": "gdwn8jw1g3vp8js9im14jvgj",
         "linkName": "paromy-na-tenerife",
         "href": "/canary-islands/paromy-na-tenerife",
@@ -879,8 +838,638 @@ export const contentData = {
                 ]
               }
             }
+          },
+          {
+            "href": "https://www.autodoc.eu/",
+            "competitorName": "Autodoc",
+            "isSuitable": true,
+            "isAnalyzed": true,
+            "recommendationReason": "Autodoc is highly suitable for competitive analysis as Europe's leading online automotive parts retailer with strong market presence across 26+ countries, innovative platform features like Autodoc Club, and substantial revenue ($329M+ annually). Their multi-modal approach combining e-commerce with educational content presents valuable insights for competitive positioning.",
+            "competitorStructure": [
+              {
+                "id": "hero-search-section",
+                "contentStructure": {
+                  "classification": "hybrid",
+                  "tag": "hero",
+                  "semanticMetadata": {
+                    "purpose": "Primary vehicle identification and parts search interface",
+                    "userIntent": "transactional",
+                    "interactionType": "interactive",
+                    "visualPriority": "primary"
+                  },
+                  "keywords": [
+                    "car parts",
+                    "vehicle search",
+                    "compatibility",
+                    "OEM parts"
+                  ],
+                  "intent": "Enable users to quickly find compatible parts for their specific vehicle",
+                  "taxonomy": "Product Discovery",
+                  "attention": "Vehicle selector and search functionality",
+                  "audiences": "DIY mechanics, professional workshops, car owners",
+                  "additionalData": {
+                    "actualContent": "Vehicle identification system with year/make/model selectors and part search",
+                    "position": {
+                      "order": 1,
+                      "depth": 0
+                    },
+                    "styling": {
+                      "hasSpecialFormatting": true,
+                      "visualWeight": "bold"
+                    }
+                  }
+                },
+                "researchResult": {
+                  "analysisText": "Autodoc's hero section prioritizes immediate vehicle compatibility matching, which is critical for automotive parts e-commerce. This approach reduces bounce rate by ensuring users find relevant products quickly, addressing the complexity of automotive part fitment.",
+                  "elementAnalysis": {
+                    "qualityScore": 85,
+                    "effectivenessRating": "excellent",
+                    "intentAlignment": 95
+                  },
+                  "recommendations": [
+                    "Implement progressive enhancement for mobile users",
+                    "Add saved vehicle profiles",
+                    "Include visual vehicle recognition"
+                  ],
+                  "strengths": [
+                    "Vehicle-first approach",
+                    "Reduces complexity",
+                    "High conversion potential"
+                  ],
+                  "weaknesses": [
+                    "May overwhelm new users",
+                    "Requires vehicle knowledge"
+                  ],
+                  "opportunities": [
+                    "AI-powered part suggestions",
+                    "Visual search integration",
+                    "Maintenance scheduling"
+                  ]
+                }
+              },
+              {
+                "id": "product-categories",
+                "contentStructure": {
+                  "classification": "semantic",
+                  "tag": "navigation",
+                  "semanticMetadata": {
+                    "purpose": "Comprehensive product category navigation and browsing",
+                    "userIntent": "navigational",
+                    "interactionType": "interactive",
+                    "visualPriority": "secondary"
+                  },
+                  "keywords": [
+                    "brake parts",
+                    "engine components",
+                    "filters",
+                    "accessories",
+                    "OEM",
+                    "aftermarket"
+                  ],
+                  "intent": "Guide users through extensive product catalog organization",
+                  "taxonomy": "Product Navigation",
+                  "attention": "Mega menu with visual category representations",
+                  "audiences": "Technical buyers, professional mechanics, parts specialists",
+                  "additionalData": {
+                    "actualContent": "Multi-level category structure with visual aids and part numbers",
+                    "position": {
+                      "order": 2,
+                      "depth": 1
+                    },
+                    "styling": {
+                      "hasSpecialFormatting": true,
+                      "visualWeight": "medium"
+                    }
+                  }
+                },
+                "researchResult": {
+                  "analysisText": "The category structure reflects deep automotive domain expertise with both technical and consumer-friendly organization. The extensive catalog (evidenced by their marketplace expansion) requires sophisticated navigation to prevent user overwhelm.",
+                  "elementAnalysis": {
+                    "qualityScore": 80,
+                    "effectivenessRating": "good",
+                    "intentAlignment": 85
+                  },
+                  "recommendations": [
+                    "Implement smart category suggestions",
+                    "Add visual part identification",
+                    "Create guided shopping flows"
+                  ],
+                  "strengths": [
+                    "Comprehensive coverage",
+                    "Professional organization",
+                    "Technical accuracy"
+                  ],
+                  "weaknesses": [
+                    "Complex for novice users",
+                    "May cause choice paralysis"
+                  ],
+                  "opportunities": [
+                    "Personalized categories",
+                    "AI-driven recommendations",
+                    "Cross-selling optimization"
+                  ]
+                }
+              },
+              {
+                "id": "autodoc-club-integration",
+                "contentStructure": {
+                  "classification": "hybrid",
+                  "tag": "features",
+                  "semanticMetadata": {
+                    "purpose": "Educational platform integration with commercial offerings",
+                    "userIntent": "informational",
+                    "interactionType": "media",
+                    "visualPriority": "primary"
+                  },
+                  "keywords": [
+                    "repair instructions",
+                    "video tutorials",
+                    "DIY",
+                    "maintenance",
+                    "expert advice"
+                  ],
+                  "intent": "Position Autodoc as educational authority while driving parts sales",
+                  "taxonomy": "Value-Added Services",
+                  "attention": "Video content and downloadable repair guides",
+                  "audiences": "DIY enthusiasts, learning mechanics, cost-conscious car owners",
+                  "additionalData": {
+                    "actualContent": "1,300+ PDF manuals, 2,240+ video tutorials, integrated parts purchasing",
+                    "position": {
+                      "order": 3,
+                      "depth": 0
+                    },
+                    "styling": {
+                      "hasSpecialFormatting": true,
+                      "visualWeight": "bold"
+                    }
+                  }
+                },
+                "researchResult": {
+                  "analysisText": "Autodoc Club represents innovative content marketing that creates ecosystem lock-in. By providing educational content directly linked to parts purchasing, they've created a unique competitive moat that combines authority building with conversion optimization.",
+                  "elementAnalysis": {
+                    "qualityScore": 95,
+                    "effectivenessRating": "excellent",
+                    "intentAlignment": 90
+                  },
+                  "recommendations": [
+                    "Expand mobile app functionality",
+                    "Add community features",
+                    "Implement progress tracking"
+                  ],
+                  "strengths": [
+                    "Unique market positioning",
+                    "High user engagement",
+                    "Conversion integration"
+                  ],
+                  "weaknesses": [
+                    "Resource intensive",
+                    "Content maintenance complexity"
+                  ],
+                  "opportunities": [
+                    "Subscription model potential",
+                    "Professional partnerships",
+                    "Certification programs"
+                  ]
+                }
+              },
+              {
+                "id": "trust-signals",
+                "contentStructure": {
+                  "classification": "semantic",
+                  "tag": "testimonials",
+                  "semanticMetadata": {
+                    "purpose": "Build credibility and address purchase hesitation",
+                    "userIntent": "commercial",
+                    "interactionType": "passive",
+                    "visualPriority": "secondary"
+                  },
+                  "keywords": [
+                    "reviews",
+                    "guarantees",
+                    "delivery",
+                    "customer service",
+                    "quality assurance"
+                  ],
+                  "intent": "Overcome trust barriers in online automotive parts purchasing",
+                  "taxonomy": "Trust Building",
+                  "attention": "Customer testimonials and service guarantees",
+                  "audiences": "Risk-averse buyers, first-time customers, B2B clients",
+                  "additionalData": {
+                    "actualContent": "Customer reviews, service guarantees, delivery promises, quality certifications",
+                    "position": {
+                      "order": 4,
+                      "depth": 1
+                    },
+                    "styling": {
+                      "hasSpecialFormatting": false,
+                      "visualWeight": "medium"
+                    }
+                  }
+                },
+                "researchResult": {
+                  "analysisText": "Trust signals are crucial given mixed customer service reviews (2.2 stars on some platforms). The company faces challenges in customer service perception despite competitive pricing and product quality, requiring stronger trust-building initiatives.",
+                  "elementAnalysis": {
+                    "qualityScore": 65,
+                    "effectivenessRating": "average",
+                    "intentAlignment": 75
+                  },
+                  "recommendations": [
+                    "Improve customer service visibility",
+                    "Add live chat support",
+                    "Showcase resolution success stories"
+                  ],
+                  "strengths": [
+                    "Competitive pricing emphasis",
+                    "Quality guarantees",
+                    "European market presence"
+                  ],
+                  "weaknesses": [
+                    "Customer service reputation",
+                    "Mixed review scores"
+                  ],
+                  "opportunities": [
+                    "Service excellence campaigns",
+                    "Proactive communication",
+                    "Loyalty program development"
+                  ]
+                }
+              },
+              {
+                "id": "marketplace-platform",
+                "contentStructure": {
+                  "classification": "technical",
+                  "tag": "marketplace",
+                  "semanticMetadata": {
+                    "purpose": "Extended product catalog through third-party sellers",
+                    "userIntent": "transactional",
+                    "interactionType": "interactive",
+                    "visualPriority": "tertiary"
+                  },
+                  "keywords": [
+                    "third-party sellers",
+                    "expanded catalog",
+                    "competitive pricing",
+                    "availability"
+                  ],
+                  "intent": "Provide comprehensive parts availability through marketplace model",
+                  "taxonomy": "Platform Extension",
+                  "attention": "Seller diversity and product range expansion",
+                  "audiences": "Price-sensitive buyers, rare parts seekers, professional procurement",
+                  "additionalData": {
+                    "actualContent": "Curated seller network with integrated purchasing experience",
+                    "position": {
+                      "order": 5,
+                      "depth": 2
+                    },
+                    "styling": {
+                      "hasSpecialFormatting": false,
+                      "visualWeight": "light"
+                    }
+                  }
+                },
+                "researchResult": {
+                  "analysisText": "The marketplace expansion launched in France demonstrates strategic evolution from pure retailer to platform orchestrator. This model increases catalog depth while maintaining quality control through seller curation, addressing availability challenges in automotive parts.",
+                  "elementAnalysis": {
+                    "qualityScore": 80,
+                    "effectivenessRating": "good",
+                    "intentAlignment": 85
+                  },
+                  "recommendations": [
+                    "Expand to additional countries",
+                    "Implement seller rating systems",
+                    "Add seller performance analytics"
+                  ],
+                  "strengths": [
+                    "Expanded product range",
+                    "Competitive pricing",
+                    "Quality control"
+                  ],
+                  "weaknesses": [
+                    "Complexity management",
+                    "Seller onboarding"
+                  ],
+                  "opportunities": [
+                    "B2B marketplace development",
+                    "API integrations",
+                    "White-label solutions"
+                  ]
+                }
+              }
+            ],
+            "overallAnalysis": {
+              "overallScore": 82,
+              "summary": "Autodoc represents a sophisticated automotive e-commerce platform that successfully combines traditional online retail with innovative educational content and marketplace functionality. Their strength lies in vehicle-specific product matching and the unique Autodoc Club ecosystem that positions them as both retailer and educational authority. However, customer service challenges and complex navigation for novice users present improvement opportunities.",
+              "keyFindings": [
+                "Unique educational content integration creates competitive differentiation",
+                "Strong European market presence with localized operations across 26+ countries",
+                "Innovative marketplace model expanding product availability",
+                "Vehicle-first approach reduces complexity for technical product discovery",
+                "Mixed customer service reputation despite competitive pricing"
+              ],
+              "actionableInsights": [
+                "Focus on customer service excellence to match product quality",
+                "Develop mobile-first experiences for growing app user base",
+                "Leverage educational content for SEO and authority building",
+                "Implement AI-driven personalization for complex product catalogs",
+                "Create loyalty programs to capitalize on repeat purchase behavior"
+              ],
+              "ourAdvantages": [
+                "Opportunity to provide superior customer service experience",
+                "Potential for more intuitive user onboarding processes",
+                "Modern mobile-first development approach",
+                "Streamlined purchasing flows without marketplace complexity",
+                "Integrated customer support throughout the buying journey"
+              ],
+              "semanticPatterns": {
+                "commonBlocks": [
+                  "hero-search",
+                  "product-categories",
+                  "trust-signals",
+                  "educational-content"
+                ],
+                "unusualImplementations": [
+                  "Autodoc Club integration",
+                  "Marketplace curation",
+                  "Video tutorial commerce integration"
+                ],
+                "missingOpportunities": [
+                  "AI-powered diagnostics",
+                  "Augmented reality part identification",
+                  "Subscription-based maintenance programs",
+                  "Real-time inventory integration with local workshops"
+                ]
+              }
+            }
+          },
+          {
+            "href": "https://www.autoscout24.es/",
+            "competitorName": "AutoScout24",
+            "isSuitable": true,
+            "isAnalyzed": true,
+            "recommendationReason": "AutoScout24 является крупнейшей европейской платформой по продаже автомобилей с более чем 30 миллионами пользователей в месяц, что делает его отличным объектом для конкурентного анализа. Компания работает в 18 странах, имеет сильное SEO-присутствие и продвинутый UX-дизайн, что предоставляет ценные инсайты для анализа.",
+            "competitorStructure": [
+              {
+                "id": "hero-section",
+                "contentStructure": {
+                  "classification": "semantic",
+                  "tag": "hero",
+                  "semanticMetadata": {
+                    "purpose": "Главный призыв к действию для продажи автомобиля",
+                    "userIntent": "transactional",
+                    "interactionType": "interactive",
+                    "visualPriority": "primary"
+                  },
+                  "keywords": [
+                    "продать автомобиль",
+                    "быстро",
+                    "бесплатно",
+                    "оценка цены"
+                  ],
+                  "intent": "Мотивировать пользователей продать свой автомобиль через платформу",
+                  "taxonomy": "Конверсионная секция",
+                  "attention": "Крупный заголовок и призыв к действию",
+                  "audiences": "Владельцы автомобилей, желающие продать",
+                  "additionalData": {
+                    "actualContent": "Vende tu coche rápido y gratis - введи данные автомобиля, получи оценку цены и найди покупателя",
+                    "position": {
+                      "order": 1,
+                      "depth": 0
+                    },
+                    "styling": {
+                      "hasSpecialFormatting": true,
+                      "visualWeight": "bold"
+                    }
+                  }
+                },
+                "researchResult": {
+                  "analysisText": "Герой-секция фокусируется на основном value proposition - быстрой и бесплатной продаже автомобилей. Использует эмоциональные триггеры (быстро, бесплатно) и четкий CTA.",
+                  "elementAnalysis": {
+                    "qualityScore": 85,
+                    "effectivenessRating": "excellent",
+                    "intentAlignment": 90
+                  },
+                  "recommendations": [
+                    "Добавить визуальные элементы доверия",
+                    "Включить статистику успешных продаж"
+                  ],
+                  "strengths": [
+                    "Четкий value proposition",
+                    "Простой призыв к действию",
+                    "Фокус на основных преимуществах"
+                  ],
+                  "weaknesses": [
+                    "Отсутствие социальных доказательств",
+                    "Нет визуальной демонстрации процесса"
+                  ],
+                  "opportunities": [
+                    "Добавление интерактивного калькулятора",
+                    "Интеграция отзывов клиентов"
+                  ]
+                }
+              },
+              {
+                "id": "expert-reviews-section",
+                "contentStructure": {
+                  "classification": "semantic",
+                  "tag": "content-hub",
+                  "semanticMetadata": {
+                    "purpose": "Предоставление экспертного контента и обзоров автомобилей",
+                    "userIntent": "informational",
+                    "interactionType": "passive",
+                    "visualPriority": "secondary"
+                  },
+                  "keywords": [
+                    "обзоры",
+                    "эксперты",
+                    "тесты",
+                    "сравнение автомобилей"
+                  ],
+                  "intent": "Привлечь пользователей через полезный контент и установить экспертность",
+                  "taxonomy": "Контент-маркетинг",
+                  "attention": "Информационные блоки с экспертными материалами",
+                  "audiences": "Потенциальные покупатели, ищущие информацию об автомобилях",
+                  "additionalData": {
+                    "actualContent": "¡Lee nuestras pruebas! - экспертные обзоры с анализом плюсов и минусов каждой модели",
+                    "position": {
+                      "order": 2,
+                      "depth": 0
+                    },
+                    "styling": {
+                      "hasSpecialFormatting": false,
+                      "visualWeight": "medium"
+                    }
+                  }
+                },
+                "researchResult": {
+                  "analysisText": "Секция контент-маркетинга, направленная на привлечение органического трафика и установление доверия через экспертные материалы. Хорошо подходит для SEO-продвижения по информационным запросам.",
+                  "elementAnalysis": {
+                    "qualityScore": 78,
+                    "effectivenessRating": "good",
+                    "intentAlignment": 85
+                  },
+                  "recommendations": [
+                    "Добавить предварительный просмотр популярных обзоров",
+                    "Включить рейтинговую систему"
+                  ],
+                  "strengths": [
+                    "Фокус на экспертности",
+                    "Контент-маркетинговый подход",
+                    "SEO-потенциал"
+                  ],
+                  "weaknesses": [
+                    "Недостаточно визуальной привлекательности",
+                    "Отсутствие интерактивности"
+                  ],
+                  "opportunities": [
+                    "Персонализация рекомендаций",
+                    "Интеграция с поиском автомобилей"
+                  ]
+                }
+              },
+              {
+                "id": "car-valuation-tool",
+                "contentStructure": {
+                  "classification": "hybrid",
+                  "tag": "interactive-tool",
+                  "semanticMetadata": {
+                    "purpose": "Бесплатная онлайн-оценка стоимости автомобиля",
+                    "userIntent": "commercial",
+                    "interactionType": "interactive",
+                    "visualPriority": "primary"
+                  },
+                  "keywords": [
+                    "оценка автомобиля",
+                    "рыночная цена",
+                    "бесплатно",
+                    "онлайн"
+                  ],
+                  "intent": "Привлечь потенциальных продавцов через бесплатный инструмент оценки",
+                  "taxonomy": "Лид-генерация",
+                  "attention": "Интерактивный инструмент с мгновенным результатом",
+                  "audiences": "Владельцы автомобилей, рассматривающие продажу",
+                  "additionalData": {
+                    "actualContent": "Tasar mi coche ya - бесплатный онлайн-инструмент для определения рыночной стоимости за несколько минут",
+                    "position": {
+                      "order": 3,
+                      "depth": 0
+                    },
+                    "styling": {
+                      "hasSpecialFormatting": true,
+                      "visualWeight": "bold"
+                    }
+                  }
+                },
+                "researchResult": {
+                  "analysisText": "Стратегический инструмент лид-генерации, который привлекает пользователей бесплатной услугой и конвертирует их в потенциальных продавцов. Создает высокую воспринимаемую ценность.",
+                  "elementAnalysis": {
+                    "qualityScore": 88,
+                    "effectivenessRating": "excellent",
+                    "intentAlignment": 92
+                  },
+                  "recommendations": [
+                    "Добавить прогресс-бар процесса оценки",
+                    "Интегрировать с CRM для последующего контакта"
+                  ],
+                  "strengths": [
+                    "Высокая конверсионная ценность",
+                    "Бесплатность привлекает пользователей",
+                    "Мгновенный результат"
+                  ],
+                  "weaknesses": [
+                    "Отсутствие объяснения методологии оценки",
+                    "Нет гарантий точности"
+                  ],
+                  "opportunities": [
+                    "Персонализированные рекомендации по продаже",
+                    "Интеграция с расчетом налогов"
+                  ]
+                }
+              }
+            ],
+            "overallAnalysis": {
+              "overallScore": 84,
+              "summary": "AutoScout24 демонстрирует сильную конкурентную позицию с фокусом на пользовательский опыт и конверсию. Платформа эффективно использует комбинацию транзакционных и информационных элементов для привлечения и удержания пользователей в воронке продаж.",
+              "keyFindings": [
+                "Мобильный трафик составляет 70%+ от общего объема",
+                "Сильное SEO-присутствие с 15+ миллионами месячных визитов",
+                "Продвинутая защита от ботов (Akamai) указывает на высокую ценность данных",
+                "Мультистрановая локализация с адаптацией под местные рынки",
+                "Фокус на бесплатных инструментах как точке входа в воронку"
+              ],
+              "actionableInsights": [
+                "Использовать бесплатные инструменты оценки как лид-магниты",
+                "Инвестировать в мобильную оптимизацию (приоритет №1)",
+                "Развивать контент-маркетинг для привлечения органического трафика",
+                "Создать многоэтапную воронку с постепенным повышением вовлеченности"
+              ],
+              "ourAdvantages": [
+                "Возможность более персонализированного AI-подхода",
+                "Современный tech stack (React 19, Next.js 15) для лучшей производительности",
+                "Интеграция AI-чата для улучшения пользовательского опыта",
+                "Более гибкая архитектура для быстрых итераций"
+              ],
+              "semanticPatterns": {
+                "commonBlocks": [
+                  "hero",
+                  "value-proposition",
+                  "interactive-tools",
+                  "content-hub"
+                ],
+                "unusualImplementations": [
+                  "Интеграция экспертного контента с транзакционными элементами",
+                  "Фокус на бесплатных инструментах"
+                ],
+                "missingOpportunities": [
+                  "AI-персонализация",
+                  "Real-time чат поддержка",
+                  "Социальные доказательства",
+                  "Прогрессивные веб-приложения"
+                ]
+              }
+            }
           }
         ]
+      },
+      {
+        "id": "bft9sas1qpjtnp0dauhchecj",
+        "linkName": "paromy-to-cadiz",
+        "href": "/canary-islands/paromy-to-cadiz",
+        "roles": [
+          "guest"
+        ],
+        "hasBadge": false,
+        "type": "blog",
+        "isPublished": false,
+        "isAddedToPrompt": false,
+        "isVectorConnected": true,
+        "isChatSynchronized": false,
+        "order": 2,
+        "title": "паром из Кадис",
+        "description": "Забронируйте паром из Кадис",
+        "keywords": [
+          "паром из Кадис"
+        ],
+        "images": [
+          {
+            "id": "r4qubk99cxtzrevmwpjjznfe",
+            "alt": "Забронируйте паром из Кадис",
+            "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193738-2b9rzOUfoSrjgb3GhqV9ZEVP8UioDw.png"
+          }
+        ],
+        "sections": [
+          {
+            "id": "section-1"
+          },
+          {
+            "id": "section-2"
+          }
+        ],
+        "updatedAt": "2025-08-14T10:45:56.924Z",
+        "linkConfiguration": {
+          "outgoing": "active",
+          "incoming": "pending",
+          "external": "pending"
+        }
       }
     ],
     "order": 2
@@ -1015,5 +1604,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-01T20:26:19.265Z";
+export const lastUpdated = "2025-09-02T12:44:04.199Z";
 export const generatedBy = "menu-persist-api";

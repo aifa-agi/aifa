@@ -10,7 +10,14 @@ import {
 } from "../(_config)/admin-pages-config";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Feather,
+  Star,
+} from "lucide-react";
 
 /**
  * Component that displays dynamic title and description based on active tab
@@ -68,14 +75,11 @@ export function AdminPageDynamicHeader() {
   // Определяем variant и другие свойства кнопки
   const isShowingAll = displayMode === "all";
   const buttonIcon = isShowingAll ? (
-    <EyeOff className="size-4" />
+    <Star className="size-4" />
   ) : (
-    <Eye className="size-4" />
+    <Feather className="size-4" />
   );
-  const buttonText = isShowingAll ? "light version" : "PRO version";
-  const buttonVariant: "outline" | "secondary" = isShowingAll
-    ? "outline"
-    : "secondary";
+  const buttonText = isShowingAll ? "PRO Flow" : "Light Flow";
 
   return (
     <div className="mb-6 pb-4 border-b w-[450px] min-w-[250px]">
@@ -92,7 +96,6 @@ export function AdminPageDynamicHeader() {
             Content generator:
           </span>
           <Button
-            variant={buttonVariant}
             size="sm"
             onClick={handleDisplayModeToggle}
             className="h-8 gap-2"

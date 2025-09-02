@@ -1,7 +1,9 @@
 // @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/competitor-research/(_service)/(_types)/competitor-research-types.ts
 
-import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
-import { LucideIcon } from "lucide-react";
+import {
+  PageData,
+  CompetitorAnalysis,
+} from "@/app/@right/(_service)/(_types)/page-types";
 
 /**
  * Props interface for CompetitorResearch component
@@ -25,32 +27,22 @@ export interface CompetitorResearchItem {
 }
 
 /**
- * Hook return type for competitor research management
- */
-export interface UseCompetitorResearchReturn {
-  competitors: CompetitorResearchItem[];
-  isUpdating: boolean;
-  canEdit: boolean;
-  addCompetitor: (url: string) => void;
-  updateCompetitor: (
-    id: string,
-    updates: Partial<CompetitorResearchItem>
-  ) => void;
-  removeCompetitor: (id: string) => void;
-  saveCompetitors: () => Promise<boolean>;
-  generateInstruction: (competitorId: string) => string;
-  markInstructionCopied: (competitorId: string) => void;
-  updateAiResponse: (competitorId: string, response: string) => void;
-  canSaveResults: boolean;
-}
-
-/**
  * Props for useCompetitorResearch hook
  */
 export interface UseCompetitorResearchProps {
   page: PageData | null;
   categoryTitle: string;
   slug: string;
+}
+
+/**
+ * НОВЫЙ интерфейс для локального состояния сохранения
+ */
+export interface LocalSaveState {
+  hasLocalChanges: boolean;
+  localCompetitorAnalysis: CompetitorAnalysis[] | null;
+  pendingServerUpload: boolean;
+  lastLocalSaveAt: string | null;
 }
 
 /**
@@ -153,4 +145,39 @@ export interface CompetitorResearchStepData {
   completedAt: string;
   totalCompetitors: number;
   completedCompetitors: number;
+}
+
+/**
+ * ОБНОВЛЕННЫЙ интерфейс возвращаемого значения хука useCompetitorResearch
+ * Включает разделенное сохранение
+ */
+export interface UseCompetitorResearchReturn {
+  // Основные данные
+  competitors: CompetitorResearchItem[];
+  isUpdating: boolean;
+  canEdit: boolean;
+
+  // Управление конкурентами
+  addCompetitor: (url: string) => void;
+  updateCompetitor: (
+    id: string,
+    updates: Partial<CompetitorResearchItem>
+  ) => void;
+  removeCompetitor: (id: string) => void;
+
+  // Генерация инструкций
+  generateInstruction: (competitorId: string) => string;
+  markInstructionCopied: (competitorId: string) => void;
+  updateAiResponse: (competitorId: string, response: string) => void;
+
+  // НОВОЕ: Разделенное сохранение
+  saveCompetitorsLocally: () => Promise<boolean>;
+  uploadToServer: () => Promise<boolean>;
+
+  // Состояния сохранения
+  canSaveResults: boolean;
+  hasUnsavedChanges: boolean;
+  hasLocalChanges: boolean;
+  pendingServerUpload: boolean;
+  isServerUploading: boolean;
 }

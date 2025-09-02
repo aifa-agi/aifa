@@ -3,7 +3,7 @@ export const JSON_REPAIR_CONFIG = {
   MAX_REPAIR_ATTEMPTS: 3,
   REPAIR_TIMEOUT: 30000, // 30 seconds
   MIN_CONFIDENCE_THRESHOLD: 0.8,
-  OPENAI_MODEL: "gpt-4o" as const,
+  OPENAI_MODEL: "gpt-4.1" as const,
   REPAIR_PROMPT_TEMPLATE: `You are an expert at converting unstructured competitive analysis data into valid CompetitorAnalysis JSON format.
 
 ORIGINAL COMPETITOR INFO:

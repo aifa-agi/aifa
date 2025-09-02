@@ -16,7 +16,45 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { CompetitorAnalysisSchema } from "../(_libs)/competitor-analysis-schema";
+export const LOCAL_SAVE_MESSAGES = {
+  LOCAL_SAVE_SUCCESS: "Исследование конкурентов сохранено локально",
+  LOCAL_SAVE_DESCRIPTION: "Готово для выгрузки на сервер",
+  SERVER_UPLOAD_SUCCESS: "Данные успешно выгружены на сервер",
+  SERVER_UPLOAD_PROGRESS: "Выгружаем данные на сервер...",
+  SERVER_UPLOAD_FAILED: "Ошибка выгрузки на сервер",
+  NO_LOCAL_DATA: "Нет данных для выгрузки",
+  LOCAL_CHANGES_AVAILABLE: "Есть локальные изменения для выгрузки",
+} as const;
 
+/**
+ * НОВЫЕ CSS классы для кнопок сохранения
+ */
+export const SAVE_BUTTON_CLASSES = {
+  // Зеленая кнопка локального сохранения
+  local_save:
+    "bg-green-600 text-white hover:bg-green-700 disabled:bg-green-300",
+  local_save_icon: "text-green-600",
+
+  // Оранжевая кнопка серверной выгрузки
+  server_upload:
+    "bg-orange-600 text-white hover:bg-orange-700 disabled:bg-orange-300",
+  server_upload_icon: "text-orange-600",
+
+  // Состояния
+  pending_upload: "border-orange-200 bg-orange-50 text-orange-800",
+  has_changes: "border-blue-200 bg-blue-50 text-blue-800",
+} as const;
+
+/**
+ * НОВЫЕ иконки для операций сохранения
+ */
+export const SAVE_OPERATION_ICONS = {
+  LOCAL_SAVE: "Save",
+  SERVER_UPLOAD: "Upload",
+  PENDING: "Clock",
+  SUCCESS: "CheckCircle2",
+  ERROR: "AlertCircle",
+} as const;
 /**
  * Configuration for competitor research workflow states
  * Defines icons, labels, and descriptions for each stage
@@ -113,9 +151,9 @@ Return ONLY a valid JSON object with this exact structure:
 {
   "href": "{competitorUrl}",
   "competitorName": "{competitorName}",
-  "isSuitable": true|false,
+  "isSuitable": false,
   "isAnalyzed": true,
-  "recommendationReason": "Detailed explanation of why this competitor is suitable/unsuitable for analysis",
+  "recommendationReason": "Don't do research, in response return empty'' ",
   "competitorStructure": [
     {
       "id": "unique-section-id",
