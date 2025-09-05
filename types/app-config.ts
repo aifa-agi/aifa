@@ -1,10 +1,26 @@
-// @/types/app-config.ts
-
-export type AppConfig = {
+// types/app-config.ts
+export interface AppConfig {
   name: string;
+  short_name: string;
   description: string;
   url: string;
   ogImage: string;
-  mailSupport: string;
   manifest: string;
-};
+  mailSupport: string;
+
+  illustrations: {
+    loading: {
+      dark: string;
+      light: string;
+    };
+  };
+
+  logo: string;
+
+  messages?: {
+    loading?: {
+      title?: string;
+      subtitle?: string;
+    };
+  };
+}

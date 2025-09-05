@@ -1,4 +1,4 @@
-// @/app\@left\(_public)\(_CHAT-FRACTAL)\(chat)\(_service)\(_components)\visibility-selector.tsx
+// @/app/@left/(_public)/(_CHAT-FRACTAL)/(chat)/(_service)/(_components)/visibility-selector.tsx
 "use client";
 
 import { type ReactNode, useMemo, useState } from "react";
@@ -17,9 +17,11 @@ import {
   LockIcon,
 } from "@/components/shared/icons";
 import { useChatVisibility } from "@/app/@left/(_public)/(_CHAT)/(chat)/(_service)/(_hooks)/use-chat-visibility";
+import { visibilityConfig } from "@/config/chat-config/visibility-config";
 
 export type VisibilityType = "private" | "public";
 
+// Создаем массив visibility на основе конфига
 const visibilities: Array<{
   id: VisibilityType;
   label: string;
@@ -28,14 +30,14 @@ const visibilities: Array<{
 }> = [
   {
     id: "private",
-    label: "Private",
-    description: "Only you can access this chat",
+    label: visibilityConfig.private.label,
+    description: visibilityConfig.private.description,
     icon: <LockIcon />,
   },
   {
     id: "public",
-    label: "Public",
-    description: "Anyone with the link can access this chat",
+    label: visibilityConfig.public.label,
+    description: visibilityConfig.public.description,
     icon: <GlobeIcon />,
   },
 ];
