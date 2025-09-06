@@ -1,4 +1,4 @@
-// @\app\@right\layout.tsx
+// @/app/@right/layout.tsx
 
 import React, { Children } from "react";
 
@@ -14,7 +14,7 @@ export default function RightLayout({
   return (
     <>
       <NavigationMenuProvider>
-        <div className="flex flex-col h-svh pb-6">
+        <div className="flex flex-col h-svh pb-6 relative">
           <NavBar />
 
           <main className="flex-1 overflow-y-auto hide-scrollbar">

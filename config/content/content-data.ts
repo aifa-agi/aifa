@@ -1431,45 +1431,324 @@ export const contentData = {
         ]
       },
       {
-        "id": "bft9sas1qpjtnp0dauhchecj",
-        "linkName": "paromy-to-cadiz",
-        "href": "/canary-islands/paromy-to-cadiz",
+        "id": "t4ymuhurl4hbpyl8puyj1x58",
+        "linkName": "paromy-na-moskow",
+        "href": "/canary-islands/paromy-na-moskow",
         "roles": [
           "guest"
         ],
         "hasBadge": false,
         "type": "blog",
-        "isPublished": false,
-        "isAddedToPrompt": false,
-        "isVectorConnected": true,
-        "isChatSynchronized": false,
-        "order": 2,
-        "title": "паром из Кадис",
-        "description": "Забронируйте паром из Кадис",
-        "keywords": [
-          "паром из Кадис"
-        ],
-        "images": [
+        "aiRecommendContentStructure": [
           {
-            "id": "r4qubk99cxtzrevmwpjjznfe",
-            "alt": "Забронируйте паром из Кадис",
-            "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193738-2b9rzOUfoSrjgb3GhqV9ZEVP8UioDw.png"
-          }
-        ],
-        "sections": [
-          {
-            "id": "section-1"
+            "classification": "technical",
+            "tag": "h2",
+            "additionalData": {
+              "actualContent": "Main Section 1"
+            },
+            "realContentStructure": [
+              {
+                "classification": "technical",
+                "tag": "p",
+                "additionalData": {
+                  "actualContent": "Description for main section 1"
+                }
+              },
+              {
+                "classification": "technical",
+                "tag": "h3",
+                "additionalData": {
+                  "actualContent": "Subsection 1.1"
+                },
+                "realContentStructure": [
+                  {
+                    "classification": "technical",
+                    "tag": "p",
+                    "additionalData": {
+                      "actualContent": "Description for subsection 1.1"
+                    }
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.1.1"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.1.1"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.1.1"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.1.2"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.1.2"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.1.2"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.1.3"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.1.3"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.1.3"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "classification": "technical",
+                "tag": "h3",
+                "additionalData": {
+                  "actualContent": "Subsection 1.2"
+                },
+                "realContentStructure": [
+                  {
+                    "classification": "technical",
+                    "tag": "p",
+                    "additionalData": {
+                      "actualContent": "Description for subsection 1.2"
+                    }
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.2.1"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.2.1"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.2.1"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.2.2"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.2.2"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.2.2"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.2.3"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.2.3"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.2.3"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "classification": "technical",
+                "tag": "h3",
+                "additionalData": {
+                  "actualContent": "Subsection 1.3"
+                },
+                "realContentStructure": [
+                  {
+                    "classification": "technical",
+                    "tag": "p",
+                    "additionalData": {
+                      "actualContent": "Description for subsection 1.3"
+                    }
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.3.1"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.3.1"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.3.1"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.3.2"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.3.2"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.3.2"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "classification": "technical",
+                    "tag": "h4",
+                    "additionalData": {
+                      "actualContent": "Topic 1.3.3"
+                    },
+                    "realContentStructure": [
+                      {
+                        "classification": "technical",
+                        "tag": "p",
+                        "additionalData": {
+                          "actualContent": "Description for topic 1.3.3"
+                        }
+                      },
+                      {
+                        "classification": "technical",
+                        "tag": "ul",
+                        "additionalData": {
+                          "actualContent": "List items for topic 1.3.3"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
-            "id": "section-2"
+            "classification": "technical",
+            "tag": "h2",
+            "additionalData": {
+              "actualContent": "Main Section 2"
+            },
+            "realContentStructure": [
+              {
+                "classification": "technical",
+                "tag": "p",
+                "additionalData": {
+                  "actualContent": "Description for main section 2"
+                }
+              }
+            ]
+          },
+          {
+            "classification": "technical",
+            "tag": "h2",
+            "additionalData": {
+              "actualContent": "Main Section 3"
+            },
+            "realContentStructure": [
+              {
+                "classification": "technical",
+                "tag": "p",
+                "additionalData": {
+                  "actualContent": "Description for main section 3"
+                }
+              }
+            ]
           }
         ],
-        "updatedAt": "2025-08-14T10:45:56.924Z",
-        "linkConfiguration": {
-          "outgoing": "active",
-          "incoming": "pending",
-          "external": "pending"
-        }
+        "isPublished": false,
+        "isAddedToPrompt": false,
+        "isVectorConnected": false,
+        "isChatSynchronized": false,
+        "order": 2
       }
     ],
     "order": 2
@@ -1604,5 +1883,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-02T12:44:04.199Z";
+export const lastUpdated = "2025-09-06T14:03:43.604Z";
 export const generatedBy = "menu-persist-api";

@@ -45,8 +45,14 @@ export default function EditableWideMenu({
 
   return (
     <div
-      className="fixed inset-x-0 mx-auto bg-black text-white rounded-lg shadow-2xl overflow-hidden z-50"
-      style={{ maxWidth: "80vw", top: "120px", height: "432px" }}
+      className="absolute bg-black text-white rounded-lg shadow-2xl overflow-hidden z-50 border"
+      style={{
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "90%",
+        top: "120px",
+        height: "432px",
+      }}
     >
       <div className="flex h-full">
         <PageSection

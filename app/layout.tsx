@@ -102,7 +102,9 @@ export default async function RootLayout({
                         </ResizablePanel>
                         <ResizableHandle withHandle />
                         <ResizablePanel defaultSize={60} minSize={35}>
-                          {right}
+                          <div className="relative overflow-hidden">
+                            {right}
+                          </div>
                         </ResizablePanel>
                       </ResizablePanelGroup>
                     </div>

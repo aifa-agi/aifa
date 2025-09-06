@@ -4,10 +4,15 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { arrayMove } from "@dnd-kit/sortable";
 import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
-import { PageType } from "@/app/@right/(_service)/(_types)/page-types";
+import {
+  ContentClassification,
+  ContentStructure,
+  PageType,
+} from "@/app/@right/(_service)/(_types)/page-types";
 import { generateCuid } from "@/lib/utils/generateCuid";
 import { useDialogs } from "@/app/@right/(_service)/(_context)/dialogs";
 import { normalizeText } from "@/app/@right/(_service)/(_libs)/normalize-text";
+import { DEFAULT_CONTENT_STRUCTURE } from "@/config/default-page-structure-config";
 
 export function useMenuOperations(
   categories: MenuCategory[],
@@ -115,6 +120,7 @@ export function useMenuOperations(
                       roles: ["guest"],
                       hasBadge: false,
                       type: "blog" as PageType,
+                      aiRecommendContentStructure: DEFAULT_CONTENT_STRUCTURE,
                       isPublished: false,
                       isAddedToPrompt: false,
                       isVectorConnected: false,

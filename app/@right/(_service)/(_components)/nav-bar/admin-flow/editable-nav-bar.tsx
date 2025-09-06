@@ -139,14 +139,14 @@ function EditableNavBarContent() {
     if (isLargeScreen) {
       return (
         <ChevronDown
-          className={`w-4 h-4 transition-transform duration-300 ${
+          className={`size-4 transition-transform duration-300 ${
             isOpen ? "rotate-180" : ""
           }`}
         />
       );
     }
 
-    return <MoreVertical className="w-5 h-5" />;
+    return <MoreVertical className="size-5" />;
   };
 
   return (
@@ -214,7 +214,7 @@ function EditableNavBarContent() {
       {isOpen && (
         <div
           className={`
-            fixed inset-0 bg-black/50 backdrop-blur-sm
+            absolute inset-0 bg-black/50 backdrop-blur-sm
             transition-opacity duration-300 ease-in-out
             z-40
           `}
