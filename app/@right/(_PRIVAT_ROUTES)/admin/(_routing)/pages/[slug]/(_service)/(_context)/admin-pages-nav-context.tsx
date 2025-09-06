@@ -1,3 +1,5 @@
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_context)/admin-pages-nav-context.ts
+
 "use client";
 
 import {
@@ -6,6 +8,7 @@ import {
   useState,
   ReactNode,
   useEffect,
+  useMemo,
 } from "react";
 import {
   ADMIN_PAGES_CONFIG,
@@ -13,6 +16,16 @@ import {
   IndicatorStatus,
   canActivateStep,
 } from "../(_config)/admin-pages-config";
+
+// ✅ ИСПРАВЛЕНО: Импортируем конфиг условий завершения
+import {
+  getAllCompletedSteps,
+  getStepsDebugInfo,
+} from "../(_config)/step-completion-config";
+
+// ✅ ИСПРАВЛЕНО: Импортируем хук оркестратора
+import { useStepsOrchestrator } from "../(_hooks)/use-steps-orchestrator";
+import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
 
 export type AdminPageTab =
   | "info"
@@ -49,6 +62,13 @@ interface AdminPagesNavContextType {
   isStepCompleted: (step: AdminPageTab) => boolean;
   displayMode: DisplayMode;
   setDisplayMode: (mode: DisplayMode) => void;
+
+  // ✅ НОВЫЕ ПОЛЯ: Интеграция с Steps Orchestrator
+  pageData: PageData | null;
+  isPageDataLoading: boolean;
+  pageDataError: string | null;
+  refreshPageData: () => void;
+  debugInfo: Record<AdminPageTab, string>;
 }
 
 const AdminPagesNavContext = createContext<
@@ -67,23 +87,54 @@ export function AdminPagesNavBarProvider({
   defaultTab = ADMIN_PAGES_CONFIG.defaultTab,
 }: AdminPagesNavBarProviderProps) {
   const [activeTab, setActiveTab] = useState<AdminPageTab>(defaultTab);
-  const [completedSteps, setCompletedSteps] = useState<AdminPageTab[]>([]);
   const [displayMode, setDisplayMode] = useState<DisplayMode>("required");
 
-  // Инициализация начальных статусов
-  const initialStatuses: IndicatorStatuses = {};
-  ADMIN_PAGES_TABS.forEach((tab) => {
-    if (tab.hasIndicator && tab.defaultIndicatorStatus) {
-      initialStatuses[tab.key] = tab.defaultIndicatorStatus;
+  // ✅ ИСПРАВЛЕНО: Используем Steps Orchestrator для получения реальных данных
+  const {
+    pageData,
+    isLoading: isPageDataLoading,
+    error: pageDataError,
+    refreshPageData,
+    updatePageData,
+    updatePageDataField,
+    syncPageDataToServer,
+    getOrchestratorStatus,
+  } = useStepsOrchestrator(slug);
+
+  // ✅ ИСПРАВЛЕНО: Автоматически вычисляем завершенные шаги на основе реальных данных
+  const completedSteps = useMemo(() => {
+    const computed = getAllCompletedSteps(pageData);
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("🎭 Context: Computing completed steps", {
+        slug,
+        pageDataAvailable: !!pageData,
+        computedSteps: computed,
+      });
     }
-  });
 
-  const [indicatorStatuses, setIndicatorStatuses] =
-    useState<IndicatorStatuses>(initialStatuses);
+    return computed;
+  }, [pageData, slug]);
 
-  // Автоматическое обновление цветов индикаторов при изменении completedSteps
-  useEffect(() => {
-    const newStatuses: IndicatorStatuses = { ...indicatorStatuses };
+  // ✅ ИСПРАВЛЕНО: Получаем отладочную информацию
+  const debugInfo = useMemo(() => {
+    return getStepsDebugInfo(pageData);
+  }, [pageData]);
+
+  // ✅ ИСПРАВЛЕНО: Инициализация статусов через useMemo
+  const initialStatuses: IndicatorStatuses = useMemo(() => {
+    const statuses: IndicatorStatuses = {};
+    ADMIN_PAGES_TABS.forEach((tab) => {
+      if (tab.hasIndicator && tab.defaultIndicatorStatus) {
+        statuses[tab.key] = tab.defaultIndicatorStatus;
+      }
+    });
+    return statuses;
+  }, []);
+
+  // ✅ ИСПРАВЛЕНО: Вычисляем статусы на основе завершенных шагов
+  const computedIndicatorStatuses = useMemo(() => {
+    const newStatuses: IndicatorStatuses = { ...initialStatuses };
 
     ADMIN_PAGES_TABS.forEach((tab) => {
       if (tab.hasIndicator) {
@@ -100,8 +151,17 @@ export function AdminPagesNavBarProvider({
       }
     });
 
-    setIndicatorStatuses(newStatuses);
-  }, [completedSteps]);
+    return newStatuses;
+  }, [completedSteps, initialStatuses]);
+
+  const [indicatorStatuses, setIndicatorStatuses] = useState<IndicatorStatuses>(
+    computedIndicatorStatuses
+  );
+
+  // ✅ ИСПРАВЛЕНО: Обновляем статусы только при их изменении
+  useEffect(() => {
+    setIndicatorStatuses(computedIndicatorStatuses);
+  }, [computedIndicatorStatuses]);
 
   const setIndicatorStatus = (tab: AdminPageTab, status: IndicatorStatus) => {
     setIndicatorStatuses((prev) => ({
@@ -116,10 +176,16 @@ export function AdminPagesNavBarProvider({
     return indicatorStatuses[tab];
   };
 
+  // ✅ ОБНОВЛЕНО: Функция помечания как завершенного теперь устарела
   const markStepAsCompleted = (step: AdminPageTab) => {
-    if (!completedSteps.includes(step)) {
-      setCompletedSteps((prev) => [...prev, step]);
-    }
+    console.warn(`🎭 markStepAsCompleted(${step}) устарела!`);
+    console.log(
+      `Шаги теперь завершаются автоматически на основе данных PageData.`
+    );
+    console.log(
+      `Для завершения шага ${step} обновите соответствующие поля в pageData:`,
+      debugInfo[step]
+    );
   };
 
   const canActivateStepLocal = (step: AdminPageTab): boolean => {
@@ -130,23 +196,45 @@ export function AdminPagesNavBarProvider({
     return completedSteps.includes(step);
   };
 
-  const value = {
-    activeTab,
-    setActiveTab,
-    slug,
-    indicatorStatuses,
-    setIndicatorStatus,
-    getIndicatorStatus,
-    completedSteps,
-    markStepAsCompleted,
-    canActivateStep: canActivateStepLocal,
-    isStepCompleted,
-    displayMode,
-    setDisplayMode,
-  };
+  // ✅ ИСПРАВЛЕНО: Мемоизируем значение контекста для предотвращения лишних перерендеров
+  const contextValue = useMemo(
+    () => ({
+      activeTab,
+      setActiveTab,
+      slug,
+      indicatorStatuses,
+      setIndicatorStatus,
+      getIndicatorStatus,
+      completedSteps,
+      markStepAsCompleted,
+      canActivateStep: canActivateStepLocal,
+      isStepCompleted,
+      displayMode,
+      setDisplayMode,
+
+      // ✅ НОВЫЕ ПОЛЯ: Интеграция с реальными данными
+      pageData,
+      isPageDataLoading,
+      pageDataError,
+      refreshPageData,
+      debugInfo,
+    }),
+    [
+      activeTab,
+      slug,
+      indicatorStatuses,
+      completedSteps,
+      displayMode,
+      pageData,
+      isPageDataLoading,
+      pageDataError,
+      refreshPageData,
+      debugInfo,
+    ]
+  );
 
   return (
-    <AdminPagesNavContext.Provider value={value}>
+    <AdminPagesNavContext.Provider value={contextValue}>
       {children}
     </AdminPagesNavContext.Provider>
   );
