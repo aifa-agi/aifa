@@ -420,6 +420,7 @@ export interface PageData {
   competitorAnalysis?: CompetitorAnalysis[];
   aiRecommendContentStructure?: ContentStructure[];
   knowledgeSettings?: KnowledgeSettings;
+  isReadyPromptForPerplexity?: boolean;
   userChooseContentStructure?: ContentStructure[];
   draftReport?: DraftReport;
   finalReport?: FinalReport;

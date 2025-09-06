@@ -50,12 +50,15 @@ export const STEP_COMPLETION_CONDITIONS: StepCompletionCondition[] = [
   {
     stepKey: "step5",
     validate: (pageData: PageData | null) => {
-      // Step 5: Generator Configuration - завершен если пользователь выбрал структуру контента
-      return (pageData?.userChooseContentStructure?.length ?? 0) > 0;
+      // Step 5: Generator perplexity prompt
+      return (
+        pageData?.isReadyPromptForPerplexity !== undefined &&
+        pageData?.isReadyPromptForPerplexity !== false
+      );
     },
-    description: "Требует выбранную пользователем структуру контента",
+    description: "Требует генерации Perplexity prompt",
     debugInfo: (pageData) =>
-      `👤 Элементов структуры: ${pageData?.userChooseContentStructure?.length ?? 0}`,
+      `📝 Perplexity prompt: ${pageData?.isReadyPromptForPerplexity ? "Есть" : "Нет"}`,
   },
 
   {
