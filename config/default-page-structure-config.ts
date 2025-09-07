@@ -295,6 +295,7 @@ export const DEFAULT_CONTENT_STRUCTURE: ContentStructure[] = [
       actualContent: "Main Section 2",
     },
     realContentStructure: [
+      // Section description
       {
         classification: "technical" as ContentClassification,
         tag: "p",
@@ -302,8 +303,263 @@ export const DEFAULT_CONTENT_STRUCTURE: ContentStructure[] = [
           actualContent: "Description for main section 2",
         },
       },
-      // Similar structure as first section...
-      // (truncated for brevity, but would include same 3x3x3 structure)
+      // Three H3 subsections
+      {
+        classification: "technical" as ContentClassification,
+        tag: "h3",
+        additionalData: {
+          actualContent: "Subsection 2.1",
+        },
+        realContentStructure: [
+          {
+            classification: "technical" as ContentClassification,
+            tag: "p",
+            additionalData: {
+              actualContent: "Description for subsection 2.1",
+            },
+          },
+          // Three H4 elements
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.1.1",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.1.1",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.1.1",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.1.2",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.1.2",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.1.2",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.1.3",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.1.3",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.1.3",
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        classification: "technical" as ContentClassification,
+        tag: "h3",
+        additionalData: {
+          actualContent: "Subsection 2.2",
+        },
+        realContentStructure: [
+          {
+            classification: "technical" as ContentClassification,
+            tag: "p",
+            additionalData: {
+              actualContent: "Description for subsection 2.2",
+            },
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.2.1",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.2.1",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.2.1",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.2.2",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.2.2",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.2.2",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.2.3",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.2.3",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.2.3",
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        classification: "technical" as ContentClassification,
+        tag: "h3",
+        additionalData: {
+          actualContent: "Subsection 2.3",
+        },
+        realContentStructure: [
+          {
+            classification: "technical" as ContentClassification,
+            tag: "p",
+            additionalData: {
+              actualContent: "Description for subsection 2.3",
+            },
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.3.1",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.3.1",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.3.1",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.3.2",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.3.2",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.3.2",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 2.3.3",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 2.3.3",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 2.3.3",
+                },
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   // Third H2 section
@@ -314,6 +570,7 @@ export const DEFAULT_CONTENT_STRUCTURE: ContentStructure[] = [
       actualContent: "Main Section 3",
     },
     realContentStructure: [
+      // Section description
       {
         classification: "technical" as ContentClassification,
         tag: "p",
@@ -321,8 +578,263 @@ export const DEFAULT_CONTENT_STRUCTURE: ContentStructure[] = [
           actualContent: "Description for main section 3",
         },
       },
-      // Similar structure as first section...
-      // (truncated for brevity, but would include same 3x3x3 structure)
+      // Three H3 subsections
+      {
+        classification: "technical" as ContentClassification,
+        tag: "h3",
+        additionalData: {
+          actualContent: "Subsection 3.1",
+        },
+        realContentStructure: [
+          {
+            classification: "technical" as ContentClassification,
+            tag: "p",
+            additionalData: {
+              actualContent: "Description for subsection 3.1",
+            },
+          },
+          // Three H4 elements
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.1.1",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.1.1",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.1.1",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.1.2",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.1.2",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.1.2",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.1.3",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.1.3",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.1.3",
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        classification: "technical" as ContentClassification,
+        tag: "h3",
+        additionalData: {
+          actualContent: "Subsection 3.2",
+        },
+        realContentStructure: [
+          {
+            classification: "technical" as ContentClassification,
+            tag: "p",
+            additionalData: {
+              actualContent: "Description for subsection 3.2",
+            },
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.2.1",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.2.1",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.2.1",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.2.2",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.2.2",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.2.2",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.2.3",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.2.3",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.2.3",
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        classification: "technical" as ContentClassification,
+        tag: "h3",
+        additionalData: {
+          actualContent: "Subsection 3.3",
+        },
+        realContentStructure: [
+          {
+            classification: "technical" as ContentClassification,
+            tag: "p",
+            additionalData: {
+              actualContent: "Description for subsection 3.3",
+            },
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.3.1",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.3.1",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.3.1",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.3.2",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.3.2",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.3.2",
+                },
+              },
+            ],
+          },
+          {
+            classification: "technical" as ContentClassification,
+            tag: "h4",
+            additionalData: {
+              actualContent: "Topic 3.3.3",
+            },
+            realContentStructure: [
+              {
+                classification: "technical" as ContentClassification,
+                tag: "p",
+                additionalData: {
+                  actualContent: "Description for topic 3.3.3",
+                },
+              },
+              {
+                classification: "technical" as ContentClassification,
+                tag: "ul",
+                additionalData: {
+                  actualContent: "List items for topic 3.3.3",
+                },
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
 ];

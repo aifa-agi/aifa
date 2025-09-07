@@ -1,9 +1,8 @@
 // @/app/admin/pages/[slug]/(_service)/(_components)/admin-page-prompt.tsx
-//
 
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -28,6 +27,9 @@ import {
   Edit3,
   Lightbulb,
   Home,
+  Network,
+  Target,
+  Layers,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
@@ -36,6 +38,8 @@ import { PageNotFound } from "../../../page-not-found";
 import { findPageBySlug } from "../../../../(_utils)/page-helpers";
 import { TOC } from "./components/table_of_content/toc";
 import { fileTreeDataTransformer } from "../../admin-page-info/(_service)/(_utils)/file-tree-transformer";
+import { usePromptReadyFlag } from "./(_hooks)/use-prompt-ready-flag";
+import { useSystemInstructionGenerator } from "./(_service)/system-instruction-generator";
 
 interface AdminPageInfoProps {
   slug: string;
@@ -164,509 +168,62 @@ const CUSTOM_REQUIREMENTS_EXAMPLES = [
 ];
 
 /**
- * Component for generating AI system instructions for page content creation
- * Combines base prompt configuration with page-specific data and personalization options
+ * Компонент для генерации AI системных инструкций для создания
+ * расширенной структуры контента с selfPrompt полями для рекурсивной генерации
  */
 export function AdminPageStep5({ slug }: AdminPageInfoProps) {
   const { categories, loading, initialized } = useNavigationMenu();
 
   const [isCopied, setIsCopied] = useState(false);
-  const [systemInstruction, setSystemInstruction] = useState<string>("");
 
-  // Personalization state
+  // Персонализация состояние
   const [writingStyle, setWritingStyle] = useState<string>("conversational");
   const [contentFormat, setContentFormat] = useState<string>("professional");
   const [customRequirements, setCustomRequirements] = useState<string>("");
 
   const pageData = findPageBySlug(categories, slug);
 
-  // Generate system instruction combining base config with page data and personalization
-  const generateSystemInstruction = useMemo(() => {
-    if (!pageData) return "";
+  // ✅ Хук для управления флагом готовности промпта
+  const {
+    isUpdating: isPromptUpdating,
+    markPromptAsReady,
+    unmarkPromptAsReady,
+    isPromptReady,
+    canUpdate: canUpdatePrompt,
+  } = usePromptReadyFlag({
+    page: pageData?.page || null,
+    categoryTitle: pageData?.category?.title || "",
+    slug,
+  });
 
-    const { page } = pageData;
+  // ✅ НОВЫЙ ХУК: Генерация системной инструкции
+  const systemInstruction = useSystemInstructionGenerator({
+    pageData: pageData,
+    slug,
+    writingStyle,
+    contentFormat,
+    customRequirements,
+    writingStyles: WRITING_STYLES,
+    contentFormats: CONTENT_FORMATS,
+  });
 
-    // Extract page-specific data
-    const pageTitle = page.title || page.linkName || "Untitled Page";
-    const pageDescription = page.description || "No description available";
-    const pageImages = page.images || [];
-    const pageKeywords = page.keywords || [];
-
-    // Get selected style and format details
-    const selectedStyle = WRITING_STYLES.find(
-      (style) => style.value === writingStyle
-    );
-    const selectedFormat = CONTENT_FORMATS.find(
-      (format) => format.value === contentFormat
-    );
-
-    // Enhanced system definition section (NEW - placed first)
-    const systemDefinitionSection = `
-/**
- * =============================================================================
- * SECTION 1: ENHANCED AI BLOG CONTENT GENERATION SYSTEM
- * Core System Definition and Objectives
- * =============================================================================
- * 
- * OBJECTIVE: Generate high-quality, SEO-optimized blog content capable of 
- * ranking in top search positions through comprehensive, structured content.
- * 
- * PRIORITY HIERARCHY (in order of precedence):
- * 1. TypeScript schema compliance (pageConfig structure)
- * 2. Content structure requirements (H1→H2→H3→H4 hierarchy)
- * 3. Contextual content requirements (mandatory intro paragraphs)
- * 4. Markdown formatting for Typography components only
- * 5. SEO optimization requirements
- * 
- * CORE PRINCIPLES:
- * - Maintain strict TypeScript schema compliance for all generated content
- * - Create comprehensive, well-structured content with logical flow
- * - Optimize for search engines while maintaining readability
- * - Follow semantic HTML structure through proper heading hierarchy
- * - Generate contextually relevant and engaging content
- * 
- * GENERATION APPROACH:
- * - Start with clear content strategy based on page type and requirements
- * - Apply selected writing style and content format consistently
- * - Integrate custom requirements without breaking core structure
- * - Ensure all content aligns with brand voice and target audience
- */
-
-/**
- * =============================================================================
- * SECTION 2: ENHANCED CONTENT STRUCTURE REQUIREMENTS
- * Mandatory Content Hierarchy with Contextual Content Rules
- * =============================================================================
- */
-
-interface EnhancedContentStructureRequirements {
-  // MANDATORY CONTENT HIERARCHY WITH CONTEXTUAL CONTENT
-  hierarchy: {
-    H1: {
-      count: 1;
-      content: "Main page topic";
-      followedBy: ["Introduction: 200-300 words", "Lead paragraph with hook"];
-      noContextualContentRequired: true;
-    };
-    H2: {
-      maxCount: 4;
-      minWordsPerSection: 400;
-      mandatoryContextualContent: {
-        placement: "Immediately after H2, before any H3 or structural elements";
-        wordCount: "200-250 words";
-        purpose: "Explains value and scope of entire H2 section";
-        structure: "3-4 paragraphs introducing the section topic";
-      };
-      mandatoryElements: {
-        introductionParagraph: "100-150 words (contextual content)";
-        mainContent: "400-550 words";
-        practicalExample: "100-150 words";
-      };
-      requiredSubsections: 2; // Exactly 2 H3 subsections
-      imageRequired: true;
-      internalLinks: "minimum 2 per H2";
-    };
-    H3: {
-      minWordsPerSection: 400;
-      mandatoryContextualContent: {
-        placement: "Immediately after H3, before any H4 or structural elements";
-        wordCount: "80-120 words";
-        purpose: "Context and significance of H3 subsection";
-        structure: "1-2 paragraphs explaining subsection relevance";
-      };
-      requiredSubsections: 2; // Exactly 2 H4 subsections
-      contentElements: {
-        contextualIntroduction: "80-120 words (contextual content)";
-        detailedExplanation: "120-150 words";
-        practicalTips: "50-80 words";
-      };
-    };
-    H4: {
-      minWordsPerSection: 100;
-      contextualContentOptional: true;
-      contentElements: {
-        specificInformation: "70-90 words";
-        miniConclusion: "30-50 words";
-      };
-    };
-  };
-
-  // CONTEXTUAL CONTENT RULES FOR STRUCTURAL ELEMENTS
-  structuralElementsRules: {
-    beforeLists: {
-      rule: "3-4 paragraphs before any list (ordered or unordered)";
-      minimumWords: "60-100 words";
-      purpose: "Explanation of list relevance and context";
-    };
-    beforeTables: {
-      rule: "3-4 paragraphs before any table";
-      minimumWords: "60-100 words";
-      purpose: "Introduction to table content and significance";
-    };
-    beforeImages: {
-      rule: "1 paragraph before complex images or infographics";
-      minimumWords: "40-80 words";
-      purpose: "Context for visual content";
-    };
-  };
-
-  // REVISED REALISTIC VOLUME CALCULATION
-  revisedVolumeTargets: {
-    H1Section: "200-300 words";
-    H2ContextualContent: "400-600 words (4 × 100-150)"; // NEW
-    H2MainContent: "1600 words (4 × 400)";
-    H3ContextualContent: "640-960 words (8 × 80-120)"; // NEW
-    H3MainContent: "1600 words (8 × 200)";
-    H4Content: "1600 words (16 × 100)";
-    structuralElementsIntros: "200-400 words"; // NEW
-    totalEstimate: "6240-6860 words"; // UPDATED
-    readingTime: "16-19 minutes"; // UPDATED
-  };
-}
-
-/**
- * =============================================================================
- * SECTION 3: MARKDOWN FORMATTING RULES
- * Typography Components Only – react-markdown/MDX Standard
- * =============================================================================
- *
- * CRITICAL RULE: Markdown formatting is ONLY allowed within Typography components,
- * rendered using react-markdown (or @mdx-js/react for MDX), with remark-gfm and
- * rehype-raw if needed. All other component types (Simple, Custom, Standard sections)
- * must receive plain text only—NO markdown, NO HTML, and NO inline styles.
- *
- * Style (colors, font size, emphasis, etc.) must be applied EXCLUSIVELY through
- * CSS classes on the Typography components—not via content, HTML tags, or inline props.
- *
- * Implementation instructions:
- * - Typography sections (e.g. TypographyH1, TypographyH2, TypographyP, TypographyBlockquote, TypographyTable, etc.)
- *   must receive the content as a markdown string—not as React elements, HTML, or styled text.
- * - Allowed formatting in Typography content:
- *     - Markdown bold (**text**)
- *     - Markdown italics (_text_)
- *     - Blockquotes (> block)
- *     - Lists
- *     - Code spans and blocks
- *     - Tables (pipe syntax, GFM, etc.)
- *     - No raw HTML or inline styles allowed in content
- * - Render Typography content using react-markdown with remark-gfm (and rehype-raw ONLY for very limited, trusted HTML if absolutely needed).
- * - Any design (color, font size, weight, etc.) must be applied through the Typography component's CSS classes.
- * - All non-Typography (Simple, Custom, Standard) sections must receive only plain strings—NO markdown, NO HTML, no formatting.
- *
- * EXAMPLES (ALLOWED):
- * // In Typography section:
- *   "children": "# Ferries in **Tenerife**: The Complete 2025 Guide"
- *   "children": "| Operator | Routes | Features |\n|---|---|---|\n| Olsen | ... | ... |"
- *
- * // In Simple or Custom sections:
- *   "bodyContent": { "type": "SimpleSectionFullScreenSizeImage", "props": { "alt": "Ferry in Tenerife 2025" } }
- *
- * EXAMPLES (PROHIBITED):
- * - "children": "<span style=\"color:blue\">Tenerife</span>"
- * - "children": "<b>Tenerife</b>"
- * - "children": "**Tenerife**", if not passed to a component that parses markdown (must not be treated as React child)
- * - "children": "<b style='font-size:48px'>Tenerife</b>"
- *
- * =============================================================================
- */
-
-/**
- * =============================================================================
- * SECTION 4: SEO CONTENT OPTIMIZATION
- * Keyword Strategy and Internal Linking
- * =============================================================================
- */
-
-interface SEOOptimization {
-  keywordStrategy: {
-    primaryKeywords: "1-2 main terms";
-    secondaryKeywords: "5-8 supporting terms";
-    lsiKeywords: "10-15 semantic variations";
-    keywordDensity: "1-2% of total content";
-    contextualKeywordPlacement: "Natural integration in contextual paragraphs";
-  };
-
-  internalLinking: {
-    minimumPerH2: 2;
-    relatedArticles: "Links to related blog posts";
-    crossReferences: "Between different sections";
-    contextualLinking: "Links naturally integrated in contextual paragraphs";
-  };
-
-  readabilityFactors: {
-    paragraphLength: "3-5 sentences maximum";
-    sentenceComplexity: "Mix of simple and complex structures";
-    transitionWords: "Use between paragraphs for flow";
-    contextualTransitions: "Smooth flow from contextual to detailed content";
-    targetReadingTime: "16-19 minutes"; // UPDATED
-  };
-}
-
-
-
-`;
-
-    // Create personalization section
-    const personalizationConfig = `
-/**
- * =============================================================================
- * SECTION 5: CONTENT PERSONALIZATION SETTINGS
- * Style and Format Customization for Content Generation
- * =============================================================================
- */
-
-interface ContentPersonalization {
-  writingStyle: {
-    type: "${selectedStyle?.value}";
-    label: "${selectedStyle?.label}";
-    description: "${selectedStyle?.description}";
-    instructions: "Apply ${selectedStyle?.label.toLowerCase()} writing style throughout the content. ${
-      selectedStyle?.description
-    }";
-  };
-  contentFormat: {
-    type: "${selectedFormat?.value}";
-    label: "${selectedFormat?.label}";
-    description: "${selectedFormat?.description}";
-    instructions: "Structure content using ${selectedFormat?.label.toLowerCase()} format. ${
-      selectedFormat?.description
-    }";
-  };
-}
-
-/**
- * PERSONALIZATION REQUIREMENTS:
- * - Writing Style: Use ${selectedStyle?.label.toLowerCase()} approach - ${
-   selectedStyle?.description
- }
- * - Content Format: Structure as ${selectedFormat?.label.toLowerCase()} - ${
-   selectedFormat?.description
- }
- * - Maintain consistency in tone and style throughout all generated content
- * - Adapt language complexity and terminology to match the selected format
- * - Ensure the writing style complements the content format choice
- */
-
-`;
-
-    // Add custom requirements section if provided
-    const customRequirementsSection = customRequirements.trim()
-      ? `
-/**
- * =============================================================================
- * SECTION 6: CUSTOM REQUIREMENTS & SPECIFICATIONS
- * Additional User-Defined Requirements for Content Generation
- * =============================================================================
- */
-
-CUSTOM REQUIREMENTS FROM USER:
-${customRequirements.trim()}
-
-IMPLEMENTATION INSTRUCTIONS:
-- Incorporate all custom requirements into the generated content
-- Ensure custom requirements align with the selected writing style and format
-- Prioritize custom requirements while maintaining overall content quality
-- If custom requirements conflict with other settings, prioritize custom requirements
-- Adapt the content structure to accommodate specific user needs
-
-`
-      : "";
-
-    // Create page-specific configuration section
-    const pageSpecificConfig = `
-/**
- * =============================================================================
- * SECTION 7: PAGE-SPECIFIC CONFIGURATION
- * Unique Data for Current Page Generation
- * =============================================================================
- */
-
-interface PageSpecificDataInfo {
-  title: "${pageTitle}";
-  description: "${pageDescription}";
-  slug: "${slug}";
-  href: "${page.href || `/${slug}`}";
-  images: ${JSON.stringify(pageImages, null, 2)};
-  keywords: ${JSON.stringify(pageKeywords, null, 2)};
-  isPublished: ${page.isPublished};
-  pageType: "${page.type}";
-  category: "${pageData.category.title}";
-}
-
-/**
- * =============================================================================
- * SECTION 8: GENERATION INSTRUCTIONS
- * =============================================================================
- */
-
-TASK: Use the system definition, personalization settings, custom requirements, 
-page data, and configuration system instructions below to generate a page 
-according to the technical requirements and return a JSON data file.
-
-SPECIFIC REQUIREMENTS FOR THIS PAGE:
-1. Generate content for page titled: "${pageTitle}"
-2. Focus on the description: "${pageDescription}"
-3. Target keywords: ${
-      pageKeywords.length > 0
-        ? pageKeywords.join(", ")
-        : "Generate appropriate keywords"
-    }
-4. Apply writing style: ${selectedStyle?.label} (${selectedStyle?.description})
-5. Use content format: ${selectedFormat?.label} (${selectedFormat?.description})
-6. Include relevant images from provided list or suggest placeholder images
-7. Ensure content matches the page type: "${page.type}"
-8. Generate appropriate metadata for SEO optimization
-9. Target audience: American market, US English
-${
-  customRequirements.trim()
-    ? `10. Custom Requirements: ${customRequirements.trim()}`
-    : ""
-}
-
-CONTENT CREATION GUIDELINES:
-- Writing Style: ${selectedStyle?.description}
-- Content Format: ${selectedFormat?.description}
-- Tone: Professional yet engaging for American audience
-- Language: US English with American terminology and cultural references
-- SEO Focus: Optimize for US search engines and user behavior
-${
-  customRequirements.trim()
-    ? `- Custom Specifications: Follow all user-defined requirements listed above`
-    : ""
-}
-
-/**
- * =============================================================================
- * SECTION 9: TYPESCRIPT SCHEMA COMPLIANCE
- * pageConfig and Dependent Types (UNCHANGED)
- * =============================================================================
- */
-
-// CRITICAL: These types must remain unchanged as they form working project schema
-
-
-interface SimpleSectionFullScreenSizeImageProps
-  extends Omit<ImageProps, "src" | "width" | "height" | "alt"> {
-  src: string;
-  alt?: string; 
-  width?: number;
-  height?: number;
-  hasBackdrop?: boolean;
-  hasBorder?: boolean;
-  hasRounded?: boolean;
-  borderRadius?: string;
-  aspectRatio?: "video" | "square" | "auto" | number | string;
-  objectFit?: "contain" | "cover" | "fill" | "none" | "scale-down";
-  objectPosition?: string;
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-export type SimpleSectionTypes = {
-  SimpleSectionFullScreenSizeImage: SimpleSectionFullScreenSizeImageProps;
-};
-
-export type SimpleSectionTypeName = keyof SimpleSectionTypes;
-
-export type TypographySectionTypes = {
-  TypographyH1: React.HTMLAttributes<HTMLHeadingElement>;
-  TypographyH2: React.HTMLAttributes<HTMLHeadingElement>;
-  TypographyH3: React.HTMLAttributes<HTMLHeadingElement>;
-  TypographyH4: React.HTMLAttributes<HTMLHeadingElement>;
-  TypographyP: React.HTMLAttributes<HTMLParagraphElement>;
-  TypographyBlockquote: React.HTMLAttributes<HTMLElement>;
-  TypographyTable: { data: React.ReactNode[][] };
-  TypographyList: { items: React.ReactNode[] };
-  TypographyOrderedList: { items: React.ReactNode[] };
-  TypographyLead: React.HTMLAttributes<HTMLParagraphElement>;
-  TypographyLarge: React.HTMLAttributes<HTMLDivElement>;
-  TypographySmall: React.HTMLAttributes<HTMLElement>;
-  TypographyMuted: React.HTMLAttributes<HTMLParagraphElement>;
-};
-
-export type TypographySectionTypeName = keyof TypographySectionTypes;
-
-export interface SimpleSection {
-  id: string;
-  order?: string;
-  bodyContent: {
-    sectionType: "Simple";
-    type: SimpleSectionTypeName;
-    props: SimpleSectionTypes[SimpleSectionTypeName];
-  };
-}
-
-export interface TypographySection {
-  id: string;
-  order?: string;
-  linkConfiguration?: LinkConfiguration;
-  bodyContent: {
-    sectionType: "Typography";
-    type: TypographySectionTypeName;
-    props: TypographySectionTypes[TypographySectionTypeName];
-  };
-}
-
-export interface StepSection {
-  id: string;
-  order?: string;
-  linkConfiguration?: LinkConfiguration;
-  bodyContent: (
-    | {
-        sectionType: "Simple Steps";
-        type: SimpleSectionTypeName;
-        props: SimpleSectionTypes[SimpleSectionTypeName];
-      }
-    | {
-        sectionType: "Typography Steps";
-        type: TypographySectionTypeName;
-        props: TypographySectionTypes[TypographySectionTypeName];
-      }
-  )[];
-}
-
-export type ExtendedSection =
-  | SimpleSection
-  | StepSection
-  | TypographySection;
-
-
-export interface PageSections {
-  sections: ExtendedSection[];
-}
-
-/**
- * =============================================================================
- *  SECTION 10:MOST IMPORTANT-MANDATORY OUTPUT FORMAT
- * =============================================================================
- */
-
-// CRITICAL REQUIREMENT: Response MUST be valid JSON in the following format:
-{
-  "sections": ExtendedSection[],
-}
-
-`;
-
-    // Combine all configurations with the new system definition first
-    return (
-      systemDefinitionSection +
-      personalizationConfig +
-      customRequirementsSection +
-      pageSpecificConfig
-    );
-  }, [pageData, slug, writingStyle, contentFormat, customRequirements]);
-
-  useEffect(() => {
-    setSystemInstruction(generateSystemInstruction);
-  }, [generateSystemInstruction]);
-
-  // Handle copy to clipboard functionality
+  // ✅ Обработка копирования с обновлением флага
   const handleCopyInstruction = async () => {
     try {
       await navigator.clipboard.writeText(systemInstruction);
       setIsCopied(true);
-      toast.success("System instruction copied to clipboard!");
+
+      // Помечаем промпт как готовый для Perplexity
+      const promptMarked = await markPromptAsReady();
+
+      if (promptMarked) {
+        toast.success(
+          "Enhanced system instruction copied and marked as ready for Perplexity!"
+        );
+      } else {
+        toast.success("Enhanced system instruction copied to clipboard!");
+        toast.warning("Could not mark prompt as ready. Please try again.");
+      }
 
       // Reset copied state after 3 seconds
       setTimeout(() => {
@@ -684,7 +241,7 @@ export interface PageSections {
       <div className="flex items-center justify-center py-12">
         <LoadingSpinner />
         <span className="ml-3 text-muted-foreground">
-          Loading prompt data...
+          Loading enhanced prompt data...
         </span>
       </div>
     );
@@ -698,6 +255,28 @@ export interface PageSections {
 
   return (
     <div className="space-y-6">
+      {/* Enhanced Header */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <Network className="size-6 text-primary" />
+            <div>
+              <CardTitle className="text-xl">
+                Recursive Content Generation System
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Generate enhanced content structure with selfPrompt fields for
+                unlimited content generation
+              </p>
+            </div>
+            <Badge variant="secondary" className="ml-auto">
+              <Layers className="size-3 mr-1" />
+              Recursive AI
+            </Badge>
+          </div>
+        </CardHeader>
+      </Card>
+
       {/* Personalization Controls */}
       <Card>
         <CardHeader>
@@ -705,14 +284,54 @@ export interface PageSections {
             <Palette className="size-5 text-primary" />
             <CardTitle className="text-lg">Content Personalization</CardTitle>
             <Badge variant="secondary">US Market</Badge>
+            {isPromptReady && (
+              <Badge variant="default" className="bg-green-600">
+                <CheckCircle className="size-3 mr-1" />
+                Ready for Perplexity
+              </Badge>
+            )}
           </div>
           <p className="text-sm text-muted-foreground">
-            Customize the writing style and content format for AI-generated
-            content targeting the American audience.
+            Configure writing style and content format for enhanced structure
+            generation
           </p>
         </CardHeader>
 
         <CardContent>
+          {/* Prompt Status Section */}
+          {isPromptReady && (
+            <div className="mb-6 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="size-5 text-green-600 dark:text-green-400" />
+                  <h4 className="font-medium text-green-900 dark:text-green-100">
+                    Enhanced Structure Prompt Ready
+                  </h4>
+                </div>
+                <Button
+                  onClick={unmarkPromptAsReady}
+                  variant="outline"
+                  size="sm"
+                  disabled={!canUpdatePrompt}
+                  className="border-green-300 text-green-700 hover:bg-green-100"
+                >
+                  {isPromptUpdating ? (
+                    <>
+                      <LoadingSpinner className="size-4 mr-2" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Unmark as Ready"
+                  )}
+                </Button>
+              </div>
+              <p className="text-sm text-green-800 dark:text-green-200 mt-2">
+                This enhanced prompt includes full page configuration and
+                current content structure for recursive generation
+              </p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Writing Style Selection */}
             <div className="space-y-3">
@@ -764,7 +383,7 @@ export interface PageSections {
                 <SelectContent>
                   {CONTENT_FORMATS.map((format) => (
                     <SelectItem key={format.value} value={format.value}>
-                      <div className="flex flex-col gap-1 ">
+                      <div className="flex flex-col gap-1">
                         <span className="font-medium text-left mt-2">
                           {format.label}
                         </span>
@@ -802,7 +421,7 @@ export interface PageSections {
 
             <Textarea
               id="custom-requirements"
-              placeholder="Add specific requirements, features, or preferences for the generated content..."
+              placeholder="Add specific requirements for content structure generation..."
               value={customRequirements}
               onChange={(e) => setCustomRequirements(e.target.value)}
               className="min-h-[100px] resize-y"
@@ -830,10 +449,10 @@ export interface PageSections {
             </div>
           </div>
 
-          {/* Current Selection Summary */}
+          {/* Current Configuration Summary */}
           <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg">
             <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
-              Selected Personalization:
+              Enhanced Generation Configuration:
             </h4>
             <div className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
               <p>
@@ -853,6 +472,15 @@ export interface PageSections {
                     ?.description
                 }
               </p>
+              <p>
+                <span className="font-medium">Content Structure:</span>{" "}
+                {page.aiRecommendContentStructure?.length || 0} existing
+                elements
+              </p>
+              <p>
+                <span className="font-medium">Generation Mode:</span> Recursive
+                with selfPrompt fields
+              </p>
               {customRequirements.trim() && (
                 <p>
                   <span className="font-medium">Custom Requirements:</span>{" "}
@@ -864,56 +492,57 @@ export interface PageSections {
         </CardContent>
       </Card>
 
-      {/* Main Content Card */}
+      {/* Main Enhanced Instruction Card */}
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="size-6 text-primary" />
+              <Target className="size-6 text-primary" />
               <CardTitle className="text-xl">
-                AI Content Generation Prompt
+                Enhanced AI Structure Generation Prompt
               </CardTitle>
             </div>
             <Badge variant="outline" className="flex items-center gap-1">
-              <FileText className="size-3" />
-              System Instructions
+              <Network className="size-3" />
+              Recursive System
             </Badge>
           </div>
 
           <div className="space-y-3 text-sm text-muted-foreground">
             <p className="leading-relaxed">
-              Copy this system instruction and set it in your AI model (e.g.,
-              ChatGPT). Wait for the JSON file generation to complete, copy it,
-              and then install it on the &quot;Data&quot; tab.
+              This enhanced system instruction generates expanded content
+              structure with selfPrompt fields for recursive content generation,
+              enabling unlimited content creation.
             </p>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 dark:bg-blue-950 dark:border-blue-800">
-              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
-                Usage Instructions:
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 dark:bg-amber-950 dark:border-amber-800">
+              <h4 className="font-medium text-amber-900 dark:text-amber-100 mb-2">
+                ⚠️ Enhanced Generation Process:
               </h4>
-              <ol className="list-decimal list-inside space-y-1 text-blue-800 dark:text-blue-200 text-xs">
+              <ol className="list-decimal list-inside space-y-1 text-amber-800 dark:text-amber-200 text-xs">
+                <li>Copy the comprehensive system instruction below</li>
                 <li>
-                  Configure personalization settings above (writing style,
-                  content format, and custom requirements)
+                  Use Perplexity Pro or GPT-4 for complex structure generation
                 </li>
-                <li>Copy the system instruction using the button below</li>
-                <li>Open ChatGPT or another AI model</li>
-                <li>Paste the instruction into the system prompt</li>
-                <li>Wait for the JSON file generation for the page</li>
-                <li>Copy the generated JSON</li>
                 <li>
-                  Go to the &quot;Data&quot; tab and install the JSON file
+                  Expect larger token usage due to complete data transmission
                 </li>
+                <li>
+                  Generated JSON will include selfPrompt for each content
+                  element
+                </li>
+                <li>Use generated structure for recursive content creation</li>
+                <li>Each content piece can be generated independently</li>
               </ol>
             </div>
           </div>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Page Info Summary */}
+          {/* Enhanced Page Info Summary */}
           <div className="bg-muted/50 rounded-lg p-4">
             <h4 className="font-medium mb-3 text-foreground">
-              Page Configuration Summary
+              Complete Page Data Transmission
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               <div>
@@ -933,21 +562,25 @@ export interface PageSections {
                 <span className="ml-2">{page.type || "—"}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Description:</span>
+                <span className="text-muted-foreground">Keywords:</span>
                 <span className="ml-2">
-                  {page.description
-                    ? page.description.length > 50
-                      ? `${page.description.substring(0, 50)}...`
-                      : page.description
+                  {page.keywords?.length
+                    ? `${page.keywords.length} keywords`
                     : "—"}
                 </span>
               </div>
               <div>
-                <span className="text-muted-foreground">Keywords:</span>
+                <span className="text-muted-foreground">Images:</span>
                 <span className="ml-2">
-                  {page.keywords?.length
-                    ? `${page.keywords.length} defined`
-                    : "—"}
+                  {page.images?.length ? `${page.images.length} images` : "—"}
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">
+                  Current Structure:
+                </span>
+                <span className="ml-2">
+                  {page.aiRecommendContentStructure?.length || 0} elements
                 </span>
               </div>
               <div>
@@ -957,10 +590,6 @@ export interface PageSections {
               <div>
                 <span className="text-muted-foreground">Taxonomy:</span>
                 <span className="ml-2">{page.taxonomy || "—"}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Attention:</span>
-                <span className="ml-2">{page.attention || "—"}</span>
               </div>
               <div>
                 <span className="text-muted-foreground">Audiences:</span>
@@ -980,57 +609,69 @@ export interface PageSections {
                     ?.label || "—"}
                 </span>
               </div>
-              {customRequirements.trim() && (
-                <div className="md:col-span-2">
-                  <span className="text-muted-foreground">
-                    Custom Requirements:
-                  </span>
-                  <span className="ml-2">
-                    Added ({customRequirements.trim().length} characters)
-                  </span>
-                </div>
-              )}
+              <div>
+                <span className="text-muted-foreground">Prompt Status:</span>
+                <span className="ml-2">
+                  {isPromptReady ? (
+                    <Badge variant="default" className="bg-green-600 text-xs">
+                      Ready for AI
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary" className="text-xs">
+                      Not Ready
+                    </Badge>
+                  )}
+                </span>
+              </div>
             </div>
           </div>
-          <h3 className="text-lg font-semibold mt-10">
-            Check Your Content Structure: File Tree
-          </h3>
-          <p className="text-gray-400 text-sm">
-            {pageData.page.aiRecommendContentStructure
-              ? "Generated content structure from AI recommendations"
-              : "If you need to update your content structure, use Pro Flow"}
-          </p>
 
-          {pageData.page.aiRecommendContentStructure &&
-            pageData.page.aiRecommendContentStructure.length > 0 && (
-              <TOC
-                toc={fileTreeDataTransformer(
-                  pageData.page.aiRecommendContentStructure
-                )}
-              />
+          {/* Current Content Structure Preview */}
+          {page.aiRecommendContentStructure &&
+            page.aiRecommendContentStructure.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold mb-2">
+                  Current Content Structure (Will be Enhanced)
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  The AI will expand this structure with selfPrompt fields for
+                  recursive generation
+                </p>
+                <TOC
+                  toc={fileTreeDataTransformer(
+                    page.aiRecommendContentStructure
+                  )}
+                />
+              </div>
             )}
-          {/* System Instruction Textarea */}
+
+          {/* Enhanced System Instruction */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium">
-                System Instruction for AI Model
+                Enhanced System Instruction for Recursive Generation
               </label>
               <Button
                 onClick={handleCopyInstruction}
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-2"
-                disabled={!systemInstruction}
+                disabled={!systemInstruction || isPromptUpdating}
               >
-                {isCopied ? (
+                {isPromptUpdating ? (
+                  <>
+                    <LoadingSpinner className="size-4" />
+                    Updating...
+                  </>
+                ) : isCopied ? (
                   <>
                     <CheckCircle className="size-4 text-green-600" />
-                    Copied!
+                    Copied & Ready!
                   </>
                 ) : (
                   <>
                     <Copy className="size-4" />
-                    Copy Instruction
+                    Copy Enhanced Instruction
                   </>
                 )}
               </Button>
@@ -1044,41 +685,28 @@ export interface PageSections {
                 backgroundColor: "#ffffff",
                 color: "#000000",
               }}
-              placeholder="Generating personalized system instruction..."
+              placeholder="Generating comprehensive enhanced system instruction..."
             />
           </div>
-          {/* Additional Information */}
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 dark:bg-amber-950 dark:border-amber-800">
-            <h5 className="font-medium text-amber-900 dark:text-amber-100 mb-2 text-sm">
-              Important Notes:
+
+          {/* Enhanced Information */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3 dark:bg-green-950 dark:border-green-800">
+            <h5 className="font-medium text-green-900 dark:text-green-100 mb-2 text-sm">
+              🚀 Enhanced System Features:
             </h5>
-            <ul className="space-y-1 text-amber-800 dark:text-amber-200 text-xs">
+            <ul className="space-y-1 text-green-800 dark:text-green-200 text-xs">
               <li>
-                • The instruction includes page-specific data, personalization
-                settings, and custom requirements
+                • Complete page configuration data transmission (all fields
+                included)
               </li>
+              <li>• Current content structure analysis and enhancement</li>
+              <li>• selfPrompt generation for each content element</li>
+              <li>• Resource and link suggestions for recursive generation</li>
+              <li>• SEO optimization with keyword distribution</li>
+              <li>• Quality criteria and validation rules for each element</li>
+              <li>• Dependencies mapping for logical content flow</li>
               <li>
-                • Content will be optimized for American audience with US
-                English
-              </li>
-              <li>
-                • Make sure to use a capable AI model (GPT-4 or similar) for
-                best results
-              </li>
-              <li>
-                • The generated JSON should match the TypeScript PageData schema
-              </li>
-              <li>
-                • Review the generated content before applying it to the live
-                page
-              </li>
-              <li>
-                • Custom requirements will be prioritized during content
-                generation
-              </li>
-              <li>
-                • Personalization settings affect tone, style, and content
-                structure
+                • Unlimited content generation through recursive architecture
               </li>
             </ul>
           </div>
@@ -1087,67 +715,3 @@ export interface PageSections {
     </div>
   );
 }
-
-export type TreeNode = {
-  id: string;
-  name: string;
-  isSelectable?: boolean;
-  children?: TreeNode[];
-};
-
-export const fileTreeData: TreeNode[] = [
-  {
-    id: "components",
-    name: "components",
-    children: [
-      {
-        id: "table_of_content",
-        name: "table_of_content",
-        children: [
-          { id: "tree-item.tsx", name: "tree-item.tsx" },
-          { id: "tree.tsx", name: "tree.tsx" },
-          { id: "toc.tsx", name: "toc.tsx" },
-        ],
-      },
-      {
-        id: "auth",
-        name: "auth",
-        children: [
-          { id: "submit-auth-form.tsx", name: "submit-auth-form.tsx" },
-          { id: "auth-schema.ts", name: "auth-schema.ts" },
-          { id: "auth-provider.tsx", name: "auth-provider.tsx" },
-        ],
-      },
-      {
-        id: "ui",
-        name: "ui",
-        children: [
-          { id: "button.tsx", name: "button.tsx" },
-          { id: "input.tsx", name: "input.tsx" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "app",
-    name: "app",
-    children: [
-      {
-        id: "login",
-        name: "login",
-        children: [{ id: "page.tsx", name: "page.tsx" }],
-      },
-      {
-        id: "register",
-        name: "register",
-        children: [{ id: "page.tsx", name: "page.tsx" }],
-      },
-      { id: "layout.tsx", name: "layout.tsx" },
-    ],
-  },
-  {
-    id: "lib",
-    name: "lib",
-    children: [{ id: "auth.ts", name: "auth.ts" }],
-  },
-];

@@ -153,20 +153,6 @@ export type ContentTag =
   | SemanticBlockType
   | AIGeneratedBlockType;
 
-export interface SemanticMetadata {
-  purpose?: string;
-  userIntent?:
-    | "informational"
-    | "navigational"
-    | "transactional"
-    | "commercial";
-  interactionType?: "passive" | "interactive" | "form" | "media";
-  visualPriority?: "primary" | "secondary" | "tertiary";
-  conversionGoal?: string;
-  aiClassificationConfidence?: number;
-  aiGeneratedDescription?: string;
-}
-
 export interface ContentElementAnalysis {
   qualityScore?: number;
   effectivenessRating?: "poor" | "average" | "good" | "excellent";
@@ -196,7 +182,6 @@ export interface ContentElementAnalysis {
 export interface ContentStructure {
   classification: ContentClassification;
   tag?: ContentTag;
-  semanticMetadata?: SemanticMetadata;
   keywords?: string[];
   intent?: string;
   taxonomy?: string;
