@@ -158,7 +158,9 @@ export interface ContentElementAnalysis {
   };
 }
 
+export type ContentClassification = "semantic" | "technical" | "hybrid";
 export interface ContentStructure {
+  classification?: ContentClassification;
   tag?: ContentTag;
   keywords?: string[];
   intent?: string;
@@ -173,6 +175,11 @@ export interface ContentStructure {
     minWords: number;
     maxWords: number;
     actualContent: string;
+    position?: {
+      order?: number;
+      depth?: number;
+      parentTag?: ContentTag;
+    };
   };
   realContentStructure?: ContentStructure[];
 }
