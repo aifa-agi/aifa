@@ -52,21 +52,16 @@ export interface PageImages {
   href?: string;
 }
 
-export type ContentClassification = "semantic" | "technical" | "hybrid";
-
 export type TechnicalTag =
   | "h1"
   | "h2"
   | "h3"
   | "h4"
-  | "h5"
-  | "h6"
   | "p"
   | "ul"
   | "ol"
   | "li"
   | "blockquote"
-  | "pre"
   | "code"
   | "table"
   | "thead"
@@ -74,22 +69,7 @@ export type TechnicalTag =
   | "tr"
   | "td"
   | "th"
-  | "img"
-  | "a"
-  | "div"
-  | "section"
-  | "article"
-  | "strong"
-  | "em"
-  | "hr"
-  | "button"
-  | "input"
-  | "form"
-  | "nav"
-  | "header"
-  | "footer"
-  | "aside"
-  | "main";
+  | "img";
 
 export type SemanticBlockType =
   | "hero"
@@ -148,10 +128,9 @@ export type SemanticBlockType =
 
 export type AIGeneratedBlockType = `ai.${string}`;
 
-export type ContentTag =
-  | TechnicalTag
-  | SemanticBlockType
-  | AIGeneratedBlockType;
+export type ContentTag = TechnicalTag;
+// | SemanticBlockType
+// | AIGeneratedBlockType;
 
 export interface ContentElementAnalysis {
   qualityScore?: number;
@@ -180,7 +159,6 @@ export interface ContentElementAnalysis {
 }
 
 export interface ContentStructure {
-  classification: ContentClassification;
   tag?: ContentTag;
   keywords?: string[];
   intent?: string;
@@ -190,29 +168,11 @@ export interface ContentStructure {
   selfPrompt?: string;
   designDescription?: string;
   connectedDesignSectionId?: string;
-  additionalData?: {
-    actualContent?: string;
-    position?: {
-      order?: number;
-      depth?: number;
-      parentTag?: ContentTag;
-    };
-    styling?: {
-      hasSpecialFormatting?: boolean;
-      visualWeight?: "light" | "medium" | "bold";
-      colorScheme?: string;
-    };
-    behaviorMetrics?: {
-      timeOnElement?: number;
-      clickThroughRate?: number;
-      scrollDepth?: number;
-      conversionRate?: number;
-    };
-    technicalImplementation?: {
-      requiredComponents?: string[];
-      dependencies?: string[];
-      complexity?: "simple" | "moderate" | "complex";
-    };
+  linksToSource?: string[];
+  additionalData: {
+    minWords: number;
+    maxWords: number;
+    actualContent: string;
   };
   realContentStructure?: ContentStructure[];
 }

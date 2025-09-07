@@ -12,8 +12,9 @@ export const textDocumentHandler = createDocumentHandler<"text">({
 
     const { fullStream } = streamText({
       model: myProvider.languageModel("artifact-model"),
+      maxTokens: 20000,
       system:
-        "Write about the given topic. Markdown is supported. Use headings wherever appropriate.",
+        "Write about the given topic. Markdown is supported. Strictly follow the instructions provided.",
       experimental_transform: smoothStream({ chunking: "word" }),
       prompt: title,
     });
@@ -40,6 +41,7 @@ export const textDocumentHandler = createDocumentHandler<"text">({
 
     const { fullStream } = streamText({
       model: myProvider.languageModel("artifact-model"),
+      maxTokens: 30000,
       system: updateDocumentPrompt(document.content, "text"),
       experimental_transform: smoothStream({ chunking: "word" }),
       prompt: description,

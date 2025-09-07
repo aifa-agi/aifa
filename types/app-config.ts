@@ -7,6 +7,7 @@ export interface AppConfig {
   ogImage: string;
   manifest: string;
   mailSupport: string;
+  lang: string;
 
   illustrations: {
     loading: {

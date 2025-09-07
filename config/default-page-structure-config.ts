@@ -1,839 +1,649 @@
-import {
-  ContentClassification,
-  ContentStructure,
-} from "@/app/@right/(_service)/(_types)/page-types";
+import { ContentStructure } from "@/app/@right/(_service)/(_types)/page-types";
 
 /**
- * Default content structure template for new pages
- * Creates a hierarchical structure: H2 -> P + 3x(H3 -> P + 3x(H4 -> P + UL))
- */
-
-/**
- * Use Ai if you need generate another structer for Light Flow or use Content generator: PRO Flow
+ * Enhanced realistic content structure template
+ * More human-like patterns with variable element placement
+ * Total word count increased by 30%: ~1,500-5,000 words
  */
 export const DEFAULT_CONTENT_STRUCTURE: ContentStructure[] = [
-  // First H2 section
+  // Introduction section (added for realism)
   {
-    classification: "technical" as ContentClassification,
     tag: "h2",
     additionalData: {
-      actualContent: "Main Section 1",
+      minWords: 3,
+      maxWords: 8,
+      actualContent: "Introduction and Overview",
     },
     realContentStructure: [
-      // Section description
+      // Opening paragraph without immediate image (more natural)
       {
-        classification: "technical" as ContentClassification,
         tag: "p",
         additionalData: {
-          actualContent: "Description for main section 1",
+          minWords: 120,
+          maxWords: 250,
+          actualContent:
+            "This comprehensive guide provides detailed information about system implementation, covering essential concepts, practical examples, and best practices for optimal performance across various deployment scenarios.",
         },
       },
-      // Three H3 subsections
+      // Second paragraph for context (human writers often use multiple paragraphs)
       {
-        classification: "technical" as ContentClassification,
+        tag: "p",
+        additionalData: {
+          minWords: 80,
+          maxWords: 180,
+          actualContent:
+            "Whether you're a beginner looking to understand the fundamentals or an experienced developer seeking advanced techniques, this documentation will guide you through every step of the process.",
+        },
+      },
+      // Image after context is established
+      {
+        tag: "img",
+        additionalData: {
+          minWords: 5,
+          maxWords: 15,
+          actualContent:
+            "System architecture overview diagram showing main components",
+        },
+      },
+      // Key benefits as blockquote
+      {
+        tag: "blockquote",
+        additionalData: {
+          minWords: 25,
+          maxWords: 50,
+          actualContent:
+            "Success in implementation requires careful planning, systematic approach, and continuous monitoring to achieve sustainable results that meet business objectives.",
+        },
+      },
+    ],
+  },
+
+  // First main section - Technical Foundation
+  {
+    tag: "h2",
+    additionalData: {
+      minWords: 3,
+      maxWords: 8,
+      actualContent: "System Requirements and Setup",
+    },
+    realContentStructure: [
+      {
+        tag: "p",
+        additionalData: {
+          minWords: 100,
+          maxWords: 200,
+          actualContent:
+            "Understanding system requirements is crucial for successful deployment and optimal performance. This section covers hardware specifications, software dependencies, and environmental considerations.",
+        },
+      },
+      // Requirements subsection
+      {
         tag: "h3",
         additionalData: {
-          actualContent: "Subsection 1.1",
+          minWords: 2,
+          maxWords: 6,
+          actualContent: "Hardware Requirements",
         },
         realContentStructure: [
           {
-            classification: "technical" as ContentClassification,
             tag: "p",
             additionalData: {
-              actualContent: "Description for subsection 1.1",
+              minWords: 70,
+              maxWords: 140,
+              actualContent:
+                "Proper hardware configuration ensures smooth operation and prevents performance bottlenecks during peak usage periods.",
             },
           },
-          // Three H4 elements
+          // Multiple paragraphs for detailed explanation (realistic pattern)
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "p",
             additionalData: {
-              actualContent: "Topic 1.1.1",
+              minWords: 90,
+              maxWords: 180,
+              actualContent:
+                "CPU requirements vary depending on your expected workload and concurrent user count. Memory allocation should account for both application needs and operating system overhead.",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.1.1",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.1.1",
-                },
-              },
-            ],
           },
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "img",
             additionalData: {
-              actualContent: "Topic 1.1.2",
+              minWords: 5,
+              maxWords: 15,
+              actualContent:
+                "Hardware requirements comparison chart for different deployment sizes",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.1.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.1.2",
-                },
-              },
-            ],
           },
+          // Requirements table
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "table",
             additionalData: {
-              actualContent: "Topic 1.1.3",
+              minWords: 80,
+              maxWords: 160,
+              actualContent:
+                "Detailed hardware specifications table with minimum and recommended configurations for different deployment scenarios including CPU, RAM, storage, and network requirements",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.1.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.1.3",
-                },
-              },
-            ],
           },
         ],
       },
+      // Software dependencies without immediate image (variation)
       {
-        classification: "technical" as ContentClassification,
         tag: "h3",
         additionalData: {
-          actualContent: "Subsection 1.2",
+          minWords: 2,
+          maxWords: 6,
+          actualContent: "Software Dependencies",
         },
         realContentStructure: [
           {
-            classification: "technical" as ContentClassification,
             tag: "p",
             additionalData: {
-              actualContent: "Description for subsection 1.2",
+              minWords: 80,
+              maxWords: 160,
+              actualContent:
+                "Required software components must be installed and properly configured before system deployment can begin successfully.",
             },
           },
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "ul",
             additionalData: {
-              actualContent: "Topic 1.2.1",
+              minWords: 40,
+              maxWords: 80,
+              actualContent:
+                "Essential software packages including runtime environments, database systems, web servers, and security tools with specific version requirements",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.2.1",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.2.1",
-                },
-              },
-            ],
           },
+          // Code example without separate subsection
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "code",
             additionalData: {
-              actualContent: "Topic 1.2.2",
+              minWords: 20,
+              maxWords: 50,
+              actualContent:
+                "Installation script example with package manager commands and configuration options for automated deployment",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.2.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.2.2",
-                },
-              },
-            ],
           },
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 1.2.3",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.2.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.2.3",
-                },
-              },
-            ],
-          },
-        ],
-      },
-      {
-        classification: "technical" as ContentClassification,
-        tag: "h3",
-        additionalData: {
-          actualContent: "Subsection 1.3",
-        },
-        realContentStructure: [
-          {
-            classification: "technical" as ContentClassification,
             tag: "p",
             additionalData: {
-              actualContent: "Description for subsection 1.3",
+              minWords: 60,
+              maxWords: 120,
+              actualContent:
+                "Version compatibility is critical for system stability. Always verify that all components work together seamlessly.",
             },
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 1.3.1",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.3.1",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.3.1",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 1.3.2",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.3.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.3.2",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 1.3.3",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 1.3.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 1.3.3",
-                },
-              },
-            ],
           },
         ],
       },
     ],
   },
-  // Second H2 section
+
+  // Second main section - Implementation Process
   {
-    classification: "technical" as ContentClassification,
     tag: "h2",
     additionalData: {
-      actualContent: "Main Section 2",
+      minWords: 3,
+      maxWords: 8,
+      actualContent: "Step-by-Step Implementation",
     },
     realContentStructure: [
-      // Section description
       {
-        classification: "technical" as ContentClassification,
+        tag: "img",
+        additionalData: {
+          minWords: 5,
+          maxWords: 15,
+          actualContent:
+            "Implementation workflow diagram showing the complete process from setup to deployment",
+        },
+      },
+      {
         tag: "p",
         additionalData: {
-          actualContent: "Description for main section 2",
+          minWords: 110,
+          maxWords: 220,
+          actualContent:
+            "This implementation guide provides step-by-step instructions, practical examples, and troubleshooting tips to ensure successful deployment and configuration of the system in various environments.",
         },
       },
-      // Three H3 subsections
+      // Initial setup
       {
-        classification: "technical" as ContentClassification,
         tag: "h3",
         additionalData: {
-          actualContent: "Subsection 2.1",
+          minWords: 2,
+          maxWords: 5,
+          actualContent: "Initial Configuration",
         },
         realContentStructure: [
           {
-            classification: "technical" as ContentClassification,
             tag: "p",
             additionalData: {
-              actualContent: "Description for subsection 2.1",
+              minWords: 85,
+              maxWords: 170,
+              actualContent:
+                "Beginning your implementation journey requires proper preparation and understanding of core configuration concepts and best practices.",
             },
           },
-          // Three H4 elements
           {
-            classification: "technical" as ContentClassification,
+            tag: "ol",
+            additionalData: {
+              minWords: 50,
+              maxWords: 100,
+              actualContent:
+                "Step-by-step configuration process including environment setup, parameter configuration, security settings, and initial testing procedures",
+            },
+          },
+          // Advanced configuration as nested section
+          {
             tag: "h4",
             additionalData: {
-              actualContent: "Topic 2.1.1",
+              minWords: 2,
+              maxWords: 5,
+              actualContent: "Advanced Settings",
             },
             realContentStructure: [
               {
-                classification: "technical" as ContentClassification,
                 tag: "p",
                 additionalData: {
-                  actualContent: "Description for topic 2.1.1",
+                  minWords: 75,
+                  maxWords: 150,
+                  actualContent:
+                    "Advanced configuration options provide additional flexibility and customization possibilities for experienced users and complex scenarios.",
                 },
               },
               {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
+                tag: "code",
                 additionalData: {
-                  actualContent: "List items for topic 2.1.1",
+                  minWords: 25,
+                  maxWords: 60,
+                  actualContent:
+                    "Advanced configuration file example with custom parameters, optimization settings, and environment-specific variables",
                 },
               },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 2.1.2",
-            },
-            realContentStructure: [
+              // Additional explanation paragraph
               {
-                classification: "technical" as ContentClassification,
                 tag: "p",
                 additionalData: {
-                  actualContent: "Description for topic 2.1.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 2.1.2",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 2.1.3",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 2.1.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 2.1.3",
+                  minWords: 65,
+                  maxWords: 130,
+                  actualContent:
+                    "These settings should only be modified by experienced administrators who understand their impact on system performance.",
                 },
               },
             ],
           },
         ],
       },
+      // Deployment process
       {
-        classification: "technical" as ContentClassification,
         tag: "h3",
         additionalData: {
-          actualContent: "Subsection 2.2",
+          minWords: 1,
+          maxWords: 4,
+          actualContent: "Deployment",
         },
         realContentStructure: [
           {
-            classification: "technical" as ContentClassification,
             tag: "p",
             additionalData: {
-              actualContent: "Description for subsection 2.2",
+              minWords: 95,
+              maxWords: 190,
+              actualContent:
+                "Deployment process involves several critical steps that must be executed in the correct order to ensure system stability and security.",
+            },
+          },
+          // No image here - variation in pattern
+          {
+            tag: "blockquote",
+            additionalData: {
+              minWords: 20,
+              maxWords: 45,
+              actualContent:
+                "A successful deployment is not just about getting the system running, but ensuring it runs reliably under all expected conditions.",
             },
           },
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "ol",
             additionalData: {
-              actualContent: "Topic 2.2.1",
+              minWords: 60,
+              maxWords: 120,
+              actualContent:
+                "Comprehensive deployment checklist including pre-deployment validation, system backup, deployment execution, post-deployment testing, and rollback procedures",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 2.2.1",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 2.2.1",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 2.2.2",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 2.2.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 2.2.2",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 2.2.3",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 2.2.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 2.2.3",
-                },
-              },
-            ],
-          },
-        ],
-      },
-      {
-        classification: "technical" as ContentClassification,
-        tag: "h3",
-        additionalData: {
-          actualContent: "Subsection 2.3",
-        },
-        realContentStructure: [
-          {
-            classification: "technical" as ContentClassification,
-            tag: "p",
-            additionalData: {
-              actualContent: "Description for subsection 2.3",
-            },
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 2.3.1",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 2.3.1",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 2.3.1",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 2.3.2",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 2.3.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 2.3.2",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 2.3.3",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 2.3.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 2.3.3",
-                },
-              },
-            ],
           },
         ],
       },
     ],
   },
-  // Third H2 section
+
+  // Third main section - Advanced Topics
   {
-    classification: "technical" as ContentClassification,
     tag: "h2",
     additionalData: {
-      actualContent: "Main Section 3",
+      minWords: 2,
+      maxWords: 6,
+      actualContent: "Advanced Configuration",
     },
     realContentStructure: [
-      // Section description
       {
-        classification: "technical" as ContentClassification,
         tag: "p",
         additionalData: {
-          actualContent: "Description for main section 3",
+          minWords: 100,
+          maxWords: 200,
+          actualContent:
+            "Advanced configuration techniques enable you to optimize system performance, implement custom workflows, and integrate with existing infrastructure components.",
         },
       },
-      // Three H3 subsections
+      // Performance optimization
       {
-        classification: "technical" as ContentClassification,
         tag: "h3",
         additionalData: {
-          actualContent: "Subsection 3.1",
+          minWords: 2,
+          maxWords: 5,
+          actualContent: "Performance Optimization",
         },
         realContentStructure: [
           {
-            classification: "technical" as ContentClassification,
+            tag: "img",
+            additionalData: {
+              minWords: 5,
+              maxWords: 15,
+              actualContent:
+                "Performance metrics dashboard showing key optimization indicators",
+            },
+          },
+          {
             tag: "p",
             additionalData: {
-              actualContent: "Description for subsection 3.1",
+              minWords: 90,
+              maxWords: 180,
+              actualContent:
+                "System performance can be significantly improved through proper configuration of caching mechanisms, database optimization, and resource allocation strategies.",
             },
           },
-          // Three H4 elements
+          // Multiple techniques paragraphs
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "p",
             additionalData: {
-              actualContent: "Topic 3.1.1",
+              minWords: 85,
+              maxWords: 170,
+              actualContent:
+                "Caching strategies play a crucial role in reducing response times and server load. Implementation should consider cache invalidation patterns and memory usage.",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.1.1",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.1.1",
-                },
-              },
-            ],
           },
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "ul",
             additionalData: {
-              actualContent: "Topic 3.1.2",
+              minWords: 45,
+              maxWords: 90,
+              actualContent:
+                "Key performance optimization techniques including memory management, connection pooling, query optimization, and load balancing strategies",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.1.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.1.2",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 3.1.3",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.1.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.1.3",
-                },
-              },
-            ],
           },
         ],
       },
+      // Security considerations
       {
-        classification: "technical" as ContentClassification,
         tag: "h3",
         additionalData: {
-          actualContent: "Subsection 3.2",
+          minWords: 2,
+          maxWords: 5,
+          actualContent: "Security Best Practices",
         },
         realContentStructure: [
           {
-            classification: "technical" as ContentClassification,
             tag: "p",
             additionalData: {
-              actualContent: "Description for subsection 3.2",
+              minWords: 110,
+              maxWords: 220,
+              actualContent:
+                "Security implementation requires a comprehensive approach including authentication mechanisms, authorization frameworks, data encryption, network security, and regular security auditing procedures.",
             },
           },
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "p",
             additionalData: {
-              actualContent: "Topic 3.2.1",
+              minWords: 80,
+              maxWords: 160,
+              actualContent:
+                "Multi-layered security approach ensures protection against various types of attacks and vulnerabilities while maintaining system usability and performance.",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.2.1",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.2.1",
-                },
-              },
-            ],
           },
+          // Security checklist
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "ol",
             additionalData: {
-              actualContent: "Topic 3.2.2",
+              minWords: 55,
+              maxWords: 110,
+              actualContent:
+                "Security implementation checklist covering user authentication, data encryption, network security, access controls, audit logging, and vulnerability assessment procedures",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.2.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.2.2",
-                },
-              },
-            ],
           },
+          // Security quote
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "blockquote",
             additionalData: {
-              actualContent: "Topic 3.2.3",
+              minWords: 18,
+              maxWords: 40,
+              actualContent:
+                "Security is not a feature to be added later, it's a foundation that must be built into every aspect of the system architecture.",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.2.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.2.3",
-                },
-              },
-            ],
           },
         ],
       },
+    ],
+  },
+
+  // Additional section - Monitoring and Maintenance (added for completeness)
+  {
+    tag: "h2",
+    additionalData: {
+      minWords: 3,
+      maxWords: 7,
+      actualContent: "Monitoring and Maintenance",
+    },
+    realContentStructure: [
       {
-        classification: "technical" as ContentClassification,
+        tag: "p",
+        additionalData: {
+          minWords: 105,
+          maxWords: 210,
+          actualContent:
+            "Ongoing monitoring and regular maintenance are essential for ensuring long-term system reliability, performance, and security in production environments.",
+        },
+      },
+      {
+        tag: "img",
+        additionalData: {
+          minWords: 5,
+          maxWords: 15,
+          actualContent:
+            "System monitoring dashboard with real-time metrics and alerts",
+        },
+      },
+      // Monitoring setup
+      {
         tag: "h3",
         additionalData: {
-          actualContent: "Subsection 3.3",
+          minWords: 2,
+          maxWords: 4,
+          actualContent: "Monitoring Setup",
         },
         realContentStructure: [
           {
-            classification: "technical" as ContentClassification,
             tag: "p",
             additionalData: {
-              actualContent: "Description for subsection 3.3",
+              minWords: 80,
+              maxWords: 160,
+              actualContent:
+                "Effective monitoring requires careful selection of key performance indicators and appropriate alerting thresholds to avoid false positives.",
             },
           },
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "ul",
             additionalData: {
-              actualContent: "Topic 3.3.1",
+              minWords: 40,
+              maxWords: 80,
+              actualContent:
+                "Essential monitoring metrics including system resources, application performance, user activity, error rates, and security events",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.3.1",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.3.1",
-                },
-              },
-            ],
           },
           {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
+            tag: "p",
             additionalData: {
-              actualContent: "Topic 3.3.2",
+              minWords: 70,
+              maxWords: 140,
+              actualContent:
+                "Automated alerting systems should be configured to notify administrators of critical issues while filtering out routine operational events.",
             },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.3.2",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.3.2",
-                },
-              },
-            ],
-          },
-          {
-            classification: "technical" as ContentClassification,
-            tag: "h4",
-            additionalData: {
-              actualContent: "Topic 3.3.3",
-            },
-            realContentStructure: [
-              {
-                classification: "technical" as ContentClassification,
-                tag: "p",
-                additionalData: {
-                  actualContent: "Description for topic 3.3.3",
-                },
-              },
-              {
-                classification: "technical" as ContentClassification,
-                tag: "ul",
-                additionalData: {
-                  actualContent: "List items for topic 3.3.3",
-                },
-              },
-            ],
           },
         ],
+      },
+    ],
+  },
+
+  // Troubleshooting section (commonly found in technical docs)
+  {
+    tag: "h2",
+    additionalData: {
+      minWords: 1,
+      maxWords: 4,
+      actualContent: "Troubleshooting",
+    },
+    realContentStructure: [
+      {
+        tag: "p",
+        additionalData: {
+          minWords: 95,
+          maxWords: 190,
+          actualContent:
+            "Common issues and their solutions are documented here to help you quickly resolve problems and maintain system stability during operation.",
+        },
+      },
+      // Common issues
+      {
+        tag: "h3",
+        additionalData: {
+          minWords: 2,
+          maxWords: 4,
+          actualContent: "Common Issues",
+        },
+        realContentStructure: [
+          {
+            tag: "p",
+            additionalData: {
+              minWords: 75,
+              maxWords: 150,
+              actualContent:
+                "Most operational issues fall into predictable categories and can be resolved using systematic troubleshooting approaches.",
+            },
+          },
+          {
+            tag: "table",
+            additionalData: {
+              minWords: 100,
+              maxWords: 200,
+              actualContent:
+                "Comprehensive troubleshooting reference table listing common problems, their typical causes, diagnostic steps, and detailed solution procedures with examples",
+            },
+          },
+          // Additional troubleshooting paragraph
+          {
+            tag: "p",
+            additionalData: {
+              minWords: 85,
+              maxWords: 170,
+              actualContent:
+                "When troubleshooting complex issues, systematic documentation of symptoms, attempted solutions, and outcomes helps identify patterns and prevent recurrence.",
+            },
+          },
+        ],
+      },
+      // Diagnostic tools
+      {
+        tag: "h3",
+        additionalData: {
+          minWords: 2,
+          maxWords: 4,
+          actualContent: "Diagnostic Tools",
+        },
+        realContentStructure: [
+          {
+            tag: "p",
+            additionalData: {
+              minWords: 90,
+              maxWords: 180,
+              actualContent:
+                "Built-in diagnostic tools and external utilities can help identify root causes of system issues and performance problems quickly and accurately.",
+            },
+          },
+          {
+            tag: "code",
+            additionalData: {
+              minWords: 30,
+              maxWords: 70,
+              actualContent:
+                "Diagnostic command examples including system health checks, log analysis tools, performance profiling utilities, and network connectivity tests",
+            },
+          },
+        ],
+      },
+    ],
+  },
+
+  // Conclusion section (added as requested)
+  {
+    tag: "h2",
+    additionalData: {
+      minWords: 1,
+      maxWords: 3,
+      actualContent: "Conclusion",
+    },
+    realContentStructure: [
+      {
+        tag: "p",
+        additionalData: {
+          minWords: 120,
+          maxWords: 240,
+          actualContent:
+            "This comprehensive guide has covered all essential aspects of system implementation, from initial setup and configuration through advanced optimization and ongoing maintenance procedures.",
+        },
+      },
+      {
+        tag: "p",
+        additionalData: {
+          minWords: 100,
+          maxWords: 200,
+          actualContent:
+            "Successful implementation requires attention to detail, systematic approach, and ongoing commitment to monitoring and maintenance. Following these guidelines will ensure reliable system operation.",
+        },
+      },
+      // Key takeaways
+      {
+        tag: "ul",
+        additionalData: {
+          minWords: 60,
+          maxWords: 120,
+          actualContent:
+            "Key takeaways including importance of proper planning, systematic implementation approach, security considerations, performance monitoring, and continuous improvement practices",
+        },
+      },
+      // Final thoughts
+      {
+        tag: "p",
+        additionalData: {
+          minWords: 80,
+          maxWords: 160,
+          actualContent:
+            "Remember that implementation is just the beginning. Continuous monitoring, regular updates, and proactive maintenance are essential for long-term success.",
+        },
+      },
+      // Closing quote
+      {
+        tag: "blockquote",
+        additionalData: {
+          minWords: 15,
+          maxWords: 35,
+          actualContent:
+            "The best systems are not just well-built, but well-maintained and continuously improved based on real-world usage patterns.",
+        },
       },
     ],
   },
