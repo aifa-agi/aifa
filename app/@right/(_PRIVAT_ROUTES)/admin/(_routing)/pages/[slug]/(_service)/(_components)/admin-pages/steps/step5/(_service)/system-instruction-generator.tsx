@@ -564,14 +564,13 @@ Each relevant selfPrompt MUST incorporate these custom requirements with specifi
     : ""
 }
 
-/**
- * =============================================================================
+=============================================================================
  * RESPONSE FORMAT AND VALIDATION
  * =============================================================================
  */
 
 CRITICAL REQUIREMENTS:
-1. RETURN ONLY VALID JSON
+1. RETURN ONLY VALID JSON ARRAY (NOT OBJECT)
 2. PRESERVE ALL EXISTING FIELDS
 3. FILL ALL NEW FIELDS WITH COMPLETE AUTONOMOUS INFORMATION
 4. DO NOT ADD COMMENTS IN JSON
@@ -581,14 +580,39 @@ CRITICAL REQUIREMENTS:
 8. GENERATE IN "${appConfig.lang}" LANGUAGE
 9. ENSURE MARKDOWN OUTPUT FORMAT INSTRUCTIONS
 
-RESPONSE FORMAT:
-{
-  "aiRecommendContentStructure": [
-    // Your expanded autonomous structure here with linksToSource
-  ]
-}
+// ✅ ИСПРАВЛЕННЫЙ ФОРМАТ ОТВЕТА:
+RESPONSE FORMAT - RETURN ONLY THE ARRAY (NO WRAPPER OBJECT):
+[
+  {
+    "tag": "h2",
+    "keywords": ["keyword1", "keyword2"],
+    "intent": "specific intent for this element",
+    "taxonomy": "content classification",
+    "attention": "why readers should care",
+    "audiences": "target audience for this element",
+    "selfPrompt": "complete autonomous instructions...",
+    "linksToSource": [
+      "https://source1.com",
+      "https://source2.com",
+      "https://source3.com"
+    ],
+    "additionalData": {
+      "minWords": 200,
+      "maxWords": 400,
+      "actualContent": ""
+    },
+    "realContentStructure": []
+  }
+  // Additional elements here...
+]
+
+CRITICAL: DO NOT wrap the array in an object with "aiRecommendContentStructure" field.
+Return ONLY the ContentStructure array directly.
 
 FINAL VALIDATION BEFORE RESPONDING:
+□ JSON is a direct array, NOT an object
+□ Array contains ContentStructure elements
+□ No wrapper object with "aiRecommendContentStructure"
 □ JSON is syntactically valid
 □ All existing data is preserved without modification
 □ New fields are meaningfully filled with detailed information
@@ -611,7 +635,9 @@ Ask yourself for each element: "If I gave ONLY this single element with its link
 
 If the answer is anything other than "YES" - the element needs more detailed information or better source links.
 
-BEGIN COMPREHENSIVE ANALYSIS AND AUTONOMOUS STRUCTURE GENERATION WITH RESEARCH SOURCES NOW!`;
+BEGIN COMPREHENSIVE ANALYSIS AND AUTONOMOUS STRUCTURE GENERATION WITH RESEARCH SOURCES NOW!
+
+IMPORTANT: Your response must be a valid JSON array that starts with [ and ends with ], containing ContentStructure objects.`;
   }, [
     pageData,
     slug,

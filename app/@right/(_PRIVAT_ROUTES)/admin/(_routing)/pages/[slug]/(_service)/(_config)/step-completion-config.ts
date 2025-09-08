@@ -64,15 +64,12 @@ export const STEP_COMPLETION_CONDITIONS: StepCompletionCondition[] = [
   {
     stepKey: "step6",
     validate: (pageData: PageData | null) => {
-      // Step 6: Load Project Schema - завершен если есть черновик отчета
-      return (
-        pageData?.draftReport?.reportId !== undefined &&
-        pageData?.draftReport?.reportId !== ""
-      );
+      // Step 6:
+      return (pageData?.draftContentStructure?.length ?? 0) > 0;
     },
-    description: "Требует генерации черновика отчета",
+    description: "Требует draftContentStructure lenght > 0",
     debugInfo: (pageData) =>
-      `📋 Черновик: ${pageData?.draftReport?.reportId ? "Есть" : "Нет"}`,
+      `📋 Черновик: ${pageData?.draftContentStructure?.length ?? 0}`,
   },
 
   {

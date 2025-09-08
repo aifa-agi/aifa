@@ -6,6 +6,7 @@ import { AdminPagesNavBarProvider } from "./(_service)/(_context)/admin-pages-na
 import AdminPagesNavBar from "./(_service)/(_components)/admin-page-nav-bar";
 import { AdminPageContent } from "./(_service)/(_components)/admin-page-content";
 import { AdminPageDynamicHeader } from "./(_service)/(_components)/admin-page-dynamic-header";
+import { SectionProvider } from "./(_service)/(_context)/section-provider";
 
 interface AdminPageDetailsProps {
   params: Promise<{
@@ -26,18 +27,20 @@ export default async function AdminPageDetails({
 
   return (
     <AdminPagesNavBarProvider slug={slug}>
-      <div className="p-6 w-full">
-        <div className="bg-secondary rounded-lg shadow-sm border p-6">
-          <div className="flex flex-row justify-between items-start gap-3">
-            <AdminPageDynamicHeader />
-            <AdminPagesNavBar />
-          </div>
+      <SectionProvider>
+        <div className="p-6 w-full">
+          <div className="bg-secondary rounded-lg shadow-sm border p-6">
+            <div className="flex flex-row justify-between items-start gap-3">
+              <AdminPageDynamicHeader />
+              <AdminPagesNavBar />
+            </div>
 
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminPageContent />
-          </Suspense>
+            <Suspense fallback={<LoadingSpinner />}>
+              <AdminPageContent />
+            </Suspense>
+          </div>
         </div>
-      </div>
+      </SectionProvider>
     </AdminPagesNavBarProvider>
   );
 }

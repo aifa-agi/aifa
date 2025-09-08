@@ -653,7 +653,6 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
               </label>
               <Button
                 onClick={handleCopyInstruction}
-                variant="outline"
                 size="sm"
                 className="flex items-center gap-2"
                 disabled={!systemInstruction || isPromptUpdating}

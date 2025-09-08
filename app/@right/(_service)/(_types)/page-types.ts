@@ -369,15 +369,30 @@ export interface PageData {
   audiences?: string;
   href?: string;
   roles: UserType[];
-  competitorAnalysis?: CompetitorAnalysis[];
-  aiRecommendContentStructure?: ContentStructure[];
-  knowledgeSettings?: KnowledgeSettings;
-  isReadyPromptForPerplexity?: boolean;
-  userChooseContentStructure?: ContentStructure[];
-  draftReport?: DraftReport;
-  finalReport?: FinalReport;
+
   semanticCapabilities?: AISemanticCapabilities;
   semanticLibrary?: SemanticContentLibrary;
+
+  // step 1, 2
+  competitorAnalysis?: CompetitorAnalysis[];
+
+  //step 3
+  aiRecommendContentStructure?: ContentStructure[];
+
+  // step 4
+  knowledgeSettings?: KnowledgeSettings;
+
+  //step 5
+  isReadyPromptForPerplexity?: boolean;
+
+  //step 6
+  draftContentStructure?: ContentStructure[];
+
+  //step 7
+  draftReport?: DraftReport;
+
+  finalReport?: FinalReport;
+
   hasBadge?: boolean;
   badgeName?: BadgeName;
   badgeLink?: string;
