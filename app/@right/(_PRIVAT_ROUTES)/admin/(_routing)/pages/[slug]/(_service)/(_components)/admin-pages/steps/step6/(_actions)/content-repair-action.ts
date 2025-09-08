@@ -1,12 +1,19 @@
-// @app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step6/(_actions)/content-repair-action.ts
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step6/(_actions)/content-repair-action.ts
 
 "use server";
 
-import { generateObject } from "ai";
+import { generateObject } from "ai"; // ✅ Возвращаемся к generateObject (работает!)
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 
-// ✅ Правильный импорт типов
+// ✅ Импортируем утилиты из отдельного файла
+import {
+  ContentStructureType,
+  calculateContentRepairConfidence,
+  validateRepairedContentStructure,
+} from "../(_utils)/content-repair-helpers";
+
+// ✅ ТОЛЬКО интерфейсы для Server Action
 export interface ContentRepairServerRequest {
   invalidJsonString: string;
   pageName: string;
@@ -24,7 +31,7 @@ export interface ContentRepairServerResult {
 
 const OPENAI_MODEL = "gpt-4o";
 
-// ✅ Zod схема
+// ✅ Zod схемы (минимальные, только для валидации)
 const TechnicalTagSchema = z.enum([
   "h1",
   "h2",
@@ -46,65 +53,6 @@ const TechnicalTagSchema = z.enum([
 ]);
 
 const ContentClassificationSchema = z.enum(["semantic", "technical", "hybrid"]);
-
-type ContentStructureType = {
-  classification?: "semantic" | "technical" | "hybrid";
-  tag?:
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "p"
-    | "ul"
-    | "ol"
-    | "li"
-    | "blockquote"
-    | "code"
-    | "table"
-    | "thead"
-    | "tbody"
-    | "tr"
-    | "td"
-    | "th"
-    | "img";
-  keywords?: string[];
-  intent?: string;
-  taxonomy?: string;
-  attention?: string;
-  audiences?: string;
-  selfPrompt?: string;
-  designDescription?: string;
-  connectedDesignSectionId?: string;
-  linksToSource?: string[];
-  additionalData: {
-    minWords: number;
-    maxWords: number;
-    actualContent: string;
-    position?: {
-      order?: number;
-      depth?: number;
-      parentTag?:
-        | "h1"
-        | "h2"
-        | "h3"
-        | "h4"
-        | "p"
-        | "ul"
-        | "ol"
-        | "li"
-        | "blockquote"
-        | "code"
-        | "table"
-        | "thead"
-        | "tbody"
-        | "tr"
-        | "td"
-        | "th"
-        | "img";
-    };
-  };
-  realContentStructure?: ContentStructureType[];
-};
 
 const ContentStructureSchema: z.ZodType<ContentStructureType> = z.lazy(() =>
   z.object({
@@ -135,27 +83,28 @@ const ContentStructureSchema: z.ZodType<ContentStructureType> = z.lazy(() =>
   })
 );
 
-// ✅ ИСПРАВЛЕНИЕ: Оборачиваем массив в объект
 const ContentRepairResponseSchema = z.object({
   contentStructure: z.array(ContentStructureSchema),
 });
 
 /**
- * Server Action для восстановления ContentStructure JSON через OpenAI
+ * ✅ ЕДИНСТВЕННАЯ экспортируемая async функция (Server Action)
  */
 export async function repairContentStructureAction(
   request: ContentRepairServerRequest,
   attemptNumber: number = 1
 ): Promise<ContentRepairServerResult> {
-  console.log("🔧 Server: Starting ContentStructure repair with OpenAI:", {
-    originalLength: request.invalidJsonString.length,
-    pageName: request.pageName,
-    attempt: attemptNumber,
-  });
+  console.log(
+    "🔧 Server: Starting ContentStructure repair with generateObject:",
+    {
+      originalLength: request.invalidJsonString.length,
+      pageName: request.pageName,
+      attempt: attemptNumber,
+    }
+  );
 
   try {
-    const repairPrompt = `
-You are an expert JSON repair tool specialized in ContentStructure data format. Fix the following invalid JSON data for content structure.
+    const repairPrompt = `You are an expert JSON repair tool specialized in ContentStructure data format. Fix the following invalid JSON data for content structure.
 
 Page Information:
 - Name: ${request.pageName}
@@ -207,20 +156,13 @@ IMPORTANT REPAIR RULES:
 8. Preserve any SEO keywords and intent information
 9. If completely unusable, create basic structure with explanation
 
-CONTENT STRUCTURE GUIDELINES:
-- h1: Main page titles (minWords: 3-10, maxWords: 5-15)
-- h2: Section headers (minWords: 3-8, maxWords: 5-12)
-- h3: Subsection headers (minWords: 2-6, maxWords: 4-10)
-- p: Paragraph content (minWords: 20-100, maxWords: 50-300)
-- ul/ol: List containers (minWords: 10-50, maxWords: 30-150)
-- li: List items (minWords: 3-20, maxWords: 10-50)
+Return a properly structured response object with contentStructure array.`;
 
-Return a properly structured response object with contentStructure array.
-`;
+    console.log(
+      "🔧 Server: Generated repair prompt, calling generateObject..."
+    );
 
-    console.log("🔧 Server: Generated repair prompt, calling OpenAI...");
-
-    // ✅ ИСПРАВЛЕНИЕ: Используем схему объекта вместо массива
+    // ✅ РАБОЧИЙ метод: generateObject вместо streamObject
     const { object } = await generateObject({
       model: openai(OPENAI_MODEL),
       schema: ContentRepairResponseSchema,
@@ -228,15 +170,15 @@ Return a properly structured response object with contentStructure array.
       temperature: 0.2,
     });
 
-    // ✅ ИСПРАВЛЕНИЕ: Извлекаем массив из объекта
     const repairedArray = object.contentStructure;
 
-    console.log("✅ Server: OpenAI repair successful:", {
+    console.log("✅ Server: generateObject repair successful:", {
       repairedArrayLength: repairedArray.length,
       firstElementKeys: repairedArray[0] ? Object.keys(repairedArray[0]) : [],
       hasAdditionalData: repairedArray.every((item) => item.additionalData),
     });
 
+    // ✅ Используем импортированную функцию
     const confidence = calculateContentRepairConfidence(
       repairedArray,
       request.invalidJsonString
@@ -275,60 +217,3 @@ Return a properly structured response object with contentStructure array.
     };
   }
 }
-
-/**
- * Расчет уверенности на основе качества восстановленных данных ContentStructure
- */
-function calculateContentRepairConfidence(
-  repairedData: ContentStructureType[],
-  originalData: string
-): number {
-  let confidence = 0.4;
-
-  if (Array.isArray(repairedData) && repairedData.length > 0) {
-    confidence += 0.2;
-  }
-
-  const validElements = repairedData.filter((item) => {
-    return (
-      item.additionalData &&
-      typeof item.additionalData.actualContent === "string" &&
-      typeof item.additionalData.minWords === "number" &&
-      typeof item.additionalData.maxWords === "number"
-    );
-  });
-
-  const validElementsRatio = validElements.length / repairedData.length;
-  confidence += validElementsRatio * 0.2;
-
-  const elementsWithIntent = repairedData.filter((item) => item.intent).length;
-  const elementsWithKeywords = repairedData.filter(
-    (item) => item.keywords?.length && item.keywords.length > 0
-  ).length;
-  const elementsWithSelfPrompt = repairedData.filter(
-    (item) => item.selfPrompt
-  ).length;
-
-  if (elementsWithIntent > 0) confidence += 0.05;
-  if (elementsWithKeywords > 0) confidence += 0.05;
-  if (elementsWithSelfPrompt > 0) confidence += 0.05;
-
-  const logicalWordCounts = validElements.filter(
-    (item) =>
-      item.additionalData.minWords <= item.additionalData.maxWords &&
-      item.additionalData.minWords > 0 &&
-      item.additionalData.maxWords > 0
-  ).length;
-
-  if (logicalWordCounts === validElements.length && validElements.length > 0) {
-    confidence += 0.1;
-  }
-
-  const originalWordCount = originalData.split(/\s+/).length;
-  if (originalWordCount > 100) confidence += 0.05;
-  if (originalWordCount > 500) confidence += 0.05;
-
-  return Math.min(confidence, 1.0);
-}
-
-// ✅ УБРАНА ФУНКЦИЯ validateRepairedContentStructure - она была не нужна здесь
