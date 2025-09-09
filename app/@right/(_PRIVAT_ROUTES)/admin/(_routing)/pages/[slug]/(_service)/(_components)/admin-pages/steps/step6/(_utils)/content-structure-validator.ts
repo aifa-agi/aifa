@@ -10,8 +10,8 @@ import {
 } from "../(_types)/content-repair-types";
 
 /**
- * Валидатор для ContentStructure массивов
- * Проверяет соответствие структуры требованиям типизации
+ * Validator for ContentStructure arrays
+ * Checks structure compliance with typing requirements
  */
 export class ContentStructureValidator {
   private static readonly REQUIRED_FIELDS = ["additionalData"] as const;
@@ -43,13 +43,13 @@ export class ContentStructureValidator {
   ];
 
   /**
-   * Основная функция валидации ContentStructure массива
+   * Main validation function for ContentStructure array
    */
   public static validateContentStructure(data: any): ContentValidationResult {
     const errors: ContentValidationError[] = [];
     const warnings: ContentValidationError[] = [];
 
-    // Проверка что это массив
+    // Check if it's an array
     if (!Array.isArray(data)) {
       errors.push({
         field: "root",
@@ -72,7 +72,7 @@ export class ContentStructureValidator {
       });
     }
 
-    // Валидация каждого элемента
+    // Validate each element
     data.forEach((item, index) => {
       const itemErrors = this.validateContentStructureItem(item, index);
       errors.push(...itemErrors.filter((e) => e.severity === "error"));
@@ -88,7 +88,7 @@ export class ContentStructureValidator {
   }
 
   /**
-   * Валидация отдельного элемента ContentStructure
+   * Validation of individual ContentStructure element
    */
   private static validateContentStructureItem(
     item: any,
@@ -106,7 +106,7 @@ export class ContentStructureValidator {
       return errors;
     }
 
-    // Проверка обязательных полей
+    // Check required fields
     this.REQUIRED_FIELDS.forEach((field) => {
       if (!(field in item)) {
         errors.push({
@@ -118,7 +118,7 @@ export class ContentStructureValidator {
       }
     });
 
-    // Проверка additionalData
+    // Check additionalData
     if (item.additionalData) {
       const additionalDataErrors = this.validateAdditionalData(
         item.additionalData,
@@ -127,7 +127,7 @@ export class ContentStructureValidator {
       errors.push(...additionalDataErrors);
     }
 
-    // Проверка тега
+    // Check tag
     if (item.tag && !this.VALID_TECHNICAL_TAGS.includes(item.tag)) {
       errors.push({
         field: `[${index}].tag`,
@@ -137,7 +137,7 @@ export class ContentStructureValidator {
       });
     }
 
-    // Проверка keywords
+    // Check keywords
     if (item.keywords && !Array.isArray(item.keywords)) {
       errors.push({
         field: `[${index}].keywords`,
@@ -147,7 +147,7 @@ export class ContentStructureValidator {
       });
     }
 
-    // Проверка строковых полей
+    // Check string fields
     const stringFields = [
       "intent",
       "taxonomy",
@@ -166,7 +166,7 @@ export class ContentStructureValidator {
       }
     });
 
-    // Проверка вложенной структуры
+    // Check nested structure
     if (item.realContentStructure) {
       if (!Array.isArray(item.realContentStructure)) {
         errors.push({
@@ -176,7 +176,7 @@ export class ContentStructureValidator {
           severity: "error",
         });
       } else {
-        // Рекурсивная проверка
+        // Recursive check
         const nestedErrors = this.validateContentStructure(
           item.realContentStructure
         );
@@ -193,7 +193,7 @@ export class ContentStructureValidator {
   }
 
   /**
-   * Валидация поля additionalData
+   * Validation of additionalData field
    */
   private static validateAdditionalData(
     additionalData: any,
@@ -211,7 +211,7 @@ export class ContentStructureValidator {
       return errors;
     }
 
-    // Проверка обязательных полей
+    // Check required fields
     this.REQUIRED_ADDITIONAL_DATA_FIELDS.forEach((field) => {
       if (!(field in additionalData)) {
         errors.push({
@@ -223,7 +223,7 @@ export class ContentStructureValidator {
       }
     });
 
-    // Проверка типов
+    // Check types
     if (typeof additionalData.minWords !== "number") {
       errors.push({
         field: `[${parentIndex}].additionalData.minWords`,
@@ -251,7 +251,7 @@ export class ContentStructureValidator {
       });
     }
 
-    // Логические проверки
+    // Logical checks
     if (
       typeof additionalData.minWords === "number" &&
       typeof additionalData.maxWords === "number" &&
@@ -265,7 +265,7 @@ export class ContentStructureValidator {
       });
     }
 
-    // Проверка position если существует
+    // Check position if exists
     if (additionalData.position) {
       const positionErrors = this.validatePosition(
         additionalData.position,
@@ -278,7 +278,7 @@ export class ContentStructureValidator {
   }
 
   /**
-   * Валидация поля position
+   * Validation of position field
    */
   private static validatePosition(
     position: any,
@@ -330,7 +330,7 @@ export class ContentStructureValidator {
   }
 
   /**
-   * Попытка автоматического исправления простых ошибок
+   * Attempt to automatically fix simple errors
    */
   public static autoFixContentStructure(data: any[]): {
     fixed: ContentStructure[];
@@ -342,7 +342,7 @@ export class ContentStructureValidator {
     data.forEach((item) => {
       const fixedItem = { ...item };
 
-      // Исправление отсутствующего additionalData
+      // Fix missing additionalData
       if (!fixedItem.additionalData) {
         fixedItem.additionalData = {
           minWords: 0,
@@ -352,7 +352,7 @@ export class ContentStructureValidator {
         fixedCount++;
       }
 
-      // Исправление типов в additionalData
+      // Fix types in additionalData
       if (fixedItem.additionalData) {
         if (typeof fixedItem.additionalData.minWords !== "number") {
           fixedItem.additionalData.minWords = 0;
@@ -368,7 +368,7 @@ export class ContentStructureValidator {
         }
       }
 
-      // Исправление массива keywords
+      // Fix keywords array
       if (fixedItem.keywords && !Array.isArray(fixedItem.keywords)) {
         fixedItem.keywords = [];
         fixedCount++;
@@ -384,7 +384,7 @@ export class ContentStructureValidator {
   }
 
   /**
-   * Получение человекочитаемого описания ошибки
+   * Get human-readable error description
    */
   public static getErrorSummary(result: ContentValidationResult): string {
     if (result.isValid) {

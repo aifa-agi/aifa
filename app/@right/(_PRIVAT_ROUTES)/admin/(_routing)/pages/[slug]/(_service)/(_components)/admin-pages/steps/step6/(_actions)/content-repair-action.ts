@@ -1,19 +1,15 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step6/(_actions)/content-repair-action.ts
-
 "use server";
 
-import { generateObject } from "ai"; // ✅ Возвращаемся к generateObject (работает!)
+import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 
-// ✅ Импортируем утилиты из отдельного файла
 import {
   ContentStructureType,
   calculateContentRepairConfidence,
   validateRepairedContentStructure,
 } from "../(_utils)/content-repair-helpers";
 
-// ✅ ТОЛЬКО интерфейсы для Server Action
 export interface ContentRepairServerRequest {
   invalidJsonString: string;
   pageName: string;
@@ -31,7 +27,6 @@ export interface ContentRepairServerResult {
 
 const OPENAI_MODEL = "gpt-4o";
 
-// ✅ Zod схемы (минимальные, только для валидации)
 const TechnicalTagSchema = z.enum([
   "h1",
   "h2",
@@ -87,22 +82,10 @@ const ContentRepairResponseSchema = z.object({
   contentStructure: z.array(ContentStructureSchema),
 });
 
-/**
- * ✅ ЕДИНСТВЕННАЯ экспортируемая async функция (Server Action)
- */
 export async function repairContentStructureAction(
   request: ContentRepairServerRequest,
   attemptNumber: number = 1
 ): Promise<ContentRepairServerResult> {
-  console.log(
-    "🔧 Server: Starting ContentStructure repair with generateObject:",
-    {
-      originalLength: request.invalidJsonString.length,
-      pageName: request.pageName,
-      attempt: attemptNumber,
-    }
-  );
-
   try {
     const repairPrompt = `You are an expert JSON repair tool specialized in ContentStructure data format. Fix the following invalid JSON data for content structure.
 
@@ -158,11 +141,6 @@ IMPORTANT REPAIR RULES:
 
 Return a properly structured response object with contentStructure array.`;
 
-    console.log(
-      "🔧 Server: Generated repair prompt, calling generateObject..."
-    );
-
-    // ✅ РАБОЧИЙ метод: generateObject вместо streamObject
     const { object } = await generateObject({
       model: openai(OPENAI_MODEL),
       schema: ContentRepairResponseSchema,
@@ -172,13 +150,6 @@ Return a properly structured response object with contentStructure array.`;
 
     const repairedArray = object.contentStructure;
 
-    console.log("✅ Server: generateObject repair successful:", {
-      repairedArrayLength: repairedArray.length,
-      firstElementKeys: repairedArray[0] ? Object.keys(repairedArray[0]) : [],
-      hasAdditionalData: repairedArray.every((item) => item.additionalData),
-    });
-
-    // ✅ Используем импортированную функцию
     const confidence = calculateContentRepairConfidence(
       repairedArray,
       request.invalidJsonString
@@ -192,17 +163,8 @@ Return a properly structured response object with contentStructure array.`;
       confidence,
     };
 
-    console.log("✅ Server: ContentStructure repair completed:", {
-      confidence,
-      originalLength: result.originalLength,
-      repairedLength: result.repairedLength,
-      elementsCount: repairedArray.length,
-    });
-
     return result;
   } catch (error) {
-    console.error("❌ Server: OpenAI ContentStructure repair failed:", error);
-
     const errorMessage =
       error instanceof Error
         ? `OpenAI API Error: ${error.message}`

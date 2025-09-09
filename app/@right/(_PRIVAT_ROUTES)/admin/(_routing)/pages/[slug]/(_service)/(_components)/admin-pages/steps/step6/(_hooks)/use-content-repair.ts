@@ -13,7 +13,7 @@ import {
 } from "../(_actions)/content-repair-action";
 
 /**
- * ✅ ИСПРАВЛЕННЫЙ Custom hook для восстановления ContentStructure JSON с помощью streamObject
+ * ✅ UPDATED Custom hook for ContentStructure JSON repair using streamObject
  */
 export function useContentRepair() {
   const [repairState, setRepairState] = useState<ContentRepairState>({
@@ -24,16 +24,10 @@ export function useContentRepair() {
   });
 
   /**
-   * ✅ ОСНОВНАЯ ФУНКЦИЯ: Восстановление ContentStructure через streamObject Server Action
+   * ✅ MAIN FUNCTION: ContentStructure repair via streamObject Server Action
    */
   const repairContentWithServer = useCallback(
     async (request: ContentRepairRequest): Promise<ContentRepairResult> => {
-      console.log("🔧 Client: Starting ContentStructure STREAM repair:", {
-        originalLength: request.invalidJsonString.length,
-        pageName: request.pageName,
-        attempt: repairState.repairAttempts + 1,
-      });
-
       try {
         const serverRequest: ContentRepairServerRequest = {
           invalidJsonString: request.invalidJsonString,
@@ -41,33 +35,18 @@ export function useContentRepair() {
           pageSlug: request.pageSlug,
         };
 
-        console.log(
-          "🔧 Client: Calling ContentStructure STREAM Server Action..."
-        );
-
-        // ✅ Вызываем обновленный streamObject action
+        // ✅ Call updated streamObject action
         const serverResult = await repairContentStructureAction(
           serverRequest,
           repairState.repairAttempts + 1
         );
 
-        console.log(
-          "✅ Client: ContentStructure STREAM Server Action response:",
-          {
-            success: serverResult.success,
-            confidence: serverResult.confidence,
-            elementsCount: Array.isArray(serverResult.repairedData)
-              ? serverResult.repairedData.length
-              : 0,
-          }
-        );
-
-        // ✅ ИСПРАВЛЕНИЕ: Заменяем "openai" на "openai-stream"
+        // ✅ FIX: Replace "openai" with "openai-stream"
         const result: ContentRepairResult = {
           success: serverResult.success,
           repairedData: serverResult.repairedData,
           error: serverResult.error,
-          repairMethod: "openai-stream", // ✅ ИСПРАВЛЕНО: используем новый тип
+          repairMethod: "openai-stream", // ✅ FIXED: using new type
           originalLength: serverResult.originalLength,
           repairedLength: serverResult.repairedLength,
           confidence: serverResult.confidence,
@@ -75,11 +54,6 @@ export function useContentRepair() {
 
         return result;
       } catch (error) {
-        console.error(
-          "❌ Client: ContentStructure STREAM Server Action call failed:",
-          error
-        );
-
         const errorMessage =
           error instanceof Error
             ? `StreamObject Server Action Error: ${error.message}`
@@ -88,7 +62,7 @@ export function useContentRepair() {
         return {
           success: false,
           error: errorMessage,
-          repairMethod: "openai-stream", // ✅ ИСПРАВЛЕНО: используем новый тип
+          repairMethod: "openai-stream", // ✅ FIXED: using new type
           originalLength: request.invalidJsonString.length,
           repairedLength: 0,
           confidence: 0,
@@ -99,21 +73,12 @@ export function useContentRepair() {
   );
 
   /**
-   * ✅ ОБНОВЛЕННАЯ основная функция восстановления с логикой повторов для streamObject
+   * ✅ UPDATED main repair function with retry logic for streamObject
    */
   const repairInvalidContentStructure = useCallback(
     async (request: ContentRepairRequest): Promise<ContentRepairResult> => {
-      console.log("🔧 Client: repairInvalidContentStructure called (STREAM):", {
-        pageName: request.pageName,
-        currentAttempts: repairState.repairAttempts,
-        maxAttempts: 3,
-      });
-
-      // ✅ Проверка максимального количества попыток
+      // ✅ Check maximum attempts limit
       if (repairState.repairAttempts >= 3) {
-        console.warn(
-          "⚠️ Client: Maximum ContentStructure STREAM repair attempts reached"
-        );
         return {
           success: false,
           error: "Maximum stream repair attempts reached",
@@ -133,14 +98,10 @@ export function useContentRepair() {
       try {
         const result = await repairContentWithServer(request);
 
-        // ✅ Проверка порога уверенности для streamObject результатов
+        // ✅ Check confidence threshold for streamObject results
         if (result.success && result.confidence < 0.6) {
-          console.warn(
-            "⚠️ Client: ContentStructure STREAM repair confidence below threshold:",
-            result.confidence
-          );
           toast.warning(
-            `Восстановление ContentStructure (Stream) выполнено с низкой уверенностью: ${Math.round(result.confidence * 100)}%`
+            `ContentStructure repair (Stream) completed with low confidence: ${Math.round(result.confidence * 100)}%`
           );
         }
 
@@ -155,27 +116,19 @@ export function useContentRepair() {
             ? result.repairedData.length
             : 0;
           toast.success(
-            "ContentStructure успешно восстановлена с помощью Stream ИИ",
+            "ContentStructure successfully repaired using Stream AI",
             {
-              description: `${elementsCount} элементов, уверенность: ${Math.round(result.confidence * 100)}%`,
+              description: `${elementsCount} elements, confidence: ${Math.round(result.confidence * 100)}%`,
             }
           );
         } else {
-          toast.error(
-            "Не удалось восстановить структуру ContentStructure (Stream)",
-            {
-              description: result.error,
-            }
-          );
+          toast.error("Failed to repair ContentStructure (Stream)", {
+            description: result.error,
+          });
         }
 
         return result;
       } catch (error) {
-        console.error(
-          "❌ Client: Unexpected error in repairInvalidContentStructure (STREAM):",
-          error
-        );
-
         const result: ContentRepairResult = {
           success: false,
           error:
@@ -201,10 +154,9 @@ export function useContentRepair() {
   );
 
   /**
-   * ✅ Сброс состояния восстановления
+   * ✅ Reset repair state
    */
   const resetRepairState = useCallback(() => {
-    console.log("🔄 Client: Resetting ContentStructure STREAM repair state");
     setRepairState({
       isRepairing: false,
       repairResult: null,
@@ -214,7 +166,7 @@ export function useContentRepair() {
   }, []);
 
   /**
-   * ✅ Переключение видимости инструмента восстановления
+   * ✅ Toggle repair tool visibility
    */
   const toggleRepairTool = useCallback(() => {
     setRepairState((prev) => ({
@@ -223,16 +175,16 @@ export function useContentRepair() {
     }));
   }, []);
 
-  // ✅ ОБНОВЛЕННЫЙ return объект с поддержкой streamObject
+  // ✅ UPDATED return object with streamObject support
   return {
     repairState,
-    repairInvalidContentStructure, // Основная функция для компонентов
-    repairContentWithServer, // Прямой вызов server action
+    repairInvalidContentStructure, // Main function for components
+    repairContentWithServer, // Direct server action call
     resetRepairState,
     toggleRepairTool,
     isRepairing: repairState.isRepairing,
     canRepair: repairState.repairAttempts < 3,
-    // ✅ ИСПРАВЛЕНО: возвращаем корректный тип
-    repairMethod: "openai-stream" as const, // Индикатор что используется streamObject
+    // ✅ FIXED: returning correct type
+    repairMethod: "openai-stream" as const, // Indicator that streamObject is used
   };
 }

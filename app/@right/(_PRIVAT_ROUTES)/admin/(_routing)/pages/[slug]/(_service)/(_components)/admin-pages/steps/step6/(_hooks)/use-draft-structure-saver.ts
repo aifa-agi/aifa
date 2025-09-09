@@ -46,20 +46,11 @@ const generateShortId = (): string => {
  * @param structure - Array of ContentStructure elements
  * @returns Array with all elements having IDs
  */
-// Добавь детальное логирование чтобы увидеть что происходит:
 const assignIdsToStructure = (
   structure: ContentStructure[]
 ): ContentStructure[] => {
-  console.log(`🔍 Processing ${structure.length} elements at current level`);
-
   return structure.map((element, index) => {
-    console.log(`\n--- Processing element ${index} ---`);
-    console.log("Original element.id:", element.id);
-    console.log("Element tag:", element.tag);
-    console.log("Element classification:", element.classification);
-
     const newId = element.id || generateShortId();
-    console.log("Assigned ID:", newId);
 
     const processedElement: ContentStructure = {
       ...element,
@@ -70,17 +61,11 @@ const assignIdsToStructure = (
       element.realContentStructure &&
       element.realContentStructure.length > 0
     ) {
-      console.log(
-        `📁 Element has ${element.realContentStructure.length} nested elements`
-      );
       processedElement.realContentStructure = assignIdsToStructure(
         element.realContentStructure
       );
-    } else {
-      console.log("📄 Element has no nested structure");
     }
 
-    console.log("Final element ID:", processedElement.id);
     return processedElement;
   });
 };
@@ -136,7 +121,6 @@ export function useDraftStructureSaver({
   const generateContentStructureIds = useCallback(
     (structure: ContentStructure[]): ContentStructure[] => {
       if (!Array.isArray(structure) || structure.length === 0) {
-        console.warn("Invalid structure provided for ID generation");
         return [];
       }
 
@@ -152,7 +136,6 @@ export function useDraftStructureSaver({
   const saveDraftStructure = useCallback(
     async (draftStructure: ContentStructure[]): Promise<boolean> => {
       if (!isPageValid || !page) {
-        console.warn("Cannot save draft structure: page data is not available");
         toast.error("Page data is not available");
         return false;
       }
@@ -171,16 +154,11 @@ export function useDraftStructureSaver({
 
       try {
         // Step 1: Generate IDs for elements that don't have them
-        console.log(
-          `🔧 Processing ${draftStructure.length} elements for ID assignment`
-        );
-
         const structureWithIds = assignIdsToStructure(draftStructure);
 
         // Step 2: Validate that all elements now have IDs
         if (!validateStructureIds(structureWithIds)) {
           toast.error("Failed to assign IDs to all content elements");
-          console.error("ID validation failed for draft structure");
           return false;
         }
 
@@ -189,20 +167,12 @@ export function useDraftStructureSaver({
           return count + 1 + nestedCount;
         }, 0);
 
-        console.log(
-          `✅ Successfully assigned IDs to ${totalElementsCount} content elements`
-        );
-
         // Step 3: Prepare updated page data
         const updatedPage: PageData = {
           ...page,
           draftContentStructure: structureWithIds,
           updatedAt: new Date().toISOString(),
         };
-
-        console.log(
-          `🔄 Saving draft structure with ${structureWithIds.length} elements for page: ${page.id}`
-        );
 
         // Step 4: Optimistically update the local state
         setCategories((prev) =>
@@ -244,7 +214,6 @@ export function useDraftStructureSaver({
           toast.error(
             `Failed to save draft structure: ${updateError.userMessage}`
           );
-          console.error("Failed to save draft structure:", updateError);
           return false;
         }
 
@@ -256,9 +225,6 @@ export function useDraftStructureSaver({
           }
         );
 
-        console.log(
-          `✅ Successfully saved draft structure with IDs for page: ${page.id}`
-        );
         return true;
       } catch (error) {
         // Rollback on unexpected error
@@ -281,7 +247,6 @@ export function useDraftStructureSaver({
         );
 
         toast.error("Unexpected error saving draft structure");
-        console.error("Unexpected error saving draft structure:", error);
         return false;
       } finally {
         setIsUpdating(false);
@@ -302,7 +267,6 @@ export function useDraftStructureSaver({
    */
   const clearDraftStructure = useCallback(async (): Promise<boolean> => {
     if (!isPageValid || !page) {
-      console.warn("Cannot clear draft structure: page data is not available");
       toast.error("Page data is not available");
       return false;
     }
@@ -329,8 +293,6 @@ export function useDraftStructureSaver({
         draftContentStructure: undefined, // or [] if you prefer empty array
         updatedAt: new Date().toISOString(),
       };
-
-      console.log(`🗑️ Clearing draft structure for page: ${page.id}`);
 
       // Store original data for rollback
       const originalDraftStructure = page.draftContentStructure;
@@ -375,14 +337,10 @@ export function useDraftStructureSaver({
         toast.error(
           `Failed to clear draft structure: ${updateError.userMessage}`
         );
-        console.error("Failed to clear draft structure:", updateError);
         return false;
       }
 
       toast.success("Draft structure cleared successfully");
-      console.log(
-        `✅ Successfully cleared draft structure for page: ${page.id}`
-      );
       return true;
     } catch (error) {
       // Rollback on unexpected error
@@ -405,7 +363,6 @@ export function useDraftStructureSaver({
       );
 
       toast.error("Unexpected error clearing draft structure");
-      console.error("Unexpected error clearing draft structure:", error);
       return false;
     } finally {
       setIsUpdating(false);

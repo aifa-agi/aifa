@@ -1,5 +1,3 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step6/(_components)/content-repair-tool.tsx
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -49,7 +47,6 @@ export function ContentRepairTool({
   const [showOriginal, setShowOriginal] = useState(false);
   const [showRepaired, setShowRepaired] = useState(true);
 
-  // ✅ Progress state
   const [progress, setProgress] = useState(0);
   const [progressStage, setProgressStage] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -62,101 +59,74 @@ export function ContentRepairTool({
     canRepair,
   } = useContentRepair();
 
-  // ✅ ИСПРАВЛЕННЫЙ useEffect - без проблемных зависимостей
   useEffect(() => {
-    console.log(
-      "🔄 ContentRepairTool: useEffect triggered, isRepairing:",
-      isRepairing
-    );
-
     let progressTimer: NodeJS.Timeout | undefined = undefined;
     let timeTimer: NodeJS.Timeout | undefined = undefined;
     let startTime: number | undefined = undefined;
 
     if (isRepairing) {
-      console.log("🔧 Starting progress simulation...");
-
       startTime = Date.now();
       setProgress(0);
-      setProgressStage("Инициализация восстановления...");
+      setProgressStage("Initializing repair...");
       setElapsedTime(0);
 
-      // Этапы восстановления с реалистичными временными интервалами
       const stages = [
-        { stage: "Анализ невалидных данных...", progress: 15, delay: 800 },
+        { stage: "Analyzing invalid data...", progress: 15, delay: 800 },
         {
-          stage: "Подключение к OpenAI generateObject...",
+          stage: "Connecting to OpenAI generateObject...",
           progress: 30,
           delay: 1200,
         },
-        { stage: "Генерация структуры контента...", progress: 60, delay: 3000 },
+        { stage: "Generating content structure...", progress: 60, delay: 3000 },
         {
-          stage: "Валидация восстановленной структуры...",
+          stage: "Validating repaired structure...",
           progress: 85,
           delay: 1000,
         },
-        { stage: "Финализация результата...", progress: 95, delay: 500 },
-        { stage: "Завершено", progress: 100, delay: 300 },
+        { stage: "Finalizing result...", progress: 95, delay: 500 },
+        { stage: "Completed", progress: 100, delay: 300 },
       ];
 
       let currentStageIndex = 0;
       let currentProgress = 0;
 
-      // ✅ Прогресс-таймер
       progressTimer = setInterval(() => {
         if (currentStageIndex < stages.length) {
           const currentStage = stages[currentStageIndex];
 
-          // Обновляем стадию
           if (currentProgress <= currentStage.progress - 10) {
             setProgressStage(currentStage.stage);
           }
 
-          // Плавное увеличение прогресса
           if (currentProgress < currentStage.progress) {
-            const increment = Math.random() * 2 + 0.5; // 0.5-2.5% за раз
+            const increment = Math.random() * 2 + 0.5;
             currentProgress = Math.min(
               currentProgress + increment,
               currentStage.progress
             );
             setProgress(currentProgress);
-
-            console.log(
-              `📊 Progress: ${currentProgress.toFixed(1)}% - ${currentStage.stage}`
-            );
           } else {
-            // Переходим к следующему этапу
             currentStageIndex++;
             if (currentStageIndex < stages.length) {
-              setTimeout(() => {
-                console.log(
-                  `🔄 Moving to stage ${currentStageIndex + 1}/${stages.length}`
-                );
-              }, 100);
+              setTimeout(() => {}, 100);
             }
           }
         }
-      }, 200); // Обновляем каждые 200мс для плавности
+      }, 200);
 
-      // ✅ Таймер времени выполнения
       timeTimer = setInterval(() => {
         if (startTime) {
           const elapsed = Date.now() - startTime;
           setElapsedTime(elapsed);
-          console.log(`⏱️ Elapsed time: ${(elapsed / 1000).toFixed(1)}s`);
         }
       }, 100);
     } else {
-      // Сбрасываем прогресс когда не восстанавливаем
-      console.log("🔄 Resetting progress state");
       setProgress(0);
       setProgressStage("");
       setElapsedTime(0);
     }
 
-    // ✅ Cleanup функция
     return () => {
-      console.log("🧹 Cleaning up progress timers");
       if (progressTimer !== undefined) {
         clearInterval(progressTimer);
       }
@@ -164,12 +134,10 @@ export function ContentRepairTool({
         clearInterval(timeTimer);
       }
     };
-  }, [isRepairing]); // ✅ ТОЛЬКО isRepairing в зависимостях
+  }, [isRepairing]);
 
   const handleRepairAttempt = async () => {
     if (!canEdit || isRepairing || !canRepair) return;
-
-    console.log("🔧 Starting ContentStructure repair attempt");
 
     const request: ContentRepairRequest = {
       invalidJsonString,
@@ -180,23 +148,15 @@ export function ContentRepairTool({
     const result = await repairInvalidContentStructure(request);
 
     if (result.success && result.repairedData) {
-      console.log("✅ Repair successful, finalizing progress");
-
-      // Завершаем прогресс
       setProgress(100);
-      setProgressStage("Успешно завершено!");
+      setProgressStage("Successfully completed!");
 
-      // Небольшая задержка для показа завершения
       setTimeout(() => {
         const repairedJsonString = JSON.stringify(result.repairedData, null, 2);
-        console.log(
-          "✅ ContentStructure repair successful, calling onRepairSuccess"
-        );
         onRepairSuccess(repairedJsonString);
       }, 500);
     } else {
-      console.error("❌ Repair failed:", result.error);
-      setProgressStage("Ошибка восстановления");
+      setProgressStage("Repair error");
     }
   };
 
@@ -217,7 +177,6 @@ export function ContentRepairTool({
   };
 
   const handleResetAndRetry = () => {
-    console.log("🔄 Resetting repair state and progress");
     resetRepairState();
     setProgress(0);
     setProgressStage("");
@@ -267,14 +226,13 @@ export function ContentRepairTool({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* ✅ Progress Section - показываем только во время восстановления */}
         {isRepairing && (
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2 text-blue-700">
                   <Activity className="size-4 animate-pulse" />
-                  <span className="font-medium">Восстановление в процессе</span>
+                  <span className="font-medium">Repair in progress</span>
                 </div>
                 <div className="flex items-center gap-2 text-blue-600">
                   <Timer className="size-3" />
@@ -297,7 +255,6 @@ export function ContentRepairTool({
           </div>
         )}
 
-        {/* Repair Status */}
         <div className="flex items-center justify-between p-3 bg-white/50 rounded-lg border">
           <div className="flex items-center gap-2">
             <div
@@ -345,7 +302,6 @@ export function ContentRepairTool({
           </div>
         </div>
 
-        {/* Page Information */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
           <div className="flex items-center gap-2 mb-2">
             <FileCode className="size-4 text-blue-600" />
@@ -367,7 +323,6 @@ export function ContentRepairTool({
           </div>
         </div>
 
-        {/* Original JSON Preview */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
@@ -399,7 +354,6 @@ export function ContentRepairTool({
           )}
         </div>
 
-        {/* Repair Action */}
         {!hasRepairResult ? (
           <div className="flex flex-col gap-3">
             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -457,11 +411,9 @@ export function ContentRepairTool({
             )}
           </div>
         ) : (
-          /* Repair Results */
           <div className="space-y-3">
             {repairSuccessful ? (
               <>
-                {/* Success Result */}
                 <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <CheckCircle2 className="size-4 text-green-600" />
@@ -491,7 +443,6 @@ export function ContentRepairTool({
                   </div>
                 </div>
 
-                {/* Repaired JSON Preview */}
                 {showRepaired && repairState.repairResult?.repairedData && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -521,7 +472,6 @@ export function ContentRepairTool({
                   </div>
                 )}
 
-                {/* Action Buttons */}
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() => {
@@ -551,7 +501,6 @@ export function ContentRepairTool({
                 </div>
               </>
             ) : (
-              /* Failure Result */
               <div className="space-y-3">
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">

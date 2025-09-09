@@ -53,7 +53,7 @@ export function calculateContentRepairConfidence(
 }
 
 /**
- * Валидация восстановленной ContentStructure
+ * Validation of repaired ContentStructure
  */
 export function validateRepairedContentStructure(data: any): {
   isValid: boolean;

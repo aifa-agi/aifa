@@ -36,13 +36,13 @@ interface AdminPageStep6Props {
 }
 
 /**
- * Компонент Step6 для загрузки и сохранения AI-сгенерированной ContentStructure
- * в поле draftContentStructure с валидацией и восстановлением через AI
+ * Step6 component for uploading and saving AI-generated ContentStructure
+ * to draftContentStructure field with validation and AI-powered repair
  */
 export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   const { categories, loading, initialized } = useNavigationMenu();
 
-  // Локальное состояние
+  // Local state
   const [jsonContent, setJsonContent] = useState<string>("");
   const [validationError, setValidationError] = useState<string>("");
   const [parsedContent, setParsedContent] = useState<ContentStructure[] | null>(
@@ -50,15 +50,15 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   );
   const [showRepairTool, setShowRepairTool] = useState(false);
 
-  // Поиск данных страницы
+  // Find page data
   const pageData = findPageBySlug(categories, slug);
 
-  // Хук для управления draftContentStructure
+  // Hook for managing draftContentStructure
   const {
-    saveDraftStructure, // вместо saveDraftContentStructure
-    clearDraftStructure, // вместо clearDraftContentStructure
+    saveDraftStructure, // instead of saveDraftContentStructure
+    clearDraftStructure, // instead of clearDraftContentStructure
     isUpdating: isSaving,
-    hasDraftStructure, // вместо hasDraftContent
+    hasDraftStructure, // instead of hasDraftContent
     draftElementsCount,
     canUpdate,
   } = useDraftStructureSaver({
@@ -67,11 +67,11 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
     slug,
   });
 
-  // Хук для восстановления JSON через AI
+  // Hook for JSON repair via AI
   const { resetRepairState } = useContentRepair();
 
   /**
-   * Валидация ContentStructure JSON
+   * ContentStructure JSON validation
    */
   const validateContentStructure = (data: any): data is ContentStructure[] => {
     if (!Array.isArray(data)) {
@@ -122,7 +122,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   };
 
   /**
-   * Обработка изменения JSON контента
+   * Handle JSON content change
    */
   const handleJsonChange = (value: string) => {
     setJsonContent(value);
@@ -145,7 +145,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   };
 
   /**
-   * Сохранение ContentStructure в draftContentStructure
+   * Save ContentStructure to draftContentStructure
    */
   const handleSaveStructure = async () => {
     if (!parsedContent) {
@@ -164,7 +164,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   };
 
   /**
-   * Очистка сохраненной структуры
+   * Clear saved structure
    */
   const handleClearStructure = async () => {
     const success = await clearDraftStructure();
@@ -178,7 +178,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   };
 
   /**
-   * Показать инструмент восстановления
+   * Show repair tool
    */
   const handleShowRepairTool = () => {
     if (!validationError || !jsonContent.trim()) {
@@ -189,7 +189,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   };
 
   /**
-   * Обработка успешного восстановления
+   * Handle successful repair
    */
   const handleRepairSuccess = (repairedJsonString: string) => {
     handleJsonChange(repairedJsonString);
@@ -198,7 +198,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   };
 
   /**
-   * Копирование в буфер обмена
+   * Copy to clipboard
    */
   const handleCopyToClipboard = async () => {
     if (!parsedContent) return;
@@ -212,7 +212,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
     }
   };
 
-  // Состояния загрузки
+  // Loading states
   if (loading || !initialized) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -334,7 +334,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
           {/* Instructions */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 dark:bg-blue-950 dark:border-blue-800">
             <div className="flex items-start gap-3">
-              <Info className="size-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+              <Info className="size-5 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
               <div className="flex-1">
                 <h4 className="font-medium text-blue-900 dark:text-blue-100 text-sm mb-2">
                   Expected Format:
@@ -402,7 +402,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
           {hasValidationError && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-3 dark:bg-red-950 dark:border-red-800">
               <div className="flex items-start gap-2">
-                <AlertCircle className="size-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                <AlertCircle className="size-4 text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
                 <div className="flex-1">
                   <h5 className="font-medium text-red-900 dark:text-red-100 text-sm">
                     Validation Error:
@@ -429,7 +429,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
             <div className="bg-green-50 border border-green-200 rounded-lg p-3 dark:bg-green-950 dark:border-green-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-2">
-                  <CheckCircle className="size-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="size-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
                   <div>
                     <h5 className="font-medium text-green-900 dark:text-green-100 text-sm">
                       Valid ContentStructure

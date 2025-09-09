@@ -3,7 +3,7 @@
 import { ContentStructure } from "@/app/@right/(_service)/(_types)/page-types";
 
 /**
- * Запрос на восстановление ContentStructure JSON
+ * Request for ContentStructure JSON repair
  */
 export interface ContentRepairRequest {
   invalidJsonString: string;
@@ -13,19 +13,19 @@ export interface ContentRepairRequest {
 }
 
 /**
- * ✅ ОБНОВЛЕННЫЙ Результат восстановления ContentStructure JSON
+ * ✅ UPDATED ContentStructure JSON repair result
  */
 export interface ContentRepairResult {
   success: boolean;
   repairedData?: ContentStructure[];
   error?: string;
-  repairMethod: "openai-stream" | "openai-generate" | "manual" | "none"; // ✅ Обновлено для streamObject
+  repairMethod: "openai-stream" | "openai-generate" | "manual" | "none"; // ✅ Updated for streamObject
   originalLength: number;
   repairedLength: number;
   confidence: number;
-  // ✅ Новые поля для streamObject
+  // ✅ New fields for streamObject
   isStreaming?: boolean;
-  streamDuration?: number; // Время выполнения стрима в мс
+  streamDuration?: number; // Stream execution time in ms
   tokenUsage?: {
     input: number;
     output: number;
@@ -34,45 +34,45 @@ export interface ContentRepairResult {
 }
 
 /**
- * Состояние процесса восстановления
+ * State of repair process
  */
 export interface ContentRepairState {
   isRepairing: boolean;
   repairResult: ContentRepairResult | null;
   showRepairTool: boolean;
   repairAttempts: number;
-  // ✅ Новые поля для отслеживания stream состояния
+  // ✅ New fields for tracking stream state
   isStreaming?: boolean;
   streamProgress?: number; // 0-100%
   streamStartTime?: number;
 }
 
 /**
- * ✅ ОБНОВЛЕННЫЕ Методы восстановления JSON
+ * ✅ UPDATED JSON repair methods
  */
 export type ContentRepairMethod =
-  | "openai-stream-object" // ✅ Новый основной метод
-  | "openai-generate-object" // ✅ Старый метод (deprecated)
+  | "openai-stream-object" // ✅ New primary method
+  | "openai-generate-object" // ✅ Old method (deprecated)
   | "openai-chat"
   | "manual";
 
 /**
- * Запрос для Server Action
+ * Request for Server Action
  */
 export interface ContentRepairServerRequest {
   invalidJsonString: string;
   pageName: string;
   pageSlug: string;
-  // ✅ Новые опциональные параметры для streamObject
+  // ✅ New optional parameters for streamObject
   streamingOptions?: {
     enableProgressTracking?: boolean;
-    maxStreamDuration?: number; // в мс
-    preferredMethod?: "stream" | "generate"; // Предпочтительный метод
+    maxStreamDuration?: number; // in ms
+    preferredMethod?: "stream" | "generate"; // Preferred method
   };
 }
 
 /**
- * ✅ ОБНОВЛЕННЫЙ Ответ от Server Action
+ * ✅ UPDATED Server Action response
  */
 export interface ContentRepairServerResult {
   success: boolean;
@@ -81,7 +81,7 @@ export interface ContentRepairServerResult {
   originalLength: number;
   repairedLength: number;
   confidence: number;
-  // ✅ Новые поля для streamObject
+  // ✅ New fields for streamObject
   repairMethod: "stream-object" | "generate-object" | "fallback";
   streamDuration?: number;
   tokenUsage?: {
@@ -97,19 +97,19 @@ export interface ContentRepairServerResult {
 }
 
 /**
- * ✅ ОБНОВЛЕННАЯ Конфигурация для восстановления
+ * ✅ UPDATED repair configuration
  */
 export interface ContentRepairConfig {
   maxAttempts: number;
   timeout: number;
   minConfidenceThreshold: number;
   openaiModel: string;
-  // ✅ Новые настройки для streamObject
+  // ✅ New settings for streamObject
   streamingConfig: {
     enableStreaming: boolean;
     maxStreamDuration: number; // 60000ms = 60s
     progressUpdateInterval: number; // 500ms
-    fallbackToGenerate: boolean; // Fallback если stream не работает
+    fallbackToGenerate: boolean; // Fallback if stream doesn't work
     retryStreamOnFailure: boolean;
   };
   performanceTracking: {
@@ -118,21 +118,21 @@ export interface ContentRepairConfig {
   };
 }
 
-// ✅ НОВЫЕ типы специально для streamObject
+// ✅ NEW types specifically for streamObject
 
 /**
- * Конфигурация streaming процесса
+ * Streaming process configuration
  */
 export interface StreamingConfig {
   enableProgressUpdates: boolean;
-  updateInterval: number; // в мс
-  maxDuration: number; // в мс
+  updateInterval: number; // in ms
+  maxDuration: number; // in ms
   onProgress?: (progress: number, stage: string) => void;
   onStageChange?: (stage: StreamingStage) => void;
 }
 
 /**
- * Стадии streaming процесса
+ * Streaming process stages
  */
 export type StreamingStage =
   | "initializing"
@@ -144,7 +144,7 @@ export type StreamingStage =
   | "error";
 
 /**
- * Результат с информацией о streaming
+ * Result with streaming information
  */
 export interface StreamingRepairResult extends ContentRepairResult {
   streamingStats: {
@@ -159,17 +159,17 @@ export interface StreamingRepairResult extends ContentRepairResult {
 }
 
 /**
- * ✅ Расширенный запрос с поддержкой streaming
+ * ✅ Extended request with streaming support
  */
 export interface StreamingContentRepairRequest extends ContentRepairRequest {
   streamingConfig?: StreamingConfig;
-  fallbackToGenerate?: boolean; // Если streaming не удается
+  fallbackToGenerate?: boolean; // If streaming fails
 }
 
-// ✅ Существующие типы остаются без изменений для совместимости
+// ✅ Existing types remain unchanged for compatibility
 
 /**
- * Ошибки валидации ContentStructure
+ * ContentStructure validation errors
  */
 export interface ContentValidationError {
   field: string;
@@ -179,7 +179,7 @@ export interface ContentValidationError {
 }
 
 /**
- * Результат валидации ContentStructure
+ * ContentStructure validation result
  */
 export interface ContentValidationResult {
   isValid: boolean;
@@ -188,10 +188,10 @@ export interface ContentValidationResult {
   elementsCount: number;
 }
 
-// ✅ НОВЫЕ утилитарные типы для streamObject
+// ✅ NEW utility types for streamObject
 
 /**
- * Метрики производительности streaming
+ * Streaming performance metrics
  */
 export interface StreamingMetrics {
   startTime: number;
@@ -211,7 +211,7 @@ export interface StreamingStageMetric {
 }
 
 /**
- * Статус streaming операции
+ * Streaming operation status
  */
 export interface StreamingStatus {
   isActive: boolean;
@@ -221,7 +221,7 @@ export interface StreamingStatus {
   error?: string;
 }
 
-// ✅ Type guards для проверки типов
+// ✅ Type guards for type checking
 
 export function isStreamingResult(
   result: ContentRepairResult
@@ -235,41 +235,41 @@ export function isStreamingRequest(
   return "streamingConfig" in request;
 }
 
-// ✅ Constants для streamObject
+// ✅ Constants for streamObject
 
 export const STREAMING_STAGES: Record<
   StreamingStage,
   { name: string; weight: number }
 > = {
-  initializing: { name: "Инициализация", weight: 5 },
-  "analyzing-input": { name: "Анализ входных данных", weight: 15 },
-  "generating-structure": { name: "Генерация структуры", weight: 60 },
-  "validating-output": { name: "Валидация результата", weight: 15 },
-  finalizing: { name: "Финализация", weight: 5 },
-  completed: { name: "Завершено", weight: 0 },
-  error: { name: "Ошибка", weight: 0 },
+  initializing: { name: "Initializing", weight: 5 },
+  "analyzing-input": { name: "Analyzing input data", weight: 15 },
+  "generating-structure": { name: "Generating structure", weight: 60 },
+  "validating-output": { name: "Validating result", weight: 15 },
+  finalizing: { name: "Finalizing", weight: 5 },
+  completed: { name: "Completed", weight: 0 },
+  error: { name: "Error", weight: 0 },
 };
 
 export const DEFAULT_STREAMING_CONFIG: StreamingConfig = {
   enableProgressUpdates: true,
   updateInterval: 500,
-  maxDuration: 60000, // 60 секунд
+  maxDuration: 60000, // 60 seconds
 };
 
 export const DEFAULT_REPAIR_CONFIG_WITH_STREAMING: ContentRepairConfig = {
   maxAttempts: 3,
-  timeout: 60000, // Увеличено для streaming
+  timeout: 60000, // Increased for streaming
   minConfidenceThreshold: 0.6,
   openaiModel: "gpt-4o" as const,
   streamingConfig: {
     enableStreaming: true,
-    maxStreamDuration: 45000, // 45 секунд
+    maxStreamDuration: 45000, // 45 seconds
     progressUpdateInterval: 500,
     fallbackToGenerate: true,
     retryStreamOnFailure: false,
   },
   performanceTracking: {
     enableMetrics: true,
-    logStreamingStats: false, // Включать в production можно по необходимости
+    logStreamingStats: false, // Can be enabled in production as needed
   },
 };

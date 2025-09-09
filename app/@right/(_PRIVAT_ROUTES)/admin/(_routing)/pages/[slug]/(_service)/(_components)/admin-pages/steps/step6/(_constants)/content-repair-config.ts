@@ -3,7 +3,7 @@
 export const CONTENT_REPAIR_CONFIG = {
   MAX_REPAIR_ATTEMPTS: 3,
   REPAIR_TIMEOUT: 30000, // 30 seconds
-  MIN_CONFIDENCE_THRESHOLD: 0.6, // Немного ниже для ContentStructure
+  MIN_CONFIDENCE_THRESHOLD: 0.6, // Slightly lower for ContentStructure
   OPENAI_MODEL: "gpt-4o" as const,
   REPAIR_PROMPT_TEMPLATE: `You are an expert at converting unstructured content data into valid ContentStructure JSON format.
 
