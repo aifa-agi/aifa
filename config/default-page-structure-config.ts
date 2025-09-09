@@ -1,11 +1,11 @@
-import { ContentStructure } from "@/app/@right/(_service)/(_types)/page-types";
+import { RootContentStructure } from "@/app/@right/(_service)/(_types)/page-types";
 
 /**
  * Enhanced realistic content structure template
  * More human-like patterns with variable element placement
  * Total word count increased by 30%: ~1,500-5,000 words
  */
-export const DEFAULT_CONTENT_STRUCTURE: ContentStructure[] = [
+export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
   // Introduction section (added for realism)
   {
     tag: "h2",
