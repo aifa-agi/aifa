@@ -8,7 +8,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { useMediaQuery } from "@/config/content/sections/hooks/use-media-query";
 
 interface RightSidebarContextType {
   isOpen: boolean;

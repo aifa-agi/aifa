@@ -1,9 +1,8 @@
-// @app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step6/(_hooks)/use-draft-structure-saver.ts
-
 "use client";
 
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
+import { createId } from "@paralleldrive/cuid2";
 import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
 import {
   PageData,
@@ -29,7 +28,87 @@ interface UseDraftStructureSaverReturn {
   hasDraftStructure: boolean;
   draftElementsCount: number;
   canUpdate: boolean;
+  generateContentStructureIds: (
+    structure: ContentStructure[]
+  ) => ContentStructure[];
 }
+
+/**
+ * Generate short 6-character ID using cuid v2
+ */
+const generateShortId = (): string => {
+  const fullId = createId();
+  return fullId.substring(0, 6);
+};
+
+/**
+ * Recursively assign IDs to ContentStructure elements that don't have them
+ * @param structure - Array of ContentStructure elements
+ * @returns Array with all elements having IDs
+ */
+// Добавь детальное логирование чтобы увидеть что происходит:
+const assignIdsToStructure = (
+  structure: ContentStructure[]
+): ContentStructure[] => {
+  console.log(`🔍 Processing ${structure.length} elements at current level`);
+
+  return structure.map((element, index) => {
+    console.log(`\n--- Processing element ${index} ---`);
+    console.log("Original element.id:", element.id);
+    console.log("Element tag:", element.tag);
+    console.log("Element classification:", element.classification);
+
+    const newId = element.id || generateShortId();
+    console.log("Assigned ID:", newId);
+
+    const processedElement: ContentStructure = {
+      ...element,
+      id: newId,
+    };
+
+    if (
+      element.realContentStructure &&
+      element.realContentStructure.length > 0
+    ) {
+      console.log(
+        `📁 Element has ${element.realContentStructure.length} nested elements`
+      );
+      processedElement.realContentStructure = assignIdsToStructure(
+        element.realContentStructure
+      );
+    } else {
+      console.log("📄 Element has no nested structure");
+    }
+
+    console.log("Final element ID:", processedElement.id);
+    return processedElement;
+  });
+};
+
+/**
+ * Validate that all ContentStructure elements have IDs
+ * @param structure - Array of ContentStructure elements to validate
+ * @returns true if all elements have IDs, false otherwise
+ */
+const validateStructureIds = (structure: ContentStructure[]): boolean => {
+  const validateElement = (element: ContentStructure): boolean => {
+    if (!element.id) {
+      return false;
+    }
+
+    // Recursively validate nested elements
+    if (
+      element.realContentStructure &&
+      element.realContentStructure.length > 0
+    ) {
+      return element.realContentStructure.every(validateElement);
+    }
+
+    return true;
+  };
+
+  return structure.every(validateElement);
+};
 
 /**
  * Custom hook for managing draftContentStructure field
@@ -51,7 +130,24 @@ export function useDraftStructureSaver({
   const canUpdate = !isUpdating && isPageValid;
 
   /**
+   * Generate IDs for ContentStructure elements that don't have them
+   * Public method that can be used externally
+   */
+  const generateContentStructureIds = useCallback(
+    (structure: ContentStructure[]): ContentStructure[] => {
+      if (!Array.isArray(structure) || structure.length === 0) {
+        console.warn("Invalid structure provided for ID generation");
+        return [];
+      }
+
+      return assignIdsToStructure(structure);
+    },
+    []
+  );
+
+  /**
    * Save ContentStructure[] to page.draftContentStructure
+   * Now includes automatic ID generation and validation
    */
   const saveDraftStructure = useCallback(
     async (draftStructure: ContentStructure[]): Promise<boolean> => {
@@ -74,17 +170,41 @@ export function useDraftStructureSaver({
       setIsUpdating(true);
 
       try {
+        // Step 1: Generate IDs for elements that don't have them
+        console.log(
+          `🔧 Processing ${draftStructure.length} elements for ID assignment`
+        );
+
+        const structureWithIds = assignIdsToStructure(draftStructure);
+
+        // Step 2: Validate that all elements now have IDs
+        if (!validateStructureIds(structureWithIds)) {
+          toast.error("Failed to assign IDs to all content elements");
+          console.error("ID validation failed for draft structure");
+          return false;
+        }
+
+        const totalElementsCount = structureWithIds.reduce((count, element) => {
+          const nestedCount = element.realContentStructure?.length || 0;
+          return count + 1 + nestedCount;
+        }, 0);
+
+        console.log(
+          `✅ Successfully assigned IDs to ${totalElementsCount} content elements`
+        );
+
+        // Step 3: Prepare updated page data
         const updatedPage: PageData = {
           ...page,
-          draftContentStructure: draftStructure,
+          draftContentStructure: structureWithIds,
           updatedAt: new Date().toISOString(),
         };
 
         console.log(
-          `🔄 Saving draft structure with ${draftStructure.length} elements for page: ${page.id}`
+          `🔄 Saving draft structure with ${structureWithIds.length} elements for page: ${page.id}`
         );
 
-        // Optimistically update the local state
+        // Step 4: Optimistically update the local state
         setCategories((prev) =>
           prev.map((cat) =>
             cat.title !== categoryTitle
@@ -98,7 +218,7 @@ export function useDraftStructureSaver({
           )
         );
 
-        // Sync with server
+        // Step 5: Sync with server
         const updateError = await updateCategories();
 
         if (updateError) {
@@ -129,15 +249,15 @@ export function useDraftStructureSaver({
         }
 
         toast.success(
-          `Draft structure saved successfully! ${draftStructure.length} content elements processed.`,
+          `Draft structure saved successfully! ${structureWithIds.length} content elements with unique IDs processed.`,
           {
             duration: 4000,
-            description: "Ready for draft analysis and content generation",
+            description: `${totalElementsCount} total elements ready for draft analysis and content generation`,
           }
         );
 
         console.log(
-          `✅ Successfully saved draft structure for page: ${page.id}`
+          `✅ Successfully saved draft structure with IDs for page: ${page.id}`
         );
         return true;
       } catch (error) {
@@ -306,5 +426,6 @@ export function useDraftStructureSaver({
     hasDraftStructure,
     draftElementsCount,
     canUpdate,
+    generateContentStructureIds,
   };
 }

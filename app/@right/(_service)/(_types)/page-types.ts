@@ -160,6 +160,8 @@ export interface ContentElementAnalysis {
 
 export type ContentClassification = "semantic" | "technical" | "hybrid";
 export interface ContentStructure {
+  id?: string;
+  order?: string;
   classification?: ContentClassification;
   tag?: ContentTag;
   keywords?: string[];

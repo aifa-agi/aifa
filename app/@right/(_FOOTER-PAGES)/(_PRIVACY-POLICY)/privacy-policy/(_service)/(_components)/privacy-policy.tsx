@@ -5,7 +5,7 @@ import { InteractiveSection } from "@/components/shared/interactive-section";
 import { useTranslation } from "../(_libs)/translation";
 import { useAppContext } from "@/contexts/app-context";
 import { useRightSidebar } from "@/contexts/right-sidebar-context";
-import { useInteractiveSections } from "@/hooks/useInteractiveSections";
+import { useInteractiveSections } from "@/config/content/sections/hooks/useInteractiveSections";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 

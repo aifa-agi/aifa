@@ -37,7 +37,7 @@ import { Badge } from "@/components/ui/badge";
 import { PageNotFound } from "../../../page-not-found";
 import { findPageBySlug } from "../../../../(_utils)/page-helpers";
 import { TOC } from "./components/table_of_content/toc";
-import { fileTreeDataTransformer } from "../../admin-page-info/(_service)/(_utils)/file-tree-transformer";
+import { fileTreeDataTransformer } from "./(_utils)/file-tree-transformer";
 import { usePromptReadyFlag } from "./(_hooks)/use-prompt-ready-flag";
 import { useSystemInstructionGenerator } from "./(_service)/system-instruction-generator";
 

@@ -260,7 +260,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
 
       {/* Current Status */}
       {hasDraftStructure && (
-        <Card className="border-green-200 bg-green-50/30">
+        <Card className="border-green-200 bg-green-50/40">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -484,7 +484,23 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
               </span>
             )}
           </div>
+        </CardContent>
+      </Card>
 
+      {/* Content Repair Tool */}
+      {showRepairTool && hasValidationError && (
+        <ContentRepairTool
+          invalidJsonString={jsonContent}
+          pageName={page.title || page.linkName}
+          pageSlug={slug}
+          onRepairSuccess={handleRepairSuccess}
+          onCancel={() => setShowRepairTool(false)}
+          canEdit={!isSaving}
+        />
+      )}
+
+      <Card>
+        <CardContent className="space-y-4">
           {/* Page Information */}
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 dark:bg-gray-950 dark:border-gray-800">
             <div className="text-xs text-gray-700 dark:text-gray-300 space-y-1">
@@ -507,18 +523,6 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
           </div>
         </CardContent>
       </Card>
-
-      {/* Content Repair Tool */}
-      {showRepairTool && hasValidationError && (
-        <ContentRepairTool
-          invalidJsonString={jsonContent}
-          pageName={page.title || page.linkName}
-          pageSlug={slug}
-          onRepairSuccess={handleRepairSuccess}
-          onCancel={() => setShowRepairTool(false)}
-          canEdit={!isSaving}
-        />
-      )}
     </div>
   );
 }
