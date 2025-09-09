@@ -1,4 +1,4 @@
-// @/app/app/(_service)/types/page-types.ts
+// @/app/(_service)/types/page-types.ts
 
 import { Metadata } from "next";
 import { UserType } from "@prisma/client";
@@ -53,7 +53,6 @@ export interface PageImages {
 }
 
 export type TechnicalTag =
-  | "h1"
   | "h2"
   | "h3"
   | "h4"
@@ -159,6 +158,8 @@ export interface ContentElementAnalysis {
 }
 
 export type ContentClassification = "semantic" | "technical" | "hybrid";
+
+// Базовый интерфейс ContentStructure для вложенных элементов
 export interface ContentStructure {
   id?: string;
   order?: string;
@@ -184,6 +185,28 @@ export interface ContentStructure {
     };
   };
   realContentStructure?: ContentStructure[];
+}
+
+// НОВЫЙ ТИП: Специальный интерфейс для корневых элементов с жёстким требованием H2
+export interface RootContentStructure extends Omit<ContentStructure, "tag"> {
+  /**
+   * КРИТИЧЕСКОЕ ТРЕБОВАНИЕ: Все корневые элементы aiRecommendContentStructure
+   * ДОЛЖНЫ иметь тег 'h2' для поддержания семантической иерархии:
+   * Page(H1) → Sections(H2) → Subsections(H3+)
+   */
+  tag: "h2";
+}
+
+// Валидационные утилиты для проверки структуры
+export interface StructureValidationResult {
+  isValid: boolean;
+  issues: string[];
+  suggestions: string[];
+  invalidElements?: {
+    index: number;
+    tag: string;
+    expectedTag: string;
+  }[];
 }
 
 export interface CompetitorContentResult {
@@ -241,7 +264,7 @@ export interface KnowledgeSettings {
 
 export interface DraftContentResult {
   id: string;
-  contentStructure: ContentStructure;
+  contentStructure: RootContentStructure;
   analysisResult: {
     analysisText: string;
     elementAnalysis?: ContentElementAnalysis;
@@ -268,7 +291,7 @@ export interface DraftContentResult {
 
 export interface FinalContentResult {
   id: string;
-  contentStructure: ContentStructure;
+  contentStructure: RootContentStructure;
   finalAnalysis: {
     analysisText: string;
     elementAnalysis?: ContentElementAnalysis;
@@ -378,8 +401,14 @@ export interface PageData {
   // step 1, 2
   competitorAnalysis?: CompetitorAnalysis[];
 
-  //step 3
-  aiRecommendContentStructure?: ContentStructure[];
+  // step 3 - ОБНОВЛЕНО: Использует RootContentStructure для жёсткого контроля H2
+  /**
+   * КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: aiRecommendContentStructure теперь использует
+   * RootContentStructure[], который требует 'h2' тег для всех корневых элементов.
+   * Это обеспечивает правильную семантическую иерархию:
+   * PageData.title (H1) → aiRecommendContentStructure[].tag (H2) → realContentStructure (H3+)
+   */
+  aiRecommendContentStructure?: RootContentStructure[];
 
   // step 4
   knowledgeSettings?: KnowledgeSettings;
@@ -388,11 +417,21 @@ export interface PageData {
   isReadyPromptForPerplexity?: boolean;
 
   //step 6
-  draftContentStructure?: ContentStructure[];
+  draftContentStructure?: RootContentStructure[];
 
-  //step 7
+  //step 7 draftContentResult + steps + section info
+  draftContentResult?: DraftContentResult;
+
+  //step 8
   draftReport?: DraftReport;
 
+  // step 9
+  finalContentStructure?: RootContentStructure[];
+
+  // step 10
+  finalContentResult?: FinalContentResult;
+
+  // step 11
   finalReport?: FinalReport;
 
   hasBadge?: boolean;
@@ -411,6 +450,7 @@ export interface PageData {
   sections?: SectionInfo[];
 }
 
+// РАСШИРЕННЫЕ УТИЛИТЫ с валидацией H2
 export interface ContentTagUtils {
   isSemanticBlock: (tag: ContentTag) => boolean;
   isTechnicalTag: (tag: ContentTag) => boolean;
@@ -425,4 +465,51 @@ export interface ContentTagUtils {
     issues: string[];
     suggestions: string[];
   };
+
+  // НОВЫЕ МЕТОДЫ для валидации корневой структуры
+  /**
+   * Валидирует, что все корневые элементы имеют тег 'h2'
+   */
+  validateRootStructure: (
+    structure: ContentStructure[] | RootContentStructure[]
+  ) => StructureValidationResult;
+
+  /**
+   * Принудительно преобразует ContentStructure[] в RootContentStructure[]
+   * устанавливая тег 'h2' для всех корневых элементов
+   */
+  enforceH2Root: (structure: ContentStructure[]) => RootContentStructure[];
+
+  /**
+   * Проверяет, является ли элемент корневым H2
+   */
+  isValidRootElement: (
+    element: ContentStructure
+  ) => element is RootContentStructure;
+
+  /**
+   * Создает корневой элемент с валидным H2 тегом
+   */
+  createRootElement: (
+    baseElement: Omit<ContentStructure, "tag">
+  ) => RootContentStructure;
 }
+
+// ВСПОМОГАТЕЛЬНЫЕ ТИПЫ для типизационной безопасности
+export type ValidatedRootStructure = RootContentStructure[];
+export type RootElementValidationError = {
+  elementIndex: number;
+  currentTag: string;
+  expectedTag: "h2";
+  message: string;
+};
+
+// КОНСТАНТЫ для валидации
+export const ROOT_ELEMENT_TAG = "h2" as const;
+export const VALIDATION_MESSAGES = {
+  INVALID_ROOT_TAG:
+    'Корневые элементы aiRecommendContentStructure должны иметь тег "h2"',
+  MISSING_ROOT_TAG: "Отсутствует обязательный тег в корневом элементе",
+  SEMANTIC_HIERARCHY_VIOLATION:
+    "Нарушение семантической иерархии: PageData содержит H1, корневые элементы должны быть H2",
+} as const;

@@ -1,4 +1,3 @@
-// @/components/toc/tree-item.tsx
 import {
   File,
   Folder,
@@ -7,17 +6,9 @@ import {
 
 type TreeItemProps = {
   elements: TreeViewElement[];
-  onSelect?: (id: string) => void;
 };
 
-export const TreeItem = ({ elements, onSelect }: TreeItemProps) => {
-  console.log(
-    "🌳 TreeItem rendering with onSelect:",
-    !!onSelect,
-    "elements:",
-    elements.length
-  );
-
+export const TreeItem = ({ elements }: TreeItemProps) => {
   return (
     <ul className="w-full space-y-1">
       {elements.map((element) => (
@@ -33,7 +24,6 @@ export const TreeItem = ({ elements, onSelect }: TreeItemProps) => {
                 key={element.id}
                 aria-label={`folder ${element.name}`}
                 elements={element.children}
-                onSelect={onSelect}
               />
             </Folder>
           ) : (
@@ -42,10 +32,6 @@ export const TreeItem = ({ elements, onSelect }: TreeItemProps) => {
               value={element.id}
               isSelectable={element.isSelectable}
               className={"px-1"}
-              handleSelect={(id: string) => {
-                console.log("📁 File clicked:", id, element.name);
-                onSelect?.(id);
-              }}
             >
               <span className="ml-1">{element?.name}</span>
             </File>

@@ -245,7 +245,10 @@ export const STREAMING_STAGES: Record<
   "analyzing-input": { name: "Analyzing input data", weight: 15 },
   "generating-structure": { name: "Generating structure", weight: 60 },
   "validating-output": { name: "Validating result", weight: 15 },
-  finalizing: { name: "Finalizing", weight: 5 },
+  finalizing: {
+    name: "Finalizing... This may take up to 10 minutes",
+    weight: 5,
+  },
   completed: { name: "Completed", weight: 0 },
   error: { name: "Error", weight: 0 },
 };
