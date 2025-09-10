@@ -26,7 +26,6 @@ const OPENAI_MODEL = "gpt-4o";
 
 // ✅ Zod схема
 const TechnicalTagSchema = z.enum([
-  "h1",
   "h2",
   "h3",
   "h4",
@@ -50,7 +49,6 @@ const ContentClassificationSchema = z.enum(["semantic", "technical", "hybrid"]);
 type ContentStructureType = {
   classification?: "semantic" | "technical" | "hybrid";
   tag?:
-    | "h1"
     | "h2"
     | "h3"
     | "h4"
