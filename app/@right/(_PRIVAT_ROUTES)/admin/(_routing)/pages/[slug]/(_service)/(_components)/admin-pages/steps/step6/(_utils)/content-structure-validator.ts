@@ -23,7 +23,6 @@ export class ContentStructureValidator {
   ] as const;
 
   private static readonly VALID_TECHNICAL_TAGS: TechnicalTag[] = [
-    "h1",
     "h2",
     "h3",
     "h4",
