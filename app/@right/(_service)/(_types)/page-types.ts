@@ -128,8 +128,6 @@ export type SemanticBlockType =
 export type AIGeneratedBlockType = `ai.${string}`;
 
 export type ContentTag = TechnicalTag;
-// | SemanticBlockType
-// | AIGeneratedBlockType;
 
 export interface ContentElementAnalysis {
   qualityScore?: number;
@@ -178,11 +176,6 @@ export interface ContentStructure {
     minWords: number;
     maxWords: number;
     actualContent: string;
-    position?: {
-      order?: number;
-      depth?: number;
-      parentTag?: ContentTag;
-    };
   };
   realContentStructure?: ContentStructure[];
 }

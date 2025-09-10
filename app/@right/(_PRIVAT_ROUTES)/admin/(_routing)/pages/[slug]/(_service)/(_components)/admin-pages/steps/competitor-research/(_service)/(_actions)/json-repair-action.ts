@@ -21,7 +21,7 @@ export interface JsonRepairServerResult {
   confidence: number;
 }
 
-const OPENAI_MODEL = "gpt-4o"; // или ваша предпочитаемая модель
+const OPENAI_MODEL = "gpt-4.1-2025-04-14";
 const MIN_CONFIDENCE_THRESHOLD = 0.6;
 const MAX_REPAIR_ATTEMPTS = 3;
 

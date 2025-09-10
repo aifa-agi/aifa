@@ -594,7 +594,7 @@ export const contentData = {
             "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png"
           }
         ],
-        "updatedAt": "2025-09-09T22:08:07.081Z",
+        "updatedAt": "2025-09-10T11:51:41.424Z",
         "sections": [
           {
             "id": "hero-title"
@@ -1987,58 +1987,7 @@ export const contentData = {
             }
           }
         ],
-        "isReadyPromptForPerplexity": true,
-        "draftContentStructure": [
-          {
-            "tag": "h2",
-            "keywords": [
-              "introduction",
-              "overview"
-            ],
-            "intent": "Introduce the main topic",
-            "taxonomy": "Introduction",
-            "audiences": "General audience",
-            "additionalData": {
-              "minWords": 120,
-              "maxWords": 250,
-              "actualContent": "Welcome to Паромы на Тенерифе! Тенерифе 2026. This comprehensive guide introduces you to the essential concepts and provides a thorough overview of what you need to know. We'll cover the fundamental principles, key benefits, and practical applications that make this topic valuable for your understanding and implementation."
-            },
-            "id": "khagwt"
-          },
-          {
-            "tag": "h2",
-            "keywords": [
-              "main content",
-              "detailed information"
-            ],
-            "intent": "Provide detailed information",
-            "taxonomy": "Main Content",
-            "audiences": "General audience",
-            "additionalData": {
-              "minWords": 200,
-              "maxWords": 400,
-              "actualContent": "This section delves deep into the core aspects of Паромы на Тенерифе! Тенерифе 2026. Here you'll find detailed explanations, practical examples, and actionable insights that form the foundation of understanding. We explore various approaches, methodologies, and best practices that have proven effective. The information presented here builds upon the introduction and provides the substance you need to move forward with confidence and clarity."
-            },
-            "id": "uto236"
-          },
-          {
-            "tag": "h2",
-            "keywords": [
-              "conclusion",
-              "summary",
-              "next steps"
-            ],
-            "intent": "Summarize key points and provide next steps",
-            "taxonomy": "Conclusion",
-            "audiences": "General audience",
-            "additionalData": {
-              "minWords": 100,
-              "maxWords": 200,
-              "actualContent": "In conclusion, Паромы на Тенерифе! Тенерифе 2026 offers significant value through the concepts and practices we've explored. The key takeaways include understanding the fundamental principles, applying best practices, and implementing the strategies discussed. Moving forward, you can use this knowledge to achieve your objectives and continue learning in this area."
-            },
-            "id": "lz8m42"
-          }
-        ]
+        "isReadyPromptForPerplexity": true
       },
       {
         "id": "uzl8djuoxz8xejna49c6pjcm",
@@ -2744,5 +2693,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-09T22:09:22.864Z";
+export const lastUpdated = "2025-09-10T12:21:15.406Z";
 export const generatedBy = "menu-persist-api";
