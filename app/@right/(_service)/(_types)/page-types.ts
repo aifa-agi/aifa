@@ -163,6 +163,7 @@ export interface ContentStructure {
   order?: string;
   classification?: ContentClassification;
   tag?: ContentTag;
+  description?: string;
   keywords?: string[];
   intent?: string;
   taxonomy?: string;
