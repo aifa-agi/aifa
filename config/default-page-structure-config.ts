@@ -4,10 +4,12 @@ import { RootContentStructure } from "@/app/@right/(_service)/(_types)/page-type
  * Enhanced realistic content structure template with all empty fields for system instruction completion
  * Template provides only structure while allowing system instruction to fill all content-specific fields
  * Total word count: ~1,500-5,000 words distributed across sections
+ * Each element has a unique ID based on tag and hierarchical position
  */
 export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
   // Introduction section
   {
+    id: "h2-1",
     tag: "h2",
     classification: "semantic",
     keywords: [],
@@ -25,6 +27,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
     },
     realContentStructure: [
       {
+        id: "p-1-1",
         tag: "p",
         additionalData: {
           minWords: 120,
@@ -33,6 +36,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "p-1-2",
         tag: "p",
         additionalData: {
           minWords: 80,
@@ -41,6 +45,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "img-1-3",
         tag: "img",
         additionalData: {
           minWords: 5,
@@ -49,6 +54,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "blockquote-1-4",
         tag: "blockquote",
         additionalData: {
           minWords: 25,
@@ -61,6 +67,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
 
   // Technical Foundation section
   {
+    id: "h2-2",
     tag: "h2",
     classification: "semantic",
     keywords: [],
@@ -78,6 +85,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
     },
     realContentStructure: [
       {
+        id: "p-2-1",
         tag: "p",
         additionalData: {
           minWords: 100,
@@ -86,6 +94,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "h3-2-2",
         tag: "h3",
         additionalData: {
           minWords: 200,
@@ -94,6 +103,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "p-2-2-1",
             tag: "p",
             additionalData: {
               minWords: 70,
@@ -102,6 +112,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "p-2-2-2",
             tag: "p",
             additionalData: {
               minWords: 90,
@@ -110,6 +121,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "img-2-2-3",
             tag: "img",
             additionalData: {
               minWords: 5,
@@ -118,6 +130,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "table-2-2-4",
             tag: "table",
             additionalData: {
               minWords: 80,
@@ -128,6 +141,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         ],
       },
       {
+        id: "h3-2-3",
         tag: "h3",
         additionalData: {
           minWords: 100,
@@ -136,6 +150,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "p-2-3-1",
             tag: "p",
             additionalData: {
               minWords: 80,
@@ -144,6 +159,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "ul-2-3-2",
             tag: "ul",
             additionalData: {
               minWords: 40,
@@ -152,6 +168,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "code-2-3-3",
             tag: "code",
             additionalData: {
               minWords: 20,
@@ -160,6 +177,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "p-2-3-4",
             tag: "p",
             additionalData: {
               minWords: 60,
@@ -174,6 +192,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
 
   // Implementation Process section
   {
+    id: "h2-3",
     tag: "h2",
     classification: "semantic",
     keywords: [],
@@ -191,6 +210,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
     },
     realContentStructure: [
       {
+        id: "img-3-1",
         tag: "img",
         additionalData: {
           minWords: 5,
@@ -199,6 +219,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "p-3-2",
         tag: "p",
         additionalData: {
           minWords: 110,
@@ -207,6 +228,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "h3-3-3",
         tag: "h3",
         additionalData: {
           minWords: 200,
@@ -215,6 +237,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "p-3-3-1",
             tag: "p",
             additionalData: {
               minWords: 85,
@@ -223,6 +246,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "ol-3-3-2",
             tag: "ol",
             additionalData: {
               minWords: 50,
@@ -231,6 +255,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "h4-3-3-3",
             tag: "h4",
             additionalData: {
               minWords: 120,
@@ -239,6 +264,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
             realContentStructure: [
               {
+                id: "p-3-3-3-1",
                 tag: "p",
                 additionalData: {
                   minWords: 75,
@@ -247,6 +273,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
                 },
               },
               {
+                id: "code-3-3-3-2",
                 tag: "code",
                 additionalData: {
                   minWords: 25,
@@ -255,6 +282,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
                 },
               },
               {
+                id: "p-3-3-3-3",
                 tag: "p",
                 additionalData: {
                   minWords: 65,
@@ -267,6 +295,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         ],
       },
       {
+        id: "h3-3-4",
         tag: "h3",
         additionalData: {
           minWords: 150,
@@ -275,6 +304,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "p-3-4-1",
             tag: "p",
             additionalData: {
               minWords: 95,
@@ -283,6 +313,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "blockquote-3-4-2",
             tag: "blockquote",
             additionalData: {
               minWords: 20,
@@ -291,6 +322,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "ol-3-4-3",
             tag: "ol",
             additionalData: {
               minWords: 60,
@@ -305,6 +337,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
 
   // Advanced Topics section
   {
+    id: "h2-4",
     tag: "h2",
     classification: "semantic",
     keywords: [],
@@ -322,6 +355,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
     },
     realContentStructure: [
       {
+        id: "p-4-1",
         tag: "p",
         additionalData: {
           minWords: 100,
@@ -330,6 +364,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "h3-4-2",
         tag: "h3",
         additionalData: {
           minWords: 200,
@@ -338,6 +373,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "img-4-2-1",
             tag: "img",
             additionalData: {
               minWords: 5,
@@ -346,6 +382,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "p-4-2-2",
             tag: "p",
             additionalData: {
               minWords: 90,
@@ -354,6 +391,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "p-4-2-3",
             tag: "p",
             additionalData: {
               minWords: 85,
@@ -362,6 +400,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "ul-4-2-4",
             tag: "ul",
             additionalData: {
               minWords: 45,
@@ -372,6 +411,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         ],
       },
       {
+        id: "h3-4-3",
         tag: "h3",
         additionalData: {
           minWords: 250,
@@ -380,6 +420,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "p-4-3-1",
             tag: "p",
             additionalData: {
               minWords: 110,
@@ -388,6 +429,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "p-4-3-2",
             tag: "p",
             additionalData: {
               minWords: 80,
@@ -396,6 +438,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "ol-4-3-3",
             tag: "ol",
             additionalData: {
               minWords: 55,
@@ -404,6 +447,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "blockquote-4-3-4",
             tag: "blockquote",
             additionalData: {
               minWords: 18,
@@ -418,6 +462,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
 
   // Monitoring and Maintenance section
   {
+    id: "h2-5",
     tag: "h2",
     classification: "semantic",
     keywords: [],
@@ -435,6 +480,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
     },
     realContentStructure: [
       {
+        id: "p-5-1",
         tag: "p",
         additionalData: {
           minWords: 105,
@@ -443,6 +489,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "img-5-2",
         tag: "img",
         additionalData: {
           minWords: 5,
@@ -451,6 +498,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "h3-5-3",
         tag: "h3",
         additionalData: {
           minWords: 150,
@@ -459,6 +507,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "p-5-3-1",
             tag: "p",
             additionalData: {
               minWords: 80,
@@ -467,6 +516,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "ul-5-3-2",
             tag: "ul",
             additionalData: {
               minWords: 40,
@@ -475,6 +525,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "p-5-3-3",
             tag: "p",
             additionalData: {
               minWords: 70,
@@ -489,6 +540,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
 
   // Troubleshooting section
   {
+    id: "h2-6",
     tag: "h2",
     classification: "semantic",
     keywords: [],
@@ -506,6 +558,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
     },
     realContentStructure: [
       {
+        id: "p-6-1",
         tag: "p",
         additionalData: {
           minWords: 95,
@@ -514,6 +567,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "h3-6-2",
         tag: "h3",
         additionalData: {
           minWords: 200,
@@ -522,6 +576,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "p-6-2-1",
             tag: "p",
             additionalData: {
               minWords: 75,
@@ -530,6 +585,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "table-6-2-2",
             tag: "table",
             additionalData: {
               minWords: 100,
@@ -538,6 +594,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "p-6-2-3",
             tag: "p",
             additionalData: {
               minWords: 85,
@@ -548,6 +605,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         ],
       },
       {
+        id: "h3-6-3",
         tag: "h3",
         additionalData: {
           minWords: 100,
@@ -556,6 +614,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
         realContentStructure: [
           {
+            id: "p-6-3-1",
             tag: "p",
             additionalData: {
               minWords: 90,
@@ -564,6 +623,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
             },
           },
           {
+            id: "code-6-3-2",
             tag: "code",
             additionalData: {
               minWords: 30,
@@ -578,6 +638,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
 
   // Conclusion section
   {
+    id: "h2-7",
     tag: "h2",
     classification: "semantic",
     keywords: [],
@@ -595,6 +656,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
     },
     realContentStructure: [
       {
+        id: "p-7-1",
         tag: "p",
         additionalData: {
           minWords: 120,
@@ -603,6 +665,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "p-7-2",
         tag: "p",
         additionalData: {
           minWords: 100,
@@ -611,6 +674,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "ul-7-3",
         tag: "ul",
         additionalData: {
           minWords: 60,
@@ -619,6 +683,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "p-7-4",
         tag: "p",
         additionalData: {
           minWords: 80,
@@ -627,6 +692,7 @@ export const DEFAULT_CONTENT_STRUCTURE: RootContentStructure[] = [
         },
       },
       {
+        id: "blockquote-7-5",
         tag: "blockquote",
         additionalData: {
           minWords: 15,
