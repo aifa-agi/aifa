@@ -1,6 +1,4 @@
-// app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)
-/*  /(_components)/admin-pages/steps/step7/(_hooks)/use-draft-confirm.ts  */
-
+//@/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step7/(_hooks)/use-draft-confirm.ts
 "use client";
 
 import { useCallback } from "react";

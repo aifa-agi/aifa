@@ -1,5 +1,4 @@
 // @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step7/(_contexts)/step7-root-context.tsx
-
 "use client";
 
 import React, {

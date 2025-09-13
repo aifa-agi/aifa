@@ -1,20 +1,5 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)
-/*  /(_components)/admin-pages/steps/step7/(_sub_domains)/editable-toc-card/(_sub_domains)/left-panel/_sub_domains)/tree/tree-node.tsx */
-
+// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step7/(_sub_domains)/editable-toc-card/(_sub_domains)/left-panel/(_sub_domains)/tree/tree-node.tsx
 "use client";
-
-/**
- * Comments are in English. UI texts are in English (US).
- *
- * TreeNode (Left Panel):
- * - No Switch (per Step 7 UI rules).
- * - Status indicator stays at the far-left inside the card (not affected by content).
- * - Tag box is fixed 32px wide and shows only first two upper-cased characters.
- * - Cards are visually aligned in a single vertical column (no depth-based horizontal offset).
- * - Second text line always shows "Level N" based on computed depth.
- * - Delete action is placed in the right gutter with a 4px separator and tooltip,
- *   reusing the legacy position/behavior.
- */
 
 import * as React from "react";
 import type { ContentStructure } from "@/app/@right/(_service)/(_types)/page-types";
@@ -28,26 +13,26 @@ import {
 } from "@/components/ui/tooltip";
 import { Trash2, Circle } from "lucide-react";
 import { useDraftDelete } from "../../../../../../(_hooks)/use-draft-delete";
+import { useRightForms } from "../../../right-panel/(_sub_domains)/forms/forms/(_contexts)/forms-context";
 
 export interface TreeNodeProps {
   node: ContentStructure;
-  depth: number; // Level N, where top-level child under H2 is Level 1
-  isRoot?: boolean; // Optional: render Section (H2) root row; defaults to false
+  depth: number;
+  isRoot?: boolean;
 }
 
-/** Trim tag to two uppercase characters for the fixed tag box. */
 function twoCharTag(tag?: string): string {
   if (!tag) return "--";
   return String(tag).toUpperCase().slice(0, 2);
 }
 
-/** Map status to color class for the left status indicator. */
 function statusDotClass(status?: "draft" | "checked") {
   return status === "checked" ? "text-emerald-400" : "text-neutral-600";
 }
 
 export function TreeNode({ node, depth, isRoot = false }: TreeNodeProps) {
   const { deleteSubtree, deleteActiveSectionCascade } = useDraftDelete();
+  const { selectedNodeId, setSelectedNode } = useRightForms();
 
   const onDelete = async () => {
     if (isRoot) {
@@ -57,21 +42,31 @@ export function TreeNode({ node, depth, isRoot = false }: TreeNodeProps) {
     }
   };
 
+  const onSelect = () => {
+    if (!node.id) return;
+    setSelectedNode(node.id);
+  };
+
+  const isSelected: boolean = !!node.id && selectedNodeId === node.id;
   const tagToken = twoCharTag(node.tag);
 
   return (
     <TooltipProvider>
       <div
         className={cn(
-          "group relative flex items-stretch rounded-md border border-neutral-800 bg-neutral-925"
+          "group relative flex items-stretch rounded-md border bg-neutral-925",
+          isSelected ? "border-violet-500" : "border-neutral-800"
         )}
         role="listitem"
         aria-label="Content element row"
       >
-        {/* Main content: 3 fixed columns inside the card to avoid overflow shifts */}
-        <div className="flex flex-1 items-center px-3 py-2">
+        <button
+          type="button"
+          onClick={onSelect}
+          className="flex flex-1 items-center px-3 py-2 text-left"
+          aria-pressed={isSelected || undefined}
+        >
           <div className="grid w-full grid-cols-[14px_32px_1fr] items-center gap-2">
-            {/* Left status indicator (fixed at far-left inside the card) */}
             <div className="flex items-center justify-center">
               <Circle
                 className={cn("h-3.5 w-3.5", statusDotClass(node.status))}
@@ -80,7 +75,6 @@ export function TreeNode({ node, depth, isRoot = false }: TreeNodeProps) {
               />
             </div>
 
-            {/* Fixed tag box: 32px width, two-char token */}
             <span
               className={cn(
                 "inline-flex h-6 w-8 shrink-0 items-center justify-center rounded-sm border border-neutral-700 bg-neutral-850 text-[10px] font-semibold tracking-wide text-neutral-300"
@@ -91,7 +85,6 @@ export function TreeNode({ node, depth, isRoot = false }: TreeNodeProps) {
               {tagToken}
             </span>
 
-            {/* Two-line text block: top label + bottom Level N, clamp content to avoid overflow */}
             <div className="min-w-0">
               <div className="truncate text-sm font-medium text-neutral-100">
                 {isRoot ? "Section (H2)" : "Content element"}
@@ -101,9 +94,8 @@ export function TreeNode({ node, depth, isRoot = false }: TreeNodeProps) {
               </div>
             </div>
           </div>
-        </div>
+        </button>
 
-        {/* Right gutter: 4px separator + delete icon area (legacy placement) */}
         <div className="flex items-stretch">
           <div className="w-[4px] bg-neutral-800" aria-hidden="true" />
           <Tooltip>

@@ -181,7 +181,7 @@ export function syncSectionRootStatus(
 }
 
 /* =========================
-   Public operations
+   Public operations (existing)
    ========================= */
 
 /** Confirm every existing node inside the section (descendants only). */
@@ -232,4 +232,87 @@ export function updateSectionInRoots(
   updated: RootContentStructure
 ): RootContentStructure[] {
   return roots.map((r) => (r.id === updated.id ? updated : r));
+}
+
+/* =========================
+   New immutable helpers (insertions)
+   ========================= */
+
+/** Insert a child at the beginning of a specific parent's children (internal). */
+function insertChildAtStart(
+  parent: ContentStructure,
+  child: ContentStructure
+): ContentStructure {
+  const nextChildren = [child, ...(parent.realContentStructure ?? [])];
+  return { ...parent, realContentStructure: nextChildren };
+}
+
+/**
+ * Splice a sibling after targetId inside nodes.
+ * Returns { changed, next } where `next` is the new children array when changed.
+ */
+function spliceSiblingAfter(
+  nodes: ContentStructure[] | undefined,
+  targetId: string,
+  toInsert: ContentStructure
+): { changed: boolean; next?: ContentStructure[] } {
+  if (!nodes) return { changed: false, next: nodes };
+  const next = nodes.map((n) => ({ ...n })); // shallow copy
+  for (let i = 0; i < next.length; i++) {
+    const n = next[i];
+    if (n.id === targetId) {
+      next.splice(i + 1, 0, toInsert);
+      return { changed: true, next };
+    }
+    // Try inside
+    const inner = spliceSiblingAfter(
+      n.realContentStructure,
+      targetId,
+      toInsert
+    );
+    if (inner.changed) {
+      n.realContentStructure = inner.next;
+      return { changed: true, next };
+    }
+  }
+  return { changed: false, next };
+}
+
+/* =========================
+   Public insert operations for Step 7
+   ========================= */
+
+/**
+ * Insert a new first child inside the H2 section (before any existing child).
+ * Pure and immutable. Caller is responsible for defaults/validation.
+ */
+export function insertFirstChildAtRootSection(
+  section: RootContentStructure,
+  newNode: ContentStructure
+): RootContentStructure {
+  const nextSection: RootContentStructure = {
+    ...section,
+    realContentStructure: [newNode, ...(section.realContentStructure ?? [])],
+  };
+  return syncSectionRootStatus(nextSection);
+}
+
+/**
+ * Insert a sibling immediately after the target node id (same level).
+ * Pure and immutable. Caller is responsible for defaults/validation.
+ */
+export function insertSiblingAfter(
+  section: RootContentStructure,
+  targetId: string,
+  newNode: ContentStructure
+): RootContentStructure {
+  const { changed, next } = spliceSiblingAfter(
+    section.realContentStructure,
+    targetId,
+    newNode
+  );
+  const nextSection: RootContentStructure = changed
+    ? { ...section, realContentStructure: next }
+    : section;
+  return syncSectionRootStatus(nextSection);
 }

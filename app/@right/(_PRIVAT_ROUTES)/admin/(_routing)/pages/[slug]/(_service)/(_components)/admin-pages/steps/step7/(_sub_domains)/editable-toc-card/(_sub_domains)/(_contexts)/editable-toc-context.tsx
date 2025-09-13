@@ -1,6 +1,4 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)
-/*  /(_components)/admin-pages/steps/step7/(_sub_domains)/editable-toc-card/(_contexts)/editable-toc-context.tsx */
-
+// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step7/(_sub_domains)/editable-toc-card/(_sub_domains)/(_contexts)/editable-toc-context.tsx
 "use client";
 
 /**

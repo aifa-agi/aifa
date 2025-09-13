@@ -1,5 +1,4 @@
 // @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step7/(_constants)/step7-conatants.ts
-
 export const UI_TEXT = {
   pageUnavailable: "Page data is not available",
   updateInProgress: "Update already in progress",

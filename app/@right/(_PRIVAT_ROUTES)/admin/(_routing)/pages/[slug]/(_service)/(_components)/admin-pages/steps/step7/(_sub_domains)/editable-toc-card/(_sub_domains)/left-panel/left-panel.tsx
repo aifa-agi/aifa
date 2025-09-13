@@ -1,14 +1,12 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step7/(_sub_domains)/editable-toc-card/(_sub_domains)/left-panel/left-panel.tsx
+// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/
+// admin-pages/steps/step7/(_sub_domains)/editable-toc-card/(_sub_domains)/left-panel/left-panel.tsx
 "use client";
 
 /**
  * Comments are in English. UI texts are in English (US).
  *
  * LeftPanel:
- * - Header with "Content Structure", metrics for the active section, and a one-way
- *   "Confirm all elements" switch (confirms all existing descendants of the section).
- * - Body renders the TreeView (always expanded).
- * - Uses existing global types and Step7RootContext selectors; no local duplicates.
+ * - Adds a read-only mini TOC for the active section below the header and above the TreeView.
  */
 
 import * as React from "react";
@@ -25,6 +23,9 @@ import { useDraftConfirm } from "../../../../(_hooks)/use-draft-confirm";
 import { TreeView } from "./(_sub_domains)/tree/tree-view";
 import { useEditableToc } from "../(_contexts)/editable-toc-context";
 
+import { SectionTOC } from "./(_sub_domains)/tree/toc/section-toc";
+import { transformSectionChildrenToTOC } from "./(_sub_domains)/tree/toc/section-toc-transformer";
+
 export function LeftPanel() {
   const { getActiveSection, ui } = useStep7Root();
   const { confirmSection } = useDraftConfirm();
@@ -37,11 +38,19 @@ export function LeftPanel() {
   const isConfirmed = Boolean(derived?.isConfirmed);
 
   const onToggleAll = async (next: boolean) => {
-    // One-way: confirm all only when toggled on. No revert to draft.
     if (!next || isConfirmed) return;
     await confirmSection();
   };
+
+  // Original data for the editable tree
   const { rootSection, nodes } = useEditableToc();
+
+  // Build read-only TOC elements for the active section
+  const tocElements = React.useMemo(
+    () => transformSectionChildrenToTOC(rootSection?.realContentStructure),
+    [rootSection?.realContentStructure]
+  );
+
   return (
     <TooltipProvider>
       <div className="flex h-full flex-col gap-3 rounded-lg border border-neutral-800 bg-neutral-925 p-3">
@@ -86,6 +95,9 @@ export function LeftPanel() {
             </div>
           </div>
         </div>
+
+        {/* Read-only mini TOC (below header, above editable tree) */}
+        <SectionTOC elements={tocElements} />
 
         <Separator className="bg-neutral-800" />
 

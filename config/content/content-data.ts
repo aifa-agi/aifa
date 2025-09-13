@@ -594,7 +594,7 @@ export const contentData = {
             "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png"
           }
         ],
-        "updatedAt": "2025-09-13T12:42:04.797Z",
+        "updatedAt": "2025-09-13T17:58:01.967Z",
         "sections": [
           {
             "id": "hero-title"
@@ -1990,6 +1990,102 @@ export const contentData = {
         "isReadyPromptForPerplexity": true,
         "draftContentStructure": [
           {
+            "id": "s5rj6ozo4b51pkriejzm2uhv",
+            "tag": "h2",
+            "status": "draft",
+            "additionalData": {
+              "minWords": 0,
+              "maxWords": 0,
+              "actualContent": ""
+            },
+            "realContentStructure": [
+              {
+                "id": "kqici1fmsil82rb06l5y5kmo",
+                "tag": "p",
+                "status": "draft",
+                "additionalData": {
+                  "minWords": 0,
+                  "maxWords": 0,
+                  "actualContent": ""
+                }
+              },
+              {
+                "id": "u9rek3ld4rrjvljnrklki8eh",
+                "tag": "p",
+                "status": "checked",
+                "additionalData": {
+                  "minWords": 0,
+                  "maxWords": 0,
+                  "actualContent": ""
+                }
+              },
+              {
+                "id": "h97c2ihpdztku850egfg9ja3",
+                "tag": "h3",
+                "status": "checked",
+                "additionalData": {
+                  "minWords": 0,
+                  "maxWords": 0,
+                  "actualContent": ""
+                },
+                "realContentStructure": [
+                  {
+                    "id": "ln2x7pe9ueiw5jl09hsf4rv9",
+                    "tag": "p",
+                    "status": "checked",
+                    "additionalData": {
+                      "minWords": 0,
+                      "maxWords": 0,
+                      "actualContent": ""
+                    }
+                  },
+                  {
+                    "id": "qajb6bu05adyhi46y78y961r",
+                    "tag": "p",
+                    "status": "checked",
+                    "additionalData": {
+                      "minWords": 0,
+                      "maxWords": 0,
+                      "actualContent": ""
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "leup2o5cm7zzm0smxr5mh32t",
+                "tag": "h3",
+                "status": "checked",
+                "additionalData": {
+                  "minWords": 0,
+                  "maxWords": 0,
+                  "actualContent": ""
+                },
+                "realContentStructure": [
+                  {
+                    "id": "d6fjb9mqugx8x6535789il6m",
+                    "tag": "p",
+                    "status": "checked",
+                    "additionalData": {
+                      "minWords": 0,
+                      "maxWords": 0,
+                      "actualContent": ""
+                    }
+                  },
+                  {
+                    "id": "j403l54nfueed0ny6r4mcuvd",
+                    "tag": "p",
+                    "status": "checked",
+                    "additionalData": {
+                      "minWords": 0,
+                      "maxWords": 0,
+                      "actualContent": ""
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "tag": "h2",
             "classification": "Introduction",
             "keywords": [
@@ -2066,7 +2162,17 @@ export const contentData = {
                   "maxWords": 220,
                   "actualContent": "need generate helpful content"
                 },
-                "id": "mp2nfi"
+                "id": "mp2nfi",
+                "description": "qwerty",
+                "intent": "asdfg",
+                "taxonomy": "zxcvbn",
+                "keywords": [
+                  "asdfgh",
+                  "xcvbn",
+                  "c vb",
+                  "xcvbn"
+                ],
+                "status": "checked"
               },
               {
                 "tag": "h3",
@@ -2083,7 +2189,8 @@ export const contentData = {
                       "maxWords": 170,
                       "actualContent": "need generate helpful content"
                     },
-                    "id": "h50y8b"
+                    "id": "h50y8b",
+                    "status": "checked"
                   },
                   {
                     "tag": "ol",
@@ -2092,7 +2199,8 @@ export const contentData = {
                       "maxWords": 100,
                       "actualContent": "need generate helpful content"
                     },
-                    "id": "fpvne5"
+                    "id": "fpvne5",
+                    "status": "checked"
                   },
                   {
                     "tag": "h4",
@@ -2109,7 +2217,8 @@ export const contentData = {
                           "maxWords": 150,
                           "actualContent": "need generate helpful content"
                         },
-                        "id": "j0dxwt"
+                        "id": "j0dxwt",
+                        "status": "checked"
                       },
                       {
                         "tag": "code",
@@ -2118,7 +2227,8 @@ export const contentData = {
                           "maxWords": 60,
                           "actualContent": "need generate helpful content"
                         },
-                        "id": "hqcrsb"
+                        "id": "hqcrsb",
+                        "status": "checked"
                       },
                       {
                         "tag": "p",
@@ -2127,13 +2237,16 @@ export const contentData = {
                           "maxWords": 130,
                           "actualContent": "need generate helpful content"
                         },
-                        "id": "y0yjvm"
+                        "id": "y0yjvm",
+                        "status": "checked"
                       }
                     ],
-                    "id": "irl5yr"
+                    "id": "irl5yr",
+                    "status": "checked"
                   }
                 ],
-                "id": "rty3wz"
+                "id": "rty3wz",
+                "status": "checked"
               },
               {
                 "tag": "h3",
@@ -2150,7 +2263,8 @@ export const contentData = {
                       "maxWords": 190,
                       "actualContent": "need generate helpful content"
                     },
-                    "id": "au62c3"
+                    "id": "au62c3",
+                    "status": "checked"
                   },
                   {
                     "tag": "blockquote",
@@ -2159,7 +2273,8 @@ export const contentData = {
                       "maxWords": 45,
                       "actualContent": "need generate helpful content"
                     },
-                    "id": "srowa0"
+                    "id": "srowa0",
+                    "status": "checked"
                   },
                   {
                     "tag": "ol",
@@ -2168,13 +2283,16 @@ export const contentData = {
                       "maxWords": 120,
                       "actualContent": "need generate helpful content"
                     },
-                    "id": "fle2tr"
+                    "id": "fle2tr",
+                    "status": "checked"
                   }
                 ],
-                "id": "dehjzf"
+                "id": "dehjzf",
+                "status": "checked"
               }
             ],
-            "id": "jvpg1y"
+            "id": "jvpg1y",
+            "status": "checked"
           },
           {
             "tag": "h2",
@@ -2563,8 +2681,95 @@ export const contentData = {
             ],
             "id": "k2jfck",
             "status": "checked"
+          },
+          {
+            "id": "z3kiz444l5zh2khquf9smhnx",
+            "tag": "h2",
+            "status": "draft",
+            "additionalData": {
+              "minWords": 0,
+              "maxWords": 0,
+              "actualContent": ""
+            },
+            "realContentStructure": [
+              {
+                "id": "exarp2sa31epcyjq17fkrv0m",
+                "tag": "p",
+                "status": "draft",
+                "additionalData": {
+                  "minWords": 0,
+                  "maxWords": 0,
+                  "actualContent": ""
+                }
+              },
+              {
+                "id": "mp0qt75kmxf573qvutsyra1f",
+                "tag": "h3",
+                "status": "draft",
+                "additionalData": {
+                  "minWords": 0,
+                  "maxWords": 0,
+                  "actualContent": ""
+                },
+                "realContentStructure": [
+                  {
+                    "id": "lk6cngmhjqdiq9hh18btos3f",
+                    "tag": "p",
+                    "status": "draft",
+                    "additionalData": {
+                      "minWords": 0,
+                      "maxWords": 0,
+                      "actualContent": ""
+                    }
+                  },
+                  {
+                    "id": "gqc3h2a0fw487ewpcn8dl4xn",
+                    "tag": "p",
+                    "status": "draft",
+                    "additionalData": {
+                      "minWords": 0,
+                      "maxWords": 0,
+                      "actualContent": ""
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "zer82cyvupdu007mebnplsu5",
+                "tag": "h3",
+                "status": "draft",
+                "additionalData": {
+                  "minWords": 0,
+                  "maxWords": 0,
+                  "actualContent": ""
+                },
+                "realContentStructure": [
+                  {
+                    "id": "fjkkozqtxze3g2baqt5ydqyg",
+                    "tag": "p",
+                    "status": "draft",
+                    "additionalData": {
+                      "minWords": 0,
+                      "maxWords": 0,
+                      "actualContent": ""
+                    }
+                  },
+                  {
+                    "id": "b2hi9fqqm14za9rmc5prkrq2",
+                    "tag": "p",
+                    "status": "draft",
+                    "additionalData": {
+                      "minWords": 0,
+                      "maxWords": 0,
+                      "actualContent": ""
+                    }
+                  }
+                ]
+              }
+            ]
           }
-        ]
+        ],
+        "isReadyDraftForPerplexity": false
       },
       {
         "id": "uzl8djuoxz8xejna49c6pjcm",
@@ -3270,5 +3475,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-13T13:10:05.184Z";
+export const lastUpdated = "2025-09-13T17:58:19.458Z";
 export const generatedBy = "menu-persist-api";

@@ -1,21 +1,14 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)
-/*  /(_components)/admin-pages/steps/step7/(_sub_domains)/section-selector-card.tsx */
-
+// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step7/(_sub_domains)/section-selector-card.tsx
 "use client";
 
 /**
  * Comments are in English. UI texts are in English (US).
- *
- * SectionSelectorCard:
- * - Strict labels: "Section N".
- * - Active section: primary highlight (violet).
- * - Completed (status='checked' on H2 root) and not active: green highlight (emerald),
- *   using the same visual style as primary (border + soft background).
- * - Leading/trailing plus buttons kept as placeholders.
+ * Adds working “+” buttons to insert a new H2 section at specific positions.
  */
 
 import * as React from "react";
 import { useStep7Root } from "../(_contexts)/step7-root-context";
+import { useSectionInsert } from "../(_hooks)/use-section-insert";
 
 function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -37,7 +30,6 @@ function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-// Strict numeric labeling: "Section N"
 function labelByIndex(index: number): string {
   return `Section ${index + 1}`;
 }
@@ -45,6 +37,7 @@ function labelByIndex(index: number): string {
 export function SectionSelectorCard() {
   const { getDraftSections, ui, setActiveSection } = useStep7Root();
   const sections = getDraftSections();
+  const { insertAtIndex } = useSectionInsert();
 
   const handlePick = React.useCallback(
     (id: string | undefined | null) => {
@@ -52,6 +45,14 @@ export function SectionSelectorCard() {
       setActiveSection(id);
     },
     [setActiveSection]
+  );
+
+  const handleInsertAt = React.useCallback(
+    async (idx: number) => {
+      await insertAtIndex(idx);
+      // Active section is preserved; alternatively, we could activate the new one after persist if needed.
+    },
+    [insertAtIndex]
   );
 
   return (
@@ -67,12 +68,13 @@ export function SectionSelectorCard() {
 
       <div className="custom-scrollbar overflow-x-auto">
         <div className="flex min-w-max items-center gap-2">
-          {/* Leading plus (placeholder) */}
+          {/* Leading plus -> insert at 0 */}
           <button
             type="button"
-            aria-label="Add section (placeholder)"
-            title="Add section (placeholder)"
+            aria-label="Add section at beginning"
+            title="Add section at beginning"
             className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-neutral-700 bg-neutral-875 text-neutral-300 hover:bg-neutral-850"
+            onClick={() => handleInsertAt(0)}
           >
             <PlusIcon />
           </button>
@@ -90,9 +92,7 @@ export function SectionSelectorCard() {
             const neutral =
               "border-neutral-700 bg-neutral-875 text-neutral-300 hover:bg-neutral-850";
 
-            // Priority: active (primary) > completed (green) > neutral
             const tone = isActive ? primary : isChecked ? completed : neutral;
-
             const label = labelByIndex(idx);
 
             return (
@@ -107,12 +107,13 @@ export function SectionSelectorCard() {
                   {label}
                 </button>
 
-                {/* Plus between sections (placeholder) */}
+                {/* Plus after this section -> insert at idx + 1 */}
                 <button
                   type="button"
-                  aria-label="Add section (placeholder)"
-                  title="Add section (placeholder)"
+                  aria-label={`Add section after ${label}`}
+                  title={`Add section after ${label}`}
                   className="inline-flex size-7 items-center justify-center rounded-md border border-neutral-700 bg-neutral-875 text-neutral-300 hover:bg-neutral-850"
+                  onClick={() => handleInsertAt(idx + 1)}
                 >
                   <PlusIcon />
                 </button>
