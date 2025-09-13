@@ -160,9 +160,9 @@ export type ContentClassification = "semantic" | "technical" | "hybrid";
 // Базовый интерфейс ContentStructure для вложенных элементов
 export interface ContentStructure {
   id?: string;
-  order?: string;
+  order?: number;
   classification?: ContentClassification;
-  tag?: ContentTag;
+  tag: ContentTag;
   description?: string;
   keywords?: string[];
   intent?: string;
@@ -178,6 +178,7 @@ export interface ContentStructure {
     maxWords: number;
     actualContent: string;
   };
+  status?: "draft" | "checked";
   realContentStructure?: ContentStructure[];
 }
 
@@ -413,19 +414,22 @@ export interface PageData {
   //step 6
   draftContentStructure?: RootContentStructure[];
 
-  //step 7 draftContentResult + steps + section info
+  //step 7
+  isReadyDraftForPerplexity?: boolean;
+
+  //step 8 draftContentResult + steps + section info
   draftContentResult?: DraftContentResult;
 
-  //step 8
+  //step 9
   draftReport?: DraftReport;
 
-  // step 9
+  // step 10
   finalContentStructure?: RootContentStructure[];
 
-  // step 10
+  // step 11
   finalContentResult?: FinalContentResult;
 
-  // step 11
+  // step 12
   finalReport?: FinalReport;
 
   hasBadge?: boolean;

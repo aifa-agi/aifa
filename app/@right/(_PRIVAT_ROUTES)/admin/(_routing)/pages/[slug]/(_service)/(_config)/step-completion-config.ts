@@ -71,6 +71,19 @@ export const STEP_COMPLETION_CONDITIONS: StepCompletionCondition[] = [
     debugInfo: (pageData) =>
       `📋 Черновик: ${pageData?.draftContentStructure?.length ?? 0}`,
   },
+  {
+    stepKey: "step7",
+    validate: (pageData: PageData | null) => {
+      // Step 7
+      return (
+        pageData?.isReadyDraftForPerplexity !== undefined &&
+        pageData?.isReadyDraftForPerplexity !== false
+      );
+    },
+    description: "Требует finish draft structer items chek",
+    debugInfo: (pageData) =>
+      `📝 isReadyDraftForPerplexity: ${pageData?.isReadyDraftForPerplexity ? "Есть" : "Нет"}`,
+  },
 
   {
     stepKey: "step8",

@@ -1,4 +1,4 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_hooks)/use-prompt-ready-flag.ts
+// @app\@right\(_PRIVAT_ROUTES)\admin\(_routing)\pages\[slug]\(_service)\(_components)\admin-pages\steps\step5\(_hooks)\use-prompt-ready-flag.ts
 
 "use client";
 

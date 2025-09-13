@@ -594,7 +594,7 @@ export const contentData = {
             "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png"
           }
         ],
-        "updatedAt": "2025-09-10T11:51:41.424Z",
+        "updatedAt": "2025-09-13T12:42:04.797Z",
         "sections": [
           {
             "id": "hero-title"
@@ -1987,7 +1987,584 @@ export const contentData = {
             }
           }
         ],
-        "isReadyPromptForPerplexity": true
+        "isReadyPromptForPerplexity": true,
+        "draftContentStructure": [
+          {
+            "tag": "h2",
+            "classification": "Introduction",
+            "keywords": [
+              "паромы на Тенерифе",
+              "морские перевозки",
+              "путешествие на пароме",
+              "альтернатива самолету",
+              "семейный отдых"
+            ],
+            "taxonomy": "Вводная информация о паромном сообщении с Тенерифе",
+            "attention": "Узнайте, почему паром может стать лучшим выбором для семейного путешествия на Тенерифе, чем авиаперелет.",
+            "intent": "Представить паромы как комфортный и практичный способ добраться до Тенерифе для семей с детьми.",
+            "audiences": "Семейные туристы с детьми, ищущие комфортный и безопасный способ путешествия",
+            "selfPrompt": "Создай введение к статье 'Паромы на Тенерифе! Тенерифе 2026' для семейных туристов 25-45 лет. Используй дружелюбный, неформальный тон как при разговоре с другом. Включи ключевые слова: 'паромы на Тенерифе', 'морские перевозки', 'семейный отдых'. Объясни преимущества паромов перед самолетами для семей с детьми. Раздели контент: первый абзац (120-250 слов) - общее представление и главные преимущества, второй абзац (80-180 слов) - почему именно семьям стоит выбрать паром. Добавь вдохновляющую цитату (25-50 слов) о путешествии на пароме. Используй Markdown форматирование, язык: русский. actualContent поля остаются как 'need generate helpful content'.",
+            "designDescription": "Приветственная секция с теплыми тонами и семейными изображениями паромов",
+            "connectedDesignSectionId": "ferry-intro-section-001",
+            "additionalData": {
+              "minWords": 200,
+              "maxWords": 350,
+              "actualContent": "need generate helpful content"
+            },
+            "realContentStructure": [
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 120,
+                  "maxWords": 250,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "syysvy",
+                "status": "checked"
+              },
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 80,
+                  "maxWords": 180,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "fu9n6b",
+                "status": "checked"
+              }
+            ],
+            "id": "sis938",
+            "status": "checked"
+          },
+          {
+            "tag": "h2",
+            "classification": "Tutorial",
+            "keywords": [
+              "билеты на паром Тенерифе",
+              "бронирование паромов",
+              "онлайн покупка билетов",
+              "цены на билеты",
+              "скидки семьям"
+            ],
+            "taxonomy": "Пошаговое руководство по покупке билетов на паром",
+            "attention": "Пошаговая инструкция поможет легко забронировать билеты онлайн и сэкономить на семейной поездке.",
+            "intent": "Предоставить четкие инструкции по бронированию билетов и получению лучших цен для семей.",
+            "audiences": "Родители, планирующие семейную поездку и желающие сэкономить на билетах",
+            "selfPrompt": "Создай подробное руководство по покупке билетов на паром до Тенерифе. Дружелюбный тон как с другом. Ключевые слова: 'билеты на паром Тенерифе', 'бронирование паромов', 'скидки семьям'. Структура: вводный абзац (110-220 слов) о важности раннего бронирования. Подраздел 'Онлайн бронирование' (200-350 слов): пошаговая инструкция (50-100 слов в списке), подподраздел 'Документы для бронирования' (120-200 слов) с code блоком необходимых данных (25-60 слов). Подраздел 'Семейные скидки' (150-250 слов): виды скидок, цитата от довольного клиента (20-45 слов), советы по экономии (60-120 слов). Язык: русский. actualContent поля как 'need generate helpful content'.",
+            "designDescription": "Пошаговый туториал с визуальными индикаторами процесса бронирования",
+            "connectedDesignSectionId": "ferry-booking-section-003",
+            "additionalData": {
+              "minWords": 500,
+              "maxWords": 750,
+              "actualContent": "need generate helpful content"
+            },
+            "realContentStructure": [
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 110,
+                  "maxWords": 220,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "mp2nfi"
+              },
+              {
+                "tag": "h3",
+                "additionalData": {
+                  "minWords": 200,
+                  "maxWords": 350,
+                  "actualContent": "need generate helpful content"
+                },
+                "realContentStructure": [
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 85,
+                      "maxWords": 170,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "h50y8b"
+                  },
+                  {
+                    "tag": "ol",
+                    "additionalData": {
+                      "minWords": 50,
+                      "maxWords": 100,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "fpvne5"
+                  },
+                  {
+                    "tag": "h4",
+                    "additionalData": {
+                      "minWords": 120,
+                      "maxWords": 200,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "realContentStructure": [
+                      {
+                        "tag": "p",
+                        "additionalData": {
+                          "minWords": 75,
+                          "maxWords": 150,
+                          "actualContent": "need generate helpful content"
+                        },
+                        "id": "j0dxwt"
+                      },
+                      {
+                        "tag": "code",
+                        "additionalData": {
+                          "minWords": 25,
+                          "maxWords": 60,
+                          "actualContent": "need generate helpful content"
+                        },
+                        "id": "hqcrsb"
+                      },
+                      {
+                        "tag": "p",
+                        "additionalData": {
+                          "minWords": 65,
+                          "maxWords": 130,
+                          "actualContent": "need generate helpful content"
+                        },
+                        "id": "y0yjvm"
+                      }
+                    ],
+                    "id": "irl5yr"
+                  }
+                ],
+                "id": "rty3wz"
+              },
+              {
+                "tag": "h3",
+                "additionalData": {
+                  "minWords": 150,
+                  "maxWords": 250,
+                  "actualContent": "need generate helpful content"
+                },
+                "realContentStructure": [
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 95,
+                      "maxWords": 190,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "au62c3"
+                  },
+                  {
+                    "tag": "blockquote",
+                    "additionalData": {
+                      "minWords": 20,
+                      "maxWords": 45,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "srowa0"
+                  },
+                  {
+                    "tag": "ol",
+                    "additionalData": {
+                      "minWords": 60,
+                      "maxWords": 120,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "fle2tr"
+                  }
+                ],
+                "id": "dehjzf"
+              }
+            ],
+            "id": "jvpg1y"
+          },
+          {
+            "tag": "h2",
+            "classification": "Guide",
+            "keywords": [
+              "каюты на пароме",
+              "рестораны на борту",
+              "развлечения для детей",
+              "удобства парома",
+              "комфорт на борту"
+            ],
+            "taxonomy": "Подробный обзор условий и развлечений на борту парома",
+            "attention": "Узнайте о всех удобствах и развлечениях на борту, чтобы сделать путешествие с детьми максимально комфортным.",
+            "intent": "Показать все преимущества путешествия на пароме для семей и помочь выбрать подходящие услуги.",
+            "audiences": "Семьи с детьми, интересующиеся комфортными условиями путешествия и развлечениями на борту",
+            "selfPrompt": "Создай подробный обзор удобств и развлечений на борту паромов до Тенерифе для семей. Дружелюбный тон. Ключевые слова: 'каюты на пароме', 'развлечения для детей', 'рестораны на борту'. Структура: вводный абзац (100-200 слов) о важности комфорта в семейном путешествии. Подраздел 'Размещение и каюты' (200-300 слов): типы кают, удобства, рекомендации для семей, список преимуществ (45-90 слов). Подраздел 'Питание и развлечения' (250-350 слов): рестораны и кафе (110-220 слов), детские площадки и активности (80-160 слов), список развлечений (55-110 слов), цитата довольной мамы (18-40 слов). Язык: русский. actualContent поля как 'need generate helpful content'.",
+            "designDescription": "Яркая секция с фотографиями кают, ресторанов и детских зон",
+            "connectedDesignSectionId": "ferry-amenities-section-004",
+            "additionalData": {
+              "minWords": 450,
+              "maxWords": 650,
+              "actualContent": "need generate helpful content"
+            },
+            "realContentStructure": [
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 100,
+                  "maxWords": 200,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "xfi1ti",
+                "status": "checked"
+              },
+              {
+                "tag": "h3",
+                "additionalData": {
+                  "minWords": 200,
+                  "maxWords": 300,
+                  "actualContent": "need generate helpful content"
+                },
+                "realContentStructure": [
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 90,
+                      "maxWords": 180,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "ckavsm",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 85,
+                      "maxWords": 170,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "cqjxkg",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "ul",
+                    "additionalData": {
+                      "minWords": 45,
+                      "maxWords": 90,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "fdudxy",
+                    "status": "checked"
+                  }
+                ],
+                "id": "zjodrv",
+                "status": "checked"
+              },
+              {
+                "tag": "h3",
+                "additionalData": {
+                  "minWords": 250,
+                  "maxWords": 350,
+                  "actualContent": "need generate helpful content"
+                },
+                "realContentStructure": [
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 110,
+                      "maxWords": 220,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "vk0wrm",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 80,
+                      "maxWords": 160,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "zk5l4s",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "blockquote",
+                    "additionalData": {
+                      "minWords": 18,
+                      "maxWords": 40,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "knvuzv",
+                    "status": "checked"
+                  }
+                ],
+                "id": "vb2rth",
+                "status": "checked"
+              }
+            ],
+            "id": "w4dfbf",
+            "status": "checked"
+          },
+          {
+            "tag": "h2",
+            "classification": "Tutorial",
+            "keywords": [
+              "подготовка к поездке на пароме",
+              "что взять с собой",
+              "документы для парома",
+              "советы семьям",
+              "путешествие с детьми"
+            ],
+            "taxonomy": "Практические советы по подготовке к путешествию на пароме с семьей",
+            "attention": "Полезные советы помогут вам правильно подготовиться к поездке и избежать неприятных сюрпризов в путешествии.",
+            "intent": "Предоставить практические рекомендации по подготовке к паромному путешествию с детьми.",
+            "audiences": "Семьи, впервые путешествующие на пароме или желающие улучшить свой опыт",
+            "selfPrompt": "Создай практический раздел советов по подготовке к путешествию на пароме до Тенерифе для семей. Дружелюбный тон как совет друга. Ключевые слова: 'путешествие с детьми', 'что взять с собой', 'советы семьям'. Структура: вводный абзац (105-210 слов) о важности подготовки. Подраздел 'Документы и формальности' (150-250 слов): необходимые документы, советы по оформлению (80-160 слов), список документов (40-80 слов), заключительные советы (70-140 слов). Язык: русский, неформальный стиль. actualContent поля как 'need generate helpful content'.",
+            "designDescription": "Практичная секция с чек-листами и иконками необходимых вещей",
+            "connectedDesignSectionId": "ferry-preparation-section-005",
+            "additionalData": {
+              "minWords": 400,
+              "maxWords": 550,
+              "actualContent": "need generate helpful content"
+            },
+            "realContentStructure": [
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 105,
+                  "maxWords": 210,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "p9nthd",
+                "status": "checked"
+              },
+              {
+                "tag": "h3",
+                "additionalData": {
+                  "minWords": 150,
+                  "maxWords": 250,
+                  "actualContent": "need generate helpful content"
+                },
+                "realContentStructure": [
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 80,
+                      "maxWords": 160,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "c2u28i",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "ul",
+                    "additionalData": {
+                      "minWords": 40,
+                      "maxWords": 80,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "svpsso",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 70,
+                      "maxWords": 140,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "az1x88",
+                    "status": "checked"
+                  }
+                ],
+                "id": "ysjdde",
+                "status": "checked"
+              }
+            ],
+            "id": "bmuj2l",
+            "status": "checked"
+          },
+          {
+            "tag": "h2",
+            "classification": "Comparison",
+            "keywords": [
+              "стоимость парома Тенерифе",
+              "цены на билеты",
+              "сравнение с самолетом",
+              "экономия семьям",
+              "бюджет поездки"
+            ],
+            "taxonomy": "Анализ стоимости паромного путешествия и сравнение с альтернативами",
+            "attention": "Детальный анализ стоимости поможет правильно спланировать бюджет и найти самые выгодные варианты для семьи.",
+            "intent": "Предоставить полную информацию о стоимости и помочь семьям принять обоснованное решение о способе путешествия.",
+            "audiences": "Семьи, планирующие бюджет поездки и сравнивающие различные способы добраться до Тенерифе",
+            "selfPrompt": "Создай детальный анализ стоимости паромного путешествия на Тенерифе для семей. Дружелюбный тон. Ключевые слова: 'стоимость парома Тенерифе', 'сравнение с самолетом', 'экономия семьям'. Структура: вводный абзац (95-190 слов) о важности планирования бюджета. Подраздел 'Цены на билеты' (200-300 слов): подробная таблица цен (100-200 слов), факторы влияющие на стоимость (85-170 слов). Подраздел 'Экономия для семей' (100-150 слов): советы по экономии (90-180 слов), code блок с контактами для скидок (30-70 слов). Язык: русский. actualContent поля как 'need generate helpful content'.",
+            "designDescription": "Информативная секция с таблицами цен и графиками сравнения",
+            "connectedDesignSectionId": "ferry-pricing-section-006",
+            "additionalData": {
+              "minWords": 350,
+              "maxWords": 500,
+              "actualContent": "need generate helpful content"
+            },
+            "realContentStructure": [
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 95,
+                  "maxWords": 190,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "kvlqjk",
+                "status": "checked"
+              },
+              {
+                "tag": "h3",
+                "additionalData": {
+                  "minWords": 200,
+                  "maxWords": 300,
+                  "actualContent": "need generate helpful content"
+                },
+                "realContentStructure": [
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 75,
+                      "maxWords": 150,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "jyu7bv",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "table",
+                    "additionalData": {
+                      "minWords": 100,
+                      "maxWords": 200,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "lvf3ld",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 85,
+                      "maxWords": 170,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "j7fpqt",
+                    "status": "checked"
+                  }
+                ],
+                "id": "z3wzfz",
+                "status": "checked"
+              },
+              {
+                "tag": "h3",
+                "additionalData": {
+                  "minWords": 100,
+                  "maxWords": 150,
+                  "actualContent": "need generate helpful content"
+                },
+                "realContentStructure": [
+                  {
+                    "tag": "p",
+                    "additionalData": {
+                      "minWords": 90,
+                      "maxWords": 180,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "uiyh8z",
+                    "status": "checked"
+                  },
+                  {
+                    "tag": "code",
+                    "additionalData": {
+                      "minWords": 30,
+                      "maxWords": 70,
+                      "actualContent": "need generate helpful content"
+                    },
+                    "id": "qi3bud",
+                    "status": "checked"
+                  }
+                ],
+                "id": "d04fhj",
+                "status": "checked"
+              }
+            ],
+            "id": "pflxa7",
+            "status": "checked"
+          },
+          {
+            "tag": "h2",
+            "classification": "Conclusion",
+            "keywords": [
+              "выводы о пароме Тенерифе",
+              "рекомендации семьям",
+              "лучший способ добраться",
+              "паром или самолет",
+              "семейное путешествие"
+            ],
+            "taxonomy": "Заключительные рекомендации и выводы о паромном путешествии",
+            "attention": "Подведем итоги и дадим финальные рекомендации, которые помогут принять правильное решение для вашей семьи.",
+            "intent": "Обобщить информацию и дать четкие рекомендации семьям по выбору парома для поездки на Тенерифе.",
+            "audiences": "Все семьи, рассматривающие паром как способ добраться до Тенерифе",
+            "selfPrompt": "Создай заключительный раздел статьи о паромах на Тенерифе с рекомендациями для семей. Дружелюбный, мотивирующий тон. Ключевые слова: 'рекомендации семьям', 'семейное путешествие', 'паром или самолет'. Структура: вводный абзац (120-240 слов) с основными выводами, второй абзац (100-200 слов) с конкретными рекомендациями, список ключевых преимуществ (60-120 слов), заключительный абзац (80-160 слов) с призывом к действию, вдохновляющая цитата (15-35 слов). Используй теплый, мотивирующий тон. Язык: русский. actualContent поля как 'need generate helpful content'.",
+            "designDescription": "Вдохновляющая заключительная секция с призывом к действию",
+            "connectedDesignSectionId": "ferry-conclusion-section-007",
+            "additionalData": {
+              "minWords": 300,
+              "maxWords": 450,
+              "actualContent": "need generate helpful content"
+            },
+            "realContentStructure": [
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 120,
+                  "maxWords": 240,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "eghleo",
+                "status": "checked"
+              },
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 100,
+                  "maxWords": 200,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "dcayav",
+                "status": "checked"
+              },
+              {
+                "tag": "ul",
+                "additionalData": {
+                  "minWords": 60,
+                  "maxWords": 120,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "z1afdc",
+                "status": "checked"
+              },
+              {
+                "tag": "p",
+                "additionalData": {
+                  "minWords": 80,
+                  "maxWords": 160,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "srxhdn",
+                "status": "checked"
+              },
+              {
+                "tag": "blockquote",
+                "additionalData": {
+                  "minWords": 15,
+                  "maxWords": 35,
+                  "actualContent": "need generate helpful content"
+                },
+                "id": "e5zelk",
+                "status": "checked"
+              }
+            ],
+            "id": "k2jfck",
+            "status": "checked"
+          }
+        ]
       },
       {
         "id": "uzl8djuoxz8xejna49c6pjcm",
@@ -2693,5 +3270,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-10T12:21:15.406Z";
+export const lastUpdated = "2025-09-13T13:10:05.184Z";
 export const generatedBy = "menu-persist-api";

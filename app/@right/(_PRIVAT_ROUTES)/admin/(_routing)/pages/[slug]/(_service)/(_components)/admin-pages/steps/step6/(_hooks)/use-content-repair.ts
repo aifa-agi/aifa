@@ -2,12 +2,15 @@
 
 "use client";
 
+// Comments in English for clarity.
+
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import {
   ContentRepairRequest,
   ContentRepairResult,
   ContentRepairState,
+  buildContentRepairResultFromServer, // <-- use helper to normalize
 } from "../(_types)/content-repair-types";
 import {
   ContentRepairServerRequest,
@@ -15,8 +18,8 @@ import {
 } from "../(_actions)/content-repair-action";
 
 /**
- * Custom hook для восстановления ContentStructure JSON с помощью AI
- * Адаптация useJsonRepair специально для ContentStructure
+ * Custom hook for repairing ContentStructure JSON via AI (Server Action-backed).
+ * Applies normalization to ensure repairedData is ContentStructure[] with a valid TechnicalTag (default "p").
  */
 export function useContentRepair() {
   const [repairState, setRepairState] = useState<ContentRepairState>({
@@ -27,7 +30,7 @@ export function useContentRepair() {
   });
 
   /**
-   * Восстановление ContentStructure JSON через Server Action
+   * Perform repair via Server Action
    */
   const repairContentWithServer = useCallback(
     async (request: ContentRepairRequest): Promise<ContentRepairResult> => {
@@ -62,16 +65,11 @@ export function useContentRepair() {
             : 0,
         });
 
-        // Конвертация результата сервера в формат клиентского хука
-        const result: ContentRepairResult = {
-          success: serverResult.success,
-          repairedData: serverResult.repairedData,
-          error: serverResult.error,
-          repairMethod: "openai",
-          originalLength: serverResult.originalLength,
-          repairedLength: serverResult.repairedLength,
-          confidence: serverResult.confidence,
-        };
+        // Normalize server result to strict ContentStructure[]
+        const result: ContentRepairResult = buildContentRepairResultFromServer(
+          serverResult,
+          "openai"
+        );
 
         return result;
       } catch (error) {
@@ -99,7 +97,7 @@ export function useContentRepair() {
   );
 
   /**
-   * Основная функция восстановления с логикой повторов
+   * Main repair function with retry logic
    */
   const repairInvalidContentStructure = useCallback(
     async (request: ContentRepairRequest): Promise<ContentRepairResult> => {
@@ -109,7 +107,7 @@ export function useContentRepair() {
         maxAttempts: 3,
       });
 
-      // Проверка максимального количества попыток
+      // Max attempts guard
       if (repairState.repairAttempts >= 3) {
         console.warn(
           "⚠️ Client: Maximum ContentStructure repair attempts reached"
@@ -133,14 +131,16 @@ export function useContentRepair() {
       try {
         const result = await repairContentWithServer(request);
 
-        // Проверка порога уверенности
+        // Confidence threshold warning
         if (result.success && result.confidence < 0.6) {
           console.warn(
             "⚠️ Client: ContentStructure repair confidence below threshold:",
             result.confidence
           );
           toast.warning(
-            `Восстановление ContentStructure выполнено с низкой уверенностью: ${Math.round(result.confidence * 100)}%`
+            `Восстановление ContentStructure выполнено с низкой уверенностью: ${Math.round(
+              result.confidence * 100
+            )}%`
           );
         }
 
@@ -155,7 +155,9 @@ export function useContentRepair() {
             ? result.repairedData.length
             : 0;
           toast.success("ContentStructure успешно восстановлена с помощью ИИ", {
-            description: `${elementsCount} элементов, уверенность: ${Math.round(result.confidence * 100)}%`,
+            description: `${elementsCount} элементов, уверенность: ${Math.round(
+              result.confidence * 100
+            )}%`,
           });
         } else {
           toast.error("Не удалось восстановить структуру ContentStructure", {
@@ -195,7 +197,7 @@ export function useContentRepair() {
   );
 
   /**
-   * Сброс состояния восстановления
+   * Reset repair state
    */
   const resetRepairState = useCallback(() => {
     console.log("🔄 Client: Resetting ContentStructure repair state");
@@ -208,7 +210,7 @@ export function useContentRepair() {
   }, []);
 
   /**
-   * Переключение видимости инструмента восстановления
+   * Toggle repair tool visibility
    */
   const toggleRepairTool = useCallback(() => {
     setRepairState((prev) => ({
