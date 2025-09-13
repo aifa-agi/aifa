@@ -248,7 +248,7 @@ export function fileTreeDataTransformerFlexible(
 
       case "hierarchical":
         const baseId = structure.id || structure.order || `${index}`;
-        return parentId ? `${parentId}.${baseId}` : baseId;
+        return parentId ? `${parentId}.${baseId}` : `${baseId}`;
 
       case "classification-based":
         const classification =
