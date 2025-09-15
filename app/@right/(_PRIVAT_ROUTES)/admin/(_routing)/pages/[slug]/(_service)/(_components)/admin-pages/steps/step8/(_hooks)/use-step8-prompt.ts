@@ -2,35 +2,36 @@
 "use client";
 
 /**
- * Step 8 - Prompt hook:
- * Builds the system/user prompt parts for MDX generation of a given H2 section.
- *
+ * Step 8 - Prompt hook (schema-driven, with chain, SEO, and page meta):
  * Understanding of the task (step-by-step):
- * 1) The source of truth is PageData (draftContentStructure for H2 sections and sections[].tempMDXContent for saved MDX).
- * 2) For section i, the system prompt must include: selfPrompt, writingStyle, contentFormat, and a coherence hint,
- *    plus all previously saved MDX [0..i-1] concatenated for stylistic consistency.
- * 3) Word count policy is advisory (min/max can be zero). We explicitly state this in the system prompt.
- * 4) The hook exposes builders for active section and by arbitrary section id, without mutating PageData.
- * 5) Errors (e.g., missing section or inconsistent chain) are surfaced via Sonner toasts.
- *
- * Notes:
- * - Comments and UI strings are in English (US). Chat/communication is Russian.
- * - writingStyle/contentFormat may be optional on RootContentStructure; access with care.
+ * 1) Build a strict SYSTEM instruction that includes:
+ *    - Serialized section blueprint (RootContentStructure + children).
+ *    - Page progress meta: totalSections, completedSectionsIndexes (0-based), currentSectionIndex.
+ *    - LANGUAGE CONTRACT: enforce appConfig.lang with safe fallback.
+ *    - MDX OUTPUT CONTRACT: valid MDX only, no H2, start from H3, allowed tags list.
+ *    - SEMANTICS & BOUNDS CONTRACT: follow blueprint order, advisory min/max words, intent/audiences/taxonomy, style/format hints.
+ *    - CHAIN COHERENCE: inject previous MDX (read-only), explain WHY chain is included.
+ *    - SEO BEST PRACTICES: natural keywords usage, LSI/synonyms, headings clarity and scannability, no keyword stuffing.
+ *    - WORD COUNT POLICY: ignore header word limits, count child elements' words instead.
+ * 2) Build a concise USER seed from description/keywords/intent/audiences.
+ * 3) Preserve existing streaming/one-shot flows; do not mutate PageData here.
+ * 4) Keep hooks usage valid: do NOT call hooks inside callbacks; use closures from this hook scope only.
  */
 
 import * as React from "react";
 import { toast } from "sonner";
 import { useStep8Root } from "../(_contexts)/step8-root-context";
 import type {
-  PageData,
   RootContentStructure,
   SectionInfo,
+  ContentStructure,
 } from "@/app/@right/(_service)/(_types)/page-types";
 import { STEP8_TEXTS } from "../(_constants)/step8-texts";
 import { STEP8_IDS } from "../(_constants)/step8-ids";
-import { normalizedRoots } from "../../step7/(_utils)/step7-utils";
 
-/** Prompt parts contract used by the generator hook. */
+// Optional app config import for language; keep safe fallback if not present.
+import { appConfig } from "@/config/appConfig";
+
 export interface Step8PromptParts {
   system: string;
   user: string;
@@ -38,19 +39,17 @@ export interface Step8PromptParts {
     sectionId: string;
     sectionIndex: number;
     previousMDXCount: number;
+    totalSections: number;
+    completedIndexes: number[];
+    language: string;
   };
 }
 
-/** External prompt for single-input UIs (e.g., Perplexity). */
-export interface ExternalPrompt {
-  system: string;
-  user: string;
-  combined: string; // SYSTEM + USER + OUTPUT FORMAT contract (plain text)
+function nonEmpty(v?: string | null): boolean {
+  return typeof v === "string" && v.trim().length > 0;
 }
 
-function indexSections(
-  sections: SectionInfo[] | undefined
-): Map<string, SectionInfo> {
+function indexSections(sections: SectionInfo[] | undefined) {
   const map = new Map<string, SectionInfo>();
   (sections ?? []).forEach((s) => {
     if (s?.id) map.set(s.id, s);
@@ -58,8 +57,32 @@ function indexSections(
   return map;
 }
 
-function nonEmpty(value: string | undefined | null): boolean {
-  return typeof value === "string" && value.trim().length > 0;
+function serializeBlueprint(section: RootContentStructure): string {
+  const pick = (s: any): any => ({
+    id: s?.id ?? null,
+    order: s?.order ?? null,
+    classification: s?.classification ?? null,
+    tag: s?.tag ?? null,
+    description: s?.description ?? null,
+    keywords: Array.isArray(s?.keywords) ? s.keywords : [],
+    intent: s?.intent ?? null,
+    taxonomy: s?.taxonomy ?? null,
+    attention: s?.attention ?? null,
+    audiences: s?.audiences ?? null,
+    selfPrompt: s?.selfPrompt ?? null,
+    designDescription: s?.designDescription ?? null,
+    connectedDesignSectionId: s?.connectedDesignSectionId ?? null,
+    linksToSource: Array.isArray(s?.linksToSource) ? s.linksToSource : [],
+    additionalData: {
+      minWords: s?.additionalData?.minWords ?? 0,
+      maxWords: s?.additionalData?.maxWords ?? 0,
+    },
+    status: s?.status ?? null,
+    children: Array.isArray(s?.realContentStructure)
+      ? s.realContentStructure.map((c: ContentStructure) => pick(c))
+      : [],
+  });
+  return JSON.stringify(pick(section), null, 2);
 }
 
 function getPreviousSectionsMDX(
@@ -80,6 +103,19 @@ function getPreviousSectionsMDX(
 function joinChainMDX(chain: string[]): string {
   if (chain.length === 0) return "";
   return chain.join("\n\n{/* ---- previous section ---- */}\n\n");
+}
+
+function computeCompletedIndexes(
+  roots: RootContentStructure[],
+  byId: Map<string, SectionInfo>
+): number[] {
+  const indexes: number[] = [];
+  roots.forEach((r, idx) => {
+    if (!r?.id) return;
+    const mdx = byId.get(r.id)?.tempMDXContent ?? "";
+    if (nonEmpty(mdx)) indexes.push(idx);
+  });
+  return indexes;
 }
 
 function readOptionalStyleFields(section: RootContentStructure): {
@@ -107,19 +143,26 @@ function buildUserSeed(section: RootContentStructure): string {
   if (nonEmpty(section.intent)) {
     parts.push(`Intent: ${section.intent!.trim()}`);
   }
+  if (nonEmpty(section.taxonomy)) {
+    parts.push(`Taxonomy: ${section.taxonomy!.trim()}`);
+  }
+  if (nonEmpty(section.attention)) {
+    parts.push(`Attention: ${section.attention!.trim()}`);
+  }
   if (nonEmpty(section.audiences)) {
     parts.push(`Target audiences: ${section.audiences!.trim()}`);
   }
+  if (nonEmpty(section.selfPrompt)) {
+    parts.push(`Self Prompt: ${section.selfPrompt!.trim()}`);
+  }
+  // Keep concise; the system prompt drives the main behavior.
   return parts.join("\n");
 }
 
-/**
- * useStep8Prompt:
- * Exposes prompt builders for the active section and by arbitrary section id.
- */
 export function useStep8Prompt() {
-  const { page, ui, getSections, getActiveSection } = useStep8Root();
+  const { page, getSections, getActiveSection } = useStep8Root();
 
+  // Stable roots and index map derived once per render
   const roots = React.useMemo(() => getSections(), [getSections]);
   const indexById = React.useMemo(() => {
     const map = new Map<string, number>();
@@ -143,7 +186,7 @@ export function useStep8Prompt() {
       if (typeof index !== "number" || index < 0) {
         toast.error(STEP8_TEXTS.errors.missingSection, {
           id: STEP8_IDS.toasts.generateError,
-          description: STEP8_TEXTS.guard.invalidIndexDescription,
+          description: "Invalid section index.",
         });
         return null;
       }
@@ -152,69 +195,137 @@ export function useStep8Prompt() {
       if (!section) {
         toast.error(STEP8_TEXTS.errors.missingSection, {
           id: STEP8_IDS.toasts.generateError,
-          description: STEP8_TEXTS.guard.invalidIndexDescription,
+          description: "Section not found in roots.",
         });
         return null;
       }
 
       const byId = indexSections(page?.sections);
       const prevChain = getPreviousSectionsMDX(roots, index, byId);
-      if (index > 0 && prevChain.length === 0) {
-        toast.warning(STEP8_TEXTS.guard.clearedChainTitle, {
-          id: STEP8_IDS.toasts.rollback,
-          description: STEP8_TEXTS.guard.clearedChainDescription,
-        });
-      }
+      const chainJoined = joinChainMDX(prevChain);
+      const completedIndexes = computeCompletedIndexes(roots, byId);
+      const totalSections = roots.length;
 
       const { writingStyle, contentFormat } = readOptionalStyleFields(section);
+      const language = (appConfig as any)?.lang ?? "ru";
+      const blueprint = serializeBlueprint(section);
 
-      const systemLines: string[] = [];
-      if (nonEmpty(section.selfPrompt)) {
-        systemLines.push(String(section.selfPrompt).trim());
-      }
-      if (nonEmpty(writingStyle)) {
-        systemLines.push(
-          `Writing style preference: ${String(writingStyle).trim()}`
-        );
-      }
-      if (nonEmpty(contentFormat)) {
-        systemLines.push(
-          `Desired content format: ${String(contentFormat).trim()}`
-        );
-      }
-      systemLines.push(STEP8_TEXTS.prompt.wordCountPolicy);
-      systemLines.push(STEP8_TEXTS.prompt.styleCoherenceHint);
+      const pageProgress = [
+        `PAGE PROGRESS CONTEXT:`,
+        `- totalSections: ${totalSections}`,
+        `- completedSectionsIndexes (0-based): [${completedIndexes.join(", ")}]`,
+        `- currentSectionIndex (0-based): ${index}`,
+        `Narrative directive: "Previously presented content covers sections ${
+          completedIndexes.map((i) => i + 1).join(", ") || "none"
+        }, now we generate section ${index + 1}, total ${totalSections} sections. Use this to maintain sequential exposition and cross-section continuity."`,
+      ].join("\n");
 
-      const chainJoined = joinChainMDX(prevChain);
-      if (nonEmpty(chainJoined)) {
-        systemLines.push("Previously saved sections (MDX, read-only context):");
-        systemLines.push(chainJoined);
-      }
+      const languageContract = [
+        `LANGUAGE CONTRACT:`,
+        `- All output MUST be written in "${language}".`,
+        `- Do NOT switch language unless explicitly required by the blueprint.`,
+      ].join("\n");
+
+      const mdxContract = [
+        `MDX OUTPUT CONTRACT:`,
+        `- Return ONLY valid MDX suitable for the Next.js MDX parser.`,
+        `- Do NOT include explanations, pre/post text, or code fences.`,
+        `- Do NOT duplicate the H2 title of the section.`,
+        `- Start headings from H3 and below.`,
+        `- Allowed tags: h3, h4, p, ul, ol, li, blockquote, code, table, thead, tbody, tr, td, th, img.`,
+      ].join("\n");
+
+      const wordCountPolicy = [
+        `WORD COUNT POLICY:`,
+        `- IGNORE minWords and maxWords requirements specified in headings (h2, h3, h4).`,
+        `- The actual content size is determined by the sum of minWords/maxWords of child elements.`,
+        `- If child elements have minWords=0 and maxWords=0, generate content at AI model discretion.`,
+        `- Example: h3 with minWords=50, maxWords=100, containing two paragraphs each requiring 300 words should result in ~600 words total content.`,
+      ].join("\n");
+
+      const semanticsContract = [
+        `SEMANTICS & BOUNDS CONTRACT:`,
+        `- Follow the blueprint exactly for structure, child order and roles.`,
+        `- Use taxonomy/attention/audiences/intent to shape tone, coverage and value.`,
+        `- If linksToSource exist, integrate them as Markdown links where appropriate.`,
+        `- Apply selfPrompt instructions if present in the section blueprint.`,
+        writingStyle
+          ? `- Writing style preference: ${String(writingStyle).trim()}`
+          : "",
+        contentFormat
+          ? `- Desired content format: ${String(contentFormat).trim()}`
+          : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      const chainCoherence = [
+        `CHAIN COHERENCE (read-only context):`,
+        `- Reason: enforce a unified tone of voice, avoid semantic duplication, and maintain a continuous flow of thought across the entire page.`,
+        STEP8_TEXTS.prompt.styleCoherenceHint,
+        nonEmpty(chainJoined)
+          ? `Previously saved sections (MDX, read-only context):\n${chainJoined}`
+          : `No previous sections saved.`,
+      ].join("\n\n");
+
+      const seoContract = [
+        `SEO BEST PRACTICES:`,
+        `- Target given keywords naturally; avoid keyword stuffing.`,
+        `- Use semantically related terms and synonyms (LSI) to improve relevance.`,
+        `- Keep headings (H3/H4) clear; ensure scannability with concise paragraphs and lists.`,
+        `- Align with the section's intent, audiences and taxonomy to match search intent.`,
+        `- Maintain internal consistency of terminology and avoid content duplication.`,
+      ].join("\n");
+
+      const system = [
+        `SECTION BLUEPRINT (read-only JSON):`,
+        blueprint,
+        "",
+        pageProgress,
+        "",
+        languageContract,
+        "",
+        mdxContract,
+        "",
+        wordCountPolicy,
+        "",
+        semanticsContract,
+        "",
+        chainCoherence,
+        "",
+        seoContract,
+        "",
+        STEP8_TEXTS.prompt.wordCountPolicy,
+      ].join("\n");
 
       const userSeed = buildUserSeed(section);
       const user = [
-        "Generate high-quality MDX for the current section (H2).",
-        "Preserve heading levels and keep consistent formatting.",
+        `Generate the MDX for the current H2 section strictly following the blueprint and contracts.`,
+        `Preserve heading levels (from H3) and keep consistent formatting.`,
         userSeed,
       ]
         .filter(Boolean)
         .join("\n");
 
-      const prompt: Step8PromptParts = {
-        system: systemLines.join("\n\n"),
+      return {
+        system,
         user,
         meta: {
           sectionId: sectionId,
           sectionIndex: index,
           previousMDXCount: prevChain.length,
+          totalSections,
+          completedIndexes,
+          language,
         },
       };
-
-      return prompt;
     },
     [indexById, page?.sections, roots]
   );
 
+  /**
+   * Convenience builder for the currently active section (no hook calls inside callback).
+   */
   const buildForActiveSection =
     React.useCallback((): Step8PromptParts | null => {
       const active = getActiveSection();
@@ -228,66 +339,8 @@ export function useStep8Prompt() {
       return buildForSectionId(active.id);
     }, [buildForSectionId, getActiveSection]);
 
-  /**
-   * Builds a single-string external prompt for single-input UIs (e.g., Perplexity).
-   * Appends an explicit OUTPUT FORMAT contract to force MDX.
-   */
-  const buildExternalPromptForSectionId = React.useCallback(
-    (sectionId: string | null | undefined): ExternalPrompt | null => {
-      const p = buildForSectionId(sectionId);
-      if (!p) return null;
-
-      const outputContract = [
-        "OUTPUT FORMAT:",
-        "- Return ONLY valid MDX content suitable for Next.js MDX parser.",
-        "- Do NOT include any explanations, prefaces, or meta text.",
-        "- Do NOT wrap the output in code fences.",
-        "- Keep heading levels consistent: start from H3 and below; do NOT duplicate the H2 title.",
-        "- Use lists, tables, blockquotes and inline code as MDX; avoid raw HTML unless required by MDX components.",
-      ].join("\n");
-
-      const combined = [
-        "SYSTEM INSTRUCTION:",
-        p.system,
-        "",
-        "USER TASK:",
-        p.user,
-        "",
-        outputContract,
-      ].join("\n");
-
-      return { system: p.system, user: p.user, combined };
-    },
-    [buildForSectionId]
-  );
-
-  const buildExternalPromptForActiveSection =
-    React.useCallback((): ExternalPrompt | null => {
-      const active = getActiveSection();
-      if (!active?.id) {
-        toast.error(STEP8_TEXTS.errors.missingActive, {
-          id: STEP8_IDS.toasts.generateError,
-          description: STEP8_TEXTS.selector.selectPrompt,
-        });
-        return null;
-      }
-      return buildExternalPromptForSectionId(active.id);
-    }, [buildExternalPromptForSectionId, getActiveSection]);
-
-  const getSectionIndex = React.useCallback(
-    (sectionId: string | null | undefined): number => {
-      if (!sectionId) return -1;
-      return indexById.get(sectionId) ?? -1;
-    },
-    [indexById]
-  );
-
   return {
     buildForSectionId,
     buildForActiveSection,
-    buildExternalPromptForSectionId,
-    buildExternalPromptForActiveSection,
-    getSectionIndex,
-    roots,
   };
 }

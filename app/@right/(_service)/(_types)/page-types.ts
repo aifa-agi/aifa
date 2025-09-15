@@ -158,38 +158,6 @@ export interface ContentElementAnalysis {
 
 export type ContentClassification = "semantic" | "technical" | "hybrid";
 
-// Базовый интерфейс ContentStructure для вложенных элементов
-export interface ContentStructure {
-  id?: string;
-  order?: number;
-  classification?: ContentClassification;
-  tag: ContentTag;
-  description?: string;
-  keywords?: string[];
-  intent?: string;
-  taxonomy?: string;
-  attention?: string;
-  audiences?: string;
-  selfPrompt?: string;
-  designDescription?: string;
-  connectedDesignSectionId?: string;
-  linksToSource?: string[];
-  additionalData: {
-    minWords: number;
-    maxWords: number;
-    actualContent: string;
-  };
-  status?: "draft" | "checked";
-  realContentStructure?: ContentStructure[];
-}
-
-// НОВЫЙ ТИП: Специальный интерфейс для корневых элементов с жёстким требованием H2
-export interface RootContentStructure extends Omit<ContentStructure, "tag"> {
-  tag: "h2";
-  writingStyle?: string;
-  contentFormat?: string;
-}
-
 // Валидационные утилиты для проверки структуры
 export interface StructureValidationResult {
   isValid: boolean;
@@ -253,6 +221,35 @@ export interface CompetitorAnalysis {
 export interface KnowledgeSettings {
   knowledgeBase: string;
   mixingRatio: number;
+}
+
+export interface RootContentStructure extends Omit<ContentStructure, "tag"> {
+  tag: "h2";
+  writingStyle?: string;
+  contentFormat?: string;
+}
+export interface ContentStructure {
+  id?: string;
+  order?: number;
+  classification?: ContentClassification;
+  tag: ContentTag;
+  description?: string;
+  keywords?: string[];
+  intent?: string;
+  taxonomy?: string;
+  attention?: string;
+  audiences?: string;
+  selfPrompt?: string;
+  designDescription?: string;
+  connectedDesignSectionId?: string;
+  linksToSource?: string[];
+  additionalData: {
+    minWords: number;
+    maxWords: number;
+    actualContent: string;
+  };
+  status?: "draft" | "checked";
+  realContentStructure?: ContentStructure[];
 }
 
 export interface DraftContentResult {

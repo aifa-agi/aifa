@@ -2,22 +2,16 @@
 "use server";
 
 /**
- * Step 8 - Server Action: regenerateAllDrafts
- * Mass-regenerates MDX for H2 sections sequentially with style-coherent chain.
- *
+ * Step 8 - Server Action: regenerateAllDrafts (enhanced system with page meta, language, SEO, and chain)
  * Understanding of the task (step-by-step):
- * 1) Input roots are the ordered H2 sections (RootContentStructure[]) representing the page's sections.
- * 2) We compute the unlocked index from existing sections (non-empty tempMDXContent).
- * 3) We start regeneration from `regenerateFromIndex` (defaults to unlocked index) and go sequentially to the end.
- * 4) For each section i, the system prompt includes: selfPrompt, optional writingStyle/contentFormat,
- *    the advisory word count policy, the style coherence hint, and MDX chain of previously saved/generated sections [0..i-1].
- * 5) We use OpenAI via AI SDK streamText and aggregate the full MDX (non-stream return in this action).
- * 6) No persistence here. The caller should optimistically save to PageData.sections[].tempMDXContent and handle rollback.
- *
- * Notes:
- * - UI strings and comments are in English (US).
- * - Model defaults: gpt-4.1-mini, temperature=0.5, maxTokens=30000.
- * - We keep this action self-contained (no client hooks), mirroring the client-side prompt policy.
+ * 1) For each section i, build SYSTEM with:
+ *    - Progress meta (total, completed indexes, current index + narrative directive).
+ *    - LANGUAGE/MDX/SEMANTICS/SEO contracts.
+ *    - Chain of previous saved/generated MDX with delimiter and WHY explanation.
+ *    - Word count policy that ignores header limits and focuses on child elements.
+ * 2) Use advisory min/max words; avoid truncation artifacts.
+ * 3) Keep sequential chain: append each successful MDX to chainMDX.
+ * 4) Return full MDX per section; no persistence here.
  */
 
 import { streamText } from "ai";
@@ -27,13 +21,16 @@ import type {
   SectionInfo,
 } from "@/app/@right/(_service)/(_types)/page-types";
 
+// Optional app config import for language
+import { appConfig } from "@/config/appConfig";
+
 export type RegenerateAllDraftsInput = {
   pageId: string;
   roots: RootContentStructure[];
-  existingSections?: SectionInfo[]; // to read saved tempMDXContent
-  regenerateFromIndex?: number; // default: unlockedIndex (count of non-empty saved MDX)
-  model?: string; // default: "gpt-4.1-mini"
-  stopOnEmpty?: boolean; // default: true -> stop batch if a generation returns empty
+  existingSections?: SectionInfo[];
+  regenerateFromIndex?: number;
+  model?: string;
+  stopOnEmpty?: boolean;
 };
 
 export type RegenerateAllDraftsSectionResult = {
@@ -76,8 +73,6 @@ export type RegenerateAllDraftsResult = {
   };
 };
 
-// Helpers
-
 function nonEmpty(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -106,7 +101,6 @@ function indexSections(
   return map;
 }
 
-/** Count how many leading sections have non-empty saved MDX (defines unlockedIndex). */
 function computeUnlockedIndex(
   roots: RootContentStructure[],
   byId: Map<string, SectionInfo>
@@ -122,55 +116,143 @@ function computeUnlockedIndex(
   return count;
 }
 
-/** Join previous MDX chain with safe MDX comment delimiter. */
 function joinChain(chain: string[]): string {
   if (chain.length === 0) return "";
   return chain.join("\n\n{/* ---- previous section ---- */}\n\n");
 }
 
-/** Build system and user prompts for section i using saved/generated chain. */
+function serializeBlueprint(section: RootContentStructure): string {
+  const pick = (s: any): any => ({
+    id: s?.id ?? null,
+    order: s?.order ?? null,
+    classification: s?.classification ?? null,
+    tag: s?.tag ?? null,
+    description: s?.description ?? null,
+    keywords: Array.isArray(s?.keywords) ? s.keywords : [],
+    intent: s?.intent ?? null,
+    taxonomy: s?.taxonomy ?? null,
+    attention: s?.attention ?? null,
+    audiences: s?.audiences ?? null,
+    selfPrompt: s?.selfPrompt ?? null,
+    designDescription: s?.designDescription ?? null,
+    connectedDesignSectionId: s?.connectedDesignSectionId ?? null,
+    linksToSource: Array.isArray(s?.linksToSource) ? s.linksToSource : [],
+    additionalData: {
+      minWords: s?.additionalData?.minWords ?? 0,
+      maxWords: s?.additionalData?.maxWords ?? 0,
+    },
+    status: s?.status ?? null,
+    children: Array.isArray(s?.realContentStructure)
+      ? s.realContentStructure.map((c: any) => pick(c))
+      : [],
+  });
+  return JSON.stringify(pick(section), null, 2);
+}
+
 function buildPromptsForIndex(params: {
   roots: RootContentStructure[];
   index: number;
   chainMDX: string[];
+  language: string;
 }): { system: string; user: string } {
-  const { roots, index, chainMDX } = params;
+  const { roots, index, chainMDX, language } = params;
   const section = roots[index];
   const { writingStyle, contentFormat } = readOptionalStyleFields(section);
 
-  const sys: string[] = [];
+  const totalSections = roots.length;
+  const completedIndexes = Array.from({ length: index }, (_, i) => i);
 
-  // Base self prompt
-  if (nonEmpty(section.selfPrompt)) {
-    sys.push(String(section.selfPrompt).trim());
-  }
+  const blueprint = serializeBlueprint(section);
 
-  // Style and format hints
-  if (nonEmpty(writingStyle)) {
-    sys.push(`Writing style preference: ${String(writingStyle).trim()}`);
-  }
-  if (nonEmpty(contentFormat)) {
-    sys.push(`Desired content format: ${String(contentFormat).trim()}`);
-  }
+  const pageProgress = [
+    `PAGE PROGRESS CONTEXT:`,
+    `- totalSections: ${totalSections}`,
+    `- completedSectionsIndexes (0-based): [${completedIndexes.join(", ")}]`,
+    `- currentSectionIndex (0-based): ${index}`,
+    `Narrative directive: "Previously presented content covers sections ${
+      completedIndexes.map((i) => i + 1).join(", ") || "none"
+    }, now we generate section ${index + 1}, total ${totalSections} sections. Use this to maintain sequential exposition and cross-section continuity."`,
+  ].join("\n");
 
-  // Advisory word count policy
-  sys.push(
-    "Word count is decided by the model preferences; min/max are advisory and can be zero."
-  );
+  const languageContract = [
+    `LANGUAGE CONTRACT:`,
+    `- All output MUST be written in "${language}".`,
+    `- Do NOT switch language unless explicitly required by the blueprint.`,
+  ].join("\n");
 
-  // Coherence with previously saved/generated sections
-  sys.push(
-    "Ensure stylistic and formatting coherence with all previously saved sections."
-  );
+  const mdxContract = [
+    `MDX OUTPUT CONTRACT:`,
+    `- Return ONLY valid MDX suitable for the Next.js MDX parser.`,
+    `- Do NOT include explanations, pre/post text, or code fences.`,
+    `- Do NOT duplicate the H2 title of the section.`,
+    `- Start headings from H3 and below.`,
+    `- Allowed tags: h3, h4, p, ul, ol, li, blockquote, code, table, thead, tbody, tr, td, th, img.`,
+  ].join("\n");
 
-  // Include read-only MDX context for previous sections
+  const wordCountPolicy = [
+    `WORD COUNT POLICY:`,
+    `- IGNORE minWords and maxWords requirements specified in headings (h2, h3, h4).`,
+    `- The actual content size is determined by the sum of minWords/maxWords of child elements.`,
+    `- If child elements have minWords=0 and maxWords=0, generate content at AI model discretion.`,
+    `- Example: h3 with minWords=50, maxWords=100, containing two paragraphs each requiring 300 words should result in ~600 words total content.`,
+  ].join("\n");
+
+  const semanticsContract = [
+    `SEMANTICS & BOUNDS CONTRACT:`,
+    `- Follow the blueprint exactly for structure, child order and roles.`,
+    `- Use taxonomy/attention/audiences/intent to shape tone, coverage and value.`,
+    `- If linksToSource exist, integrate them as Markdown links where appropriate.`,
+    `- Apply selfPrompt instructions if present in the section blueprint.`,
+    writingStyle
+      ? `- Writing style preference: ${String(writingStyle).trim()}`
+      : "",
+    contentFormat
+      ? `- Desired content format: ${String(contentFormat).trim()}`
+      : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
   const joined = joinChain(chainMDX);
-  if (nonEmpty(joined)) {
-    sys.push("Previously saved sections (MDX, read-only context):");
-    sys.push(joined);
-  }
+  const chainCoherence = [
+    `CHAIN COHERENCE (read-only context):`,
+    `- Reason: enforce a unified tone of voice, avoid semantic duplication, and maintain a continuous flow of thought across the entire page.`,
+    `Ensure stylistic and formatting coherence with all previously saved sections.`,
+    nonEmpty(joined)
+      ? `Previously saved sections (MDX, read-only context):\n${joined}`
+      : `No previous sections saved.`,
+  ].join("\n\n");
 
-  // Minimal informative user seed from section meta
+  const seoContract = [
+    `SEO BEST PRACTICES:`,
+    `- Target given keywords naturally; avoid keyword stuffing.`,
+    `- Use semantically related terms and synonyms (LSI) to improve relevance.`,
+    `- Keep headings (H3/H4) clear; ensure scannability with concise paragraphs and lists.`,
+    `- Align with the section's intent, audiences and taxonomy to match search intent.`,
+    `- Maintain internal consistency of terminology and avoid content duplication.`,
+  ].join("\n");
+
+  const sys = [
+    `SECTION BLUEPRINT (read-only JSON):`,
+    blueprint,
+    "",
+    pageProgress,
+    "",
+    languageContract,
+    "",
+    mdxContract,
+    "",
+    wordCountPolicy,
+    "",
+    semanticsContract,
+    "",
+    chainCoherence,
+    "",
+    seoContract,
+    "",
+    "Word count is decided by the model preferences; min/max are advisory and can be zero.",
+  ].join("\n");
+
   const userLines: string[] = [
     "Generate high-quality MDX for the current section (H2).",
     "Preserve heading levels and keep consistent formatting.",
@@ -184,12 +266,24 @@ function buildPromptsForIndex(params: {
   if (nonEmpty(section.intent)) {
     userLines.push(`Intent: ${section.intent!.trim()}`);
   }
+  if (nonEmpty(section.attention)) {
+    userLines.push(`Attention: ${section.attention!.trim()}`);
+  }
+  if (nonEmpty(section.taxonomy)) {
+    userLines.push(`Taxonomy: ${section.taxonomy!.trim()}`);
+  }
+  if (nonEmpty(section.attention)) {
+    userLines.push(`Attention focus: ${section.attention!.trim()}`);
+  }
   if (nonEmpty(section.audiences)) {
     userLines.push(`Target audiences: ${section.audiences!.trim()}`);
   }
+  if (nonEmpty(section.selfPrompt)) {
+    userLines.push(`Self Prompt: ${section.selfPrompt!.trim()}`);
+  }
 
   return {
-    system: sys.join("\n\n"),
+    system: sys,
     user: userLines.join("\n"),
   };
 }
@@ -207,6 +301,7 @@ export async function regenerateAllDrafts(
   } = input ?? {};
 
   const modelName = model ?? "gpt-4.1-mini";
+  const language = (appConfig as any)?.lang ?? "ru";
 
   if (!pageId || !Array.isArray(roots) || roots.length === 0) {
     return {
@@ -228,16 +323,13 @@ export async function regenerateAllDrafts(
     };
   }
 
-  // Build index for saved MDX
   const byId = indexSections(existingSections);
-  // Default start index equals unlockedIndex (count of leading non-empty MDX)
   const unlocked = computeUnlockedIndex(roots, byId);
   const startIndex =
     typeof regenerateFromIndex === "number" && regenerateFromIndex >= 0
       ? regenerateFromIndex
       : unlocked;
 
-  // Initialize chain with saved MDX for indices < startIndex
   const chainMDX: string[] = [];
   for (let i = 0; i < Math.min(startIndex, roots.length); i += 1) {
     const id = roots[i]?.id;
@@ -265,6 +357,7 @@ export async function regenerateAllDrafts(
       roots,
       index: i,
       chainMDX,
+      language,
     });
 
     try {
@@ -285,17 +378,11 @@ export async function regenerateAllDrafts(
       const normalized = (mdx ?? "").trim();
 
       if (!nonEmpty(normalized)) {
-        errors.push({
-          sectionId: id,
-          index: i,
-          message: "Empty MDX result",
-        });
+        errors.push({ sectionId: id, index: i, message: "Empty MDX result" });
         if (stopOnEmpty) break;
-        // Do not push to chain if empty
         continue;
       }
 
-      // Append to chain for coherence in subsequent sections
       chainMDX.push(normalized);
 
       results.push({

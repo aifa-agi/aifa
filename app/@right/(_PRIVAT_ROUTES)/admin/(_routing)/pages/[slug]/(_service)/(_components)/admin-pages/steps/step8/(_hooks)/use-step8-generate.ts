@@ -48,8 +48,7 @@ function setStatusFor(
 /** Public API of the generate hook. */
 export function useStep8Generate() {
   const { page, getSections, getActiveSection } = useStep8Root();
-  const { buildForSectionId, buildForActiveSection, getSectionIndex } =
-    useStep8Prompt();
+  const { buildForSectionId } = useStep8Prompt();
   const { canActivateId } = useStep8Guard();
 
   // Per-section generation statuses
