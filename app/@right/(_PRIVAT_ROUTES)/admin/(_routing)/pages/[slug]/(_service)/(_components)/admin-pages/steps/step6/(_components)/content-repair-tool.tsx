@@ -2,6 +2,32 @@
 
 "use client";
 
+/*
+  CSS-only improvement plan (no logic changes) — Comments in English:
+
+  1) Card framing:
+     - Orange-tinted semantic container with rounded corners and soft shadow.
+     - Dark mode variants for border/bg parity.
+
+  2) Focus-visible rings:
+     - Add `focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background`
+       on actionable elements (Buttons/ghost Buttons) for accessibility.
+     - Use ring colors aligned with action semantics (primary/orange, green, neutral).
+
+  3) Icon sizing & spacing:
+     - Replace `size-*` with `h-* w-*`.
+     - Normalize gaps between icons and labels.
+
+  4) Previews:
+     - Monospace, better contrast, selection highlight, rounded borders, readable max heights.
+
+  5) Badges & status bars:
+     - Subtle borders and backgrounds, consistent text colors; keep existing variants.
+
+  6) No changes to:
+     - Component logic, handlers, data flow, or JSX structure beyond presentational classes.
+*/
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -114,17 +140,17 @@ export function ContentRepairTool({
     : 0;
 
   return (
-    <Card className="border-orange-200 bg-orange-50/30">
+    <Card className="rounded-md border-orange-200 bg-orange-50/40 shadow-sm dark:border-orange-900/50 dark:bg-orange-950/30">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-orange-800">
-            <Wrench className="size-4" />
+          <div className="flex items-center gap-2 text-orange-800 dark:text-orange-200">
+            <Wrench className="h-4 w-4" />
             ContentStructure Repair Tool
             <Badge
               variant="outline"
-              className="text-xs bg-orange-100 text-orange-700"
+              className="text-xs bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-200"
             >
-              <Sparkles className="size-3 mr-1" />
+              <Sparkles className="h-3 w-3 mr-1" />
               AI-Powered
             </Badge>
           </div>
@@ -133,13 +159,13 @@ export function ContentRepairTool({
             variant="ghost"
             size="sm"
             onClick={onCancel}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-orange-500"
           >
             Close
           </Button>
         </CardTitle>
 
-        <p className="text-sm text-orange-700">
+        <p className="text-sm text-orange-800 dark:text-orange-300">
           The AI response contains invalid ContentStructure JSON format. Use our
           automated repair tool to fix it.
         </p>
@@ -147,19 +173,19 @@ export function ContentRepairTool({
 
       <CardContent className="space-y-4">
         {/* Repair Status */}
-        <div className="flex items-center justify-between p-3 bg-white/50 rounded-lg border">
+        <div className="flex items-center justify-between rounded-md border bg-white/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/40">
           <div className="flex items-center gap-2">
             <div
               className={cn(
-                "size-2 rounded-full",
+                "h-2 w-2 rounded-full",
                 hasRepairResult
                   ? repairSuccessful
-                    ? "bg-green-500"
+                    ? "bg-emerald-500"
                     : "bg-red-500"
                   : "bg-orange-500"
               )}
             />
-            <span className="text-sm font-medium">
+            <span className="text-sm font-medium text-foreground">
               {hasRepairResult
                 ? repairSuccessful
                   ? "Repair Successful"
@@ -178,15 +204,21 @@ export function ContentRepairTool({
           <div className="flex items-center gap-2">
             {hasRepairResult && repairSuccessful && (
               <>
-                <Badge variant="outline" className="text-xs text-green-700">
+                <Badge
+                  variant="outline"
+                  className="text-xs text-emerald-700 dark:text-emerald-300"
+                >
                   {Math.round(
                     (repairState.repairResult?.confidence || 0) * 100
                   )}
                   % Confidence
                 </Badge>
                 {elementsCount > 0 && (
-                  <Badge variant="outline" className="text-xs text-blue-700">
-                    <Layers className="size-3 mr-1" />
+                  <Badge
+                    variant="outline"
+                    className="text-xs text-blue-700 dark:text-blue-300"
+                  >
+                    <Layers className="h-3 w-3 mr-1" />
                     {elementsCount} Elements
                   </Badge>
                 )}
@@ -196,14 +228,14 @@ export function ContentRepairTool({
         </div>
 
         {/* Page Information */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <FileCode className="size-4 text-blue-600" />
-            <h4 className="text-sm font-medium text-blue-800">
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-900/50 dark:bg-blue-950/30">
+          <div className="mb-2 flex items-center gap-2">
+            <FileCode className="h-4 w-4 text-blue-600" />
+            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200">
               Page Information
             </h4>
           </div>
-          <div className="text-xs text-blue-700 space-y-1">
+          <div className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
             <p>
               <span className="font-medium">Page:</span> {pageName}
             </p>
@@ -221,27 +253,27 @@ export function ContentRepairTool({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
-              <XCircle className="size-4 text-red-600" />
+              <XCircle className="h-4 w-4 text-red-600" />
               Invalid ContentStructure JSON ({invalidJsonString.length} chars)
             </h4>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowOriginal(!showOriginal)}
-              className="text-xs"
+              className="text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-neutral-500"
             >
               {showOriginal ? (
-                <EyeOff className="size-3 mr-1" />
+                <EyeOff className="h-3 w-3 mr-1" />
               ) : (
-                <Eye className="size-3 mr-1" />
+                <Eye className="h-3 w-3 mr-1" />
               )}
               {showOriginal ? "Hide" : "Show"}
             </Button>
           </div>
 
           {showOriginal && (
-            <div className="bg-red-50 border border-red-200 rounded p-3 max-h-40 overflow-y-auto">
-              <pre className="text-xs text-red-800 whitespace-pre-wrap break-words font-mono">
+            <div className="max-h-40 overflow-y-auto rounded border border-red-200 bg-red-50 p-3 dark:border-red-900/40 dark:bg-red-950/30">
+              <pre className="whitespace-pre-wrap break-words font-mono text-xs text-red-800 dark:text-red-200 selection:bg-red-400/20">
                 {invalidJsonString.substring(0, 1000)}
                 {invalidJsonString.length > 1000 && "..."}
               </pre>
@@ -252,19 +284,19 @@ export function ContentRepairTool({
         {/* Repair Action */}
         {!hasRepairResult ? (
           <div className="flex flex-col gap-3">
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/50 dark:bg-blue-950/30">
               <div className="flex items-start gap-3">
-                <Sparkles className="size-5 text-blue-600 mt-0.5 shrink-0" />
+                <Sparkles className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
                 <div className="flex-1">
-                  <h4 className="text-sm font-medium text-blue-800 mb-1">
+                  <h4 className="mb-1 text-sm font-medium text-blue-800 dark:text-blue-200">
                     AI ContentStructure Repair Process
                   </h4>
-                  <p className="text-xs text-blue-700 mb-3">
+                  <p className="mb-3 text-xs text-blue-700 dark:text-blue-300">
                     Our AI will analyze the invalid response and convert it into
                     a properly structured ContentStructure array using OpenAI
                     GPT-4o with specialized validation.
                   </p>
-                  <ul className="text-xs text-blue-600 space-y-1">
+                  <ul className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
                     <li>• Extract and preserve meaningful content data</li>
                     <li>
                       • Ensure additionalData fields are properly structured
@@ -281,25 +313,25 @@ export function ContentRepairTool({
             <Button
               onClick={handleRepairAttempt}
               disabled={!canEdit || isRepairing || !canRepair}
-              className="w-full bg-orange-600 text-white hover:bg-orange-700"
+              className="w-full bg-orange-600 text-white hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isRepairing ? (
                 <>
-                  <LoadingSpinner className="size-4 mr-2" />
+                  <LoadingSpinner className="h-4 w-4 mr-2" />
                   Repairing ContentStructure with AI...
                 </>
               ) : (
                 <>
-                  <Sparkles className="size-4 mr-2" />
+                  <Sparkles className="h-4 w-4 mr-2" />
                   Repair ContentStructure with AI
                 </>
               )}
             </Button>
 
             {!canRepair && (
-              <div className="text-center p-3 bg-red-50 border border-red-200 rounded">
-                <AlertTriangle className="size-4 text-red-600 mx-auto mb-1" />
-                <p className="text-xs text-red-700">
+              <div className="rounded border border-red-200 bg-red-50 p-3 text-center dark:border-red-900/40 dark:bg-red-950/30">
+                <AlertTriangle className="mx-auto mb-1 h-4 w-4 text-red-600" />
+                <p className="text-xs text-red-700 dark:text-red-300">
                   Maximum repair attempts reached. Please check the original
                   response or try again later.
                 </p>
@@ -312,14 +344,14 @@ export function ContentRepairTool({
             {repairSuccessful ? (
               <>
                 {/* Success Result */}
-                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle2 className="size-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-800">
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-900/50 dark:bg-emerald-950/30">
+                  <div className="mb-2 flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    <span className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
                       ContentStructure Successfully Repaired
                     </span>
                   </div>
-                  <div className="text-xs text-green-700 space-y-1">
+                  <div className="space-y-1 text-xs text-emerald-700 dark:text-emerald-300">
                     <p>
                       • Original: {repairState.repairResult?.originalLength}{" "}
                       characters
@@ -345,22 +377,22 @@ export function ContentRepairTool({
                 {showRepaired && repairState.repairResult?.repairedData && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-medium text-green-800 flex items-center gap-2">
-                        <Layers className="size-4" />
+                      <h4 className="flex items-center gap-2 text-sm font-medium text-emerald-800 dark:text-emerald-200">
+                        <Layers className="h-4 w-4" />
                         Repaired ContentStructure ({elementsCount} elements)
                       </h4>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={handleCopyRepairedJson}
-                        className="text-xs"
+                        className="text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-emerald-500"
                       >
-                        <Copy className="size-3 mr-1" />
+                        <Copy className="h-3 w-3 mr-1" />
                         Copy
                       </Button>
                     </div>
-                    <div className="bg-green-50 border border-green-200 rounded p-3 max-h-60 overflow-y-auto">
-                      <pre className="text-xs text-green-800 whitespace-pre-wrap break-words font-mono">
+                    <div className="max-h-60 overflow-y-auto rounded border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-900/50 dark:bg-emerald-950/30">
+                      <pre className="whitespace-pre-wrap break-words font-mono text-xs text-emerald-800 dark:text-emerald-200 selection:bg-emerald-400/20">
                         {JSON.stringify(
                           repairState.repairResult.repairedData,
                           null,
@@ -382,9 +414,9 @@ export function ContentRepairTool({
                       );
                       onRepairSuccess(jsonString);
                     }}
-                    className="flex-1 bg-green-600 text-white hover:bg-green-700"
+                    className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
-                    <CheckCircle2 className="size-4 mr-2" />
+                    <CheckCircle2 className="h-4 w-4 mr-2" />
                     Use Repaired ContentStructure
                   </Button>
 
@@ -393,8 +425,9 @@ export function ContentRepairTool({
                       variant="outline"
                       onClick={handleResetAndRetry}
                       size="sm"
+                      className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
-                      <RefreshCw className="size-3 mr-1" />
+                      <RefreshCw className="h-3 w-3 mr-1" />
                       Try Again
                     </Button>
                   )}
@@ -403,14 +436,14 @@ export function ContentRepairTool({
             ) : (
               /* Failure Result */
               <div className="space-y-3">
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <XCircle className="size-4 text-red-600" />
-                    <span className="text-sm font-medium text-red-800">
+                <div className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-900/50 dark:bg-red-950/30">
+                  <div className="mb-2 flex items-center gap-2">
+                    <XCircle className="h-4 w-4 text-red-600" />
+                    <span className="text-sm font-medium text-red-800 dark:text-red-200">
                       ContentStructure Repair Failed
                     </span>
                   </div>
-                  <p className="text-xs text-red-700">
+                  <p className="text-xs text-red-700 dark:text-red-300">
                     {repairState.repairResult?.error}
                   </p>
                 </div>
@@ -420,15 +453,15 @@ export function ContentRepairTool({
                     <Button
                       onClick={handleResetAndRetry}
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
-                      <RefreshCw className="size-4 mr-2" />
+                      <RefreshCw className="h-4 w-4 mr-2" />
                       Try Again ({repairState.repairAttempts}/
                       {CONTENT_REPAIR_CONFIG.MAX_REPAIR_ATTEMPTS})
                     </Button>
                   ) : (
-                    <div className="flex-1 text-center p-3 bg-gray-50 border border-gray-200 rounded">
-                      <p className="text-xs text-gray-600">
+                    <div className="flex-1 rounded border border-gray-200 bg-gray-50 p-3 text-center dark:border-neutral-800 dark:bg-neutral-900/30">
+                      <p className="text-xs text-gray-600 dark:text-neutral-300">
                         All ContentStructure repair attempts exhausted. Please
                         check the original response.
                       </p>

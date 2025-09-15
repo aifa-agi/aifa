@@ -2,6 +2,33 @@
 
 "use client";
 
+/*
+  CSS-only refactor plan (no logic changes) — Comments in English:
+
+  1) Focus visibility & accessibility
+     - Add focus-visible rings to actionable elements (Buttons, Textarea) with ring-offset for contrast.
+     - Ensure mouse clicks don't show obtrusive rings; keyboard nav remains clearly indicated.
+
+  2) Icon sizing & consistency
+     - Replace inconsistent `size-*` with Tailwind `h-* w-*` pairs for predictable behavior across setups.
+
+  3) Status & message cards
+     - Use subtle semantic backgrounds/borders for success, warning, and error sections with dark mode counterparts.
+     - Keep rounded corners consistent with shadcn/ui feel.
+
+  4) Spacing & typography
+     - Normalize paddings, gaps, and font sizes across header, content areas, and meta info.
+     - Improve Textarea readability: monospace, better line-height, selection color, responsive min/max heights.
+
+  5) Buttons
+     - Add clear hover/focus/disabled states aligned with shadcn/ui best practices.
+     - Keep icon sizes consistent and spacing between icon and label uniform.
+
+  6) Do not change:
+     - Component logic, handlers, hooks, render conditions, or text content.
+     - Only Tailwind classes and presentational tweaks are adjusted.
+*/
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -217,7 +244,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   // Состояния загрузки
   if (loading || !initialized) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-12 text-sm">
         <LoadingSpinner />
         <span className="ml-3 text-muted-foreground">
           Loading draft content structure...
@@ -239,12 +266,12 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <FileCode className="size-6 text-primary" />
+            <FileCode className="h-6 w-6 text-primary" />
             <div>
-              <CardTitle className="text-xl">
+              <CardTitle className="text-xl md:text-2xl font-semibold">
                 Draft Content Structure Upload
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
@@ -253,7 +280,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
               </p>
             </div>
             <Badge variant="secondary" className="ml-auto">
-              <Layers className="size-3 mr-1" />
+              <Layers className="h-3 w-3 mr-1" />
               Step 6
             </Badge>
           </div>
@@ -262,16 +289,16 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
 
       {/* Current Status */}
       {hasDraftStructure && (
-        <Card className="border-green-200 bg-green-50/30">
+        <Card className="border-emerald-200 bg-emerald-50/60 dark:border-emerald-900/50 dark:bg-emerald-950/40 rounded-md">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CheckCircle className="size-5 text-green-600" />
+                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 <div>
-                  <h4 className="font-medium text-green-900">
+                  <h4 className="font-medium text-emerald-900 dark:text-emerald-100">
                     Draft Content Structure Saved
                   </h4>
-                  <p className="text-sm text-green-700">
+                  <p className="text-sm text-emerald-700 dark:text-emerald-300">
                     {draftElementsCount} elements stored in
                     draftContentStructure
                   </p>
@@ -282,16 +309,16 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
                 variant="outline"
                 size="sm"
                 disabled={!canClear}
-                className="border-red-300 text-red-700 hover:bg-red-100"
+                className="border-red-300 text-red-700 hover:bg-red-50 dark:hover:bg-red-950 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSaving ? (
                   <>
-                    <LoadingSpinner className="size-4 mr-2" />
+                    <LoadingSpinner className="h-4 w-4 mr-2" />
                     Clearing...
                   </>
                 ) : (
                   <>
-                    <Trash2 className="size-4 mr-2" />
+                    <Trash2 className="h-4 w-4 mr-2" />
                     Clear Structure
                   </>
                 )}
@@ -302,22 +329,22 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
       )}
 
       {/* Main Upload Card */}
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <Database className="size-6 text-primary" />
-            <CardTitle className="text-xl">
+            <Database className="h-6 w-6 text-primary" />
+            <CardTitle className="text-xl md:text-2xl font-semibold">
               Upload ContentStructure JSON
             </CardTitle>
             {isValidJson && (
-              <Badge variant="default" className="bg-green-600">
-                <CheckCircle className="size-3 mr-1" />
+              <Badge variant="default" className="bg-emerald-600">
+                <CheckCircle className="h-3 w-3 mr-1" />
                 Valid Structure
               </Badge>
             )}
             {hasValidationError && (
               <Badge variant="destructive">
-                <AlertCircle className="size-3 mr-1" />
+                <AlertCircle className="h-3 w-3 mr-1" />
                 Invalid JSON
               </Badge>
             )}
@@ -334,9 +361,9 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
 
         <CardContent className="space-y-4">
           {/* Instructions */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 dark:bg-blue-950 dark:border-blue-800">
+          <div className="rounded-md border border-blue-200 bg-blue-50/60 p-4 dark:border-blue-900/50 dark:bg-blue-950/40">
             <div className="flex items-start gap-3">
-              <Info className="size-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+              <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
                 <h4 className="font-medium text-blue-900 dark:text-blue-100 text-sm mb-2">
                   Expected Format:
@@ -383,7 +410,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
 ]`}
               value={jsonContent}
               onChange={(e) => handleJsonChange(e.target.value)}
-              className="min-h-[300px] max-h-[500px] resize-y font-mono text-sm"
+              className="min-h-[320px] md:min-h-[360px] max-h-[600px] resize-y font-mono text-xs md:text-sm leading-6 whitespace-pre-wrap break-words selection:bg-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
               disabled={isSaving}
             />
 
@@ -392,7 +419,7 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{jsonContent.length} characters</span>
                 {isValidJson && (
-                  <span className="text-green-600">
+                  <span className="text-emerald-700 dark:text-emerald-300">
                     • {parsedContent?.length} elements validated
                   </span>
                 )}
@@ -402,9 +429,9 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
 
           {/* Validation Error */}
           {hasValidationError && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3 dark:bg-red-950 dark:border-red-800">
+            <div className="rounded-md border border-red-200 bg-red-50/70 p-3 dark:border-red-900/50 dark:bg-red-950/40">
               <div className="flex items-start gap-2">
-                <AlertCircle className="size-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
                   <h5 className="font-medium text-red-900 dark:text-red-100 text-sm">
                     Validation Error:
@@ -416,9 +443,9 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
                     onClick={handleShowRepairTool}
                     variant="outline"
                     size="sm"
-                    className="mt-2 border-orange-300 text-orange-700 hover:bg-orange-100"
+                    className="mt-2 border-orange-300 text-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-orange-500"
                   >
-                    <Wrench className="size-3 mr-1" />
+                    <Wrench className="h-3 w-3 mr-1" />
                     Repair with AI
                   </Button>
                 </div>
@@ -428,15 +455,15 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
 
           {/* Valid Structure Info */}
           {isValidJson && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3 dark:bg-green-950 dark:border-green-800">
+            <div className="rounded-md border border-emerald-200 bg-emerald-50/70 p-3 dark:border-emerald-900/50 dark:bg-emerald-950/40">
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-2">
-                  <CheckCircle className="size-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h5 className="font-medium text-green-900 dark:text-green-100 text-sm">
+                    <h5 className="font-medium text-emerald-900 dark:text-emerald-100 text-sm">
                       Valid ContentStructure
                     </h5>
-                    <p className="text-green-800 dark:text-green-200 text-xs mt-1">
+                    <p className="text-emerald-800 dark:text-emerald-200 text-xs mt-1">
                       {parsedContent?.length} elements ready for saving
                     </p>
                   </div>
@@ -445,9 +472,9 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
                   onClick={handleCopyToClipboard}
                   variant="ghost"
                   size="sm"
-                  className="text-green-700 hover:bg-green-100"
+                  className="text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-500"
                 >
-                  <Copy className="size-3 mr-1" />
+                  <Copy className="h-3 w-3 mr-1" />
                   Copy
                 </Button>
               </div>
@@ -459,23 +486,23 @@ export function AdminPageStep6({ slug }: AdminPageStep6Props) {
             <Button
               onClick={handleSaveStructure}
               disabled={!canSave}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <>
-                  <LoadingSpinner className="size-4" />
+                  <LoadingSpinner className="h-4 w-4" />
                   Saving...
                 </>
               ) : (
                 <>
-                  <Save className="size-4" />
+                  <Save className="h-4 w-4" />
                   Save Draft Structure
                 </>
               )}
             </Button>
 
             {isValidJson && (
-              <span className="text-xs text-green-600">
+              <span className="text-xs text-emerald-700 dark:text-emerald-300">
                 {parsedContent?.length} elements ready to save
               </span>
             )}

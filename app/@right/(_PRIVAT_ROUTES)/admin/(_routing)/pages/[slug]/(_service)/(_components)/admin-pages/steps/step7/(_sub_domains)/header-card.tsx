@@ -1,15 +1,20 @@
 // @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step7/(_sub_domains)/header-card.tsx
 "use client";
 
-/**
- * Comments are in English. UI texts are in English (US).
- * HeaderCard: dark card header for Step 7 with page title and section metrics.
- *
- * Changes:
- * - "Draft Editor" button is highlighted with primary style (same as active section chip).
- * - Left dot indicator inside the button reflects readiness:
- *   gray (0%), orange (1-99%), green (100%).
- */
+/*
+  CSS-only improvement — Comments in English:
+
+  Goals:
+  - Match the current neutral "card-like" surface and typography used elsewhere.
+  - Use neutral surface in light mode and translucent neutral in dark mode.
+  - Use text-foreground for primary text and text-muted-foreground for secondary text.
+  - Keep violet accents; add accessible focus-visible ring on the button.
+  - Do not change component logic or JSX structure.
+
+  References:
+  - shadcn/ui theming & dark mode tokens (text-foreground, muted-foreground). 
+  - Tailwind dark mode and neutral color usage.
+*/
 
 import React, { useMemo } from "react";
 import { useStep7Root } from "../(_contexts)/step7-root-context";
@@ -67,10 +72,13 @@ export function HeaderCard() {
   const editorBtnBase =
     "inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors";
   const editorBtnTone =
-    "border-violet-500 bg-violet-500/15 text-neutral-100 hover:bg-violet-500/20";
+    // Keep violet accent but improve text and focus accessibility.
+    "border-violet-500 bg-violet-500/15 text-white hover:bg-violet-500/20 " +
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 " +
+    "focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
   return (
-    <div className="w-full rounded-lg border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm">
+    <div className="w-full rounded-md border border-neutral-200 bg-neutral-50/60 p-5 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900/40">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-start gap-3">
           <div className="mt-0.5 text-violet-400">
@@ -78,14 +86,14 @@ export function HeaderCard() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-semibold text-neutral-100">
+              <h2 className="text-base font-semibold text-foreground">
                 Draft Preparation
               </h2>
-              <span className="rounded-full border border-neutral-700 px-2 py-0.5 text-xs text-neutral-300">
+              <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
                 {pageTitleText}
               </span>
             </div>
-            <p className="mt-1 text-sm text-neutral-400">
+            <p className="mt-1 text-sm text-muted-foreground">
               Prepare your content structure for generation. Make necessary
               adjustments before launching the content generation process.
             </p>
@@ -112,22 +120,22 @@ export function HeaderCard() {
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-        <div className="rounded-md border border-neutral-800 bg-neutral-925 p-4 text-center">
+        <div className="rounded-md border border-neutral-200 bg-neutral-50/60 p-4 text-center dark:border-neutral-800/60 dark:bg-neutral-900/30">
           <div className="text-xl font-semibold text-violet-400">{total}</div>
-          <div className="text-xs text-neutral-400">Total Sections</div>
+          <div className="text-xs text-muted-foreground">Total Sections</div>
         </div>
-        <div className="rounded-md border border-neutral-800 bg-neutral-925 p-4 text-center">
+        <div className="rounded-md border border-neutral-200 bg-neutral-50/60 p-4 text-center dark:border-neutral-800/60 dark:bg-neutral-900/30">
           <div className="text-xl font-semibold text-emerald-400">
             {completed}
           </div>
-          <div className="text-xs text-neutral-400">Completed</div>
+          <div className="text-xs text-muted-foreground">Completed</div>
         </div>
 
-        <div className="rounded-md border border-neutral-800 bg-neutral-925 p-4 text-center">
+        <div className="rounded-md border border-neutral-200 bg-neutral-50/60 p-4 text-center dark:border-neutral-800/60 dark:bg-neutral-900/30">
           <div className="text-xl font-semibold text-orange-400">
             {readyPct}%
           </div>
-          <div className="text-xs text-neutral-400">Ready</div>
+          <div className="text-xs text-muted-foreground">Ready</div>
         </div>
       </div>
     </div>

@@ -2,21 +2,38 @@
 
 "use client";
 
+/*
+  CSS-only improvement plan (no logic changes) — Comments in English:
+
+  1) Status Card styling:
+     - Subtle semantic background/border for orange warning with dark-mode variants.
+     - Slight rounding and soft shadow for depth.
+
+  2) Focus & accessibility:
+     - No interactive controls here, so no focus ring additions needed.
+
+  3) Icon sizing consistency:
+     - Replace `size-*` with explicit `h-* w-*` for predictable rendering.
+
+  4) Typography & spacing:
+     - Normalize gaps, text colors, and font sizes for better readability.
+*/
+
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertTriangle, Zap } from "lucide-react";
 
 export function ValidationTipsWarning() {
   return (
-    <Card className="border-orange-200 bg-orange-50/40 dark:border-orange-800 dark:bg-orange-950/20">
+    <Card className="rounded-md border-orange-200 bg-orange-50/50 shadow-sm dark:border-orange-900/40 dark:bg-orange-950/30">
       <CardContent className="pt-6">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="size-5 text-orange-600 dark:text-orange-400 mt-0.5 shrink-0" />
+          <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400 mt-0.5 shrink-0" />
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2">
               <h4 className="font-medium text-orange-900 dark:text-orange-100 text-sm">
                 AI Model Validation Issues
               </h4>
-              <Zap className="size-4 text-orange-600" />
+              <Zap className="h-4 w-4 text-orange-600" />
             </div>
 
             <div className="text-orange-800 dark:text-orange-200 text-xs space-y-2">
@@ -25,7 +42,7 @@ export function ValidationTipsWarning() {
                 AI model fail validation and require JSON repair streaming.
               </p>
 
-              <div className="bg-orange-100 dark:bg-orange-900/30 rounded p-2 space-y-1">
+              <div className="rounded-md border border-orange-200/70 bg-orange-100/70 p-2 dark:border-orange-900/40 dark:bg-orange-900/30 space-y-1">
                 <p>
                   <strong>💡 Solution:</strong> Try a different AI model for
                   better results.

@@ -4,6 +4,12 @@
 /**
  * Comments are in English. UI texts are in English (US).
  * Adds working “+” buttons to insert a new H2 section at specific positions.
+ *
+ * CSS-only improvements plan (no logic changes) — Comments in English:
+ * - Match neutral "card-like" surface used elsewhere (light: subtle neutral, dark: translucent neutral).
+ * - Use theme tokens for text colors (text-foreground, text-muted-foreground).
+ * - Keep violet/emerald accents; unify neutral chip/plus buttons.
+ * - Add focus-visible rings for accessibility with ring-offset against background.
  */
 
 import * as React from "react";
@@ -55,15 +61,31 @@ export function SectionSelectorCard() {
     [insertAtIndex]
   );
 
+  // Base styles (tokenized for theme)
+  const containerCls =
+    "w-full rounded-md border border-neutral-200 bg-neutral-50/60 p-4 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900/40";
+  const titleCls = "text-sm font-semibold text-foreground";
+  const subtitleCls = "text-xs text-muted-foreground";
+
+  // Chip/button bases
+  const chipBase =
+    "inline-flex max-w-[240px] items-center truncate rounded-md border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  const plusBase =
+    "inline-flex size-7 items-center justify-center rounded-md border text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+  // Tones
+  const tonePrimary =
+    "border-violet-500 bg-violet-500/15 text-white hover:bg-violet-500/20 focus-visible:ring-violet-500";
+  const toneCompleted =
+    "border-emerald-500 bg-emerald-500/15 text-white hover:bg-emerald-500/20 focus-visible:ring-emerald-500";
+  const toneNeutral =
+    "border-border bg-background/60 text-muted-foreground hover:bg-background/80 dark:bg-background/30 focus-visible:ring-neutral-500";
+
   return (
-    <div className="w-full rounded-lg border border-neutral-800 bg-neutral-900/60 p-4">
+    <div className={containerCls}>
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-neutral-100">
-          Section Navigation
-        </h3>
-        <p className="text-xs text-neutral-400">
-          Select a section to work with.
-        </p>
+        <h3 className={titleCls}>Section Navigation</h3>
+        <p className={subtitleCls}>Select a section to work with.</p>
       </div>
 
       <div className="custom-scrollbar overflow-x-auto">
@@ -73,7 +95,10 @@ export function SectionSelectorCard() {
             type="button"
             aria-label="Add section at beginning"
             title="Add section at beginning"
-            className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-neutral-700 bg-neutral-875 text-neutral-300 hover:bg-neutral-850"
+            className={[
+              plusBase,
+              "border-border bg-background/60 text-muted-foreground hover:bg-background/80 dark:bg-background/30",
+            ].join(" ")}
             onClick={() => handleInsertAt(0)}
           >
             <PlusIcon />
@@ -83,16 +108,11 @@ export function SectionSelectorCard() {
             const isActive = ui.activeSectionId === s.id;
             const isChecked = s.status === "checked";
 
-            const base =
-              "inline-flex max-w-[240px] items-center truncate rounded-md border px-3 py-1.5 text-xs font-medium transition-colors";
-            const primary =
-              "border-violet-500 bg-violet-500/15 text-neutral-100";
-            const completed =
-              "border-emerald-500 bg-emerald-500/15 text-neutral-100";
-            const neutral =
-              "border-neutral-700 bg-neutral-875 text-neutral-300 hover:bg-neutral-850";
-
-            const tone = isActive ? primary : isChecked ? completed : neutral;
+            const tone = isActive
+              ? tonePrimary
+              : isChecked
+                ? toneCompleted
+                : toneNeutral;
             const label = labelByIndex(idx);
 
             return (
@@ -100,7 +120,7 @@ export function SectionSelectorCard() {
                 <button
                   type="button"
                   onClick={() => handlePick(s.id)}
-                  className={[base, tone].join(" ")}
+                  className={[chipBase, tone].join(" ")}
                   title={label}
                   aria-pressed={isActive}
                 >
@@ -112,7 +132,10 @@ export function SectionSelectorCard() {
                   type="button"
                   aria-label={`Add section after ${label}`}
                   title={`Add section after ${label}`}
-                  className="inline-flex size-7 items-center justify-center rounded-md border border-neutral-700 bg-neutral-875 text-neutral-300 hover:bg-neutral-850"
+                  className={[
+                    plusBase,
+                    "border-border bg-background/60 text-muted-foreground hover:bg-background/80 dark:bg-background/30",
+                  ].join(" ")}
                   onClick={() => handleInsertAt(idx + 1)}
                 >
                   <PlusIcon />
@@ -125,3 +148,4 @@ export function SectionSelectorCard() {
     </div>
   );
 }
+// and here

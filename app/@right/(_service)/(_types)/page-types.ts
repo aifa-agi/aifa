@@ -22,6 +22,7 @@ export interface SectionInfo {
   id: string;
   summary?: SummaryData;
   linksData?: LinksData[];
+  tempMDXContent: string;
 }
 
 export interface SummaryData {
@@ -184,12 +185,9 @@ export interface ContentStructure {
 
 // НОВЫЙ ТИП: Специальный интерфейс для корневых элементов с жёстким требованием H2
 export interface RootContentStructure extends Omit<ContentStructure, "tag"> {
-  /**
-   * КРИТИЧЕСКОЕ ТРЕБОВАНИЕ: Все корневые элементы aiRecommendContentStructure
-   * ДОЛЖНЫ иметь тег 'h2' для поддержания семантической иерархии:
-   * Page(H1) → Sections(H2) → Subsections(H3+)
-   */
   tag: "h2";
+  writingStyle?: string;
+  contentFormat?: string;
 }
 
 // Валидационные утилиты для проверки структуры
@@ -260,11 +258,11 @@ export interface KnowledgeSettings {
 export interface DraftContentResult {
   id: string;
   contentStructure: RootContentStructure;
-  analysisResult: {
-    analysisText: string;
+  analysisResult?: {
+    analysisText?: string;
     elementAnalysis?: ContentElementAnalysis;
-    aiRecommendations: string[];
-    acceptRecommendation: boolean;
+    aiRecommendations?: string[];
+    acceptRecommendation?: boolean;
     strengths?: string[];
     weaknesses?: string[];
     improvementAreas?: string[];
@@ -418,7 +416,7 @@ export interface PageData {
   isReadyDraftForPerplexity?: boolean;
 
   //step 8 draftContentResult + steps + section info
-  draftContentResult?: DraftContentResult;
+  draftContentResult?: DraftContentResult[];
 
   //step 9
   draftReport?: DraftReport;

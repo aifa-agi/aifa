@@ -594,7 +594,7 @@ export const contentData = {
             "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png"
           }
         ],
-        "updatedAt": "2025-09-13T17:58:01.967Z",
+        "updatedAt": "2025-09-15T10:12:07.120Z",
         "sections": [
           {
             "id": "hero-title"
@@ -814,6 +814,22 @@ export const contentData = {
           },
           {
             "id": "nature-focused-itinerary-details"
+          },
+          {
+            "id": "sis938",
+            "tempMDXContent": ""
+          },
+          {
+            "id": "jvpg1y",
+            "tempMDXContent": ""
+          },
+          {
+            "id": "w4dfbf",
+            "tempMDXContent": "```mdx\n## Удобства и развлечения на борту паромов до Тенерифе для семей\n\nПутешествие с семьёй — это всегда особое приключение, и комфорт на борту играет ключевую роль в создании приятных воспоминаний. Особенно важно, чтобы каждый член семьи, от самых маленьких до взрослых, чувствовал себя уютно и мог найти занятие по душе. Паромы до Тенерифе предлагают широкий спектр удобств и развлечений, которые сделают ваше путешествие не только удобным, но и увлекательным. От просторных и комфортных кают до разнообразных ресторанов на борту и специально оборудованных детских зон — всё продумано с заботой о семейном отдыхе. Давайте подробнее рассмотрим, какие возможности открываются перед вами и вашей семьёй во время морского путешествия.\n\n### Размещение и каюты\n\nПаромы до Тенерифе предлагают несколько типов кают, чтобы удовлетворить потребности разных путешественников. Семьям особенно подойдут просторные семейные каюты с несколькими кроватями и удобной зоной отдыха. В таких каютах предусмотрены все необходимые удобства: кондиционер, отдельная ванная комната, шкафы для хранения вещей и иногда даже мини-бар. Для тех, кто предпочитает более бюджетный вариант, доступны комфортабельные места в салоне с мягкими креслами и дополнительными пледами.\n\nВыбирая каюту на пароме, стоит учитывать не только размер, но и расположение — многие семьи выбирают каюты ближе к детским зонам или ресторанам на борту для удобства. Дополнительным плюсом является возможность бронирования кают с окнами, что позволяет наслаждаться морскими пейзажами.\n\n**Преимущества кают на пароме для семей:**\n\n- Простор и комфорт для всех членов семьи  \n- Удобства, обеспечивающие отдых и приватность  \n- Разнообразие вариантов под любой бюджет  \n- Возможность выбора каюты с видом на море  \n- Лёгкий доступ к основным зонам парома  \n\n### Питание и развлечения\n\nНа борту паромов до Тенерифе вы найдёте разнообразные рестораны и кафе, способные удовлетворить вкусы даже самых взыскательных путешественников. Рестораны на борту предлагают как традиционные блюда канарской кухни, так и международные блюда, включая детское меню. Здесь можно насладиться свежими морепродуктами, ароматным кофе или быстрыми закусками — всё это в уютной атмосфере с видом на океан. Для семей с маленькими детьми предусмотрены удобные зоны питания с детскими стульчиками и специальным меню.\n\nРазвлечения для детей — отдельная гордость паромов. На борту оборудованы игровые комнаты и детские площадки, где малыши смогут весело провести время под присмотром аниматоров. Регулярно проводятся творческие мастер-классы, конкурсы и шоу, которые не дадут детям заскучать в пути. Это отличная возможность для родителей отдохнуть и насладиться путешествием.\n\n**Список развлечений на борту:**\n\n- Детские игровые комнаты с разнообразными игрушками  \n- Анимационные программы и мастер-классы  \n- Семейные киносеансы и мультфильмы  \n- Зоны отдыха с настольными играми  \n- Вечерние шоу и музыкальные выступления  \n\n> «Мы были приятно удивлены, насколько комфортно и интересно прошло наше путешествие на пароме с двумя детьми. Особенно понравились детские развлечения и вкусные блюда в ресторане — настоящий отдых для всей семьи!» — Марина, мама двух детей  \n\nПутешествие на пароме до Тенерифе — это не просто переезд, а полноценный семейный отдых с комфортом и радостью для каждого. Наслаждайтесь удобствами парома, открывайте новые горизонты и создавайте незабываемые воспоминания вместе!\n```"
+          },
+          {
+            "id": "bmuj2l",
+            "tempMDXContent": ""
           }
         ],
         "intent": "как добраться на Тенерифе на пароме",
@@ -1990,311 +2006,6 @@ export const contentData = {
         "isReadyPromptForPerplexity": true,
         "draftContentStructure": [
           {
-            "id": "s5rj6ozo4b51pkriejzm2uhv",
-            "tag": "h2",
-            "status": "draft",
-            "additionalData": {
-              "minWords": 0,
-              "maxWords": 0,
-              "actualContent": ""
-            },
-            "realContentStructure": [
-              {
-                "id": "kqici1fmsil82rb06l5y5kmo",
-                "tag": "p",
-                "status": "draft",
-                "additionalData": {
-                  "minWords": 0,
-                  "maxWords": 0,
-                  "actualContent": ""
-                }
-              },
-              {
-                "id": "u9rek3ld4rrjvljnrklki8eh",
-                "tag": "p",
-                "status": "checked",
-                "additionalData": {
-                  "minWords": 0,
-                  "maxWords": 0,
-                  "actualContent": ""
-                }
-              },
-              {
-                "id": "h97c2ihpdztku850egfg9ja3",
-                "tag": "h3",
-                "status": "checked",
-                "additionalData": {
-                  "minWords": 0,
-                  "maxWords": 0,
-                  "actualContent": ""
-                },
-                "realContentStructure": [
-                  {
-                    "id": "ln2x7pe9ueiw5jl09hsf4rv9",
-                    "tag": "p",
-                    "status": "checked",
-                    "additionalData": {
-                      "minWords": 0,
-                      "maxWords": 0,
-                      "actualContent": ""
-                    }
-                  },
-                  {
-                    "id": "qajb6bu05adyhi46y78y961r",
-                    "tag": "p",
-                    "status": "checked",
-                    "additionalData": {
-                      "minWords": 0,
-                      "maxWords": 0,
-                      "actualContent": ""
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "leup2o5cm7zzm0smxr5mh32t",
-                "tag": "h3",
-                "status": "checked",
-                "additionalData": {
-                  "minWords": 0,
-                  "maxWords": 0,
-                  "actualContent": ""
-                },
-                "realContentStructure": [
-                  {
-                    "id": "d6fjb9mqugx8x6535789il6m",
-                    "tag": "p",
-                    "status": "checked",
-                    "additionalData": {
-                      "minWords": 0,
-                      "maxWords": 0,
-                      "actualContent": ""
-                    }
-                  },
-                  {
-                    "id": "j403l54nfueed0ny6r4mcuvd",
-                    "tag": "p",
-                    "status": "checked",
-                    "additionalData": {
-                      "minWords": 0,
-                      "maxWords": 0,
-                      "actualContent": ""
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "tag": "h2",
-            "classification": "Introduction",
-            "keywords": [
-              "паромы на Тенерифе",
-              "морские перевозки",
-              "путешествие на пароме",
-              "альтернатива самолету",
-              "семейный отдых"
-            ],
-            "taxonomy": "Вводная информация о паромном сообщении с Тенерифе",
-            "attention": "Узнайте, почему паром может стать лучшим выбором для семейного путешествия на Тенерифе, чем авиаперелет.",
-            "intent": "Представить паромы как комфортный и практичный способ добраться до Тенерифе для семей с детьми.",
-            "audiences": "Семейные туристы с детьми, ищущие комфортный и безопасный способ путешествия",
-            "selfPrompt": "Создай введение к статье 'Паромы на Тенерифе! Тенерифе 2026' для семейных туристов 25-45 лет. Используй дружелюбный, неформальный тон как при разговоре с другом. Включи ключевые слова: 'паромы на Тенерифе', 'морские перевозки', 'семейный отдых'. Объясни преимущества паромов перед самолетами для семей с детьми. Раздели контент: первый абзац (120-250 слов) - общее представление и главные преимущества, второй абзац (80-180 слов) - почему именно семьям стоит выбрать паром. Добавь вдохновляющую цитату (25-50 слов) о путешествии на пароме. Используй Markdown форматирование, язык: русский. actualContent поля остаются как 'need generate helpful content'.",
-            "designDescription": "Приветственная секция с теплыми тонами и семейными изображениями паромов",
-            "connectedDesignSectionId": "ferry-intro-section-001",
-            "additionalData": {
-              "minWords": 200,
-              "maxWords": 350,
-              "actualContent": "need generate helpful content"
-            },
-            "realContentStructure": [
-              {
-                "tag": "p",
-                "additionalData": {
-                  "minWords": 120,
-                  "maxWords": 250,
-                  "actualContent": "need generate helpful content"
-                },
-                "id": "syysvy",
-                "status": "checked"
-              },
-              {
-                "tag": "p",
-                "additionalData": {
-                  "minWords": 80,
-                  "maxWords": 180,
-                  "actualContent": "need generate helpful content"
-                },
-                "id": "fu9n6b",
-                "status": "checked"
-              }
-            ],
-            "id": "sis938",
-            "status": "checked"
-          },
-          {
-            "tag": "h2",
-            "classification": "Tutorial",
-            "keywords": [
-              "билеты на паром Тенерифе",
-              "бронирование паромов",
-              "онлайн покупка билетов",
-              "цены на билеты",
-              "скидки семьям"
-            ],
-            "taxonomy": "Пошаговое руководство по покупке билетов на паром",
-            "attention": "Пошаговая инструкция поможет легко забронировать билеты онлайн и сэкономить на семейной поездке.",
-            "intent": "Предоставить четкие инструкции по бронированию билетов и получению лучших цен для семей.",
-            "audiences": "Родители, планирующие семейную поездку и желающие сэкономить на билетах",
-            "selfPrompt": "Создай подробное руководство по покупке билетов на паром до Тенерифе. Дружелюбный тон как с другом. Ключевые слова: 'билеты на паром Тенерифе', 'бронирование паромов', 'скидки семьям'. Структура: вводный абзац (110-220 слов) о важности раннего бронирования. Подраздел 'Онлайн бронирование' (200-350 слов): пошаговая инструкция (50-100 слов в списке), подподраздел 'Документы для бронирования' (120-200 слов) с code блоком необходимых данных (25-60 слов). Подраздел 'Семейные скидки' (150-250 слов): виды скидок, цитата от довольного клиента (20-45 слов), советы по экономии (60-120 слов). Язык: русский. actualContent поля как 'need generate helpful content'.",
-            "designDescription": "Пошаговый туториал с визуальными индикаторами процесса бронирования",
-            "connectedDesignSectionId": "ferry-booking-section-003",
-            "additionalData": {
-              "minWords": 500,
-              "maxWords": 750,
-              "actualContent": "need generate helpful content"
-            },
-            "realContentStructure": [
-              {
-                "tag": "p",
-                "additionalData": {
-                  "minWords": 110,
-                  "maxWords": 220,
-                  "actualContent": "need generate helpful content"
-                },
-                "id": "mp2nfi",
-                "description": "qwerty",
-                "intent": "asdfg",
-                "taxonomy": "zxcvbn",
-                "keywords": [
-                  "asdfgh",
-                  "xcvbn",
-                  "c vb",
-                  "xcvbn"
-                ],
-                "status": "checked"
-              },
-              {
-                "tag": "h3",
-                "additionalData": {
-                  "minWords": 200,
-                  "maxWords": 350,
-                  "actualContent": "need generate helpful content"
-                },
-                "realContentStructure": [
-                  {
-                    "tag": "p",
-                    "additionalData": {
-                      "minWords": 85,
-                      "maxWords": 170,
-                      "actualContent": "need generate helpful content"
-                    },
-                    "id": "h50y8b",
-                    "status": "checked"
-                  },
-                  {
-                    "tag": "ol",
-                    "additionalData": {
-                      "minWords": 50,
-                      "maxWords": 100,
-                      "actualContent": "need generate helpful content"
-                    },
-                    "id": "fpvne5",
-                    "status": "checked"
-                  },
-                  {
-                    "tag": "h4",
-                    "additionalData": {
-                      "minWords": 120,
-                      "maxWords": 200,
-                      "actualContent": "need generate helpful content"
-                    },
-                    "realContentStructure": [
-                      {
-                        "tag": "p",
-                        "additionalData": {
-                          "minWords": 75,
-                          "maxWords": 150,
-                          "actualContent": "need generate helpful content"
-                        },
-                        "id": "j0dxwt",
-                        "status": "checked"
-                      },
-                      {
-                        "tag": "code",
-                        "additionalData": {
-                          "minWords": 25,
-                          "maxWords": 60,
-                          "actualContent": "need generate helpful content"
-                        },
-                        "id": "hqcrsb",
-                        "status": "checked"
-                      },
-                      {
-                        "tag": "p",
-                        "additionalData": {
-                          "minWords": 65,
-                          "maxWords": 130,
-                          "actualContent": "need generate helpful content"
-                        },
-                        "id": "y0yjvm",
-                        "status": "checked"
-                      }
-                    ],
-                    "id": "irl5yr",
-                    "status": "checked"
-                  }
-                ],
-                "id": "rty3wz",
-                "status": "checked"
-              },
-              {
-                "tag": "h3",
-                "additionalData": {
-                  "minWords": 150,
-                  "maxWords": 250,
-                  "actualContent": "need generate helpful content"
-                },
-                "realContentStructure": [
-                  {
-                    "tag": "p",
-                    "additionalData": {
-                      "minWords": 95,
-                      "maxWords": 190,
-                      "actualContent": "need generate helpful content"
-                    },
-                    "id": "au62c3",
-                    "status": "checked"
-                  },
-                  {
-                    "tag": "blockquote",
-                    "additionalData": {
-                      "minWords": 20,
-                      "maxWords": 45,
-                      "actualContent": "need generate helpful content"
-                    },
-                    "id": "srowa0",
-                    "status": "checked"
-                  },
-                  {
-                    "tag": "ol",
-                    "additionalData": {
-                      "minWords": 60,
-                      "maxWords": 120,
-                      "actualContent": "need generate helpful content"
-                    },
-                    "id": "fle2tr",
-                    "status": "checked"
-                  }
-                ],
-                "id": "dehjzf",
-                "status": "checked"
-              }
-            ],
-            "id": "jvpg1y",
-            "status": "checked"
-          },
-          {
             "tag": "h2",
             "classification": "Guide",
             "keywords": [
@@ -2489,6 +2200,16 @@ export const contentData = {
                 ],
                 "id": "ysjdde",
                 "status": "checked"
+              },
+              {
+                "id": "mt1pvd346qvtgu9o9ylrjg8m",
+                "tag": "p",
+                "status": "checked",
+                "additionalData": {
+                  "minWords": 0,
+                  "maxWords": 0,
+                  "actualContent": ""
+                }
               }
             ],
             "id": "bmuj2l",
@@ -2681,95 +2402,9 @@ export const contentData = {
             ],
             "id": "k2jfck",
             "status": "checked"
-          },
-          {
-            "id": "z3kiz444l5zh2khquf9smhnx",
-            "tag": "h2",
-            "status": "draft",
-            "additionalData": {
-              "minWords": 0,
-              "maxWords": 0,
-              "actualContent": ""
-            },
-            "realContentStructure": [
-              {
-                "id": "exarp2sa31epcyjq17fkrv0m",
-                "tag": "p",
-                "status": "draft",
-                "additionalData": {
-                  "minWords": 0,
-                  "maxWords": 0,
-                  "actualContent": ""
-                }
-              },
-              {
-                "id": "mp0qt75kmxf573qvutsyra1f",
-                "tag": "h3",
-                "status": "draft",
-                "additionalData": {
-                  "minWords": 0,
-                  "maxWords": 0,
-                  "actualContent": ""
-                },
-                "realContentStructure": [
-                  {
-                    "id": "lk6cngmhjqdiq9hh18btos3f",
-                    "tag": "p",
-                    "status": "draft",
-                    "additionalData": {
-                      "minWords": 0,
-                      "maxWords": 0,
-                      "actualContent": ""
-                    }
-                  },
-                  {
-                    "id": "gqc3h2a0fw487ewpcn8dl4xn",
-                    "tag": "p",
-                    "status": "draft",
-                    "additionalData": {
-                      "minWords": 0,
-                      "maxWords": 0,
-                      "actualContent": ""
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "zer82cyvupdu007mebnplsu5",
-                "tag": "h3",
-                "status": "draft",
-                "additionalData": {
-                  "minWords": 0,
-                  "maxWords": 0,
-                  "actualContent": ""
-                },
-                "realContentStructure": [
-                  {
-                    "id": "fjkkozqtxze3g2baqt5ydqyg",
-                    "tag": "p",
-                    "status": "draft",
-                    "additionalData": {
-                      "minWords": 0,
-                      "maxWords": 0,
-                      "actualContent": ""
-                    }
-                  },
-                  {
-                    "id": "b2hi9fqqm14za9rmc5prkrq2",
-                    "tag": "p",
-                    "status": "draft",
-                    "additionalData": {
-                      "minWords": 0,
-                      "maxWords": 0,
-                      "actualContent": ""
-                    }
-                  }
-                ]
-              }
-            ]
           }
         ],
-        "isReadyDraftForPerplexity": false
+        "isReadyDraftForPerplexity": true
       },
       {
         "id": "uzl8djuoxz8xejna49c6pjcm",
@@ -3475,5 +3110,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-13T17:58:19.458Z";
+export const lastUpdated = "2025-09-15T10:18:10.149Z";
 export const generatedBy = "menu-persist-api";
