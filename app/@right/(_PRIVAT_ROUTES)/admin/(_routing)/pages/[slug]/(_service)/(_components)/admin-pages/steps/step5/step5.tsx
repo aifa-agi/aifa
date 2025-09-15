@@ -1,14 +1,18 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step5/step5.tsx
 "use client";
 
 /**
- * Step 5 - Enhanced System Instruction Builder (visual parity with Step 8)
- * Notes:
- * - Visual refactor only; business logic unchanged.
- * - Card containers and chips follow Step 8 neutral styles.
- * - "Recursive AI" pill replaced by a rectangular button with 4px status dot.
- * - "US Market" removed; Ready-badge styled like Step 8 MDX Editor [Completed].
- * - All headings/labels/triggers use single-line truncation (truncate).
+ * Step 5 - Enhanced Content Structure Generation System + Internal AI Stream Mode
+ * Understanding of the task (step-by-step):
+ * 1) Add a shadcn/ui Switch with enhanced styling and clear mode indicators.
+ *    Default OFF keeps the current flow: copy enhanced system instruction for Perplexity.
+ * 2) When the Switch is ON (internal AI mode):
+ *    - Hide all prompt-related helper content (process notes and copy-instruction UI).
+ *    - Replace the big textarea with a streaming output area.
+ *    - Replace the "Copy Enhanced Instruction" button with streaming controls.
+ *    - The new button changes from "Start Structure Generation" to "Save Content Structure" after completion.
+ * 3) Enhanced UI with primary-themed borders and backgrounds for mode selection.
+ * 4) More precise naming focused on content structure generation.
+ * 5) Full integration with streaming hooks and draftContentStructure saving.
  */
 
 import React, { useEffect, useState } from "react";
@@ -35,6 +39,8 @@ import {
   Target,
   Layers,
   Copy as CopyIcon,
+  Zap,
+  Settings,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
@@ -45,6 +51,11 @@ import { TOC } from "./components/table_of_content/toc";
 import { fileTreeDataTransformer } from "./(_utils)/file-tree-transformer";
 import { usePromptReadyFlag } from "./(_hooks)/use-prompt-ready-flag";
 import { useSystemInstructionGenerator } from "./(_service)/system-instruction-generator";
+import { Switch } from "@/components/ui/switch";
+// NEW: Import streaming hooks
+import { useStep5Stream } from "./(_hooks)/use-step5-stream";
+import { useStep5Save } from "./(_hooks)/use-step5-save";
+import type { RootContentStructure } from "@/app/@right/(_service)/(_types)/page-types";
 
 interface AdminPageInfoProps {
   slug: string;
@@ -158,20 +169,6 @@ const CONTENT_FORMATS = [
   },
 ];
 
-// Custom requirements example suggestions
-const CUSTOM_REQUIREMENTS_EXAMPLES = [
-  "Include call-to-action buttons in specific sections",
-  "Focus on mobile-first design considerations",
-  "Add customer testimonials or social proof",
-  "Include pricing information or cost comparisons",
-  "Emphasize security and privacy features",
-  "Target specific demographic (e.g., small business owners)",
-  "Include step-by-step tutorials or guides",
-  "Add FAQ section addressing common concerns",
-  "Focus on local market considerations",
-  "Include competitor comparison analysis",
-];
-
 export function AdminPageStep5({ slug }: AdminPageInfoProps) {
   const { categories, loading, initialized } = useNavigationMenu();
 
@@ -181,6 +178,17 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
   const [writingStyle, setWritingStyle] = useState<string>("conversational");
   const [contentFormat, setContentFormat] = useState<string>("professional");
   const [customRequirements, setCustomRequirements] = useState<string>("");
+
+  // Mode switch state
+  const [useInternalAI, setUseInternalAI] = useState<boolean>(true);
+
+  // NEW: Streaming state
+  const { streamText, isStreaming, startStreaming, cancel } = useStep5Stream();
+  const { saveDraftContentStructure } = useStep5Save();
+  const [streamCompleted, setStreamCompleted] = useState(false);
+  const [generatedStructure, setGeneratedStructure] = useState<
+    RootContentStructure[]
+  >([]);
 
   const pageData = findPageBySlug(categories, slug);
 
@@ -197,7 +205,7 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
     slug,
   });
 
-  // New: same model generator hook preserved
+  // System instruction generator
   const systemInstruction = useSystemInstructionGenerator({
     pageData: pageData,
     slug,
@@ -208,20 +216,46 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
     contentFormats: CONTENT_FORMATS,
   });
 
-  // Compute Step 8-like ready indicator (supports both proper field and legacy naming)
+  // Compute ready indicator
   const page = pageData?.page;
   const isReadyFlag =
     Boolean((page as any)?.aiReadyPromptForPerplexyty) ||
     Boolean(page?.isReadyPromptForPerplexity) ||
     Boolean(isPromptReady);
 
-  // Toast + copy
+  // Watch for streaming completion
+  React.useEffect(() => {
+    if (!isStreaming && streamText && streamText.trim().length > 0) {
+      try {
+        // Try to parse JSON from streamed text
+        const parsed = JSON.parse(streamText);
+        if (Array.isArray(parsed)) {
+          setGeneratedStructure(parsed);
+          setStreamCompleted(true);
+        }
+      } catch (e) {
+        console.warn("Failed to parse streamed JSON:", e);
+        // If not JSON, treat as raw text and create basic structure
+        setGeneratedStructure([]);
+        setStreamCompleted(true);
+      }
+    }
+  }, [isStreaming, streamText]);
+
+  // Reset completion state when switching modes
+  React.useEffect(() => {
+    if (!useInternalAI) {
+      setStreamCompleted(false);
+      setGeneratedStructure([]);
+    }
+  }, [useInternalAI]);
+
+  // Copy instruction handler
   const handleCopyInstruction = async () => {
     try {
       await navigator.clipboard.writeText(systemInstruction);
       setIsCopied(true);
 
-      // Mark ready for Perplexity (same behavior as before)
       const promptMarked = await markPromptAsReady();
 
       if (promptMarked) {
@@ -233,11 +267,42 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
         toast.warning("Could not mark prompt as ready. Please try again.");
       }
 
-      // Reset copied state after 3 seconds
       setTimeout(() => setIsCopied(false), 3000);
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
       toast.error("Failed to copy instruction. Please try again.");
+    }
+  };
+
+  // Stream generation handler
+  const handleStartStream = async () => {
+    setStreamCompleted(false);
+    setGeneratedStructure([]);
+
+    await startStreaming({
+      system: systemInstruction,
+      prompt:
+        "Generate enhanced content structure with selfPrompt fields for recursive generation.",
+      model: "gpt-4.1-mini",
+    });
+  };
+
+  // Save structure handler
+  const handleSaveStructure = async () => {
+    if (!pageData?.page || generatedStructure.length === 0) {
+      toast.error("Nothing to save", {
+        description: "No generated structure found.",
+      });
+      return;
+    }
+
+    const success = await saveDraftContentStructure(
+      pageData.page,
+      generatedStructure
+    );
+    if (success) {
+      setStreamCompleted(false);
+      setGeneratedStructure([]);
     }
   };
 
@@ -247,7 +312,7 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
       <div className="flex items-center justify-center py-12">
         <LoadingSpinner />
         <span className="ml-3 text-muted-foreground">
-          Loading enhanced prompt data...
+          Loading content structure system...
         </span>
       </div>
     );
@@ -257,7 +322,7 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
     return <PageNotFound slug={slug} />;
   }
 
-  // Shared Step 8 chip classes
+  // Shared style classes
   const chipBase =
     "inline-flex items-center truncate rounded-md border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
   const tonePrimary =
@@ -266,7 +331,7 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
     "border-border bg-background/60 text-muted-foreground hover:bg-background/80 dark:bg-background/30 focus-visible:ring-neutral-500";
   const toneDisabled = "opacity-50 cursor-not-allowed";
 
-  // 4px status dot (like Step 8)
+  // Status dot
   const dotBase = "inline-block h-1 w-1 rounded-full";
   const dotCls = isReadyFlag
     ? `${dotBase} bg-emerald-400`
@@ -287,15 +352,15 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
 
             <div className="min-w-0">
               <CardTitle className="text-xl truncate text-foreground">
-                Recursive Content Generation System
+                Recursive Content Structure Generation System
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-1 truncate">
                 Generate enhanced content structure with selfPrompt fields for
-                unlimited content generation
+                unlimited structure creation
               </p>
             </div>
 
-            {/* Rectangular control with 4px status dot (replaces round badge) */}
+            {/* Status indicator with 4px dot */}
             <div className="ml-auto">
               <Button
                 type="button"
@@ -309,16 +374,68 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
         </CardHeader>
       </Card>
 
-      {/* Personalization Controls (visual parity + ready badge like MDX Editor Completed) */}
+      {/* Enhanced Mode Switch with primary theme */}
+      <Card
+        className={`w-full rounded-md shadow-sm transition-all ${
+          useInternalAI
+            ? "border-violet-500 bg-violet-500/10 dark:border-violet-400 dark:bg-violet-900/20"
+            : "border-neutral-200 bg-neutral-50/60 dark:border-neutral-800/60 dark:bg-neutral-900/40"
+        }`}
+      >
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                {useInternalAI ? (
+                  <Zap className="size-5 text-violet-400" />
+                ) : (
+                  <Settings className="size-5 text-muted-foreground" />
+                )}
+                <Label
+                  htmlFor="use-internal-ai"
+                  className="text-base font-semibold truncate"
+                >
+                  {useInternalAI
+                    ? "AI Structure Generation Mode"
+                    : "System Instruction Mode"}
+                </Label>
+                <Badge
+                  variant={useInternalAI ? "default" : "secondary"}
+                  className="text-xs"
+                >
+                  {useInternalAI ? "Active" : "Inactive"}
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {useInternalAI
+                  ? "Using internal AI model to generate content structure directly with streaming output"
+                  : "Generate enhanced system instruction for external AI tools like Perplexity Pro"}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="text-xs text-muted-foreground">
+                {useInternalAI ? "Internal AI" : "External AI"}
+              </div>
+              <Switch
+                id="use-internal-ai"
+                checked={useInternalAI}
+                onCheckedChange={setUseInternalAI}
+                className="data-[state=checked]:bg-violet-500"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Personalization Controls */}
       <Card className="w-full rounded-md border border-neutral-200 bg-neutral-50/60 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900/40">
         <CardHeader>
           <div className="flex items-center gap-3">
             <Palette className="size-5 text-primary" />
             <CardTitle className="text-lg truncate">
-              Content Personalization
+              Content Structure Personalization
             </CardTitle>
 
-            {/* Remove US Market; show Ready for Perplexity like MDX Editor Completed */}
             {isReadyFlag ? (
               <span className="ml-auto rounded-sm bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-300">
                 Ready for Perplexity
@@ -331,14 +448,14 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
           </div>
 
           <p className="text-sm text-muted-foreground truncate">
-            Configure writing style and content format for enhanced structure
-            generation
+            Configure writing style and content format for enhanced content
+            structure generation
           </p>
         </CardHeader>
 
         <CardContent>
-          {/* Prompt Status Section (kept, but aligned visually) */}
-          {isPromptReady && (
+          {/* Prompt Ready Status */}
+          {isPromptReady && !useInternalAI && (
             <div className="mb-6 p-4 rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -365,8 +482,8 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
                 </Button>
               </div>
               <p className="text-sm text-green-800 dark:text-green-200 mt-2 truncate">
-                This enhanced prompt includes full page configuration and
-                current content structure for recursive generation
+                This enhanced prompt includes full page configuration for
+                recursive content structure generation
               </p>
             </div>
           )}
@@ -395,7 +512,7 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
                       className="truncate"
                     >
                       <div className="flex flex-col gap-1">
-                        <span className="font-medium text-left  truncate">
+                        <span className="font-medium text-left truncate">
                           {style.label}
                         </span>
                       </div>
@@ -434,7 +551,7 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
                       className="truncate"
                     >
                       <div className="flex flex-col gap-1">
-                        <span className="font-medium text-left  truncate">
+                        <span className="font-medium text-left truncate">
                           {format.label}
                         </span>
                       </div>
@@ -473,33 +590,12 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
               onChange={(e) => setCustomRequirements(e.target.value)}
               className="min-h-[100px] resize-y"
             />
-
-            <div className="rounded-lg p-3 border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950">
-              <div className="flex items-start gap-2">
-                <Lightbulb className="size-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
-                <div className="min-w-0">
-                  <h5 className="font-medium text-blue-900 dark:text-blue-100 text-sm mb-2 truncate">
-                    Example Requirements:
-                  </h5>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs text-blue-800 dark:text-blue-200">
-                    {CUSTOM_REQUIREMENTS_EXAMPLES.map((example, index) => (
-                      <div key={index} className="flex items-start gap-1">
-                        <span className="text-blue-600 dark:text-blue-400">
-                          •
-                        </span>
-                        <span className="truncate">{example}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Current Configuration Summary */}
+          {/* Configuration Summary */}
           <div className="mt-6 p-4 rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950">
             <h4 className="font-medium mb-3 text-foreground truncate">
-              Enhanced Generation Configuration:
+              Enhanced Structure Generation Configuration:
             </h4>
             <div className="text-sm text-foreground/80 space-y-1">
               <p className="truncate">
@@ -520,13 +616,15 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
                 }
               </p>
               <p className="truncate">
-                <span className="font-medium">Content Structure:</span>{" "}
+                <span className="font-medium">Current Structure:</span>{" "}
                 {page?.aiRecommendContentStructure?.length || 0} existing
                 elements
               </p>
               <p className="truncate">
-                <span className="font-medium">Generation Mode:</span> Recursive
-                with selfPrompt fields
+                <span className="font-medium">Generation Mode:</span>{" "}
+                {useInternalAI
+                  ? "Internal AI streaming"
+                  : "External instruction generation"}
               </p>
               {customRequirements.trim() && (
                 <p className="truncate">
@@ -539,55 +637,70 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
         </CardContent>
       </Card>
 
-      {/* Main Enhanced Instruction Card */}
+      {/* Main Generation Card */}
       <Card className="w-full rounded-md border border-neutral-200 bg-neutral-50/60 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900/40">
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 min-w-0">
               <Target className="size-6 text-primary shrink-0" />
               <CardTitle className="text-xl truncate">
-                Enhanced AI Structure Generation Prompt
+                {useInternalAI
+                  ? "AI Content Structure Generation"
+                  : "Enhanced AI Structure Generation Prompt"}
               </CardTitle>
             </div>
             <span className="ml-auto inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs text-muted-foreground border-border bg-background/60 dark:bg-background/30">
               <Network className="size-3" />
-              <span className="truncate">Recursive System</span>
+              <span className="truncate">
+                {useInternalAI ? "Internal Model" : "Recursive System"}
+              </span>
             </span>
           </div>
 
           <div className="space-y-3 text-sm text-muted-foreground">
-            <p className="leading-relaxed truncate">
-              This enhanced system instruction generates expanded content
-              structure with selfPrompt fields for recursive content generation,
-              enabling unlimited content creation
-            </p>
+            {!useInternalAI ? (
+              <>
+                <p className="leading-relaxed truncate">
+                  This enhanced system instruction generates expanded content
+                  structure with selfPrompt fields for recursive content
+                  generation, enabling unlimited structure creation
+                </p>
 
-            <div className="rounded-lg p-3 border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950">
-              <h4 className="font-medium text-amber-900 dark:text-amber-100 mb-2 truncate">
-                ⚠️ Enhanced Generation Process:
-              </h4>
-              <ol className="list-decimal list-inside space-y-1 text-amber-800 dark:text-amber-200 text-xs">
-                <li className="truncate">
-                  Copy the comprehensive system instruction below
-                </li>
-                <li className="truncate">
-                  Use Perplexity Pro or GPT-4 for complex structure generation
-                </li>
-                <li className="truncate">
-                  Expect larger token usage due to complete data transmission
-                </li>
-                <li className="truncate">
-                  Generated JSON will include selfPrompt for each content
-                  element
-                </li>
-                <li className="truncate">
-                  Use generated structure for recursive content creation
-                </li>
-                <li className="truncate">
-                  Each content piece can be generated independently
-                </li>
-              </ol>
-            </div>
+                <div className="rounded-lg p-3 border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950">
+                  <h4 className="font-medium text-amber-900 dark:text-amber-100 mb-2 truncate">
+                    ⚠️ Enhanced Generation Process:
+                  </h4>
+                  <ol className="list-decimal list-inside space-y-1 text-amber-800 dark:text-amber-200 text-xs">
+                    <li className="truncate">
+                      Copy the comprehensive system instruction below
+                    </li>
+                    <li className="truncate">
+                      Use Perplexity Pro or GPT-4 for complex structure
+                      generation
+                    </li>
+                    <li className="truncate">
+                      Expect larger token usage due to complete data
+                      transmission
+                    </li>
+                    <li className="truncate">
+                      Generated JSON will include selfPrompt for each content
+                      element
+                    </li>
+                    <li className="truncate">
+                      Use generated structure for recursive content creation
+                    </li>
+                    <li className="truncate">
+                      Each content piece can be generated independently
+                    </li>
+                  </ol>
+                </div>
+              </>
+            ) : (
+              <p className="leading-relaxed truncate">
+                Stream content structure using the internal AI model; the output
+                area below will display results in real time during generation
+              </p>
+            )}
           </div>
         </CardHeader>
 
@@ -595,7 +708,7 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
           {/* Enhanced Page Info Summary */}
           <div className="rounded-lg p-4 bg-muted/50">
             <h4 className="font-medium mb-3 text-foreground truncate">
-              Complete Page Data Transmission
+              Complete Page Data for Structure Generation
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               <div className="truncate">
@@ -663,9 +776,11 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
                 </span>
               </div>
               <div className="truncate">
-                <span className="text-muted-foreground">Prompt Status:</span>
+                <span className="text-muted-foreground">
+                  Generation Status:
+                </span>
                 <span className="ml-2">
-                  {isPromptReady ? (
+                  {isReadyFlag ? (
                     <Badge variant="default" className="bg-green-600 text-xs">
                       Ready for AI
                     </Badge>
@@ -679,84 +794,166 @@ export function AdminPageStep5({ slug }: AdminPageInfoProps) {
             </div>
           </div>
 
-          {/* Enhanced System Instruction */}
+          {/* Generation Area */}
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <label className="text-sm font-medium truncate">
-                Enhanced System Instruction for Recursive Generation
+                {useInternalAI
+                  ? "Internal AI Structure Generation Output"
+                  : "Enhanced System Instruction for Structure Generation"}
               </label>
-              <button
-                type="button"
-                onClick={handleCopyInstruction}
-                disabled={!systemInstruction || isPromptUpdating}
-                className={[
-                  chipBase,
-                  tonePrimary,
-                  !systemInstruction || isPromptUpdating ? toneDisabled : "",
-                ].join(" ")}
-                title="Copy enhanced instruction"
-              >
-                {isPromptUpdating ? (
-                  <>
-                    <LoadingSpinner className="size-4" />
-                    <span className="ml-2">Updating...</span>
-                  </>
-                ) : isCopied ? (
-                  <>
-                    <CheckCircle className="size-4 text-emerald-400" />
-                    <span className="ml-2">Copied & Ready!</span>
-                  </>
-                ) : (
-                  <>
-                    <CopyIcon className="size-4" />
-                    <span className="ml-2">Copy Enhanced Instruction</span>
-                  </>
-                )}
-              </button>
+
+              {!useInternalAI ? (
+                <button
+                  type="button"
+                  onClick={handleCopyInstruction}
+                  disabled={!systemInstruction || isPromptUpdating}
+                  className={[
+                    chipBase,
+                    tonePrimary,
+                    !systemInstruction || isPromptUpdating ? toneDisabled : "",
+                  ].join(" ")}
+                  title="Copy enhanced instruction"
+                >
+                  {isPromptUpdating ? (
+                    <>
+                      <LoadingSpinner className="size-4" />
+                      <span className="ml-2">Updating...</span>
+                    </>
+                  ) : isCopied ? (
+                    <>
+                      <CheckCircle className="size-4 text-emerald-400" />
+                      <span className="ml-2">Copied & Ready!</span>
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon className="size-4" />
+                      <span className="ml-2">Copy Enhanced Instruction</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  {isStreaming && (
+                    <button
+                      type="button"
+                      onClick={cancel}
+                      className={[chipBase, toneNeutral].join(" ")}
+                      title="Cancel generation"
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={
+                      streamCompleted ? handleSaveStructure : handleStartStream
+                    }
+                    disabled={isStreaming}
+                    className={[
+                      chipBase,
+                      tonePrimary,
+                      isStreaming ? toneDisabled : "",
+                    ].join(" ")}
+                    title={
+                      streamCompleted
+                        ? "Save generated structure"
+                        : "Start structure generation"
+                    }
+                  >
+                    {isStreaming ? (
+                      <>
+                        <LoadingSpinner className="size-4" />
+                        <span className="ml-2">Generating...</span>
+                      </>
+                    ) : streamCompleted ? (
+                      <>
+                        <CheckCircle className="size-4" />
+                        <span className="ml-2">Save Content Structure</span>
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="size-4" />
+                        <span className="ml-2">Start Structure Generation</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
 
-            <textarea
-              value={systemInstruction}
-              readOnly
-              className="w-full h-96 p-4 text-sm font-mono bg-white text-black border border-input rounded-lg resize-y focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-              style={{ backgroundColor: "#ffffff", color: "#000000" }}
-              placeholder="Generating comprehensive enhanced system instruction..."
-            />
+            {!useInternalAI ? (
+              <textarea
+                value={systemInstruction}
+                readOnly
+                className="w-full h-96 p-4 text-sm font-mono bg-white text-black border border-input rounded-lg resize-y focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                style={{ backgroundColor: "#ffffff", color: "#000000" }}
+                placeholder="Generating comprehensive enhanced system instruction..."
+              />
+            ) : (
+              <div className="w-full h-96 p-4 text-sm font-mono bg-white text-black border border-input rounded-lg overflow-auto">
+                {isStreaming && (
+                  <div className="flex items-center gap-2 text-blue-600 mb-2">
+                    <LoadingSpinner className="size-4" />
+                    <span>Generating content structure...</span>
+                  </div>
+                )}
+                {streamText ? (
+                  <pre className="whitespace-pre-wrap text-xs leading-relaxed">
+                    {streamText}
+                  </pre>
+                ) : (
+                  <div className="text-gray-400 italic">
+                    Content structure will appear here during generation...
+                  </div>
+                )}
+                {streamCompleted && generatedStructure.length > 0 && (
+                  <div className="mt-4 p-3 bg-green-50 rounded border border-green-200">
+                    <div className="text-green-800 text-xs font-medium">
+                      ✅ Structure generation completed!{" "}
+                      {generatedStructure.length} elements ready to save.
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Enhanced Information */}
-          <div className="rounded-lg p-3 border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950">
-            <h5 className="font-medium text-green-900 dark:text-green-100 mb-2 text-sm truncate">
-              🚀 Enhanced System Features:
-            </h5>
-            <ul className="space-y-1 text-green-800 dark:text-green-200 text-xs">
-              <li className="truncate">
-                • Complete page configuration data transmission (all fields
-                included)
-              </li>
-              <li className="truncate">
-                • Current content structure analysis and enhancement
-              </li>
-              <li className="truncate">
-                • selfPrompt generation for each content element
-              </li>
-              <li className="truncate">
-                • Resource and link suggestions for recursive generation
-              </li>
-              <li className="truncate">
-                • SEO optimization with keyword distribution
-              </li>
-              <li className="truncate">
-                • Quality criteria and validation rules for each element
-              </li>
-              <li className="truncate">
-                • Dependencies mapping for logical content flow
-              </li>
-              <li className="truncate">
-                • Unlimited content generation through recursive architecture
-              </li>
-            </ul>
-          </div>
+          {/* Enhanced Information — hide in internal AI mode */}
+          {!useInternalAI && (
+            <div className="rounded-lg p-3 border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950">
+              <h5 className="font-medium text-green-900 dark:text-green-100 mb-2 text-sm truncate">
+                🚀 Enhanced Structure System Features:
+              </h5>
+              <ul className="space-y-1 text-green-800 dark:text-green-200 text-xs">
+                <li className="truncate">
+                  • Complete page configuration data for structure generation
+                </li>
+                <li className="truncate">
+                  • Current content structure analysis and enhancement
+                </li>
+                <li className="truncate">
+                  • selfPrompt generation for each content structure element
+                </li>
+                <li className="truncate">
+                  • Resource and link suggestions for recursive generation
+                </li>
+                <li className="truncate">
+                  • SEO optimization with keyword distribution in structure
+                </li>
+                <li className="truncate">
+                  • Quality criteria and validation rules for each element
+                </li>
+                <li className="truncate">
+                  • Dependencies mapping for logical content structure flow
+                </li>
+                <li className="truncate">
+                  • Unlimited content structure generation through recursive
+                  architecture
+                </li>
+              </ul>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
