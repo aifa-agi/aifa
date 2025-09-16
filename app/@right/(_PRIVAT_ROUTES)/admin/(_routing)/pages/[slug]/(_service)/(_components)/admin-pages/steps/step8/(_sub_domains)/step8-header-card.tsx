@@ -10,14 +10,11 @@
  */
 
 import * as React from "react";
-import { Button } from "@/components/ui/button";
 import { useStep8Root } from "../(_contexts)/step8-root-context";
-import { useStep8RegenerateAll } from "../(_hooks)/use-step8-regenerate-all";
 import { useStep8Status } from "../(_hooks)/use-step8-status";
 
 export function Step8HeaderCard() {
   const { page, getSections, ui } = useStep8Root();
-  const { regenerateAll, isRunning } = useStep8RegenerateAll();
   const { savedCount, totalCount, isAllSaved8 } = useStep8Status();
 
   const sections = getSections();
@@ -47,11 +44,6 @@ export function Step8HeaderCard() {
         ? `${dotBase} bg-orange-400`
         : `${dotBase} bg-neutral-500/60`;
 
-  const onRegenerate = async () => {
-    // Trigger batch regeneration; optimistic save/rollback handled inside hook.
-    await regenerateAll();
-  };
-
   return (
     <div className="w-full rounded-md border border-neutral-200 bg-neutral-50/60 p-5 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900/40">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -80,35 +72,13 @@ export function Step8HeaderCard() {
         </div>
 
         <div className="flex shrink-0">
-          <Button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-md border border-violet-500 bg-violet-500/15 px-3 py-1.5 text-sm text-white hover:bg-violet-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            onClick={onRegenerate}
-            disabled={isRunning}
-          >
+          <div className="inline-flex items-center gap-2 rounded-md border border-violet-500 bg-violet-500/15 px-3 py-1.5 text-sm text-white hover:bg-violet-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
             {/* 4px status dot placed inside the button, left to the label */}
             <span className={`${dotCls}`} aria-hidden="true" />
-            <span>{isRunning ? "Regenerating..." : "Regenerate draft"}</span>
-          </Button>
+            <span> Generate draft</span>
+          </div>
         </div>
       </div>
-
-      {/* <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-        <div className="rounded-md border border-neutral-200 bg-neutral-50/60 p-4 text-center dark:border-neutral-800/60 dark:bg-neutral-900/30">
-          <div className="text-xl font-semibold text-violet-400">{total}</div>
-          <div className="text-xs text-muted-foreground">Total Sections</div>
-        </div>
-        <div className="rounded-md border border-neutral-200 bg-neutral-50/60 p-4 text-center dark:border-neutral-800/60 dark:bg-neutral-900/30">
-          <div className="text-xl font-semibold text-emerald-400">
-            {withResults}
-          </div>
-          <div className="text-xs text-muted-foreground">With Results</div>
-        </div>
-        <div className="rounded-md border border-neutral-200 bg-neutral-50/60 p-4 text-center dark:border-neutral-800/60 dark:bg-neutral-900/30">
-          <div className="text-xl font-semibold text-orange-400">{pct}%</div>
-          <div className="text-xs text-muted-foreground">Coverage</div>
-        </div>
-      </div> */}
 
       <p className="mt-2 text-xs text-muted-foreground">
         Last update: {updatedAt}

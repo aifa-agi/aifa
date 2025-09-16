@@ -76,7 +76,7 @@ export async function POST(req: Request) {
       model: openai(model ?? "gpt-4.1-mini"),
       system,
       prompt,
-      temperature: 0.5,
+      temperature: 0.2,
       maxTokens: 30000,
     });
 

@@ -24,7 +24,6 @@ export async function POST(req: Request) {
     system,
     prompt,
     temperature: 0.5,
-    // AI SDK v4 uses `maxTokens` (renamed to `maxOutputTokens` in v5)
     maxTokens: 30000,
   });
 

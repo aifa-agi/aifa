@@ -8,9 +8,9 @@
  *    - Serialized section blueprint (RootContentStructure + children).
  *    - Page progress meta: totalSections, completedSectionsIndexes (0-based), currentSectionIndex.
  *    - LANGUAGE CONTRACT: enforce appConfig.lang with safe fallback.
- *    - MDX OUTPUT CONTRACT: valid MDX only, no H2, start from H3, allowed tags list.
+ *    - HTML OUTPUT CONTRACT: valid HTML only, start from H3, allowed tags list.
  *    - SEMANTICS & BOUNDS CONTRACT: follow blueprint order, advisory min/max words, intent/audiences/taxonomy, style/format hints.
- *    - CHAIN COHERENCE: inject previous MDX (read-only), explain WHY chain is included.
+ *    - CHAIN COHERENCE: inject previous HTML (read-only), explain WHY chain is included.
  *    - SEO BEST PRACTICES: natural keywords usage, LSI/synonyms, headings clarity and scannability, no keyword stuffing.
  *    - WORD COUNT POLICY: ignore header word limits, count child elements' words instead.
  * 2) Build a concise USER seed from description/keywords/intent/audiences.
@@ -94,6 +94,7 @@ function getPreviousSectionsMDX(
   for (let i = 0; i < sectionIndex; i += 1) {
     const id = roots[i]?.id;
     if (!id) continue;
+    // Read previous content; historically named tempMDXContent.
     const mdx = byId.get(id)?.tempMDXContent ?? "";
     if (nonEmpty(mdx)) chain.push(mdx.trim());
   }
@@ -102,7 +103,8 @@ function getPreviousSectionsMDX(
 
 function joinChainMDX(chain: string[]): string {
   if (chain.length === 0) return "";
-  return chain.join("\n\n{/* ---- previous section ---- */}\n\n");
+  // Keep delimiter, textual label updated to "previous section" without MDX mention.
+  return chain.join("\n\n<!-- ---- previous section ---- -->\n\n");
 }
 
 function computeCompletedIndexes(
@@ -226,19 +228,17 @@ export function useStep8Prompt() {
         `- Do NOT switch language unless explicitly required by the blueprint.`,
       ].join("\n");
 
-      const mdxContract = [
-        `MDX OUTPUT CONTRACT:`,
-        `- Return ONLY valid MDX suitable for the Next.js MDX parser.`,
-        `- Do NOT include explanations, pre/post text, or code fences.`,
-        `- Do NOT duplicate the H2 title of the section.`,
-        `- Start headings from H3 and below.`,
-        `- Allowed tags: h3, h4, p, ul, ol, li, blockquote, code, table, thead, tbody, tr, td, th, img.`,
+      const htmlOutputContract = [
+        `HTML OUTPUT CONTRACT:`,
+        `- Output MUST be a single, valid HTML fragment, not Markdown, not MDX, no JSX.`,
+        `- Allowed tags include: <h3>, <h4>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <a>, <code>, <pre>, <blockquote>, <hr>, <br>, <img>, <table>, <thead>, <tbody>, <tr>, <th>, <td>, <figure>, <figcaption>, <details>, <summary>, and semantic containers like <section> or <div> when needed.`,
+        `- All <a> must have rel="nofollow noopener" when target="_blank".`,
+        `- Close all tags properly; ensure nesting is valid.`,
+        `- Do NOT include <html>, <head>, or <body>; produce only the content fragment.`,
       ].join("\n");
 
       const wordCountPolicy = [
         `WORD COUNT POLICY:`,
-        `- IGNORE minWords and maxWords requirements specified in headings (h2, h3, h4).`,
-        `- The actual content size is determined by the sum of minWords/maxWords of child elements.`,
         `- If child elements have minWords=0 and maxWords=0, generate content at AI model discretion.`,
         `- Example: h3 with minWords=50, maxWords=100, containing two paragraphs each requiring 300 words should result in ~600 words total content.`,
       ].join("\n");
@@ -247,7 +247,7 @@ export function useStep8Prompt() {
         `SEMANTICS & BOUNDS CONTRACT:`,
         `- Follow the blueprint exactly for structure, child order and roles.`,
         `- Use taxonomy/attention/audiences/intent to shape tone, coverage and value.`,
-        `- If linksToSource exist, integrate them as Markdown links where appropriate.`,
+        `- If linksToSource exist, integrate them as HTML links (<a href="...">) where appropriate.`,
         `- Apply selfPrompt instructions if present in the section blueprint.`,
         writingStyle
           ? `- Writing style preference: ${String(writingStyle).trim()}`
@@ -264,7 +264,7 @@ export function useStep8Prompt() {
         `- Reason: enforce a unified tone of voice, avoid semantic duplication, and maintain a continuous flow of thought across the entire page.`,
         STEP8_TEXTS.prompt.styleCoherenceHint,
         nonEmpty(chainJoined)
-          ? `Previously saved sections (MDX, read-only context):\n${chainJoined}`
+          ? `Previously saved sections (HTML, read-only context):\n${chainJoined}`
           : `No previous sections saved.`,
       ].join("\n\n");
 
@@ -278,14 +278,14 @@ export function useStep8Prompt() {
       ].join("\n");
 
       const system = [
-        `SECTION BLUEPRINT (read-only JSON):`,
+        `SECTION BLUEPRINT:`,
         blueprint,
         "",
         pageProgress,
         "",
         languageContract,
         "",
-        mdxContract,
+        htmlOutputContract,
         "",
         wordCountPolicy,
         "",
@@ -295,13 +295,14 @@ export function useStep8Prompt() {
         "",
         seoContract,
         "",
+        // Keep any additional policy lines from STEP8_TEXTS as-is.
         STEP8_TEXTS.prompt.wordCountPolicy,
       ].join("\n");
 
       const userSeed = buildUserSeed(section);
       const user = [
-        `Generate the MDX for the current H2 section strictly following the blueprint and contracts.`,
-        `Preserve heading levels (from H3) and keep consistent formatting.`,
+        `Generate the HTML for the current H2 section strictly following the blueprint and contracts.`,
+        ,
         userSeed,
       ]
         .filter(Boolean)
@@ -309,7 +310,7 @@ export function useStep8Prompt() {
 
       return {
         system,
-        user,
+        user: system,
         meta: {
           sectionId: sectionId,
           sectionIndex: index,

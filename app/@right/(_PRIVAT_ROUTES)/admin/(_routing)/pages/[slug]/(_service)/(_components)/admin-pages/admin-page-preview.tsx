@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { UserType } from "@prisma/client";
 import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
 import { PageNotFound } from "../page-not-found";
-import { AdminPageInfoProps } from "../../(_types)/admin-page-sections-types";
+import { AdminPageInfoProps } from "../../(_config)/(_types)/admin-page-sections-types";
 import { findPageBySlug } from "../../(_utils)/page-helpers";
 import { StepActivationCard } from "../step-activation-card";
 

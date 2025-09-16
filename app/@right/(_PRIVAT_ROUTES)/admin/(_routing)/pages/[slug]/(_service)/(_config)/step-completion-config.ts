@@ -52,8 +52,9 @@ export const STEP_COMPLETION_CONDITIONS: StepCompletionCondition[] = [
     validate: (pageData: PageData | null) => {
       // Step 5: Generator perplexity prompt
       return (
-        pageData?.isReadyPromptForPerplexity !== undefined &&
-        pageData?.isReadyPromptForPerplexity !== false
+        (pageData?.isReadyPromptForPerplexity !== undefined &&
+          pageData?.isReadyPromptForPerplexity !== false) ||
+        (pageData?.draftContentStructure?.length ?? 0) > 0
       );
     },
     description: "Требует генерации Perplexity prompt",
@@ -84,19 +85,15 @@ export const STEP_COMPLETION_CONDITIONS: StepCompletionCondition[] = [
     debugInfo: (pageData) =>
       `📝 isReadyDraftForPerplexity: ${pageData?.isReadyDraftForPerplexity ? "Есть" : "Нет"}`,
   },
-
+  // sections
   {
     stepKey: "step8",
     validate: (pageData: PageData | null) => {
-      // Step 8: Automatic Generation - завершен если есть финальный отчет
-      return (
-        pageData?.finalReport?.reportId !== undefined &&
-        pageData?.finalReport?.reportId !== ""
-      );
+      // Step 6:
+      return (pageData?.sections?.length ?? 0) > 0;
     },
-    description: "Требует генерации финального отчета",
-    debugInfo: (pageData) =>
-      `📝 Финальный отчет: ${pageData?.finalReport?.reportId ? "Есть" : "Нет"}`,
+    description: "Требует sections lenght > 0",
+    debugInfo: (pageData) => `📋 Черновик: ${pageData?.sections?.length ?? 0}`,
   },
 ];
 

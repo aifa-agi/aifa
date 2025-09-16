@@ -167,7 +167,7 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
     hasIndicator: true,
     defaultIndicatorStatus: "gray",
     stepType: "required",
-    dependencies: ["step6"],
+    dependencies: ["step8"],
   },
   {
     key: "deploy",
@@ -178,7 +178,7 @@ export const ADMIN_PAGES_TABS: AdminPageTabConfig[] = [
     hasIndicator: true,
     defaultIndicatorStatus: "gray",
     stepType: "required",
-    dependencies: ["step6"],
+    dependencies: ["step8"],
     titleForRequired: "Deploy", // Остается Deploy в обоих режимах
   },
 ];
