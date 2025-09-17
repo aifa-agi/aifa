@@ -5,7 +5,7 @@
 import { useAdminPagesNav } from "../(_context)/admin-pages-nav-context";
 import { AdminPageDeploy } from "./admin-pages/admin-page-deploy";
 import { AdminPageInfo } from "./admin-pages/admin-page-info/(_service)/(_components)/admin-page-info";
-import { AdminPagePreview } from "./admin-pages/admin-page-preview";
+import { AdminPagePreview } from "./admin-pages/steps/step12/admin-page-preview";
 import { CompetitorResearch } from "./admin-pages/steps/competitor-research/(_service)/(_components)/competitor-research";
 
 import { AdminPageStep10 } from "./admin-pages/steps/step10/step10";
