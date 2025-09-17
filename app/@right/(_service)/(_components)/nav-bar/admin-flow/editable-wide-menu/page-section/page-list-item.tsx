@@ -1,5 +1,3 @@
-// @/app/(_service)/components/nav-bar/admin-flow/editable-wide-menu/page-section/page-list-item.tsx
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -9,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 import { PageActionsDropdown } from "../components/page-actions-dropdown";
 import { PublishActionsDropdown } from "../components/publish-actions-dropdown/components/publish-actions-dropdown";
-// ИСПРАВЛЕНО: vecror -> vector
 import { VectorStoreActionsDropdown } from "../components/vector-store-actions-dropdown";
 import { ChatSynchroniseActionDropdown } from "../components/chat-synchronise-action-dropdown";
 import { LinksActionsDropdown } from "../components/links-action-dropdown";
@@ -53,18 +50,16 @@ export function PageListItem({
 
   const handlePageClick = () => {
     if (categoryTitle.toLowerCase() === "admin") {
-      router.push(`/admin/${page.linkName}`);
-      setIsOpen(false);
+      // При параллельной маршрутизации нужно использовать router.push с href напрямую
+      if (page.href) {
+        router.push(page.href);
+        setIsOpen(false);
+      }
     }
   };
 
   useEffect(() => {
-    if (categoryTitle.toLowerCase() === "admin") {
-      setAdminCategory(true);
-    }
-    if (categoryTitle.toLowerCase() !== "admin") {
-      setAdminCategory(false);
-    }
+    setAdminCategory(categoryTitle.toLowerCase() === "admin");
   }, [categoryTitle]);
 
   return (
@@ -91,7 +86,7 @@ export function PageListItem({
           )}
           onClick={handlePageClick}
         >
-          {humanize(page.linkName)}
+          {humanize(page.title ?? page.linkName)}
         </span>
         {page.hasBadge && page.badgeName && (
           <Badge className="shadow-none rounded-full px-2.5 py-0.5 text-xs font-semibold h-6 flex items-center">

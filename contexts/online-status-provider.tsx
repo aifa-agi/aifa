@@ -2,7 +2,8 @@
 
 "use client"; // This directive is crucial. It marks the component as a Client Component.
 
-import { useOnlineStatus } from "@/config/content/sections/hooks/use-online-status";
+
+import { useOnlineStatus } from "@/app/@right/(_service)/hooks/use-online-status";
 import { OfflinePlaceholder } from "@/components/shared/offline-placeholder";
 import React from "react";
 

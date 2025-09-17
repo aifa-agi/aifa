@@ -1,6 +1,7 @@
 // @/contexts/right-sidebar-context.tsx
 "use client";
 
+import { useMediaQuery } from "@/app/@right/(_service)/hooks/use-media-query";
 import {
   createContext,
   useContext,
@@ -8,7 +9,6 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { useMediaQuery } from "@/config/content/sections/hooks/use-media-query";
 
 interface RightSidebarContextType {
   isOpen: boolean;

@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@/config/content/sections/hooks/use-media-query";
+import { useMediaQuery } from "../../../hooks/use-media-query";
 
 interface PresentationMeta {
   metaTitle: string;

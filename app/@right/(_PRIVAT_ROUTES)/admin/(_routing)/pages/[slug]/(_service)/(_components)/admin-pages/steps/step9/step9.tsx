@@ -5,18 +5,18 @@ import React from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
 import { useSession } from "next-auth/react";
-import { UserType } from "@prisma/client";
 import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
 import { PageNotFound } from "../../../page-not-found";
 import { AdminPageInfoProps } from "../../../../(_config)/(_types)/admin-page-sections-types";
 import { findPageBySlug } from "../../../../(_utils)/page-helpers";
 import { StepActivationCard } from "../../../step-activation-card";
+import { UserType } from "@prisma/client";
 
 // slug will === "step1"
 export function AdminPageStep9({ slug }: AdminPageInfoProps) {
   const { categories, loading, initialized } = useNavigationMenu();
   const { data: session } = useSession();
-  const role: UserType = session?.user?.type || "guest";
+  const role: UserType= session?.user?.type || "guest";
 
   // Show loading state with theme-aware colors
   if (loading || !initialized) {

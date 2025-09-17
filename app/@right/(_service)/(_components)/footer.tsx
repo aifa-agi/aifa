@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 
@@ -31,6 +32,7 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
   const { categories } = useNavigationMenu();
   const { data: session } = useSession();
   const userType: UserType = session?.user?.type || "guest";
+  const router = useRouter();
 
   const getFilteredSections = React.useMemo((): FilteredSection[] => {
     const allowedCategories = categories.filter((category: MenuCategory) =>
@@ -58,7 +60,7 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
           items: accessiblePages
             .sort((a, b) => (a.order || 0) - (b.order || 0))
             .map((page: PageData) => ({
-              title: page.linkName || page.title || "Untitled",
+              title: page.title || page.linkName || "Untitled",
               href: page.href || "#",
             })),
         };
@@ -80,6 +82,16 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
 
   const filteredSections = getFilteredSections;
 
+  // Хендлер для мягкой навигации внутренних ссылок
+  const handleInternalLinkClick = (href: string) => {
+    router.push(href);
+  };
+
+  // Проверка, является ли ссылка внешней
+  const isExternalLink = (href: string) => {
+    return /^https?:\/\//.test(href);
+  };
+
   return (
     <>
       <footer className={cn("border-t mt-6 px-4", className)}>
@@ -92,12 +104,25 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
               <ul className="mt-4 list-inside space-y-3">
                 {section.items.map((link) => (
                   <li key={`${section.category}-${link.href}`}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground hover:text-primary"
-                    >
-                      {capitalize(link.title)}
-                    </Link>
+                    {isExternalLink(link.href) ? (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-muted-foreground hover:text-primary"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {capitalize(link.title)}
+                      </Link>
+                    ) : (
+                      // Мягкая маршрутизация внутренней ссылки через router.push
+                      <button
+                        type="button"
+                        onClick={() => handleInternalLinkClick(link.href)}
+                        className="text-left text-sm text-muted-foreground hover:text-primary"
+                      >
+                        {capitalize(link.title)}
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -7,8 +7,7 @@ import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
 import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
 import { normalizeText } from "@/app/@right/(_service)/(_libs)/normalize-text";
 import { BadgeName } from "@/app/@right/(_service)/(_config)/badge-config";
-import { UserType } from "@prisma/client";
-
+import { UserType } from "@/app/@right/(_service)/(_types)/footer-types";
 interface UseBadgesLogicProps {
   singlePage: PageData;
   categoryTitle: string;

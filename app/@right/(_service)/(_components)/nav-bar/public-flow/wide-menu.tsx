@@ -1,7 +1,9 @@
 "use client";
+
 import { useState, useEffect, JSX } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { MenuCategory } from "../../../(_types)/menu-types";
 import { PageData } from "../../../(_types)/page-types";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +32,7 @@ export default function WideMenu({
 }: WideMenuProps) {
   const { data: session } = useSession();
   const userType: UserType = session?.user?.type || "guest";
+  const router = useRouter();
 
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [activeCategoryTitle, setActiveCategoryTitle] = useState<string | null>(
@@ -56,6 +59,14 @@ export default function WideMenu({
     }))
     .filter((category) => category.pages.length > 0);
 
+  // Новая функция обработчик клика по странице с мягкой навигацией
+  const handlePageClick = (page: PageData) => {
+    if (page.href) {
+      router.push(page.href);
+      setIsOpen(false);
+    }
+  };
+
   const renderCategoryLinks = (pages: PageData[], maxLinks: number) => (
     <ul className="space-y-3">
       {pages.slice(0, maxLinks).map((singlePage) => {
@@ -63,11 +74,11 @@ export default function WideMenu({
         const isHovered = hoveredLink === hoverKey;
         return (
           <li key={singlePage.id} style={{ height: 24, marginTop: 12 }}>
-            <a
-              href={singlePage.href || "#"}
-              className="group flex items-center justify-between text-white hover:text-gray-300 transition-colors duration-200 relative"
+            <button
+              onClick={() => handlePageClick(singlePage)}
               onMouseEnter={() => setHoveredLink(hoverKey)}
               onMouseLeave={() => setHoveredLink(null)}
+              className="group flex items-center justify-between text-white hover:text-gray-300 transition-colors duration-200 relative w-full text-left"
               style={{ height: 24 }}
             >
               <span
@@ -79,7 +90,7 @@ export default function WideMenu({
                 )}
                 style={{ transition: "margin 0.2s" }}
               >
-                {humanize(singlePage.linkName)}
+                {humanize(singlePage.title ?? singlePage.linkName)}
               </span>
               {singlePage.hasBadge && singlePage.badgeName && !isHovered && (
                 <Badge
@@ -108,7 +119,7 @@ export default function WideMenu({
                   <ArrowRight className="w-4 h-4" />
                 </motion.span>
               )}
-            </a>
+            </button>
           </li>
         );
       })}

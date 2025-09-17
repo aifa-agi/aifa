@@ -1,6 +1,5 @@
 // @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/step1.tsx
 "use client";
-
 import React from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
@@ -10,15 +9,20 @@ import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
 import { PageNotFound } from "../page-not-found";
 import { AdminPageInfoProps } from "../../(_config)/(_types)/admin-page-sections-types";
 import { findPageBySlug } from "../../(_utils)/page-helpers";
-import { StepActivationCard } from "../step-activation-card";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 
-// slug will === "step1"
+/**
+ * Understanding:
+ * - Replace full-bleed container with a two-column layout (left nav + right editor).
+ * - Avoid 100vw/100vh to prevent horizontal overflow in app router parallel slots.
+ * - Left column scrolls vertically when overflowing; right editor never scrolls horizontally.
+ * - Toolbar should wrap to next line on small widths.
+ */
 export function AdminPagePreview({ slug }: AdminPageInfoProps) {
   const { categories, loading, initialized } = useNavigationMenu();
   const { data: session } = useSession();
   const role: UserType = session?.user?.type || "guest";
 
-  // Show loading state with theme-aware colors
   if (loading || !initialized) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -28,17 +32,13 @@ export function AdminPagePreview({ slug }: AdminPageInfoProps) {
     );
   }
 
-  // Adapt to existing findPageBySlug function
   const searchResult = findPageBySlug(categories, slug);
-
-  // Show error state if page not found with theme-aware styling
   if (!searchResult) {
     return <PageNotFound slug={slug} />;
   }
 
   let page: PageData;
   let category: { title: string };
-
   if (
     typeof searchResult === "object" &&
     "page" in searchResult &&
@@ -51,67 +51,49 @@ export function AdminPagePreview({ slug }: AdminPageInfoProps) {
     category = { title: "Unknown Category" };
   }
 
+  // Two-column layout wrapper
   return (
-    <div className="space-y-6">
-      <div className="max-w-4xl mx-auto p-6">
-        <StepActivationCard stepKey="AdminPagePreview" />
+    <div className="w-full h-full">
+      <div className="mx-auto p-4 md:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)] gap-4 md:gap-6">
+          {/* Left navigation column */}
+          // внутри AdminPagePreview, в aside:
+<aside className="rounded-lg border bg-card text-card-foreground p-3 md:p-4 max-h-[calc(100vh-180px)] md:max-h-[calc(100vh-160px)] overflow-hidden">
+  {/* Mobile: horizontal scroll; Desktop: vertical list */}
+  <nav
+    className="
+      custom-sidebar
+      flex gap-2
+      overflow-x-auto overflow-y-hidden
+      px-1
+      md:px-0
+      md:flex-col md:overflow-x-hidden md:overflow-y-auto
+    "
+    aria-label="Sections"
+  >
+    <button type="button" className="shrink-0 md:shrink md:w-full text-left px-3 py-2 rounded-md bg-primary/10 hover:bg-primary/20 text-primary">
+      All sections
+    </button>
+    {Array.from({ length: 7 }).map((_, idx) => (
+      <button
+        key={idx}
+        type="button"
+        className="shrink-0 md:shrink md:w-full text-left px-3 py-2 rounded-md hover:bg-accent"
+      >
+        Section {idx + 1}
+      </button>
+    ))}
+  </nav>
+</aside>
 
-        {/* Additional step content after activation */}
-        <div className="mt-8 space-y-4">
-          <h3 className="text-lg font-semibold">
-            Live Preview & Final Editorial Control: Real-Time Content
-            Visualization & Advanced Text Editor Integration
-          </h3>
-          <p className="text-muted-foreground">
-            This penultimate step transforms your strategically crafted content
-            into a pixel-perfect preview experience, presenting your completed
-            page exactly as it will appear to end users in the live production
-            environment. The sophisticated preview engine renders all generated
-            sections with authentic styling, responsive design elements, custom
-            visual components, and interactive features, providing comprehensive
-            visualization of your content&apos;s final presentation across
-            different device formats and screen resolutions. This realistic
-            preview functionality ensures complete confidence in your
-            content&apos;s visual impact and user experience before final
-            publication deployment.
-            <br />
-            <br />
-            The integrated advanced text editor empowers you with
-            professional-grade editorial control over every content element,
-            featuring rich formatting capabilities, real-time collaborative
-            editing, and intelligent suggestion systems that maintain content
-            quality while preserving strategic keyword optimization and
-            structural integrity. Each section becomes individually editable
-            through intuitive click-to-edit functionality, allowing seamless
-            transitions between preview mode and active editing without
-            disrupting the overall content flow or losing contextual awareness
-            of surrounding sections.
-            <br />
-            <br />
-            The editor includes sophisticated features such as grammar and style
-            checking, readability optimization suggestions, keyword density
-            monitoring, and format consistency validation that ensure your final
-            edits enhance rather than compromise the strategic content
-            architecture developed throughout your multi-step creation process.
-            Version control functionality automatically saves editing
-            iterations, enabling easy rollback to previous versions if needed,
-            while change tracking highlights all modifications for comprehensive
-            audit trail maintenance.
-            <br />
-            <br />
-            Advanced formatting options include custom typography controls,
-            image placement optimization, video embedding capabilities, and
-            interactive element positioning that align with your selected design
-            components from earlier steps. The system maintains perfect
-            synchronization between preview rendering and actual page output,
-            ensuring that every editorial refinement translates accurately to
-            the final published result. Real-time collaboration features enable
-            team-based editing workflows, stakeholder review processes, and
-            approval management systems that streamline content finalization
-            across organizational hierarchies while maintaining strategic
-            coherence and brand consistency throughout all editorial
-            modifications.
-          </p>
+
+          {/* Right editor column */}
+          <section className="min-w-0">
+            {/* min-w-0 prevents flex/grid children from overflowing horizontally */}
+            <div className="mx-auto w-full max-w-4xl">
+              <SimpleEditor />
+            </div>
+          </section>
         </div>
       </div>
     </div>

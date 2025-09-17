@@ -1,6 +1,7 @@
 "use client";
 
-import type React from "react";
+import React from "react";
+import { useRouter } from "next/navigation";
 import {
   AccordionContent,
   AccordionItem,
@@ -29,18 +30,27 @@ export default function EditableMobileMenu({
   categories,
   setCategories,
 }: EditableMobileMenuProps) {
+  const router = useRouter();
+
+  const handlePageClick = (page: PageData) => {
+    if (page.href) {
+      router.push(page.href);
+    }
+  };
+
   const renderCategoryLinks = (categoryLinks: PageData[]) => (
     <ul className="space-y-3 py-2">
       {categoryLinks.map((singlePage) => (
         <li key={singlePage.id}>
-          <a
-            href={singlePage.href ?? "#"}
-            className="flex items-center text-white transition-colors duration-200 relative"
+          <button
+            type="button"
+            onClick={() => handlePageClick(singlePage)}
+            className="flex items-center text-white transition-colors duration-200 relative w-full text-left"
           >
             {singlePage.hasBadge && singlePage.badgeName ? (
               <div className="flex items-center justify-between gap-2 w-full">
                 <span className="flex-grow overflow-hidden whitespace-nowrap text-ellipsis flex items-center gap-2">
-                  {humanize(singlePage.linkName)}
+                  {humanize(singlePage.title ?? singlePage.linkName)}
                 </span>
                 <Badge
                   className={cn(
@@ -58,10 +68,10 @@ export default function EditableMobileMenu({
               </div>
             ) : (
               <span className="flex items-center gap-2 overflow-hidden whitespace-nowrap text-ellipsis">
-                {humanize(singlePage.linkName)}
+                {humanize(singlePage.title ?? singlePage.linkName)}
               </span>
             )}
-          </a>
+          </button>
         </li>
       ))}
     </ul>

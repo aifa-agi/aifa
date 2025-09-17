@@ -1,25 +1,31 @@
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+
+
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-    }
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
 }
 
 @layer utilities {
-    .text-balance {
-        text-wrap: balance;
-    }
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
 @layer base {
@@ -96,72 +102,72 @@
 }
 
 @layer base {
-    * {
-        @apply border-border;
-    }
+  * {
+    @apply border-border;
+  }
 
-    body {
-        @apply bg-background text-foreground;
-    }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 .skeleton {
-    * {
-        pointer-events: none !important;
-    }
+  * {
+    pointer-events: none !important;
+  }
 
-    *[class^="text-"] {
-        color: transparent;
-        @apply rounded-md bg-foreground/20 select-none animate-pulse;
-    }
+  *[class^="text-"] {
+    color: transparent;
+    @apply rounded-md bg-foreground/20 select-none animate-pulse;
+  }
 
-    .skeleton-bg {
-        @apply bg-foreground/10;
-    }
+  .skeleton-bg {
+    @apply bg-foreground/10;
+  }
 
-    .skeleton-div {
-        @apply bg-foreground/20 animate-pulse;
-    }
+  .skeleton-div {
+    @apply bg-foreground/20 animate-pulse;
+  }
 }
 
 .ProseMirror {
-    outline: none;
+  outline: none;
 }
 
 .cm-editor,
 .cm-gutters {
-    @apply bg-background dark:bg-zinc-800 outline-none selection:bg-zinc-900 !important;
+  @apply bg-background dark:bg-zinc-800 outline-none selection:bg-zinc-900 !important;
 }
 
-.ͼo.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground,
+.ͼo.cm-focused>.cm-scroller>.cm-selectionLayer .cm-selectionBackground,
 .ͼo.cm-selectionBackground,
 .ͼo.cm-content::selection {
-    @apply bg-zinc-200 dark:bg-zinc-900 !important;
+  @apply bg-zinc-200 dark:bg-zinc-900 !important;
 }
 
 .cm-activeLine,
 .cm-activeLineGutter {
-    @apply bg-transparent !important;
+  @apply bg-transparent !important;
 }
 
 .cm-activeLine {
-    @apply rounded-r-sm !important;
+  @apply rounded-r-sm !important;
 }
 
 .cm-lineNumbers {
-    @apply min-w-7;
+  @apply min-w-7;
 }
 
 .cm-foldGutter {
-    @apply min-w-3;
+  @apply min-w-3;
 }
 
 .cm-lineNumbers .cm-activeLineGutter {
-    @apply rounded-l-sm !important;
+  @apply rounded-l-sm !important;
 }
 
 .suggestion-highlight {
-    @apply bg-blue-200 hover:bg-blue-300 dark:hover:bg-blue-400/50 dark:text-blue-50 dark:bg-blue-500/40;
+  @apply bg-blue-200 hover:bg-blue-300 dark:hover:bg-blue-400/50 dark:text-blue-50 dark:bg-blue-500/40;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -171,11 +177,14 @@
 /* Скрыть скроллбар для Firefox */
 .hide-scrollbar {
   scrollbar-width: none;
-  -ms-overflow-style: none; /* IE 10+ */
+  -ms-overflow-style: none;
+  /* IE 10+ */
 }
+
 .interactive-section {
   position: relative;
 }
+
 .interaction-icon {
   position: absolute;
   top: 0.5rem;
@@ -186,6 +195,7 @@
   opacity: 0;
   transform: scale(0.9);
 }
+
 .interaction-arrow-icon {
   position: absolute;
   top: 0.5rem;
@@ -196,26 +206,31 @@
   opacity: 0.3;
   transform: scale(0.9);
 }
+
 .interactive-section:hover .interaction-icon {
   opacity: 1;
   transform: scale(1);
 }
+
 .interactive-section:hover .interaction-arrow-icon {
   opacity: 1;
   transform: scale(1);
 }
+
 .container {
-    width: 100%;
+  width: 100%;
 }
+
 @media (min-width: 640px) {
-    .container {
-        max-width: 640px;
-    }
+  .container {
+    max-width: 640px;
+  }
 }
+
 @media (min-width: 768px) {
-    .container {
-        max-width: 768px;
-    }
+  .container {
+    max-width: 768px;
+  }
 }
 
 
@@ -230,19 +245,19 @@
 }
 
 ::-webkit-scrollbar {
-  width: 16px;          
-  height: 16px;        
+  width: 16px;
+  height: 16px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #a3aed6;  
-  border-radius: 8px;   
+  background: #a3aed6;
+  border-radius: 8px;
   border: 4px solid transparent;
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-track {
-    
+
   border-radius: 8px;
 }
 

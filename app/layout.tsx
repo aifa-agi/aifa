@@ -9,7 +9,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import "./globals.css";
+import "./globals.scss";
 import { SessionProvider } from "next-auth/react";
 import RightDrawerBar from "./@right/(_service)/(_components)/right-drawer-bar";
 // Import the new provider component.
