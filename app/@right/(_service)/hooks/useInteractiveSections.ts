@@ -1,6 +1,6 @@
 // @/hooks/useInteractiveSections.ts
 import { useState, useEffect, useCallback } from "react";
-import { useMediaQuery } from "@/config/content/sections/hooks/use-media-query";
+import { useMediaQuery } from "./use-media-query";
 
 export function useInteractiveSections() {
   const { isMobile } = useMediaQuery();
