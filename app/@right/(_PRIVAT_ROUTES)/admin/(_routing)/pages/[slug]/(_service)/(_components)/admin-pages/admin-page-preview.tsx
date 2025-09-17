@@ -57,7 +57,7 @@ export function AdminPagePreview({ slug }: AdminPageInfoProps) {
       <div className="mx-auto p-4 md:p-6">
         <div className="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)] gap-4 md:gap-6">
           {/* Left navigation column */}
-          // внутри AdminPagePreview, в aside:
+        
 <aside className="rounded-lg border bg-card text-card-foreground p-3 md:p-4 max-h-[calc(100vh-180px)] md:max-h-[calc(100vh-160px)] overflow-hidden">
   {/* Mobile: horizontal scroll; Desktop: vertical list */}
   <nav
