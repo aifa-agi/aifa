@@ -95,6 +95,20 @@ export const STEP_COMPLETION_CONDITIONS: StepCompletionCondition[] = [
     description: "Требует sections lenght > 0",
     debugInfo: (pageData) => `📋 Черновик: ${pageData?.sections?.length ?? 0}`,
   },
+
+  {
+    stepKey: "preview",
+    validate: (pageData: PageData | null) => {
+      // Step 12: Generator isPreviewComplited 
+      return (
+        (pageData?.isPreviewComplited !== undefined &&
+          pageData?.isPreviewComplited !== false) 
+      );
+    },
+    description: "Требует генерации isPreviewComplited ",
+    debugInfo: (pageData) =>
+      `📝 Perplexity prompt: ${pageData?.isPreviewComplited  ? "Есть" : "Нет"}`,
+  },
 ];
 
 /**
