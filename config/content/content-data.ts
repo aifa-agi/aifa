@@ -596,7 +596,6 @@ export const contentData = {
         ],
         "updatedAt": "2025-09-16T00:58:33.739Z",
         "sections": [
-          
           {
             "id": "sis938",
             "tempMDXContent": ""
@@ -3886,5 +3885,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-16T00:58:36.280Z";
+export const lastUpdated = "2025-09-17T21:21:11.237Z";
 export const generatedBy = "menu-persist-api";

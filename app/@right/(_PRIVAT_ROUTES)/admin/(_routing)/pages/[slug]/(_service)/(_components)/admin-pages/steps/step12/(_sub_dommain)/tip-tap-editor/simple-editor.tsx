@@ -1,3 +1,4 @@
+// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_sub_domains)/tiptap-editor/simple-editor.tsx
 "use client";
 
 import * as React from "react";
@@ -24,7 +25,6 @@ import "@/components/tiptap/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap/tiptap-node/heading-node/heading-node.scss";
 import "@/components/tiptap/tiptap-node/paragraph-node/paragraph-node.scss";
 
-
 import { ImageUploadButton } from "@/components/tiptap/tiptap-ui/image-upload-button";
 import { ListDropdownMenu } from "@/components/tiptap/tiptap-ui/list-dropdown-menu";
 import { BlockquoteButton } from "@/components/tiptap/tiptap-ui/blockquote-button";
@@ -42,10 +42,17 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 import "./simple-editor.scss";
-import content from "./data/content.json";
 import HorizontalRule from "@/components/tiptap/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension";
 import { ImageUploadNode } from "@/components/tiptap/tiptap-node/image-upload-node";
 import { HeadingDropdownMenu } from "@/components/tiptap/tiptap-ui/heading-dropdown-menu";
+
+export type JSONContent = Record<string, any>;
+
+export type SimpleEditorProps = {
+  content: JSONContent;
+  readOnlyMode?: boolean;
+  onContentChange?: (json: JSONContent) => void;
+};
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -115,13 +122,14 @@ const MobileToolbarContent = ({ type, onBack }: { type: "highlighter" | "link"; 
   </>
 );
 
-export function SimpleEditor() {
+export function SimpleEditor({ content, readOnlyMode = false, onContentChange }: SimpleEditorProps) {
   const isMobile = useIsMobile();
   const [mobileView, setMobileView] = React.useState<"main" | "highlighter" | "link">("main");
 
   const editor = useEditor({
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
+    editable: !readOnlyMode,
     editorProps: {
       attributes: {
         autocomplete: "off",
@@ -130,6 +138,9 @@ export function SimpleEditor() {
         "aria-label": "Main content area, start typing to enter text.",
         class: "simple-editor",
       },
+    },
+    onUpdate: ({ editor }) => {
+      onContentChange?.(editor.getJSON());
     },
     extensions: [
       StarterKit.configure({
@@ -157,26 +168,36 @@ export function SimpleEditor() {
     content,
   });
 
+  React.useEffect(() => {
+    if (!editor) return;
+    editor.commands.setContent(content);
+  }, [editor, content]);
+
+  React.useEffect(() => {
+    if (!editor) return;
+    editor.setEditable(!readOnlyMode);
+  }, [editor, readOnlyMode]);
+
   return (
     <div className="tt-editor-shell">
       <EditorContext.Provider value={{ editor }}>
-        {/* Прокручиваемый хост. ВАЖНО: sticky привязан к этому контейнеру */}
         <div className="tt-editor-scrollhost">
-          <Toolbar className="tt-sticky-toolbar">
-            {mobileView === "main" ? (
-              <MainToolbarContent
-                onHighlighterClick={() => setMobileView("highlighter")}
-                onLinkClick={() => setMobileView("link")}
-                isMobile={isMobile}
-              />
-            ) : (
-              <MobileToolbarContent
-                type={mobileView === "highlighter" ? "highlighter" : "link"}
-                onBack={() => setMobileView("main")}
-              />
-            )}
-          </Toolbar>
-
+          {!readOnlyMode && (
+            <Toolbar className="tt-sticky-toolbar">
+              {mobileView === "main" ? (
+                <MainToolbarContent
+                  onHighlighterClick={() => setMobileView("highlighter")}
+                  onLinkClick={() => setMobileView("link")}
+                  isMobile={isMobile}
+                />
+              ) : (
+                <MobileToolbarContent
+                  type={mobileView === "highlighter" ? "highlighter" : "link"}
+                  onBack={() => setMobileView("main")}
+                />
+              )}
+            </Toolbar>
+          )}
           <EditorContent editor={editor} role="presentation" className="simple-editor-content" />
         </div>
       </EditorContext.Provider>

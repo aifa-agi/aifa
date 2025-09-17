@@ -425,6 +425,9 @@ export interface PageData {
   finalContentResult?: FinalContentResult;
 
   // step 12
+  isPreviewComplited?: boolean;
+
+   // step 13
   finalReport?: FinalReport;
 
   hasBadge?: boolean;
