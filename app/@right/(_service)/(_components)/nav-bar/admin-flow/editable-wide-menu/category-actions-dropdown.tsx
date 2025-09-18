@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
 import { useDialogs } from "@/app/@right/(_service)/(_context)/dialogs";
 import { normalizeText } from "@/app/@right/(_service)/(_libs)/normalize-text";
+import { transliterate } from "@/lib/utils/transliterate";
 
 interface CategoryActionsDropdownProps {
   categoryTitle: string;
@@ -51,19 +52,17 @@ export function CategoryActionsDropdown({
       confirmLabel: "Rename",
       cancelLabel: "Cancel",
       onConfirm: (value) => {
-        const normalizedValue = normalizeText(value as string);
-        if (!normalizedValue) {
+        const newTitle = value?.trim();
+        if (!newTitle) {
           toast.error("Category name cannot be empty");
           return;
         }
 
-        // Проверяем уникальность нового названия
         setCategories((prev) => {
           const exists = prev.some(
             (cat) =>
               cat.title !== categoryTitle &&
-              normalizeText(cat.title).toLowerCase() ===
-                normalizedValue.toLowerCase()
+              cat.title.toLowerCase() === newTitle.toLowerCase()
           );
 
           if (exists) {
@@ -71,18 +70,36 @@ export function CategoryActionsDropdown({
             return prev;
           }
 
-          // Обновляем название категории
-          const updatedCategories = prev.map((cat) =>
-            cat.title === categoryTitle
-              ? { ...cat, title: normalizedValue }
-              : cat
-          );
+          const newHref = "/" + transliterate(newTitle);
+
+          // Обновляем категорию и все страницы внутри неё
+          const updatedCategories = prev.map((cat) => {
+            if (cat.title !== categoryTitle) return cat;
+
+            // Обновить href каждой страницы, заменяя старый href категории на новый
+            const oldCategoryHref = cat.href ?? "/" + transliterate(cat.title);
+
+            const updatedPages = cat.pages.map((page) => {
+              const pageSlug = page.href?.split("/").pop() ?? transliterate(page.title ?? page.linkName);
+              return {
+                ...page,
+                href: `${newHref}/${pageSlug}`,
+              };
+            });
+
+            return {
+              ...cat,
+              title: newTitle,
+              href: newHref,
+              pages: updatedPages,
+            };
+          });
 
           toast.success("Category renamed successfully");
           return updatedCategories;
         });
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   };
 
@@ -102,7 +119,7 @@ export function CategoryActionsDropdown({
           return filteredCategories;
         });
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   };
 

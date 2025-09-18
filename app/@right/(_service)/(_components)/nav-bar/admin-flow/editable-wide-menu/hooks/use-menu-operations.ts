@@ -13,6 +13,7 @@ import { generateCuid } from "@/lib/utils/generateCuid";
 import { useDialogs } from "@/app/@right/(_service)/(_context)/dialogs";
 import { normalizeText } from "@/app/@right/(_service)/(_libs)/normalize-text";
 import { DEFAULT_CONTENT_STRUCTURE } from "@/config/default-page-structure-config";
+import { transliterate } from "@/lib/utils/transliterate";
 
 export function useMenuOperations(
   categories: MenuCategory[],
@@ -63,16 +64,14 @@ export function useMenuOperations(
       value: "",
       confirmLabel: "Create",
       onConfirm: (value) => {
-        const normalizedValue = normalizeText(value as string);
-        if (!normalizedValue) {
+        const normalizedTitle = value?.trim();
+        if (!normalizedTitle) {
           toast.error("Category name cannot be empty");
           return;
         }
 
         const exists = categories.some(
-          (cat) =>
-            normalizeText(cat.title).toLowerCase() ===
-            normalizedValue.toLowerCase()
+          (cat) => cat.title.toLowerCase() === normalizedTitle.toLowerCase()
         );
 
         if (exists) {
@@ -83,10 +82,15 @@ export function useMenuOperations(
         const maxOrder = categories.length
           ? Math.max(...categories.map((c) => c.order ?? 0))
           : 0;
+
+        // Генерация href из title
+        const href = "/" + transliterate(normalizedTitle);
+
         setCategories((prev) => [
           ...prev,
           {
-            title: normalizedValue,
+            title: normalizedTitle,
+            href,
             pages: [],
             order: maxOrder + 1,
           },
@@ -103,8 +107,12 @@ export function useMenuOperations(
       value: "",
       confirmLabel: "Create",
       onConfirm: (value) => {
-        if (!value) return;
-        const normalizedName = normalizeText(value);
+        const normalizedTitle = value?.trim();
+        if (!normalizedTitle) return;
+
+        // Формируем slug/href для страницы: категория + транслит
+        const pageSlug = transliterate(normalizedTitle);
+        const categoryHref = category.href || "/" + transliterate(category.title);
 
         setCategories((prev) =>
           prev.map((cat) =>
@@ -115,11 +123,12 @@ export function useMenuOperations(
                     ...cat.pages,
                     {
                       id: generateCuid(),
-                      linkName: normalizedName,
-                      href: `/${category.title}/${normalizedName}`,
+                      title: normalizedTitle,
+                      linkName: normalizedTitle, // оставить для обратной совместимости
+                      href: `${categoryHref}/${pageSlug}`,
                       roles: ["guest"],
                       hasBadge: false,
-                      type: "blog" as PageType,
+                      type: "blog",
                       aiRecommendContentStructure: DEFAULT_CONTENT_STRUCTURE,
                       isPublished: false,
                       isAddedToPrompt: false,

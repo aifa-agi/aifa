@@ -8,6 +8,7 @@ import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
 import { normalizeText } from "@/app/@right/(_service)/(_libs)/normalize-text";
 import { BadgeName } from "@/app/@right/(_service)/(_config)/badge-config";
 import { UserType } from "@/app/@right/(_service)/(_types)/footer-types";
+import { transliterate } from "@/lib/utils/transliterate";
 interface UseBadgesLogicProps {
   singlePage: PageData;
   categoryTitle: string;
@@ -89,14 +90,18 @@ export function useBadgesLogic({
       type: "edit",
       inputType: "input",
       title: "Rename link name",
-      description: singlePage.linkName,
-      value: singlePage.linkName,
-      placeholder: "Enter new link name...",
+      description: singlePage.title ?? singlePage.linkName,
+      value: singlePage.title ?? singlePage.linkName,
+      placeholder: "Enter new page title...",
       confirmLabel: "Save changes",
       cancelLabel: "Cancel",
       onConfirm: (value) => {
-        if (!value?.trim()) return;
-        const normalizedName = normalizeText(value);
+        const newTitle = value?.trim();
+        if (!newTitle) return;
+
+        const newSlug = transliterate(newTitle);
+        const categoryHrefPrefix = `/` + transliterate(categoryTitle);
+
         setCategories((prev) => {
           return prev.map((cat) =>
             cat.title !== categoryTitle
@@ -107,8 +112,9 @@ export function useBadgesLogic({
                     l.id === singlePage.id
                       ? {
                           ...l,
-                          linkName: normalizedName,
-                          href: "/" + normalizedName,
+                          title: newTitle,                   // сохраняем русское название
+                          linkName: newTitle,                // можно сохранить для обратной совместимости
+                          href: `${categoryHrefPrefix}/${newSlug}`,   // формируем новый url
                         }
                       : l
                   ),
@@ -118,13 +124,8 @@ export function useBadgesLogic({
       },
       onCancel: () => {},
     });
-  }, [
-    singlePage.id,
-    singlePage.linkName,
-    categoryTitle,
-    setCategories,
-    dialogs,
-  ]);
+  }, [singlePage.id, singlePage.linkName, singlePage.title, categoryTitle, setCategories, dialogs]);
+
 
   const handleDelete = useCallback(() => {
     dialogs.show({

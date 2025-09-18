@@ -3,17 +3,12 @@ import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
 export const contentData = {
   categories: [
   {
-    "title": "new-category",
-    "pages": [],
-    "order": 3
-  },
-  {
-    "title": "canary-islands",
+    "title": "Канарские острова",
     "pages": [
       {
         "id": "gdwn8jw1g3vp8js9im14jvgj",
         "linkName": "paromy-na-tenerife",
-        "href": "/canary-islands/paromy-na-tenerife",
+        "href": "/kanarskie-ostrova/paromy-na-tenerife",
         "roles": [
           "guest"
         ],
@@ -3184,7 +3179,7 @@ export const contentData = {
       {
         "id": "uzl8djuoxz8xejna49c6pjcm",
         "linkName": "newnewnewn",
-        "href": "/canary-islands/newnewnewn",
+        "href": "/kanarskie-ostrova/newnewnewn",
         "roles": [
           "guest"
         ],
@@ -3753,7 +3748,14 @@ export const contentData = {
         "order": 2
       }
     ],
-    "order": 2
+    "order": 2,
+    "href": "/kanarskie-ostrova"
+  },
+  {
+    "title": "Канарские острова1",
+    "href": "/kanarskie-ostrova1",
+    "pages": [],
+    "order": 8
   },
   {
     "title": "home",
@@ -3885,5 +3887,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-17T21:30:08.264Z";
+export const lastUpdated = "2025-09-18T01:18:18.773Z";
 export const generatedBy = "menu-persist-api";
