@@ -1,110 +1,177 @@
 // File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_contexts)/step12-root-context.tsx
 "use client";
-import * as React from "react";
-import type {
-    JSONContent,
-    SectionEditorContextValue,
-    SectionId,
-    SectionState,
-} from "../(_types)/step12-types";
-import { buildRandomDoc, mergeDocs } from "../(_utils)/step12-sections-utils";
 
-const Step12Context = React.createContext<SectionEditorContextValue | null>(null);
+import React, { createContext, useContext, useState, useCallback, useMemo } from "react";
+import type { JSONContent } from "@tiptap/react";
+import { SectionState } from "../(_types)/step12-types";
+import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
+import { areAllSectionsReady, fromSectionInfo } from "../(_adapters)/sections-mapper";
+import { mergeDocs } from "../(_utils)/step12-sections-utils";
 
-type ProviderProps = { children: React.ReactNode; totalSections?: number };
+// NEW: import buttons provider to wrap subtree
+import { Step12ButtonsProvider } from "./step12-buttons-context";
 
-export function Step12Provider({ children, totalSections = 7 }: ProviderProps) {
-    const base = React.useMemo<SectionState[]>(
-        () =>
-            Array.from({ length: totalSections }).map((_, i) => ({
-                id: `section-${i + 1}`,
-                label: `Section ${i + 1}`,
-                hasData: false,
-                isLoading: false,
-                content: null,
-            })),
-        [totalSections]
-    );
+interface Step12ContextType {
+    sections: SectionState[];
+    activeId: string;
+    saving: boolean;
+    isAllReady: () => boolean;
+    hasValidSections: boolean;
+    totalSections: number;
 
-    const initial = React.useMemo<SectionState[]>(
-        () => [...base, { id: "all", label: "All sections", hasData: false, isLoading: false, content: null }],
-        [base]
-    );
+    loadSectionData: (sectionId: string) => void;
+    setActive: (sectionId: string) => void;
+    updateSectionContent: (sectionId: string, content: JSONContent) => void;
+    resetAllFlags: () => void;
+    setSaving: (saving: boolean) => void;
 
-    const [sections, setSections] = React.useState<SectionState[]>(initial);
-    const [activeId, setActiveId] = React.useState<SectionId>("all");
-    const [saving, setSaving] = React.useState(false);
+    getMergedDoc: () => JSONContent;
+    getActiveSection: () => SectionState | null;
+    getSection: (sectionId: string) => SectionState | null;
 
-    const setActive = React.useCallback((id: SectionId) => setActiveId(id), []);
+    allRefresh: number;
+    refreshAll: () => void;
 
-    const loadSectionData = React.useCallback(
-        async (id: SectionId) => {
-            if (id === "all") {
-                setActiveId("all");
-                return;
-            }
-
-            // If already have content cached, just activate without reloading
-            const existing = sections.find((s) => s.id === id)?.content;
-            if (existing) {
-                setSections((prev) => prev.map((s) => (s.id === id ? { ...s, isLoading: false } : s)));
-                setActiveId(id);
-                return;
-            }
-
-            // Mark loading for first-time load
-            setSections((prev) => prev.map((s) => (s.id === id ? { ...s, isLoading: true } : s)));
-
-            await new Promise((r) => setTimeout(r, 600));
-
-            setSections((prev) =>
-                prev.map((s, idx) => {
-                    if (s.id !== id) return s;
-                    // Only generate if still empty (protect against races)
-                    const finalContent = s.content ?? buildRandomDoc(Date.now() + idx * 97, s.label);
-                    return { ...s, content: finalContent, hasData: true, isLoading: false };
-                })
-            );
-            setActiveId(id);
-        },
-        [sections]
-    );
-
-    const updateSectionContent = React.useCallback((id: SectionId, content: JSONContent) => {
-        if (id === "all") return;
-        setSections((prev) => prev.map((s) => (s.id === id ? { ...s, content, hasData: true } : s)));
-    }, []);
-
-    const isAllReady = React.useCallback(
-        () => sections.filter((s) => s.id !== "all").every((s) => s.hasData),
-        [sections]
-    );
-
-    const resetAllFlags = React.useCallback(() => {
-        setSections((prev) => prev.map((s) => (s.id === "all" ? s : { ...s, hasData: false })));
-    }, []);
-
-    const value = React.useMemo<SectionEditorContextValue>(
-        () => ({
-            sections,
-            activeId,
-            saving,
-            setActive,
-            loadSectionData,
-            updateSectionContent,
-            isAllReady,
-            resetAllFlags,
-            setSaving,
-            getMergedDoc: () => mergeDocs(sections),
-        }),
-        [sections, activeId, saving, setActive, loadSectionData, updateSectionContent, isAllReady, resetAllFlags]
-    );
-
-    return <Step12Context.Provider value={value}>{children}</Step12Context.Provider>;
+    page?: PageData;
 }
 
-export function useStep12Root(): SectionEditorContextValue {
-    const ctx = React.useContext(Step12Context);
-    if (!ctx) throw new Error("useStep12Root must be used within Step12Provider");
-    return ctx;
+const Step12Context = createContext<Step12ContextType | undefined>(undefined);
+
+interface Step12ProviderProps {
+    children: React.ReactNode;
+    page?: PageData | null;
 }
+
+export function Step12Provider({ children, page }: Step12ProviderProps) {
+    const hasValidSections = Boolean(page?.sections && Array.isArray(page.sections) && page.sections.length > 0);
+
+    const initialSections = useMemo(() => {
+        if (!page || !hasValidSections || !page.sections) {
+            return [];
+        }
+        return fromSectionInfo(page.sections);
+    }, [page, page?.sections, hasValidSections]);
+
+    const [sections, setSections] = useState<SectionState[]>(initialSections);
+    const [activeId, setActiveId] = useState<string>("all");
+    const [saving, setSaving] = useState(false);
+    const [allRefresh, setAllRefresh] = useState(0);
+
+    React.useEffect(() => {
+        setSections(initialSections);
+        setActiveId("all");
+        setAllRefresh((v) => v + 1);
+    }, [initialSections]);
+
+    const loadSectionData = useCallback((sectionId: string) => {
+        if (!hasValidSections) return;
+        setActiveId(sectionId);
+    }, [hasValidSections]);
+
+    const updateSectionContent = useCallback((sectionId: string, content: JSONContent) => {
+        setSections(prev => prev.map(section =>
+            section.id === sectionId
+                ? { ...section, content, hasData: true }
+                : section
+        ));
+    }, []);
+
+    const setActive = useCallback((sectionId: string) => {
+        if (!hasValidSections) return;
+        setActiveId(sectionId);
+    }, [hasValidSections]);
+
+    const resetAllFlags = useCallback(() => {
+        setSections(prev => prev.map(section => ({
+            ...section,
+            hasData: Boolean(section.content),
+        })));
+    }, []);
+
+    const isAllReady = useCallback(() => {
+        return hasValidSections && areAllSectionsReady(sections);
+    }, [sections, hasValidSections]);
+
+    const getMergedDoc = useCallback((): JSONContent => {
+        if (!hasValidSections) {
+            return { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "" }] }] };
+        }
+        const realSections = sections.filter(s => s.id !== "all" && s.content);
+        if (realSections.length === 0) {
+            return { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "" }] }] };
+        }
+        return mergeDocs(realSections);
+    }, [sections, hasValidSections]);
+
+    const refreshAll = useCallback(() => {
+        setAllRefresh((v) => v + 1);
+    }, []);
+
+    const getActiveSection = useCallback((): SectionState | null => {
+        return sections.find(s => s.id === activeId) || null;
+    }, [sections, activeId]);
+
+    const getSection = useCallback((sectionId: string): SectionState | null => {
+        return sections.find(s => s.id === sectionId) || null;
+    }, [sections]);
+
+    const contextValue: Step12ContextType = useMemo(() => ({
+        sections,
+        activeId,
+        saving,
+        isAllReady,
+        hasValidSections,
+        totalSections: sections.filter(s => s.id !== "all").length,
+
+        setActive,
+        loadSectionData,
+        updateSectionContent,
+        resetAllFlags,
+        setSaving,
+
+        getMergedDoc,
+        getActiveSection,
+        getSection,
+
+        allRefresh,
+        refreshAll,
+
+        page: page || undefined,
+    }), [
+        sections,
+        activeId,
+        saving,
+        isAllReady,
+        hasValidSections,
+        setActive,
+        loadSectionData,
+        updateSectionContent,
+        resetAllFlags,
+        getMergedDoc,
+        getActiveSection,
+        getSection,
+        allRefresh,
+        refreshAll,
+        page,
+    ]);
+
+    return (
+        <Step12Context.Provider value={contextValue}>
+            {/* Lifted provider: now the whole Step 12 subtree has buttons context */}
+            <Step12ButtonsProvider>
+                {children}
+            </Step12ButtonsProvider>
+        </Step12Context.Provider>
+    );
+}
+
+export function useStep12Root() {
+    const context = useContext(Step12Context);
+    if (context === undefined) {
+        throw new Error("useStep12Root must be used within a Step12Provider");
+    }
+    return context;
+}
+
+export { Step12Context };
+export type { Step12ContextType };

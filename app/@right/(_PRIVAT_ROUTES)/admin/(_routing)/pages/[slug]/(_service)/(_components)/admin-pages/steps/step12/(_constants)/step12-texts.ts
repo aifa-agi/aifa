@@ -6,7 +6,7 @@ export const STEP12_TEXTS = {
     editingEnabled: "Editing is enabled for the selected section.",
     saveAll: "Save all sections",
     saving: "Saving...",
-    resultBadge: "result",
+    resultBadge: "confirm", // renamed from "result" to "confirm"
     headerSubtitle: "Review AI draft results and analysis before proceeding to reporting.",
     headerCta: "Preview flow",
   },

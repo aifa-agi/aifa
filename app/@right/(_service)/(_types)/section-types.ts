@@ -13,7 +13,7 @@ export interface Section {
   designDescription?: string;
   connectedDesignSectionId?: string;
 
-  body?: React.ReactNode;
+  body?: React.ReactNode | JSON;
 
   keywords?: string[];
   intent?: string;

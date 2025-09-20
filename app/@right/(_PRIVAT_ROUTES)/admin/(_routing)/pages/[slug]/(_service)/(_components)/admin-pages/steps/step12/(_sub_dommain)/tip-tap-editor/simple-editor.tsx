@@ -171,7 +171,7 @@ export function SimpleEditor({ content, readOnlyMode = false, onContentChange }:
   React.useEffect(() => {
     if (!editor) return;
     editor.commands.setContent(content);
-  }, [editor, content]);
+  }, [editor]);
 
   React.useEffect(() => {
     if (!editor) return;

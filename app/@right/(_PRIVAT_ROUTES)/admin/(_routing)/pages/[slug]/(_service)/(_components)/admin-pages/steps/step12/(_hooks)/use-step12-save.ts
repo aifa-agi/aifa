@@ -1,106 +1,144 @@
 // File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_hooks)/use-step12-save.ts
 "use client";
 
-import * as React from "react";
+import { useState, useCallback } from "react";
 import { toast } from "sonner";
-import { useStep12Root } from "../(_contexts)/step12-root-context";
-import { STEP12_TEXTS } from "../(_constants)/step12-texts";
-import { STEP12_IDS } from "../(_constants)/step12-ids";
-import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
 import type { PageData } from "@/app/@right/(_service)/(_types)/page-types";
+import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
+import { uploadSections, SectionUploadError, UploadErrorType } from "../(_utils)/sections-upload.service";
+import { toExtendedSections } from "../(_adapters)/sections-mapper";
+import { STEP12_IDS } from "../(_constants)/step12-ids";
+import { useStep12Root } from "../(_contexts)/step12-root-context";
+
+interface UseStep12SaveReturn {
+  save: (page?: PageData) => Promise<boolean>;
+  saving: boolean;
+}
 
 /**
- * Save all sections:
- * - Validates readiness.
- * - Shows start/success/error toasts.
- * - Simulates server save (3s).
- * - On success: clears hasData flags in section context AND marks current page as isPreviewComplited=true (optimistic).
+ * Returns boolean success status so caller can react (e.g., reset confirm flags).
  */
-export function useStep12Save() {
-  const { isAllReady, setSaving, resetAllFlags } = useStep12Root();
-  const { categories, setCategories, updateCategories } = useNavigationMenu();
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+export function useStep12Save(): UseStep12SaveReturn {
+  const [localSaving, setLocalSaving] = useState(false);
+  const { categories, setCategories } = useNavigationMenu();
 
-  const save = React.useCallback(async (page?: PageData | null): Promise<boolean> => {
-    setError(null);
+  const {
+    sections,
+    isAllReady,
+    resetAllFlags,
+    setSaving: setContextSaving,
+    page: contextPage,
+  } = useStep12Root();
+
+  const save = useCallback(async (page?: PageData): Promise<boolean> => {
+    const targetPage = page || contextPage;
+
+    if (!targetPage) {
+      toast.error("Page data is required for saving", { id: STEP12_IDS.toasts.saveError });
+      return false;
+    }
+
+    if (!targetPage.href) {
+      toast.error("Page href is required for saving", { id: STEP12_IDS.toasts.saveError });
+      return false;
+    }
 
     if (!isAllReady()) {
-      toast.error(STEP12_TEXTS.save.notReadyTitle, {
-        id: STEP12_IDS.toasts.saveNotReady,
-        description: STEP12_TEXTS.save.notReadyDescription,
-      });
+      toast.error("Please complete all sections before saving", { id: STEP12_IDS.toasts.saveNotReady });
       return false;
     }
 
-    toast.message(STEP12_TEXTS.save.startTitle, {
-      id: STEP12_IDS.toasts.saveStart,
-      description: STEP12_TEXTS.save.startDescription,
-    });
-
-    setLoading(true);
-    setSaving(true);
+    setLocalSaving(true);
+    setContextSaving(true);
+    toast.loading("Saving all sections...", { id: STEP12_IDS.toasts.saveStart });
 
     try {
-      // Simulate server latency
-      await new Promise((r) => setTimeout(r, 3000));
+      const payload = toExtendedSections(sections, targetPage.href);
 
-      // Clear local "dirty" flags in section context
-      resetAllFlags();
-
-      // Mark page as preview-completed (optimistic)
-      if (page?.id) {
-        const updatedCategories = categories.map((cat) => ({
-          ...cat,
-          pages: cat.pages.map((p) =>
-            p.id === page.id ? { ...p, isPreviewComplited: true, updatedAt: new Date().toISOString() } : p
-          ),
-        }));
-
-        setCategories(updatedCategories);
-
-        // Persist with provider
-        const updateErr = await updateCategories();
-        if (updateErr) {
-          // Rollback only the completion flag
-          setCategories((prev) =>
-            prev.map((cat) => ({
-              ...cat,
-              pages: cat.pages.map((p) =>
-                p.id === page.id ? { ...p, isPreviewComplited: false } : p
-              ),
-            }))
-          );
-
-          throw new Error(updateErr.userMessage ?? "Update failed");
-        }
+      if (payload.sections.length === 0) {
+        throw new Error("No sections to save");
       }
 
-      toast.success(STEP12_TEXTS.save.successTitle, {
-        id: STEP12_IDS.toasts.saveSuccess,
-        description: STEP12_TEXTS.save.successDescription,
-      });
+      const response = await uploadSections(payload);
 
-      setLoading(false);
-      setSaving(false);
+      // Reset content-related flags after success (existing behavior)
+      resetAllFlags();
+
+      // Update navigation state optimistically
+      try {
+        setCategories((prevCategories) =>
+          prevCategories.map((category) => ({
+            ...category,
+            pages: category.pages.map((p) =>
+              p.href === targetPage.href
+                ? { ...p, isPreviewComplited: true, updatedAt: new Date().toISOString() }
+                : p
+            ),
+          }))
+        );
+      } catch (navError) {
+        console.warn("Step12Save: Failed to update navigation state", navError);
+      }
+
+      toast.success(
+        `Successfully saved ${payload.sections.length} sections${response.filePath ? ` to ${response.filePath}` : ""}`,
+        { id: STEP12_IDS.toasts.saveSuccess, duration: 4000 }
+      );
       return true;
-    } catch (e) {
-      setLoading(false);
-      setSaving(false);
-      setError("save_error");
+    } catch (error) {
+      console.error("Step12Save: Save failed", error);
 
-      toast.error(STEP12_TEXTS.save.errorTitle, {
-        id: STEP12_IDS.toasts.saveError,
-        description: STEP12_TEXTS.save.errorDescription,
-      });
-      toast.warning(STEP12_TEXTS.save.rollbackTitle, {
-        id: STEP12_IDS.toasts.rollback,
-        description: STEP12_TEXTS.save.rollbackDescription,
-      });
+      if (error instanceof SectionUploadError) {
+        let errorMessage = error.message;
 
+        switch (error.type) {
+          case UploadErrorType.VALIDATION_ERROR:
+            errorMessage = `Validation error: ${error.message}`;
+            break;
+          case UploadErrorType.NETWORK_ERROR:
+            errorMessage = "Network error: Please check your connection and try again";
+            break;
+          case UploadErrorType.GITHUB_ERROR:
+            errorMessage = "GitHub integration error: Please contact administrator";
+            break;
+          case UploadErrorType.FILESYSTEM_ERROR:
+            errorMessage = "File system error: Unable to save sections";
+            break;
+          case UploadErrorType.SERVER_ERROR:
+            errorMessage = `Server error: ${error.message}`;
+            break;
+          default:
+            errorMessage = `Upload failed: ${error.message}`;
+        }
+
+        toast.error(errorMessage, { id: STEP12_IDS.toasts.saveError, duration: 6000 });
+      } else {
+        const message = error instanceof Error ? error.message : "Unknown error occurred";
+        toast.error(`Save failed: ${message}`, { id: STEP12_IDS.toasts.saveError, duration: 6000 });
+      }
+
+      // Rollback navigation state
+      try {
+        setCategories((prevCategories) =>
+          prevCategories.map((category) => ({
+            ...category,
+            pages: category.pages.map((p) =>
+              p.href === (page || contextPage)?.href
+                ? { ...p, isPreviewComplited: false }
+                : p
+            ),
+          }))
+        );
+      } catch (rollbackError) {
+        console.warn("Step12Save: Failed to rollback navigation state", rollbackError);
+      }
       return false;
+    } finally {
+      setLocalSaving(false);
+      setContextSaving(false);
+      toast.dismiss(STEP12_IDS.toasts.saveStart);
     }
-  }, [isAllReady, resetAllFlags, setSaving, categories, setCategories, updateCategories]);
+  }, [contextPage, isAllReady, sections, resetAllFlags, setContextSaving, setCategories]);
 
-  return { loading, error, save };
+  return { save, saving: localSaving };
 }

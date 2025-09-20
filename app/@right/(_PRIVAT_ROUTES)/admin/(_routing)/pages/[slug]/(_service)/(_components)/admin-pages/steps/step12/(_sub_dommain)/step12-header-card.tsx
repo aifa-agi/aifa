@@ -1,22 +1,26 @@
 // File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_sub_domains)/step12-header-card.tsx
 "use client";
 
+
 import * as React from "react";
 import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
 import type { PageData } from "@/app/@right/(_service)/(_types)/page-types";
 import { STEP12_TEXTS } from "../(_constants)/step12-texts";
 
+
 /**
- * Step12HeaderCard:
- * - Shows a CTA chip with a 4px tri-state status dot INSIDE, left to label.
- * - Status logic: green (isPreviewComplited === true), orange (default/otherwise).
- * - Texts sourced from STEP12_TEXTS.
- */
+* Step12HeaderCard:
+* - Shows a CTA chip with a 4px tri-state status dot INSIDE, left to label.
+* - Status logic: green (isPreviewComplited === true), orange (default/otherwise).
+* - Texts sourced from STEP12_TEXTS.
+*/
 export function Step12HeaderCard({ page }: { page?: PageData | null }) {
   const isCompleted = Boolean(page?.isPreviewComplited);
 
+
   const dotBase = "inline-block h-1 w-1 rounded-full"; // 4px
   const dotCls = isCompleted ? `${dotBase} bg-emerald-400` : `${dotBase} bg-orange-400`;
+
 
   return (
     <div className="w-full rounded-md border border-neutral-200 bg-neutral-50/60 p-5 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900/40">
@@ -36,6 +40,7 @@ export function Step12HeaderCard({ page }: { page?: PageData | null }) {
           </div>
         </div>
 
+
         <div className="flex shrink-0">
           <div className="inline-flex items-center gap-2 rounded-md border border-violet-500 bg-violet-500/15 px-3 py-1.5 text-sm text-white hover:bg-violet-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
             <span className={dotCls} aria-hidden="true" />
@@ -46,3 +51,5 @@ export function Step12HeaderCard({ page }: { page?: PageData | null }) {
     </div>
   );
 }
+
+
