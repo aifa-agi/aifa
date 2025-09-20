@@ -14,7 +14,7 @@
  */
 
 import * as React from "react";
-import { useStep12Root } from "../(_contexts)/step12-root-context";
+import { useStep12Root } from "./step12-root-context";
 
 type ButtonsContextValue = {
     isConfirmed: (id: string) => boolean;

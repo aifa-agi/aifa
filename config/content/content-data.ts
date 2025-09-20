@@ -3147,7 +3147,7 @@ export const contentData = {
             "status": "checked"
           }
         ],
-        "isPreviewComplited": true
+        "isPreviewComplited": false
       },
       {
         "id": "uzl8djuoxz8xejna49c6pjcm",
