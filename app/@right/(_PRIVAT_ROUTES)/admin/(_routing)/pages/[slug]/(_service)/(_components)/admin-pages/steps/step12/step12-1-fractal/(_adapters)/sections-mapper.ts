@@ -1,13 +1,4 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_adapters)/sections-mapper.ts
-// Adapts between domain types: SectionInfo -> SectionState -> ExtendedSection
-// Handles bidirectional mapping for Step 12 data flow
-
-/**
- * Understanding and plan (EN):
- * - Keep content eagerly parsed (good UX), but set hasData=false initially so buttons are neutral gray.
- * - Insert synthetic "all" section at the top with hasData=false.
- * - areAllSectionsReady() will become true only after user edits and we set hasData=true in updateSectionContent.
- */
+// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_adapters)/sections-mapper.ts
 
 import type { SectionInfo } from '@/app/@right/(_service)/(_types)/page-types';
 import type { ExtendedSection } from '@/app/@right/(_service)/(_types)/section-types';

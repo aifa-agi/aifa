@@ -1,4 +1,4 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_types)/step12-types.ts
+//  @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_types)/step12-types.ts
 export type SectionId = string;
 export type JSONContent = Record<string, any>;
 

@@ -1,4 +1,4 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_constants)/step12-texts.ts
+// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_constants)/step12-texts.ts
 export const STEP12_TEXTS = {
   labels: {
     sections: "Sections",

@@ -122,7 +122,7 @@ const MobileToolbarContent = ({ type, onBack }: { type: "highlighter" | "link"; 
   </>
 );
 
-export function SimpleEditor({ content, readOnlyMode = false, onContentChange }: SimpleEditorProps) {
+export function SimpleEditorV2({ content, readOnlyMode = false, onContentChange }: SimpleEditorProps) {
   const isMobile = useIsMobile();
   const [mobileView, setMobileView] = React.useState<"main" | "highlighter" | "link">("main");
 

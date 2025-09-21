@@ -1,5 +1,5 @@
 // Auto-generated file - do not edit manually
-// Generated on: 2025-09-20T21:00:29.365Z
+// Generated on: 2025-09-21T16:03:13.214Z
 // Source href: paromy-na-tenerife
 
 // @ts-ignore
@@ -20,7 +20,7 @@ export const sections: ExtendedSection[] = [
           "content": [
             {
               "type": "text",
-              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову"
+              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову??"
             }
           ]
         },
@@ -77,7 +77,7 @@ export const sections: ExtendedSection[] = [
           "content": [
             {
               "type": "text",
-              "text": "Расписание и маршруты паромов на Тенерифе в 2025 году"
+              "text": "Расписание и маршруты паромов на Тенерифе в 2025 году!!!"
             }
           ]
         },

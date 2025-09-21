@@ -1,8 +1,4 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_hooks)/use-step12-init.ts
-// Hook for initializing Step 12 sections from page data
-// Handles conversion from SectionInfo[] to SectionState[]
-
-
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_hooks)/use-step12-init.ts
 import { useMemo } from 'react';
 import type { PageData } from '@/app/@right/(_service)/(_types)/page-types';
 import type { SectionState } from '../(_types)/step12-types';

@@ -1,5 +1,5 @@
-// 1) admin-page-preview.tsx
-// app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/admin-page-preview.tsx
+
+// app/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/admin-page-preview.tsx
 
 "use client";
 

@@ -1,5 +1,4 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_contexts)/step12-root-context.tsx
-"use client";
+// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_contexts)/step12-root-context.tsx
 
 import React, { createContext, useContext, useState, useCallback, useMemo } from "react";
 import type { JSONContent } from "@tiptap/react";

@@ -589,7 +589,7 @@ export const contentData = {
             "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png"
           }
         ],
-        "updatedAt": "2025-09-20T18:24:47.729Z",
+        "updatedAt": "2025-09-21T15:44:36.906Z",
         "sections": [
           {
             "id": "h2-1",
@@ -3147,7 +3147,7 @@ export const contentData = {
             "status": "checked"
           }
         ],
-        "isPreviewComplited": false
+        "isPreviewComplited": true
       },
       {
         "id": "uzl8djuoxz8xejna49c6pjcm",
@@ -3854,5 +3854,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-20T18:25:04.944Z";
+export const lastUpdated = "2025-09-21T15:44:39.317Z";
 export const generatedBy = "menu-persist-api";

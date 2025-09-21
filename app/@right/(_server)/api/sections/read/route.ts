@@ -1,4 +1,4 @@
-// @/app/api/sections/read/route.ts
+// @/app/@right/(_server)/api/sections/read/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from 'fs';
 import path from 'path';

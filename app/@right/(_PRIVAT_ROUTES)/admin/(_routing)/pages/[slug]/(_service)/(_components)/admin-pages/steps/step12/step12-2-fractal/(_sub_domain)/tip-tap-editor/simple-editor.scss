@@ -1,0 +1,107 @@
+/* Корневой namespace виджета */
+.tt-editor-shell {
+  /* локальные переменные */
+  --tt-toolbar-height: 44px;
+  --tt-theme-text: var(--tt-gray-light-900);
+  /* если есть глобальный фиксированный хедер, можно задать снаружи:
+     .right-slot { --app-header-h: 64px; } */
+  --app-header-h: 0px;
+
+  .dark & {
+    --tt-theme-text: var(--tt-gray-dark-900);
+  }
+
+  font-family: "Inter",
+  sans-serif;
+  color: var(--tt-theme-text);
+  width: 100%;
+  min-width: 0;
+  /* не прокручиваем сам shell, чтобы sticky работал относительно scrollhost */
+  overflow: visible;
+
+  .tiptap.ProseMirror {
+    font-family: "DM Sans", sans-serif;
+  }
+
+  /* Прокручиваемый контейнер редактора */
+  .tt-editor-scrollhost {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    /* ВНИМАНИЕ: именно этот контейнер скроллится */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* занимает доступную высоту */
+    max-height: calc(100vh - var(--app-header-h));
+    /* если высотный контекст другой, можно заменить на 100% от родителя */
+  }
+
+  /* Sticky toolbar */
+  .tt-sticky-toolbar {
+    position: sticky;
+    top: 0;
+    /* если есть фикс‑хедер сверху, используйте top: var(--app-header-h); */
+    z-index: 30;
+    background: var(--tt-bg-color, hsl(var(--background)));
+    border-bottom: 1px solid hsl(var(--border));
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    /* небольшая тень для читаемости поверх контента */
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .04);
+  }
+
+  /* Контентная колонка редактора */
+  .simple-editor-content {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    display: block;
+    padding-top: 0.75rem;
+    /* не прилипает вплотную к тулбару */
+  }
+
+  /* Toolbar layout helpers (общее правило на случай сторонних обёрток) */
+  .tiptap-toolbar,
+  *[data-toolbar] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  /* Внутренние отступы редактора */
+  .simple-editor-content .tiptap.ProseMirror.simple-editor {
+    padding: 2rem 1.25rem 20vh;
+  }
+
+  @media (min-width: 640px) {
+    .simple-editor-content .tiptap.ProseMirror.simple-editor {
+      padding: 2.5rem 2rem 20vh;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .simple-editor-content .tiptap.ProseMirror.simple-editor {
+      padding: 3rem 3rem 20vh;
+    }
+  }
+
+  /* Большие элементы не должны ломать ширину */
+  .simple-editor-content pre,
+  .simple-editor-content code,
+  .simple-editor-content img,
+  .simple-editor-content table {
+    max-width: 100%;
+    overflow-x: auto;
+    border-radius: 0.5rem;
+  }
+
+  .simple-editor-content img {
+    height: auto;
+    display: block;
+  }
+}

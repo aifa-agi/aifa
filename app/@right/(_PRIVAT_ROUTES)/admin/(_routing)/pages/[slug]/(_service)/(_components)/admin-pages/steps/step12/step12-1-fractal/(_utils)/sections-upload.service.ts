@@ -1,7 +1,4 @@
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_utils)/sections-upload.service.ts
-// Service layer for uploading sections to /api/sections/upload endpoint
-// Handles network communication and error processing
-
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_utils)/sections-upload.service.ts
 
 import type { ExtendedSectionPayload } from '../(_adapters)/sections-mapper';
 

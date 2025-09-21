@@ -1,8 +1,5 @@
 
-// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_lib)/html-section-parser.ts
-// Pure utility to convert SectionInfo HTML content into tiptap JSON and extract human-friendly labels.
-// All inline comments and JSDoc are in English for US audience.
-
+// @//Users/romanbolshiyanov/Documents/Code/Aifa/aifa-main/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_lib)/html-section-parser.ts
 
 import type { SectionInfo } from '@/app/@right/(_service)/(_types)/page-types';
 import type { JSONContent } from '@tiptap/react';
