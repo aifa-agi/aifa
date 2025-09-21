@@ -6,13 +6,15 @@
  * Step 8 - Save hook:
  * Optimistically upserts SectionInfo.tempMDXContent into the current PageData,
  * persists via NavigationMenuProvider.updateCategories(), and rolls back on error.
+ * Additionally resets isPreviewComplited to false when content changes.
  *
  * Understanding of the task (step-by-step):
  * 1) Single source of truth: PageData lives inside menu categories; no tree duplication.
  * 2) Build nextCategories by updating the current page's sections: upsert { id, tempMDXContent }.
- * 3) Optimistic UX: setCategories(nextCategories), then await updateCategories() (NO args).
- * 4) On failure: rollback to prevCategories and show rollback toast.
- * 5) Clearing with empty string is allowed and removes "completed" derived state.
+ * 3) Reset isPreviewComplited to false to indicate preview needs regeneration.
+ * 4) Optimistic UX: setCategories(nextCategories), then await updateCategories() (NO args).
+ * 5) On failure: rollback to prevCategories and show rollback toast.
+ * 6) Clearing with empty string is allowed and removes "completed" derived state.
  *
  * Notes:
  * - Comments and UI strings are in English (US). Chat remains in Russian.
@@ -42,7 +44,10 @@ function nonEmpty(value: string | null | undefined): boolean {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-/** Upserts SectionInfo { id, tempMDXContent } in a PageData, preserving summary/linksData. */
+/** 
+ * Upserts SectionInfo { id, tempMDXContent } in a PageData, preserving summary/linksData.
+ * Also resets isPreviewComplited to false since content has changed.
+ */
 function upsertSectionInfoInPage(
   page: PageData,
   sectionId: string,
@@ -67,6 +72,9 @@ function upsertSectionInfoInPage(
   }
 
   next.sections = sections;
+  // Reset preview completion flag since content has changed
+  next.isPreviewComplited = false;
+  
   return next;
 }
 
@@ -99,6 +107,7 @@ export function useStep8Save() {
   /**
    * Saves MDX for a section id (empty string allowed to clear content).
    * Optimistic flow with rollback on failure.
+   * Resets isPreviewComplited to false when content changes.
    */
   const saveSectionTempMDX = React.useCallback(
     async (sectionId: string, mdx: string): Promise<boolean> => {
@@ -113,7 +122,7 @@ export function useStep8Save() {
       // Snapshot for rollback
       const prevCategories = deepCloneCategories(categories);
 
-      // Build updated page
+      // Build updated page (includes resetting isPreviewComplited)
       const updatedPage = upsertSectionInfoInPage(page, sectionId, mdx);
 
       // Compute next categories (replace page by id)
