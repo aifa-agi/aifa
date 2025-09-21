@@ -17,7 +17,6 @@ import { AdminPageInfoProps } from "../../../admin-page-info/(_service)/(_types)
 import { findPageBySlug } from "../../../../../(_utils)/page-helpers";
 import { PageNotFound } from "../../../../page-not-found";
 import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
-import { DebugSectionsV2 } from "./(_sub_domain)/debug-sections-v2";
 
 // ==================== INTERNAL COMPONENTS ====================
 
@@ -202,7 +201,6 @@ export function Step12V2({ slug }: AdminPageInfoProps) {
 
                     {/* Main editor area */}
                     <EditorHostV2 />
-                    {/* <DebugSectionsV2 page={page} /> */}
                 </div>
             </div>
         </Step12V2Provider>
