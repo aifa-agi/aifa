@@ -60,7 +60,7 @@ export function ProcessInstructionsPanel({
                             Internal AI Generation Process
                         </h4>
                         <ol className="list-decimal list-inside space-y-1 text-amber-800 dark:text-amber-200 text-xs">
-                            <li className="truncate">Click "Start Structure Generation" to begin streaming</li>
+                            <li className="truncate">Click &quot;Start Structure Generation&quot; to begin streaming</li>
                             <li className="truncate">Watch real-time output in the streaming area below</li>
                             <li className="truncate">Generation uses your configured personalization settings</li>
                             <li className="truncate">Cancel anytime during generation if needed</li>
