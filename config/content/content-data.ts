@@ -12,7 +12,7 @@ export const contentData = {
         "roles": [
           "guest"
         ],
-        "hasBadge": false,
+        "hasBadge": true,
         "type": "blog",
         "aiRecommendContentStructure": [
           {
@@ -589,7 +589,7 @@ export const contentData = {
             "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png"
           }
         ],
-        "updatedAt": "2025-09-21T15:44:36.906Z",
+        "updatedAt": "2025-09-22T19:04:16.995Z",
         "sections": [
           {
             "id": "h2-1",
@@ -3147,7 +3147,8 @@ export const contentData = {
             "status": "checked"
           }
         ],
-        "isPreviewComplited": true
+        "isPreviewComplited": true,
+        "badgeName": "AD"
       },
       {
         "id": "uzl8djuoxz8xejna49c6pjcm",
@@ -3854,5 +3855,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-22T08:42:08.466Z";
+export const lastUpdated = "2025-09-22T19:04:21.724Z";
 export const generatedBy = "menu-persist-api";

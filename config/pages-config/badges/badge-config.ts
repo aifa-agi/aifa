@@ -5,6 +5,7 @@ export const ALL_BADGES: BadgeName[] = [
   "AD",
   "UPDATED",
   "IMPORTANT",
+  "BLOG"
 ];
 
 export type BadgeName =
@@ -12,3 +13,4 @@ export type BadgeName =
   | "AD"
   | "UPDATED"
   | "IMPORTANT"
+  | "BLOG"

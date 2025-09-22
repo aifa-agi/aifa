@@ -1,37 +1,29 @@
-// @/app/api/admin/sections/upload/route.ts
+// Main API route handler for page upload operations
+// Production-critical module - consolidated from decomposed services
 
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
 import { existsSync } from "fs";
+import { join } from "path";
 import type { PageUploadPayload, ExtendedSection } from "@/app/@right/(_service)/(_types)/section-types";
-import { generateMetadataFromSection } from "@/app/@right/(_service)/(_components)/content-renderer/utils";
 
-interface PageUploadResponse {
-  success: boolean;
-  message: string;
-  filePath?: string;
-  environment: "development" | "production";
-  error?: string;
-  errorCode?: string;
-  details?: string;
-}
+// Import decomposed services
+import { saveToGitHub, type PageUploadResponse, ErrorCode } from "@/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_utils)/github-service";
+import { saveToFileSystem } from "@/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/(_utils)/filesystem-service";
 
-enum ErrorCode {
-  GITHUB_TOKEN_INVALID = "github_token_invalid",
-  GITHUB_API_UNAVAILABLE = "github_api_unavailable",
-  NETWORK_ERROR = "network_error",
-  FILE_WRITE_FAILED = "file_write_failed",
-  INVALID_DATA_FORMAT = "invalid_data_format",
-  DIRECTORY_CREATION_FAILED = "directory_creation_failed",
-  VALIDATION_ERROR = "validation_error",
-  UNKNOWN_ERROR = "unknown_error",
-}
 
+/**
+ * Checks if current environment is production
+ * @returns boolean - true if NODE_ENV is production
+ */
 function isProduction() {
   return process.env.NODE_ENV === "production";
 }
 
+/**
+ * Parses href string into component parts for file path generation
+ * @param href - URL path in format "/category/subcategory"
+ * @returns Object with firstPartHref and secondPartHref
+ */
 function parseHref(href: string): {
   firstPartHref: string;
   secondPartHref: string;
@@ -51,6 +43,11 @@ function parseHref(href: string): {
   return { firstPartHref, secondPartHref };
 }
 
+/**
+ * Validates request body structure and required fields
+ * @param body - Request body to validate
+ * @returns boolean - true if valid, throws error if invalid
+ */
 function validateRequestBody(body: any): body is PageUploadPayload {
   if (!body || typeof body !== "object") {
     throw new Error("Request body must be an object");
@@ -90,6 +87,11 @@ function validateRequestBody(body: any): body is PageUploadPayload {
   return true;
 }
 
+/**
+ * Validates that name contains only safe characters for file paths
+ * @param name - Name to validate
+ * @param fieldName - Field name for error messages
+ */
 function validateSafeName(name: string, fieldName: string): void {
   const safeNameRegex = /^[a-zA-Z0-9_-]+$/;
   if (!safeNameRegex.test(name)) {
@@ -99,287 +101,10 @@ function validateSafeName(name: string, fieldName: string): void {
   }
 }
 
-// Функция для генерации содержимого page.tsx файла с использованием pageMetadata
-// В файле route.ts - обновляем функцию generatePageTsxContent
-function generatePageTsxContent(
-  firstPartHref: string,
-  secondPartHref: string,
-  payload: PageUploadPayload
-): string {
-  const { pageMetadata, sections } = payload;
-  
-  // Используем метаданные из payload или fallback из первой секции
-  let finalMetadata = {
-    title: pageMetadata.title || "Страница без заголовка",
-    description: pageMetadata.description || "Описание отсутствует", 
-    keywords: pageMetadata.keywords || [],
-    images: pageMetadata.images || []
-  };
-
-  // Fallback: если метаданные страницы пустые, пытаемся извлечь из первой секции
-  if (!pageMetadata.title && !pageMetadata.description && sections.length > 0) {
-    const fallbackMetadata = generateMetadataFromSection(sections[0]);
-    finalMetadata = {
-      title: fallbackMetadata.title,
-      description: fallbackMetadata.description,
-      keywords: fallbackMetadata.keywords,
-      images: fallbackMetadata.images
-    };
-  }
-
-  // Создаем JSON строку для секций с правильным форматированием
-  const sectionsJson = JSON.stringify(sections, null, 2);
-
-  const pageContent = `// Auto-generated page - do not edit manually
-// Generated on: ${new Date().toISOString()}
-// Source href: /${firstPartHref}/${secondPartHref}
-// Page metadata: ${pageMetadata.title || 'No title'} | ${sections.length} sections
-
-import { Metadata } from "next";
-import ContentRenderer from "@/app/@right/(_service)/(_components)/content-renderer";
-
-// Встроенные данные секций
-const sections = ${sectionsJson};
-
-// Генерация метаданных для SEO из pageMetadata
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "${finalMetadata.title.replace(/"/g, '\\"')}",
-    description: "${finalMetadata.description.replace(/"/g, '\\"')}",
-    keywords: ${JSON.stringify(finalMetadata.keywords)},
-    
-    // Open Graph метатеги
-    openGraph: {
-      title: "${finalMetadata.title.replace(/"/g, '\\"')}",
-      description: "${finalMetadata.description.replace(/"/g, '\\"')}",
-      type: "article",
-      url: "/${firstPartHref}/${secondPartHref}",
-      ${finalMetadata.images.length > 0 ? `images: [
-        {
-          url: "${finalMetadata.images[0].href}",
-          alt: "${finalMetadata.images[0].alt?.replace(/"/g, '\\"') || ''}",
-        }
-      ],` : ''}
-    },
-    
-    // Twitter метатеги
-    twitter: {
-      card: "summary_large_image",
-      title: "${finalMetadata.title.replace(/"/g, '\\"')}",
-      description: "${finalMetadata.description.replace(/"/g, '\\"')}",
-      ${finalMetadata.images.length > 0 ? `images: ["${finalMetadata.images[0].href}"],` : ''}
-    },
-    
-    // Дополнительные метатеги
-    alternates: {
-      canonical: "/${firstPartHref}/${secondPartHref}",
-    },
-    
-    // Метаданные для поисковых роботов
-    robots: {
-      index: true,
-      follow: true,
-    },
-    
-    // Автор и издатель (можно настроить через env)
-    authors: [{ name: process.env.SITE_AUTHOR || "Site Author" }],
-  };
-}
-
-// Основной компонент страницы
-export default function Page() {
-  return (
-    <article className="page-content">
-      {/* Заголовок страницы */}
-      <header className="page-header mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 leading-tight">
-          ${finalMetadata.title.replace(/"/g, '\\"')}
-        </h1>
-        
-        {/* Описание страницы */}
-        <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-4xl">
-          ${finalMetadata.description.replace(/"/g, '\\"')}
-        </p>
-      </header>
-
-      {/* Контент секций */}
-      <div className="page-sections">
-        <ContentRenderer sections={sections} />
-      </div>
-    </article>
-  );
-}
-`;
-
-  return pageContent;
-}
-
-
-async function ensureDirectoryExists(dirPath: string): Promise<void> {
-  if (!existsSync(dirPath)) {
-    await mkdir(dirPath, { recursive: true });
-  }
-}
-
-// Функция для сохранения в GitHub (production) - обновлена для PageUploadPayload
-async function saveToGitHub(
-  firstPartHref: string,
-  secondPartHref: string,
-  payload: PageUploadPayload
-): Promise<PageUploadResponse> {
-  try {
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-    const GITHUB_REPO = process.env.GITHUB_REPO;
-    const GITHUB_PAGES_BASE_PATH = process.env.GITHUB_PAGES_BASE_PATH || "app/@right/(_PAGES)";
-
-    if (!GITHUB_TOKEN) {
-      return {
-        success: false,
-        message: "GitHub token is not configured",
-        error: "GitHub token is missing in environment variables",
-        errorCode: ErrorCode.GITHUB_TOKEN_INVALID,
-        environment: "production",
-      };
-    }
-
-    if (!GITHUB_REPO) {
-      return {
-        success: false,
-        message: "GitHub repository is not configured",
-        error: "GitHub repository is missing in environment variables",
-        errorCode: ErrorCode.GITHUB_API_UNAVAILABLE,
-        environment: "production",
-      };
-    }
-
-    const fileContents = generatePageTsxContent(firstPartHref, secondPartHref, payload);
-    const encodedContent = Buffer.from(fileContents).toString("base64");
-    const filePath = `${GITHUB_PAGES_BASE_PATH}/${firstPartHref}/${secondPartHref}/page.tsx`;
-
-    // Проверяем существование файла
-    const getFileResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`,
-      {
-        headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-      }
-    );
-
-    let sha: string | undefined;
-    if (getFileResponse.ok) {
-      const fileData = await getFileResponse.json();
-      sha = fileData.sha;
-    }
-
-    // Создаем или обновляем файл
-    const updateResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
-          Accept: "application/vnd.github.v3+json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: `${sha ? 'Update' : 'Create'} page: "${payload.pageMetadata.title || firstPartHref + '/' + secondPartHref}" - ${new Date().toISOString()}`,
-          content: encodedContent,
-          ...(sha && { sha }),
-        }),
-      }
-    );
-
-    if (!updateResponse.ok) {
-      const errorData = await updateResponse.json().catch(() => ({}));
-      return {
-        success: false,
-        message: "Failed to update page on GitHub",
-        error: `GitHub API returned ${updateResponse.status}: ${errorData.message || "Unknown error"}`,
-        errorCode: updateResponse.status === 401
-          ? ErrorCode.GITHUB_TOKEN_INVALID
-          : ErrorCode.GITHUB_API_UNAVAILABLE,
-        environment: "production",
-        details: JSON.stringify(errorData),
-      };
-    }
-
-    return {
-      success: true,
-      message: `Successfully created/updated page "${payload.pageMetadata.title || 'Untitled'}" on GitHub`,
-      filePath: filePath,
-      environment: "production",
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: "Network error while connecting to GitHub",
-      error: error.message || "Unknown network error",
-      errorCode: ErrorCode.NETWORK_ERROR,
-      environment: "production",
-    };
-  }
-}
-
-// Функция для сохранения в файловую систему (development) - обновлена для PageUploadPayload
-async function saveToFileSystem(
-  firstPartHref: string,
-  secondPartHref: string,
-  payload: PageUploadPayload
-): Promise<PageUploadResponse> {
-  try {
-    const pagesDir = join(process.cwd(), "app", "@right", "(_PAGES)");
-    const categoryDir = join(pagesDir, firstPartHref);
-    const pageDir = join(categoryDir, secondPartHref);
-    const filePath = join(pageDir, "page.tsx");
-    const relativeFilePath = `app/@right/(_PAGES)/${firstPartHref}/${secondPartHref}/page.tsx`;
-
-    // Создаем все необходимые директории
-    await ensureDirectoryExists(pagesDir);
-    await ensureDirectoryExists(categoryDir);
-    await ensureDirectoryExists(pageDir);
-
-    const fileContent = generatePageTsxContent(firstPartHref, secondPartHref, payload);
-    await writeFile(filePath, fileContent, "utf-8");
-
-    return {
-      success: true,
-      message: `Successfully created page "${payload.pageMetadata.title || 'Untitled'}" in filesystem`,
-      filePath: relativeFilePath,
-      environment: "development",
-    };
-  } catch (error: any) {
-    if (error.message.includes("EACCES")) {
-      return {
-        success: false,
-        message: "Permission denied: Unable to write to file system",
-        error: error.message,
-        errorCode: ErrorCode.FILE_WRITE_FAILED,
-        environment: "development",
-      };
-    }
-
-    if (error.message.includes("ENOSPC")) {
-      return {
-        success: false,
-        message: "No space left on device",
-        error: error.message,
-        errorCode: ErrorCode.FILE_WRITE_FAILED,
-        environment: "development",
-      };
-    }
-
-    return {
-      success: false,
-      message: "Failed to create page in local filesystem",
-      error: error.message || "Unknown filesystem error",
-      errorCode: ErrorCode.FILE_WRITE_FAILED,
-      environment: "development",
-    };
-  }
-}
-
+/**
+ * POST handler for creating/updating pages
+ * Routes to appropriate service based on environment
+ */
 export async function POST(
   request: NextRequest
 ): Promise<NextResponse<PageUploadResponse>> {
@@ -454,7 +179,7 @@ export async function POST(
       );
     }
 
-    // Создаем страницу в зависимости от окружения
+    // Route to appropriate service based on environment
     const result: PageUploadResponse = isProduction()
       ? await saveToGitHub(firstPartHref, secondPartHref, payload)
       : await saveToFileSystem(firstPartHref, secondPartHref, payload);
@@ -480,6 +205,10 @@ export async function POST(
   }
 }
 
+/**
+ * GET handler for checking page existence
+ * Routes to appropriate check based on environment
+ */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);

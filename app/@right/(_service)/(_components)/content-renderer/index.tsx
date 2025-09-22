@@ -189,23 +189,11 @@ function renderTipTapDocument(document: TipTapDocument): React.ReactNode[] {
 
 // Компонент для рендеринга отдельной секции
 function renderSection(section: ExtendedSection, index: number): React.ReactNode {
-  const { id, bodyContent, title, description } = section;
+  const { id, bodyContent } = section;
 
   return (
     <section key={id || index} className="mb-12 last:mb-0">
-      {/* Заголовок секции если есть */}
-      {title && (
-        <header className="mb-6">
-          <h1 className="text-3xl font-bold mb-3 text-gray-900 dark:text-gray-100">
-            {title}
-          </h1>
-          {description && (
-            <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
-              {description}
-            </p>
-          )}
-        </header>
-      )}
+
 
       {/* Контент секции с правильным классом для TipTap стилей */}
       {bodyContent && (

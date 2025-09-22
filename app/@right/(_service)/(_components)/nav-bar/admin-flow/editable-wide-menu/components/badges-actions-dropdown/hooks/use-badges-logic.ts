@@ -6,7 +6,7 @@ import { useDialogs } from "@/app/@right/(_service)/(_context)/dialogs";
 import { PageData } from "@/app/@right/(_service)/(_types)/page-types";
 import { MenuCategory } from "@/app/@right/(_service)/(_types)/menu-types";
 import { normalizeText } from "@/app/@right/(_service)/(_libs)/normalize-text";
-import { BadgeName } from "@/app/@right/(_service)/(_config)/badge-config";
+import { BadgeName } from "@/config/pages-config/badges/badge-config";
 import { UserType } from "@/app/@right/(_service)/(_types)/footer-types";
 import { transliterate } from "@/lib/utils/transliterate";
 interface UseBadgesLogicProps {

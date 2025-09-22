@@ -16,7 +16,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { ALL_BADGES } from "@/app/@right/(_service)/(_config)/badge-config";
+import { ALL_BADGES } from "@/config/pages-config/badges/badge-config";
 import { ALL_ROLES } from "@/app/@right/(_service)/(_config)/user-roles";
 
 /**

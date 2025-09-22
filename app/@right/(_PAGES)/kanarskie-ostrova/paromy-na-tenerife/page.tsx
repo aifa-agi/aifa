@@ -1,5 +1,5 @@
 // Auto-generated page - do not edit manually
-// Generated on: 2025-09-22T09:23:28.156Z
+// Generated on: 2025-09-22T19:04:16.988Z
 // Source href: /kanarskie-ostrova/paromy-na-tenerife
 // Page metadata: Паромы на Тенерифе! Тенерифе 2026 | 3 sections
 
@@ -22,7 +22,7 @@ const sections = [
           "content": [
             {
               "type": "text",
-              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по островуerwertwertwert"
+              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову with Roma"
             }
           ]
         },

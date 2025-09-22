@@ -33,7 +33,6 @@ export interface PageSections {
 export interface PageUploadPayload {
   href: string;
   
-
   pageMetadata: {
   title?: string;
   description?: string;
@@ -43,8 +42,16 @@ export interface PageUploadPayload {
   taxonomy?: string;
   attention?: string;
   audiences?: string;
-  };
   
+  };
+
+  outgoingLinks?: string[];
+  incomingLinks?: string[];
+  externalLinks?: string[];
+  summary?: string;
+  tags?: string[];
+  authors?: string[];
+  relatedPages?: string[];
  
   sections: ExtendedSection[]; 
 }

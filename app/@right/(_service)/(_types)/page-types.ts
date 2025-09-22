@@ -2,7 +2,7 @@
 
 import { Metadata } from "next";
 import { UserType } from "@prisma/client";
-import { BadgeName } from "../(_config)/badge-config";
+import { BadgeName } from "../../../../config/pages-config/badges/badge-config";
 
 export type PageType =
   | "homePage"
@@ -51,6 +51,11 @@ export interface PageImages {
   id: string;
   alt?: string;
   href?: string;
+}
+export interface PageAuthors {
+  id: string;
+  name: string;
+  image?: PageImages[];
 }
 
 export type TechnicalTag =
@@ -377,6 +382,9 @@ export interface PageData {
   title?: string;
   description?: string;
   images?: PageImages[];
+  tags?: string[];
+  authors?: PageAuthors[];
+  summary?: string;
   keywords?: string[];
   intent?: string;
   taxonomy?: string;
