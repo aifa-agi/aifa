@@ -124,40 +124,10 @@ export function extractImages(document: TipTapDocument): Array<{ src: string; al
 
 // Функция для генерации метаданных из первой секции
 export function generateMetadataFromSection(section: ExtendedSection) {
-  const { title, description, bodyContent, images, keywords } = section;
+  const { bodyContent,  keywords } = section;
   
-  // Исправляем типизацию: string | null -> string | undefined
-  let generatedTitle: string | undefined = title;
-  let generatedDescription: string | undefined = description;
-  let generatedImages: PageImages[] = images || [];
-  
-  // Если нет title, извлекаем из первого заголовка
-  if (!generatedTitle && bodyContent) {
-    const firstHeading = findFirstHeading(bodyContent as TipTapDocument);
-    generatedTitle = firstHeading || undefined; // Преобразуем null в undefined
-  }
-  
-  // Если нет description, генерируем из первого параграфа
-  if (!generatedDescription && bodyContent) {
-    const generated = generateDescription(bodyContent as TipTapDocument);
-    generatedDescription = generated || undefined; // Обеспечиваем string | undefined
-  }
-  
-  // Если нет изображений, извлекаем из контента
-  if (generatedImages.length === 0 && bodyContent) {
-    const documentImages = extractImages(bodyContent as TipTapDocument);
-    // Преобразуем в правильный формат PageImages с требуемым полем id
-    generatedImages = documentImages.map((img, index) => ({
-      id: `generated-image-${index}`, // Добавляем обязательное поле id
-      url: img.src,
-      alt: img.alt || ""
-    }));
-  }
   
   return {
-    title: generatedTitle || "Страница без заголовка",
-    description: generatedDescription || "Описание отсутствует",
-    images: generatedImages,
     keywords: keywords || [],
     wordCount: bodyContent ? countWords(bodyContent as TipTapDocument) : 0,
     readingTime: bodyContent ? estimateReadingTime(bodyContent as TipTapDocument) : 0
