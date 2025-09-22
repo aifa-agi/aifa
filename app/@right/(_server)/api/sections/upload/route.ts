@@ -4,13 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
-import { ExtendedSection } from "@/app/@right/(_service)/(_types)/section-types";
+import type { PageUploadPayload, ExtendedSection } from "@/app/@right/(_service)/(_types)/section-types";
 import { generateMetadataFromSection } from "@/app/@right/(_service)/(_components)/content-renderer/utils";
-
-interface UploadRequestBody {
-  href: string;
-  sections: ExtendedSection[];
-}
 
 interface PageUploadResponse {
   success: boolean;
@@ -56,15 +51,19 @@ function parseHref(href: string): {
   return { firstPartHref, secondPartHref };
 }
 
-function validateRequestBody(body: any): body is UploadRequestBody {
+function validateRequestBody(body: any): body is PageUploadPayload {
   if (!body || typeof body !== "object") {
     throw new Error("Request body must be an object");
   }
 
-  const { href, sections } = body;
+  const { href, pageMetadata, sections } = body;
 
   if (!href || typeof href !== "string" || href.trim() === "") {
     throw new Error("href is required and must be a non-empty string");
+  }
+
+  if (!pageMetadata || typeof pageMetadata !== "object") {
+    throw new Error("pageMetadata is required and must be an object");
   }
 
   if (!sections || !Array.isArray(sections)) {
@@ -100,20 +99,33 @@ function validateSafeName(name: string, fieldName: string): void {
   }
 }
 
-// Функция для генерации содержимого page.tsx файла
+// Функция для генерации содержимого page.tsx файла с использованием pageMetadata
+// В файле route.ts - обновляем функцию generatePageTsxContent
 function generatePageTsxContent(
   firstPartHref: string,
   secondPartHref: string,
-  sections: ExtendedSection[]
+  payload: PageUploadPayload
 ): string {
-  // Генерируем метаданные из первой секции
-  const firstSection = sections[0];
-  const metadata = firstSection ? generateMetadataFromSection(firstSection) : {
-    title: "Страница без заголовка",
-    description: "Описание отсутствует",
-    images: [],
-    keywords: []
+  const { pageMetadata, sections } = payload;
+  
+  // Используем метаданные из payload или fallback из первой секции
+  let finalMetadata = {
+    title: pageMetadata.title || "Страница без заголовка",
+    description: pageMetadata.description || "Описание отсутствует", 
+    keywords: pageMetadata.keywords || [],
+    images: pageMetadata.images || []
   };
+
+  // Fallback: если метаданные страницы пустые, пытаемся извлечь из первой секции
+  if (!pageMetadata.title && !pageMetadata.description && sections.length > 0) {
+    const fallbackMetadata = generateMetadataFromSection(sections[0]);
+    finalMetadata = {
+      title: fallbackMetadata.title,
+      description: fallbackMetadata.description,
+      keywords: fallbackMetadata.keywords,
+      images: fallbackMetadata.images
+    };
+  }
 
   // Создаем JSON строку для секций с правильным форматированием
   const sectionsJson = JSON.stringify(sections, null, 2);
@@ -121,6 +133,7 @@ function generatePageTsxContent(
   const pageContent = `// Auto-generated page - do not edit manually
 // Generated on: ${new Date().toISOString()}
 // Source href: /${firstPartHref}/${secondPartHref}
+// Page metadata: ${pageMetadata.title || 'No title'} | ${sections.length} sections
 
 import { Metadata } from "next";
 import ContentRenderer from "@/app/@right/(_service)/(_components)/content-renderer";
@@ -128,23 +141,23 @@ import ContentRenderer from "@/app/@right/(_service)/(_components)/content-rende
 // Встроенные данные секций
 const sections = ${sectionsJson};
 
-// Генерация метаданных для SEO
+// Генерация метаданных для SEO из pageMetadata
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "${metadata.title.replace(/"/g, '\\"')}",
-    description: "${metadata.description.replace(/"/g, '\\"')}",
-    keywords: ${JSON.stringify(metadata.keywords)},
+    title: "${finalMetadata.title.replace(/"/g, '\\"')}",
+    description: "${finalMetadata.description.replace(/"/g, '\\"')}",
+    keywords: ${JSON.stringify(finalMetadata.keywords)},
     
     // Open Graph метатеги
     openGraph: {
-      title: "${metadata.title.replace(/"/g, '\\"')}",
-      description: "${metadata.description.replace(/"/g, '\\"')}",
+      title: "${finalMetadata.title.replace(/"/g, '\\"')}",
+      description: "${finalMetadata.description.replace(/"/g, '\\"')}",
       type: "article",
       url: "/${firstPartHref}/${secondPartHref}",
-      ${metadata.images.length > 0 ? `images: [
+      ${finalMetadata.images.length > 0 ? `images: [
         {
-          url: "${metadata.images[0].href}",
-          alt: "${metadata.images[0].alt?.replace(/"/g, '\\"') || ''}",
+          url: "${finalMetadata.images[0].href}",
+          alt: "${finalMetadata.images[0].alt?.replace(/"/g, '\\"') || ''}",
         }
       ],` : ''}
     },
@@ -152,22 +165,48 @@ export async function generateMetadata(): Promise<Metadata> {
     // Twitter метатеги
     twitter: {
       card: "summary_large_image",
-      title: "${metadata.title.replace(/"/g, '\\"')}",
-      description: "${metadata.description.replace(/"/g, '\\"')}",
-      ${metadata.images.length > 0 ? `images: ["${metadata.images[0].href}"],` : ''}
+      title: "${finalMetadata.title.replace(/"/g, '\\"')}",
+      description: "${finalMetadata.description.replace(/"/g, '\\"')}",
+      ${finalMetadata.images.length > 0 ? `images: ["${finalMetadata.images[0].href}"],` : ''}
     },
     
     // Дополнительные метатеги
     alternates: {
       canonical: "/${firstPartHref}/${secondPartHref}",
     },
+    
+    // Метаданные для поисковых роботов
+    robots: {
+      index: true,
+      follow: true,
+    },
+    
+    // Автор и издатель (можно настроить через env)
+    authors: [{ name: process.env.SITE_AUTHOR || "Site Author" }],
   };
 }
 
 // Основной компонент страницы
 export default function Page() {
   return (
-    <ContentRenderer sections={sections} />
+    <article className="page-content">
+      {/* Заголовок страницы */}
+      <header className="page-header mb-8">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 leading-tight">
+          ${finalMetadata.title.replace(/"/g, '\\"')}
+        </h1>
+        
+        {/* Описание страницы */}
+        <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-4xl">
+          ${finalMetadata.description.replace(/"/g, '\\"')}
+        </p>
+      </header>
+
+      {/* Контент секций */}
+      <div className="page-sections">
+        <ContentRenderer sections={sections} />
+      </div>
+    </article>
   );
 }
 `;
@@ -175,17 +214,18 @@ export default function Page() {
   return pageContent;
 }
 
+
 async function ensureDirectoryExists(dirPath: string): Promise<void> {
   if (!existsSync(dirPath)) {
     await mkdir(dirPath, { recursive: true });
   }
 }
 
-// Функция для сохранения в GitHub (production)
+// Функция для сохранения в GitHub (production) - обновлена для PageUploadPayload
 async function saveToGitHub(
   firstPartHref: string,
   secondPartHref: string,
-  sections: ExtendedSection[]
+  payload: PageUploadPayload
 ): Promise<PageUploadResponse> {
   try {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -212,7 +252,7 @@ async function saveToGitHub(
       };
     }
 
-    const fileContents = generatePageTsxContent(firstPartHref, secondPartHref, sections);
+    const fileContents = generatePageTsxContent(firstPartHref, secondPartHref, payload);
     const encodedContent = Buffer.from(fileContents).toString("base64");
     const filePath = `${GITHUB_PAGES_BASE_PATH}/${firstPartHref}/${secondPartHref}/page.tsx`;
 
@@ -244,7 +284,7 @@ async function saveToGitHub(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: `${sha ? 'Update' : 'Create'} page: ${firstPartHref}/${secondPartHref} - ${new Date().toISOString()}`,
+          message: `${sha ? 'Update' : 'Create'} page: "${payload.pageMetadata.title || firstPartHref + '/' + secondPartHref}" - ${new Date().toISOString()}`,
           content: encodedContent,
           ...(sha && { sha }),
         }),
@@ -267,7 +307,7 @@ async function saveToGitHub(
 
     return {
       success: true,
-      message: "Successfully created/updated page on GitHub",
+      message: `Successfully created/updated page "${payload.pageMetadata.title || 'Untitled'}" on GitHub`,
       filePath: filePath,
       environment: "production",
     };
@@ -282,11 +322,11 @@ async function saveToGitHub(
   }
 }
 
-// Функция для сохранения в файловую систему (development)
+// Функция для сохранения в файловую систему (development) - обновлена для PageUploadPayload
 async function saveToFileSystem(
   firstPartHref: string,
   secondPartHref: string,
-  sections: ExtendedSection[]
+  payload: PageUploadPayload
 ): Promise<PageUploadResponse> {
   try {
     const pagesDir = join(process.cwd(), "app", "@right", "(_PAGES)");
@@ -300,12 +340,12 @@ async function saveToFileSystem(
     await ensureDirectoryExists(categoryDir);
     await ensureDirectoryExists(pageDir);
 
-    const fileContent = generatePageTsxContent(firstPartHref, secondPartHref, sections);
+    const fileContent = generatePageTsxContent(firstPartHref, secondPartHref, payload);
     await writeFile(filePath, fileContent, "utf-8");
 
     return {
       success: true,
-      message: "Successfully created page in filesystem",
+      message: `Successfully created page "${payload.pageMetadata.title || 'Untitled'}" in filesystem`,
       filePath: relativeFilePath,
       environment: "development",
     };
@@ -377,7 +417,8 @@ export async function POST(
       );
     }
 
-    const { href, sections } = body as UploadRequestBody;
+    const payload = body as PageUploadPayload;
+    const { href } = payload;
 
     let firstPartHref: string;
     let secondPartHref: string;
@@ -415,8 +456,8 @@ export async function POST(
 
     // Создаем страницу в зависимости от окружения
     const result: PageUploadResponse = isProduction()
-      ? await saveToGitHub(firstPartHref, secondPartHref, sections)
-      : await saveToFileSystem(firstPartHref, secondPartHref, sections);
+      ? await saveToGitHub(firstPartHref, secondPartHref, payload)
+      : await saveToFileSystem(firstPartHref, secondPartHref, payload);
 
     const httpStatus = result.success ? 200 : 500;
 

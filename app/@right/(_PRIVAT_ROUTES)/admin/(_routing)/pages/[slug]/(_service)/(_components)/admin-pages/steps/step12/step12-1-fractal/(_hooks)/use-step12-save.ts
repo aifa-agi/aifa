@@ -1,12 +1,13 @@
-// File: @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_hooks)/use-step12-save.ts
+// @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-1-fractal/(_hooks)/use-step12-save.ts
 "use client";
 
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import type { PageData } from "@/app/@right/(_service)/(_types)/page-types";
+import type { PageUploadPayload } from "@/app/@right/(_service)/(_types)/section-types";
 import { useNavigationMenu } from "@/app/@right/(_service)/(_context)/nav-bar-provider";
 import { uploadSections, SectionUploadError, UploadErrorType } from "../(_utils)/sections-upload.service";
-import { toExtendedSections } from "../(_adapters)/sections-mapper";
+import { toPageUploadPayload } from "../(_adapters)/sections-mapper";
 import { STEP12_IDS } from "../(_constants)/step12-ids";
 import { useStep12Root } from "../(_contexts)/step12-root-context";
 
@@ -50,13 +51,19 @@ export function useStep12Save(): UseStep12SaveReturn {
 
     setLocalSaving(true);
     setContextSaving(true);
-    toast.loading("Saving all sections...", { id: STEP12_IDS.toasts.saveStart });
+    toast.loading("Saving page with all sections...", { id: STEP12_IDS.toasts.saveStart });
 
     try {
-      const payload = toExtendedSections(sections, targetPage.href);
+      // Создаем новый payload с разделенными метаданными страницы и секциями
+      const payload: PageUploadPayload = toPageUploadPayload(sections, targetPage);
 
       if (payload.sections.length === 0) {
         throw new Error("No sections to save");
+      }
+
+      // Валидация метаданных страницы
+      if (!payload.pageMetadata.title && !payload.pageMetadata.description) {
+        console.warn("Step12Save: Page metadata is incomplete - no title or description provided");
       }
 
       const response = await uploadSections(payload);
@@ -71,7 +78,14 @@ export function useStep12Save(): UseStep12SaveReturn {
             ...category,
             pages: category.pages.map((p) =>
               p.href === targetPage.href
-                ? { ...p, isPreviewComplited: true, updatedAt: new Date().toISOString() }
+                ? { 
+                    ...p, 
+                    isPreviewComplited: true, 
+                    updatedAt: new Date().toISOString(),
+                    // Обновляем также метаданные в навигации
+                    title: payload.pageMetadata.title || p.title,
+                    description: payload.pageMetadata.description || p.description,
+                  }
                 : p
             ),
           }))
@@ -81,7 +95,7 @@ export function useStep12Save(): UseStep12SaveReturn {
       }
 
       toast.success(
-        `Successfully saved ${payload.sections.length} sections${response.filePath ? ` to ${response.filePath}` : ""}`,
+        `Successfully saved page "${payload.pageMetadata.title || 'Untitled'}" with ${payload.sections.length} sections${response.filePath ? ` to ${response.filePath}` : ""}`,
         { id: STEP12_IDS.toasts.saveSuccess, duration: 4000 }
       );
       return true;
@@ -102,7 +116,7 @@ export function useStep12Save(): UseStep12SaveReturn {
             errorMessage = "GitHub integration error: Please contact administrator";
             break;
           case UploadErrorType.FILESYSTEM_ERROR:
-            errorMessage = "File system error: Unable to save sections";
+            errorMessage = "File system error: Unable to save page";
             break;
           case UploadErrorType.SERVER_ERROR:
             errorMessage = `Server error: ${error.message}`;
