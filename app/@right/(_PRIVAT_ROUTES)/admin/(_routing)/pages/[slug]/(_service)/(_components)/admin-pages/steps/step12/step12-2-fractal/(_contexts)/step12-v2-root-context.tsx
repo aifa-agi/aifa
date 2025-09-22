@@ -1,6 +1,6 @@
 // @/app/@right/(_PRIVAT_ROUTES)/admin/(_routing)/pages/[slug]/(_service)/(_components)/admin-pages/steps/step12/step12-2-fractal/(_contexts)/step12-v2-root-context.tsx
 /**
- * Step12 V2 Root Context - File System Based Section Editor
+ * Step12 V2 Root Context - Updated for PageUploadPayload
  * AUTONOMOUS VERSION - integrates with SectionProvider for file system data
  * Replaces step12-root-context.tsx functionality for V2 architecture
  */
@@ -13,8 +13,12 @@ import {
     SectionEditorApiV2,
     SectionEditorContextValueV2
 } from "../(_types)/step12-v2-types";
-import { fromExtendedSections, updateSectionV2WithContent } from "../(_adapters)/sections-v2-mapper";
-import { mergeDocs, areAllSectionsV2Ready, findSectionV2ById } from "../(_utils)/step12-v2-sections-utils";
+import {
+    fromExtendedSections,
+    updateSectionV2WithContent,
+    areAllSectionsReady // ✅ ИСПРАВЛЕНО: импортируем из mapper
+} from "../(_adapters)/sections-v2-mapper";
+import { mergeDocs, findSectionV2ById } from "../(_utils)/step12-v2-sections-utils";
 import { STEP12_V2_TEXTS } from "../(_constants)/step12-v2-texts";
 
 // Import buttons provider for V2
@@ -130,9 +134,9 @@ export function Step12V2Provider({ children, page }: Step12V2ProviderProps) {
         })));
     }, []);
 
-    // Check if all sections are ready for save
+    // ✅ ИСПРАВЛЕНО: Check if all sections are ready for save using imported function
     const isAllReady = useCallback((): boolean => {
-        return hasValidSections && areAllSectionsV2Ready(sections);
+        return hasValidSections && areAllSectionsReady(sections);
     }, [sections, hasValidSections]);
 
     // Get merged document for "all" view
@@ -142,7 +146,7 @@ export function Step12V2Provider({ children, page }: Step12V2ProviderProps) {
                 type: "doc",
                 content: [{
                     type: "paragraph",
-                    content: [{ type: "text", text: STEP12_V2_TEXTS.placeholders.noSectionsDisplay }]
+                    content: [{ type: "text", text: STEP12_V2_TEXTS.placeholders?.noSectionsDisplay || "No sections available" }]
                 }]
             };
         }
@@ -154,7 +158,7 @@ export function Step12V2Provider({ children, page }: Step12V2ProviderProps) {
                 type: "doc",
                 content: [{
                     type: "paragraph",
-                    content: [{ type: "text", text: STEP12_V2_TEXTS.placeholders.sectionEmpty }]
+                    content: [{ type: "text", text: STEP12_V2_TEXTS.placeholders?.sectionEmpty || "No content available" }]
                 }]
             };
         }
@@ -176,6 +180,19 @@ export function Step12V2Provider({ children, page }: Step12V2ProviderProps) {
     const getSection = useCallback((sectionId: string): SectionStateV2 | null => {
         return findSectionV2ById(sections, sectionId);
     }, [sections]);
+
+    // ✅ ДОБАВЛЕНО: Debug information for development
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'development') {
+            console.log('Step12V2Provider:', {
+                hasValidSections,
+                sectionsCount: sections.length,
+                activeId,
+                isReady: isAllReady(),
+                pageHref: page?.href
+            });
+        }
+    }, [hasValidSections, sections.length, activeId, isAllReady, page?.href]);
 
     // Context value
     const contextValue: Step12V2ContextType = useMemo(() => ({
@@ -211,6 +228,7 @@ export function Step12V2Provider({ children, page }: Step12V2ProviderProps) {
         updateSectionContent,
         isAllReady,
         resetAllFlags,
+        setSaving,
         getMergedDoc,
         hasValidSections,
         allRefresh,
@@ -219,6 +237,35 @@ export function Step12V2Provider({ children, page }: Step12V2ProviderProps) {
         getActiveSection,
         getSection,
     ]);
+
+    // ✅ ДОБАВЛЕНО: Error boundary для sections loading
+    if (sectionsError) {
+        console.error('Step12V2Provider: Error loading sections:', sectionsError);
+        return (
+            <Step12V2Context.Provider value={{
+                ...contextValue,
+                sections: [{
+                    id: "all",
+                    label: "Error Loading Sections",
+                    content: null,
+                    hasData: false,
+                    isLoading: false,
+                }],
+                hasValidSections: false,
+                saving: false,
+            }}>
+                <Step12V2ButtonsProvider>
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+                        <h3 className="text-red-800 font-medium">Error Loading Sections</h3>
+                        <p className="text-red-600 text-sm mt-1">
+                            Failed to load sections from file system. Please try refreshing the page.
+                        </p>
+                    </div>
+                    {children}
+                </Step12V2ButtonsProvider>
+            </Step12V2Context.Provider>
+        );
+    }
 
     return (
         <Step12V2Context.Provider value={contextValue}>
@@ -235,6 +282,20 @@ export function useStep12V2Root(): Step12V2ContextType {
         throw new Error("useStep12V2Root must be used within a Step12V2Provider");
     }
     return context;
+}
+
+// ✅ ДОБАВЛЕНО: Hook для упрощенного доступа к save функциональности
+export function useStep12V2Save() {
+    const context = useStep12V2Root();
+    const { useStep12V2Save: saveHook } = require("../(_hooks)/use-step12-v2-save");
+
+    return saveHook(
+        context.sections,
+        context.isAllReady,
+        context.resetAllFlags,
+        context.setSaving,
+        context.page
+    );
 }
 
 export { Step12V2Context };

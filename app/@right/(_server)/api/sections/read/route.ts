@@ -15,28 +15,23 @@ interface ReadSectionsResponse {
   environment?: string;
 }
 
-// GitHub API configuration
+// GitHub API configuration - обновленные пути
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
 const GITHUB_REPO = process.env.GITHUB_REPO;
-const GITHUB_SECTIONS_BASE_PATH = process.env.GITHUB_SECTIONS_BASE_PATH || "config/content/sections";
+const GITHUB_PAGES_BASE_PATH = process.env.GITHUB_PAGES_BASE_PATH || "app/@right/(_PAGES)"; // ✅ ОБНОВЛЕНО
 
 /**
- * Автоматическое определение среды выполнения без дополнительных переменных
- * Основано на наличии GitHub конфигурации и характеристиках окружения
+ * Автоматическое определение среды выполнения
  */
 function detectEnvironment(): { isDevelopment: boolean; useLocal: boolean; reason: string } {
-  // 1. Проверка NODE_ENV (базовая проверка)
   const nodeEnv = process.env.NODE_ENV;
-  
-  // 2. Проверка наличия GitHub конфигурации
   const hasGitHubConfig = !!(GITHUB_TOKEN && GITHUB_REPO);
   
-  // 3. Проверка наличия локальных файлов (синхронная проверка существования директории)
-  const localPath = path.join(process.cwd(), "config/content/sections");
+  // ✅ ОБНОВЛЕНО: проверяем новый путь к страницам
+  const localPath = path.join(process.cwd(), "app", "@right", "(_PAGES)");
   let hasLocalFiles = false;
   
   try {
-    // Синхронная проверка существования директории
     const fs_sync = require('fs');
     const stats = fs_sync.statSync(localPath);
     hasLocalFiles = stats.isDirectory();
@@ -44,30 +39,28 @@ function detectEnvironment(): { isDevelopment: boolean; useLocal: boolean; reaso
     hasLocalFiles = false;
   }
 
-  // 4. Проверка характеристик среды выполнения
   const isVercel = !!process.env.VERCEL;
   const isNetlify = !!process.env.NETLIFY;
   const isLocal = !isVercel && !isNetlify && (
-    process.env.PWD?.includes('/Users/') ||  // macOS
-    process.env.PWD?.includes('/home/') ||   // Linux
-    process.env.USERPROFILE?.includes('\\Users\\') || // Windows
-    process.env.COMPUTERNAME || // Windows
-    !!process.env.USERNAME      // Local development indicators
+    process.env.PWD?.includes('/Users/') ||
+    process.env.PWD?.includes('/home/') ||
+    process.env.USERPROFILE?.includes('\\Users\\') ||
+    process.env.COMPUTERNAME ||
+    !!process.env.USERNAME
   );
 
-  // Логика определения:
   if (nodeEnv === 'development') {
     if (hasLocalFiles) {
       return { 
         isDevelopment: true, 
         useLocal: true, 
-        reason: "Development mode with local files available" 
+        reason: "Development mode with local page files available" 
       };
     } else if (hasGitHubConfig) {
       return { 
         isDevelopment: true, 
         useLocal: false, 
-        reason: "Development mode but no local files, using GitHub" 
+        reason: "Development mode but no local page files, using GitHub" 
       };
     }
   }
@@ -83,17 +76,16 @@ function detectEnvironment(): { isDevelopment: boolean; useLocal: boolean; reaso
       return { 
         isDevelopment: false, 
         useLocal: true, 
-        reason: "Production mode locally with local files" 
+        reason: "Production mode locally with local page files" 
       };
     }
   }
 
-  // Fallback логика на основе доступных ресурсов
   if (hasLocalFiles && isLocal) {
     return { 
       isDevelopment: true, 
       useLocal: true, 
-      reason: "Local environment detected with local files" 
+      reason: "Local environment detected with local page files" 
     };
   }
 
@@ -105,7 +97,6 @@ function detectEnvironment(): { isDevelopment: boolean; useLocal: boolean; reaso
     };
   }
 
-  // Последняя попытка - если есть только GitHub конфиг
   if (hasGitHubConfig) {
     return { 
       isDevelopment: false, 
@@ -114,40 +105,41 @@ function detectEnvironment(): { isDevelopment: boolean; useLocal: boolean; reaso
     };
   }
 
-  // Если ничего нет - используем локальные файлы как fallback
   return { 
     isDevelopment: true, 
     useLocal: true, 
-    reason: "No valid config found, attempting local files" 
+    reason: "No valid config found, attempting local page files" 
   };
 }
 
 /**
- * Fetches file content from local file system
+ * ✅ ОБНОВЛЕНО: Читает page.tsx файлы из новой структуры
  */
 async function fetchFileContentFromLocal(filePath: string): Promise<string> {
-  const fullPath = path.join(process.cwd(), "config/content/sections", `${filePath}.ts`);
+  // ✅ НОВЫЙ ПУТЬ: app/@right/(_PAGES)/category/page/page.tsx
+  const fullPath = path.join(process.cwd(), "app", "@right", "(_PAGES)", filePath, "page.tsx");
   
   try {
     const content = await fs.readFile(fullPath, 'utf-8');
     return content;
   } catch (error: any) {
     if (error.code === 'ENOENT') {
-      throw new Error("File not found in local filesystem");
+      throw new Error("Page file not found in local filesystem");
     }
     throw error;
   }
 }
 
 /**
- * Fetches file content from GitHub repository using GitHub REST API
+ * ✅ ОБНОВЛЕНО: Читает page.tsx файлы из GitHub
  */
 async function fetchFileContentFromGitHub(filePath: string): Promise<string> {
   if (!GITHUB_TOKEN || !GITHUB_REPO) {
     throw new Error("GitHub configuration missing: GITHUB_TOKEN and GITHUB_REPO are required");
   }
 
-  const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_SECTIONS_BASE_PATH}/${filePath}.ts`;
+  // ✅ НОВЫЙ ПУТЬ: app/@right/(_PAGES)/category/page/page.tsx
+  const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_PAGES_BASE_PATH}/${filePath}/page.tsx`;
 
   const response = await fetch(apiUrl, {
     headers: {
@@ -159,7 +151,7 @@ async function fetchFileContentFromGitHub(filePath: string): Promise<string> {
 
   if (!response.ok) {
     if (response.status === 404) {
-      throw new Error("File not found in GitHub repository");
+      throw new Error("Page file not found in GitHub repository");
     }
     if (response.status === 401) {
       throw new Error("GitHub authentication failed");
@@ -194,16 +186,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<ReadSecti
       }, { status: 400 });
     }
 
-    // Validate file path format
+    // Validate file path format (category/page)
     const pathRegex = /^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/;
     if (!pathRegex.test(filePath)) {
       return NextResponse.json({
         success: false,
-        message: "Invalid file path format"
+        message: "Invalid file path format. Expected: category/page"
       }, { status: 400 });
     }
 
-    // Автоматическое определение среды
     const { isDevelopment, useLocal, reason } = detectEnvironment();
     
     console.log(`Environment Detection: ${reason} (Development: ${isDevelopment}, UseLocal: ${useLocal})`);
@@ -213,29 +204,56 @@ export async function POST(request: NextRequest): Promise<NextResponse<ReadSecti
       let source: string;
 
       if (useLocal) {
-        console.log(`📁 Reading from LOCAL filesystem: ${filePath}`);
+        console.log(`📁 Reading page from LOCAL filesystem: ${filePath}`);
         fileContent = await fetchFileContentFromLocal(filePath);
         source = "Local FileSystem";
       } else {
-        console.log(`🔗 Reading from GITHUB repository: ${filePath}`);
+        console.log(`🔗 Reading page from GITHUB repository: ${filePath}`);
         fileContent = await fetchFileContentFromGitHub(filePath);
         source = "GitHub API";
       }
 
-      // Extract sections from the TypeScript file content
-      const sectionsMatch = fileContent.match(/export const sections[^=]*=\s*(\[[\s\S]*?\]);/);
+      // ✅ ОБНОВЛЕНО: Парсим sections из page.tsx файла
+      const sectionsMatch = fileContent.match(/const sections = (\[[\s\S]*?\]);/);
 
       if (!sectionsMatch) {
+        console.warn(`No sections found in page file: ${filePath}`);
+        return NextResponse.json({
+          success: true,
+          message: `No sections found in page file from ${source}`,
+          sections: [],
+          source,
+          environment: `${process.env.NODE_ENV} (${reason})`
+        });
+      }
+
+      const sectionsCode = sectionsMatch[1];
+      
+      // ✅ БЕЗОПАСНОЕ ВЫПОЛНЕНИЕ: используем Function constructor вместо eval
+      let sections;
+      try {
+        sections = new Function('return ' + sectionsCode)();
+      } catch (evalError) {
+        console.error('Error parsing sections:', evalError);
         return NextResponse.json({
           success: false,
-          message: "Could not parse sections from file - invalid format",
+          message: "Could not parse sections from page file - invalid JavaScript",
           source,
           environment: `${process.env.NODE_ENV} (${reason})`
         }, { status: 500 });
       }
 
-      const sectionsCode = sectionsMatch[1];
-      const sections = eval(sectionsCode);
+      // ✅ ВАЛИДАЦИЯ: проверяем что sections это массив
+      if (!Array.isArray(sections)) {
+        return NextResponse.json({
+          success: false,
+          message: "Sections data is not an array",
+          source,
+          environment: `${process.env.NODE_ENV} (${reason})`
+        }, { status: 500 });
+      }
+
+      console.log(`✅ Successfully parsed ${sections.length} sections from ${source}`);
 
       return NextResponse.json({
         success: true,
@@ -248,21 +266,23 @@ export async function POST(request: NextRequest): Promise<NextResponse<ReadSecti
     } catch (fetchError: any) {
       const source = useLocal ? "Local FileSystem" : "GitHub API";
       
-      if (fetchError.message.includes("File not found")) {
+      if (fetchError.message.includes("not found")) {
+        console.warn(`Page file not found: ${filePath}`);
         return NextResponse.json({
           success: true,
-          message: `No sections file found in ${source}`,
+          message: `No page file found in ${source}`,
           sections: [],
           source,
           environment: `${process.env.NODE_ENV} (${reason})`
         });
       }
 
+      console.error(`Error fetching from ${source}:`, fetchError);
       throw fetchError;
     }
 
   } catch (error) {
-    console.error("Error reading sections:", error);
+    console.error("Error reading page sections:", error);
 
     return NextResponse.json({
       success: false,

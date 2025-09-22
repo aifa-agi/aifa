@@ -2,8 +2,9 @@
 
 import React from 'react';
 import type { JSONContent } from '@tiptap/react';
-import { ExtendedSection } from '@/app/@right/(_service)/(_types)/section-types';
-import { FileSystemSection, FileSystemSectionPayload, SectionStateV2 } from '../(_types)/step12-v2-types';
+import type { ExtendedSection, PageUploadPayload } from '@/app/@right/(_service)/(_types)/section-types';
+import type { PageData } from '@/app/@right/(_service)/(_types)/page-types';
+import { SectionStateV2 } from '../(_types)/step12-v2-types';
 import { createEmptyDoc, generateSectionLabel, isValidTipTapContent } from '../(_utils)/step12-v2-sections-utils';
 
 /**
@@ -36,23 +37,52 @@ export function fromExtendedSections(sections: ExtendedSection[]): SectionStateV
 }
 
 /**
- * Converts SectionStateV2 back to FileSystemSectionPayload for saving
- * ИСПРАВЛЕНО: Сохраняем в bodyContent поле
+ * ✅ НОВОЕ: Создает полный payload для загрузки страницы с разделенными метаданными
+ * Заменяет старый toFileSystemPayload 
  */
-export function toFileSystemPayload(sections: SectionStateV2[], href: string): FileSystemSectionPayload{
+export function toPageUploadPayload(
+  sections: SectionStateV2[], 
+  pageData: PageData
+): PageUploadPayload {
+  const extendedSections = toExtendedSections(sections);
+  
+  // Извлекаем метаданные страницы из PageData
+  const pageMetadata = {
+    title: pageData.title,
+    description: pageData.description,
+    images: pageData.images,
+    keywords: pageData.keywords,
+    intent: pageData.intent,
+    taxonomy: pageData.taxonomy,
+    attention: pageData.attention,
+    audiences: pageData.audiences,
+  };
+
+  const payload: PageUploadPayload = {
+    href: pageData.href!,
+    pageMetadata,
+    sections: extendedSections,
+  };
+
+  return payload;
+}
+
+/**
+ * ✅ НОВОЕ: Преобразует SectionStateV2[] в ExtendedSection[]
+ * Убираем метаданные страницы из секций - они теперь в pageMetadata
+ */
+export function toExtendedSections(sections: SectionStateV2[]): ExtendedSection[] {
   const realSections = sections.filter(s => s.id !== 'all' && s.hasData && s.content);
   
-  const fileSystemSections: FileSystemSection[] = realSections.map(section => ({
+  const extendedSections: ExtendedSection[] = realSections.map((section, index) => ({
     id: section.id,
-    bodyContent: section.content!, // Сохраняем в bodyContent
-    order: undefined, // Maintain original order from file system
-    keywords: undefined, // Preserve existing keywords if any
+    bodyContent: section.content!, // Сохраняем в bodyContent как JSONContent
+    order: index + 1, // Добавляем порядок на основе позиции
+    // Убираем pageType, keywords и другие метаданные страницы
+    // Они теперь находятся в pageMetadata
   }));
-
-  return {
-    href,
-    sections: fileSystemSections,
-  };
+  
+  return extendedSections;
 }
 
 /**
@@ -99,7 +129,79 @@ export function createSectionV2State(extendedSection: ExtendedSection, index: nu
   };
 }
 
-// Private Helper Functions
+/**
+ * ✅ НОВОЕ: Проверяет готовность всех секций (исключая "all")
+ */
+export function areAllSectionsReady(sections: SectionStateV2[]): boolean {
+  const realSections = sections.filter(s => s.id !== "all");
+  return realSections.length > 0 && realSections.every(s => s.hasData);
+}
+
+/**
+ * ✅ НОВОЕ: Валидация payload перед отправкой
+ */
+export function validatePageUploadPayload(payload: PageUploadPayload): string[] {
+  const errors: string[] = [];
+  
+  if (!payload.href) {
+    errors.push("href is required");
+  }
+  
+  if (!payload.sections || payload.sections.length === 0) {
+    errors.push("At least one section is required");
+  }
+  
+  // Проверка каждой секции
+  payload.sections?.forEach((section, index) => {
+    if (!section.id) {
+      errors.push(`Section ${index + 1} is missing id`);
+    }
+    if (!section.bodyContent) {
+      errors.push(`Section ${index + 1} is missing bodyContent`);
+    }
+  });
+  
+  // Рекомендации для SEO (не ошибки, а предупреждения)
+  if (!payload.pageMetadata.title) {
+    console.warn("PageUploadPayload: Missing page title for better SEO");
+  }
+  
+  if (!payload.pageMetadata.description) {
+    console.warn("PageUploadPayload: Missing page description for better SEO");
+  }
+  
+  return errors;
+}
+
+// ===============================
+// LEGACY ФУНКЦИИ (для обратной совместимости)
+// ===============================
+
+/**
+ * @deprecated Use toPageUploadPayload instead
+ * ИСПРАВЛЕНО: Сохраняем в bodyContent поле
+ */
+export function toFileSystemPayload(sections: SectionStateV2[], href: string) {
+  console.warn("toFileSystemPayload is deprecated. Use toPageUploadPayload instead.");
+  
+  const realSections = sections.filter(s => s.id !== 'all' && s.hasData && s.content);
+  
+  const fileSystemSections = realSections.map(section => ({
+    id: section.id,
+    bodyContent: section.content!, // Сохраняем в bodyContent
+    order: undefined, // Maintain original order from file system
+    keywords: undefined, // Preserve existing keywords if any
+  }));
+
+  return {
+    href,
+    sections: fileSystemSections,
+  };
+}
+
+// ===============================
+// PRIVATE HELPER FUNCTIONS
+// ===============================
 
 /**
  * Creates the synthetic "all" section for merged view
@@ -179,4 +281,36 @@ function isEmptyContent(content: JSONContent): boolean {
     
     return false;
   });
+}
+
+// ===============================
+// ДОПОЛНИТЕЛЬНЫЕ УТИЛИТАРНЫЕ ФУНКЦИИ
+// ===============================
+
+/**
+ * Обновляет секцию новым контентом - безопасная версия
+ */
+export function updateSectionWithContent(
+  sections: SectionStateV2[],
+  sectionId: string, 
+  content: JSONContent
+): SectionStateV2[] {
+  return sections.map(s => 
+    s.id === sectionId 
+      ? { ...s, content, hasData: true, isLoading: false }
+      : s
+  );
+}
+
+/**
+ * Создает пустое состояние секции
+ */
+export function createEmptySectionState(id: string, label: string): SectionStateV2 {
+  return {
+    id,
+    label,
+    content: null,
+    hasData: false,
+    isLoading: false,
+  };
 }

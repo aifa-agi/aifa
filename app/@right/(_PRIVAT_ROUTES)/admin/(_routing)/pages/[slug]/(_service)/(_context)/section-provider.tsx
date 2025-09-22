@@ -48,6 +48,7 @@ interface SectionContextValue {
   getCacheTimestamp: (href: string) => number | null;
 }
 
+// ✅ СОХРАНЯЕМ: тот же интерфейс ответа API
 interface ApiReadResponse {
   success: boolean;
   message: string;
@@ -68,6 +69,7 @@ const initialState: SectionState = {
   lastLoaded: {},
 };
 
+// ✅ СОХРАНЯЕМ: тот же reducer без изменений
 function sectionReducer(
   state: SectionState,
   action: SectionAction
@@ -142,6 +144,7 @@ interface SectionProviderProps {
   debug?: boolean;
 }
 
+// ✅ СОХРАНЯЕМ: те же названия и интерфейсы
 export function SectionProvider({
   children,
   cacheTimeout = 5 * 60 * 1000,
@@ -150,6 +153,7 @@ export function SectionProvider({
   const [state, dispatch] = useReducer(sectionReducer, initialState);
   const { categories } = useNavigationMenu();
 
+  // ✅ СОХРАНЯЕМ: та же логика getFilePath
   const getFilePath = useCallback((href: string): string => {
     const cleanHref = href.startsWith("/") ? href.slice(1) : href;
     const parts = cleanHref.split("/").filter((part) => part.length > 0);
@@ -162,6 +166,7 @@ export function SectionProvider({
     return `${firstPart}/${secondPart}`;
   }, []);
 
+  // ✅ СОХРАНЯЕМ: та же логика кэширования
   const isCacheValid = useCallback(
     (href: string): boolean => {
       const lastLoaded = state.lastLoaded[href];
@@ -171,11 +176,13 @@ export function SectionProvider({
     [state.lastLoaded, cacheTimeout]
   );
 
+  // ✅ ОБНОВЛЕНО: только внутренняя логика, интерфейс остался тем же
   const loadSections = useCallback(
     async (
       href: string,
       force: boolean = false
     ): Promise<ExtendedSection[] | null> => {
+      // ✅ СОХРАНЯЕМ: та же логика кэша и загрузки
       if (!force && state.sections[href] && isCacheValid(href)) {
         return state.sections[href];
       }
@@ -189,6 +196,7 @@ export function SectionProvider({
 
         const filePath = getFilePath(href);
 
+        // ✅ ОБНОВЛЕНО: используем тот же endpoint, но он теперь читает из page.tsx
         const response = await fetch(`/api/sections/read`, {
           method: "POST",
           headers: {
@@ -208,6 +216,7 @@ export function SectionProvider({
           throw new Error(errorMessage);
         }
 
+        // ✅ СОХРАНЯЕМ: тот же формат ответа
         const result: ApiReadResponse = await response.json();
 
         if (!result.success) {
@@ -217,11 +226,22 @@ export function SectionProvider({
 
         const sections: ExtendedSection[] = result.sections || [];
 
+        if (debug) {
+          console.log(`SectionProvider: Loaded ${sections.length} sections for ${href}`, {
+            source: (result as any).source,
+            environment: (result as any).environment
+          });
+        }
+
         dispatch({ type: "LOAD_SUCCESS", href, sections });
         return sections;
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
+
+        if (debug) {
+          console.error(`SectionProvider: Error loading sections for ${href}:`, error);
+        }
 
         if (
           errorMessage.includes("HTTP 400") ||
@@ -238,6 +258,7 @@ export function SectionProvider({
     [state.sections, state.loading, isCacheValid, getFilePath, debug]
   );
 
+  // ✅ СОХРАНЯЕМ: все остальные методы без изменений
   const updateSections = useCallback(
     (href: string, sections: ExtendedSection[]) => {
       if (!Array.isArray(sections)) {
@@ -303,6 +324,7 @@ export function SectionProvider({
     [state.lastLoaded]
   );
 
+  // ✅ СОХРАНЯЕМ: та же логика очистки кэша
   useEffect(() => {
     if (cacheTimeout <= 0) return;
 
@@ -321,6 +343,7 @@ export function SectionProvider({
     return () => clearInterval(interval);
   }, [state.lastLoaded, cacheTimeout, clearCache]);
 
+  // ✅ СОХРАНЯЕМ: тот же контекст
   const contextValue: SectionContextValue = {
     sections: state.sections,
     loading: state.loading,
@@ -345,6 +368,7 @@ export function SectionProvider({
   );
 }
 
+// ✅ СОХРАНЯЕМ: те же хуки и экспорты
 export function useSections() {
   const context = useContext(SectionContext);
   if (context === undefined) {
@@ -471,4 +495,5 @@ export function useMultiPageSections(hrefs: string[]) {
   };
 }
 
+// ✅ СОХРАНЯЕМ: те же экспорты
 export type { SectionContextValue, ExtendedSection };
