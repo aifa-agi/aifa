@@ -1,3 +1,4 @@
+import { PageImages } from "../(_context)/dialogs";
 import { PageType } from "./page-types";
 
 export interface Section {
@@ -13,8 +14,11 @@ export interface Section {
   designDescription?: string;
   connectedDesignSectionId?: string;
 
-  body?: React.ReactNode | JSON;
+  bodyContent?: React.ReactNode | any;
 
+  title?: string;
+  description?: string;
+  images?: PageImages[];
   keywords?: string[];
   intent?: string;
   taxonomy?: string;

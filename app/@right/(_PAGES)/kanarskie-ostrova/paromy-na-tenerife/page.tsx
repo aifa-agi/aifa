@@ -1,12 +1,12 @@
-// Auto-generated file - do not edit manually
-// Generated on: 2025-09-21T20:39:43.046Z
-// Source href: paromy-na-tenerife
+// Auto-generated page - do not edit manually
+// Generated on: 2025-09-22T00:51:09.967Z
+// Source href: /kanarskie-ostrova/paromy-na-tenerife
 
-import { ExtendedSection } from "@/app/@right/(_service)/(_types)/section-types";
+import { Metadata } from "next";
+import ContentRenderer from "@/app/@right/(_service)/(_components)/content-renderer";
 
-
-
-export const sections: ExtendedSection[] = [
+// Встроенные данные секций
+const sections = [
   {
     "id": "h2-1",
     "bodyContent": {
@@ -21,7 +21,7 @@ export const sections: ExtendedSection[] = [
           "content": [
             {
               "type": "text",
-              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову"
+              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову!"
             }
           ]
         },
@@ -66,8 +66,6 @@ export const sections: ExtendedSection[] = [
   },
   {
     "id": "h2-2",
-    "title":"Тенерифе в 2025 году",
-    "description":"Планирование путешествия на Тенерифе",
     "bodyContent": {
       "type": "doc",
       "content": [
@@ -80,7 +78,7 @@ export const sections: ExtendedSection[] = [
           "content": [
             {
               "type": "text",
-              "text": "Расписание и маршруты паромов на Тенерифе в 2025 году"
+              "text": "Расписание и маршруты паромов на Тенерифе в 2025 году!!"
             }
           ]
         },
@@ -414,3 +412,41 @@ export const sections: ExtendedSection[] = [
     }
   }
 ];
+
+// Генерация метаданных для SEO
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову!",
+    description: "Если вы планируете путешествие на Тенерифе или хотите исследовать окрестные острова, морские перевозки с помощью паромов — отличный выбор. Паромы Тенерифе...",
+    keywords: [],
+    
+    // Open Graph метатеги
+    openGraph: {
+      title: "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову!",
+      description: "Если вы планируете путешествие на Тенерифе или хотите исследовать окрестные острова, морские перевозки с помощью паромов — отличный выбор. Паромы Тенерифе...",
+      type: "article",
+      url: "/kanarskie-ostrova/paromy-na-tenerife",
+      
+    },
+    
+    // Twitter метатеги
+    twitter: {
+      card: "summary_large_image",
+      title: "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову!",
+      description: "Если вы планируете путешествие на Тенерифе или хотите исследовать окрестные острова, морские перевозки с помощью паромов — отличный выбор. Паромы Тенерифе...",
+      
+    },
+    
+    // Дополнительные метатеги
+    alternates: {
+      canonical: "/kanarskie-ostrova/paromy-na-tenerife",
+    },
+  };
+}
+
+// Основной компонент страницы
+export default function Page() {
+  return (
+    <ContentRenderer sections={sections} />
+  );
+}

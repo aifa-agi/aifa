@@ -5,13 +5,14 @@ import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 import { ExtendedSection } from "@/app/@right/(_service)/(_types)/section-types";
+import { generateMetadataFromSection } from "@/app/@right/(_service)/(_components)/content-renderer/utils";
 
 interface UploadRequestBody {
   href: string;
   sections: ExtendedSection[];
 }
 
-interface SectionUploadResponse {
+interface PageUploadResponse {
   success: boolean;
   message: string;
   filePath?: string;
@@ -19,15 +20,6 @@ interface SectionUploadResponse {
   error?: string;
   errorCode?: string;
   details?: string;
-}
-
-enum OperationStatus {
-  SUCCESS = "success",
-  GITHUB_API_ERROR = "github_api_error",
-  FILESYSTEM_ERROR = "filesystem_error",
-  VALIDATION_ERROR = "validation_error",
-  NETWORK_ERROR = "network_error",
-  UNKNOWN_ERROR = "unknown_error",
 }
 
 enum ErrorCode {
@@ -94,9 +86,6 @@ function validateRequestBody(body: any): body is UploadRequestBody {
     if (!section.id || typeof section.id !== "string") {
       throw new Error(`Section at index ${i} must have a string "id" property`);
     }
-    if (!section.bodyContent || typeof section.bodyContent !== "object") {
-      throw new Error(`Section at index ${i} must have a "bodyContent" object`);
-    }
   }
 
   return true;
@@ -111,25 +100,79 @@ function validateSafeName(name: string, fieldName: string): void {
   }
 }
 
-function generateTypeScriptFile(
-  filename: string,
+// Функция для генерации содержимого page.tsx файла
+function generatePageTsxContent(
+  firstPartHref: string,
+  secondPartHref: string,
   sections: ExtendedSection[]
 ): string {
-  const importStatement = `// @ts-ignore\nimport { ExtendedSection } from "@/app/types/section-types";`;
-  const exportStatement = `export const sections: ExtendedSection[] = ${JSON.stringify(sections, null, 2)};`;
+  // Генерируем метаданные из первой секции
+  const firstSection = sections[0];
+  const metadata = firstSection ? generateMetadataFromSection(firstSection) : {
+    title: "Страница без заголовка",
+    description: "Описание отсутствует",
+    images: [],
+    keywords: []
+  };
 
-  const fileContent = [
-    "// Auto-generated file - do not edit manually",
-    `// Generated on: ${new Date().toISOString()}`,
-    `// Source href: ${filename}`,
-    "",
-    importStatement,
-    "",
-    exportStatement,
-    "",
-  ].join("\n");
+  // Создаем JSON строку для секций с правильным форматированием
+  const sectionsJson = JSON.stringify(sections, null, 2);
 
-  return fileContent;
+  const pageContent = `// Auto-generated page - do not edit manually
+// Generated on: ${new Date().toISOString()}
+// Source href: /${firstPartHref}/${secondPartHref}
+
+import { Metadata } from "next";
+import ContentRenderer from "@/app/@right/(_service)/(_components)/content-renderer";
+
+// Встроенные данные секций
+const sections = ${sectionsJson};
+
+// Генерация метаданных для SEO
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "${metadata.title.replace(/"/g, '\\"')}",
+    description: "${metadata.description.replace(/"/g, '\\"')}",
+    keywords: ${JSON.stringify(metadata.keywords)},
+    
+    // Open Graph метатеги
+    openGraph: {
+      title: "${metadata.title.replace(/"/g, '\\"')}",
+      description: "${metadata.description.replace(/"/g, '\\"')}",
+      type: "article",
+      url: "/${firstPartHref}/${secondPartHref}",
+      ${metadata.images.length > 0 ? `images: [
+        {
+          url: "${metadata.images[0].href}",
+          alt: "${metadata.images[0].alt?.replace(/"/g, '\\"') || ''}",
+        }
+      ],` : ''}
+    },
+    
+    // Twitter метатеги
+    twitter: {
+      card: "summary_large_image",
+      title: "${metadata.title.replace(/"/g, '\\"')}",
+      description: "${metadata.description.replace(/"/g, '\\"')}",
+      ${metadata.images.length > 0 ? `images: ["${metadata.images[0].href}"],` : ''}
+    },
+    
+    // Дополнительные метатеги
+    alternates: {
+      canonical: "/${firstPartHref}/${secondPartHref}",
+    },
+  };
+}
+
+// Основной компонент страницы
+export default function Page() {
+  return (
+    <ContentRenderer sections={sections} />
+  );
+}
+`;
+
+  return pageContent;
 }
 
 async function ensureDirectoryExists(dirPath: string): Promise<void> {
@@ -138,16 +181,16 @@ async function ensureDirectoryExists(dirPath: string): Promise<void> {
   }
 }
 
+// Функция для сохранения в GitHub (production)
 async function saveToGitHub(
   firstPartHref: string,
   secondPartHref: string,
   sections: ExtendedSection[]
-): Promise<SectionUploadResponse> {
+): Promise<PageUploadResponse> {
   try {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
     const GITHUB_REPO = process.env.GITHUB_REPO;
-    const GITHUB_SECTIONS_BASE_PATH =
-      process.env.GITHUB_SECTIONS_BASE_PATH || "config/content/sections";
+    const GITHUB_PAGES_BASE_PATH = process.env.GITHUB_PAGES_BASE_PATH || "app/@right/(_PAGES)";
 
     if (!GITHUB_TOKEN) {
       return {
@@ -169,10 +212,11 @@ async function saveToGitHub(
       };
     }
 
-    const fileContents = generateTypeScriptFile(secondPartHref, sections);
+    const fileContents = generatePageTsxContent(firstPartHref, secondPartHref, sections);
     const encodedContent = Buffer.from(fileContents).toString("base64");
-    const filePath = `${GITHUB_SECTIONS_BASE_PATH}/${firstPartHref}/${secondPartHref}.ts`;
+    const filePath = `${GITHUB_PAGES_BASE_PATH}/${firstPartHref}/${secondPartHref}/page.tsx`;
 
+    // Проверяем существование файла
     const getFileResponse = await fetch(
       `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`,
       {
@@ -189,6 +233,7 @@ async function saveToGitHub(
       sha = fileData.sha;
     }
 
+    // Создаем или обновляем файл
     const updateResponse = await fetch(
       `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`,
       {
@@ -199,7 +244,7 @@ async function saveToGitHub(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: `Update sections file: ${firstPartHref}/${secondPartHref}.ts - ${new Date().toISOString()}`,
+          message: `${sha ? 'Update' : 'Create'} page: ${firstPartHref}/${secondPartHref} - ${new Date().toISOString()}`,
           content: encodedContent,
           ...(sha && { sha }),
         }),
@@ -210,12 +255,11 @@ async function saveToGitHub(
       const errorData = await updateResponse.json().catch(() => ({}));
       return {
         success: false,
-        message: "Failed to update file on GitHub",
+        message: "Failed to update page on GitHub",
         error: `GitHub API returned ${updateResponse.status}: ${errorData.message || "Unknown error"}`,
-        errorCode:
-          updateResponse.status === 401
-            ? ErrorCode.GITHUB_TOKEN_INVALID
-            : ErrorCode.GITHUB_API_UNAVAILABLE,
+        errorCode: updateResponse.status === 401
+          ? ErrorCode.GITHUB_TOKEN_INVALID
+          : ErrorCode.GITHUB_API_UNAVAILABLE,
         environment: "production",
         details: JSON.stringify(errorData),
       };
@@ -223,7 +267,7 @@ async function saveToGitHub(
 
     return {
       success: true,
-      message: "Successfully updated sections file on GitHub",
+      message: "Successfully created/updated page on GitHub",
       filePath: filePath,
       environment: "production",
     };
@@ -238,26 +282,30 @@ async function saveToGitHub(
   }
 }
 
+// Функция для сохранения в файловую систему (development)
 async function saveToFileSystem(
   firstPartHref: string,
   secondPartHref: string,
   sections: ExtendedSection[]
-): Promise<SectionUploadResponse> {
+): Promise<PageUploadResponse> {
   try {
-    const contentDir = join(process.cwd(), "config", "content", "sections");
-    const firstPartDir = join(contentDir, firstPartHref);
-    const filePath = join(firstPartDir, `${secondPartHref}.ts`);
-    const relativeFilePath = `config/content/sections/${firstPartHref}/${secondPartHref}.ts`;
+    const pagesDir = join(process.cwd(), "app", "@right", "(_PAGES)");
+    const categoryDir = join(pagesDir, firstPartHref);
+    const pageDir = join(categoryDir, secondPartHref);
+    const filePath = join(pageDir, "page.tsx");
+    const relativeFilePath = `app/@right/(_PAGES)/${firstPartHref}/${secondPartHref}/page.tsx`;
 
-    await ensureDirectoryExists(contentDir);
-    await ensureDirectoryExists(firstPartDir);
+    // Создаем все необходимые директории
+    await ensureDirectoryExists(pagesDir);
+    await ensureDirectoryExists(categoryDir);
+    await ensureDirectoryExists(pageDir);
 
-    const fileContent = generateTypeScriptFile(secondPartHref, sections);
+    const fileContent = generatePageTsxContent(firstPartHref, secondPartHref, sections);
     await writeFile(filePath, fileContent, "utf-8");
 
     return {
       success: true,
-      message: "Successfully saved sections file to filesystem",
+      message: "Successfully created page in filesystem",
       filePath: relativeFilePath,
       environment: "development",
     };
@@ -284,7 +332,7 @@ async function saveToFileSystem(
 
     return {
       success: false,
-      message: "Failed to save file to local filesystem",
+      message: "Failed to create page in local filesystem",
       error: error.message || "Unknown filesystem error",
       errorCode: ErrorCode.FILE_WRITE_FAILED,
       environment: "development",
@@ -294,7 +342,7 @@ async function saveToFileSystem(
 
 export async function POST(
   request: NextRequest
-): Promise<NextResponse<SectionUploadResponse>> {
+): Promise<NextResponse<PageUploadResponse>> {
   try {
     let body;
     let rawBody: string;
@@ -307,8 +355,7 @@ export async function POST(
         {
           success: false,
           message: "Invalid JSON in request body",
-          error:
-            error instanceof Error ? error.message : "Unknown parsing error",
+          error: error instanceof Error ? error.message : "Unknown parsing error",
           errorCode: ErrorCode.INVALID_DATA_FORMAT,
           environment: isProduction() ? "production" : "development",
         },
@@ -343,8 +390,7 @@ export async function POST(
       return NextResponse.json(
         {
           success: false,
-          message:
-            error instanceof Error ? error.message : "Invalid href format",
+          message: error instanceof Error ? error.message : "Invalid href format",
           errorCode: ErrorCode.INVALID_DATA_FORMAT,
           environment: isProduction() ? "production" : "development",
         },
@@ -359,8 +405,7 @@ export async function POST(
       return NextResponse.json(
         {
           success: false,
-          message:
-            error instanceof Error ? error.message : "Invalid name format",
+          message: error instanceof Error ? error.message : "Invalid name format",
           errorCode: ErrorCode.INVALID_DATA_FORMAT,
           environment: isProduction() ? "production" : "development",
         },
@@ -368,7 +413,8 @@ export async function POST(
       );
     }
 
-    const result: SectionUploadResponse = isProduction()
+    // Создаем страницу в зависимости от окружения
+    const result: PageUploadResponse = isProduction()
       ? await saveToGitHub(firstPartHref, secondPartHref, sections)
       : await saveToFileSystem(firstPartHref, secondPartHref, sections);
 
@@ -381,7 +427,7 @@ export async function POST(
       },
     });
   } catch (error: any) {
-    const errorResponse: SectionUploadResponse = {
+    const errorResponse: PageUploadResponse = {
       success: false,
       message: "An unexpected error occurred",
       error: error.message || "Unknown error",
@@ -409,7 +455,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const { firstPartHref } = parseHref(href);
+    const { firstPartHref, secondPartHref } = parseHref(href);
 
     if (isProduction()) {
       return NextResponse.json({
@@ -418,20 +464,19 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         environment: "production",
       });
     } else {
-      const categoryDir = join(
+      const pageDir = join(
         process.cwd(),
-        "config",
-        "content",
-        "sections",
-        firstPartHref
+        "app",
+        "@right",
+        "(_PAGES)",
+        firstPartHref,
+        secondPartHref
       );
 
       return NextResponse.json({
         success: true,
-        message: existsSync(categoryDir)
-          ? "Directory exists"
-          : "Directory does not exist",
-        categoryDir: categoryDir,
+        message: existsSync(pageDir) ? "Page exists" : "Page does not exist",
+        pageDir: pageDir,
         environment: "development",
       });
     }

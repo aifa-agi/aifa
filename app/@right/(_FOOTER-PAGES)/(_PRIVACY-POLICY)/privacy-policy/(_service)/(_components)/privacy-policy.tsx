@@ -220,11 +220,7 @@ export default function PrivacyPolicy() {
             </Button>
           ))}
       </div>
-      <div className="mt-8 pt-4 border-t">
-        <p className="text-sm text-muted-foreground">
-          {t("Last updated: December 2024")}
-        </p>
-      </div>
+
     </div>
   );
 }
