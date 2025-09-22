@@ -96,8 +96,8 @@ export function useStep12V2InitDebug(sections?: ExtendedSection[], href?: string
       sectionsCount: sections?.length ?? 0,
       sectionIds: sections?.map(s => s.id) ?? [],
       pageHref: href ?? "no-href",
-      hasBodyContent: sections?.map(s => Boolean(s.body)) ?? [],
-      bodyContentTypes: sections?.map(s => typeof s.body) ?? [],
+      hasBodyContent: sections?.map(s => Boolean(s.bodyContent)) ?? [],
+      bodyContentTypes: sections?.map(s => typeof s.bodyContent) ?? [],
     };
 
     if (process.env.NODE_ENV === "development") {
@@ -118,18 +118,18 @@ export function useValidV2Sections(sections?: ExtendedSection[]): ExtendedSectio
     
     return sections.filter(section => {
       // Check if section has meaningful body content
-      if (!section.body) return false;
+      if (!section.bodyContent) return false;
       
       // Handle JSON object case
-      if (typeof section.body === 'object' && section.body !== null) {
-        const content = section.body as any;
+      if (typeof section.bodyContent === 'object' && section.bodyContent !== null) {
+        const content = section.bodyContent as any;
         return content.type === 'doc' && content.content && Array.isArray(content.content);
       }
       
       // Handle string case (JSON string)
-      if (typeof section.body === 'string') {
+      if (typeof section.bodyContent === 'string') {
         try {
-          const parsed = JSON.parse(section.body);
+          const parsed = JSON.parse(section.bodyContent);
           return parsed.type === 'doc' && parsed.content && Array.isArray(parsed.content);
         } catch {
           return false;
