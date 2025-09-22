@@ -28,16 +28,7 @@ export function generatePageTsxContent(
     images: pageMetadata.images || []
   };
 
-  // Fallback: if page metadata is empty, try to extract from first section
-  if (!pageMetadata.title && !pageMetadata.description && sections.length > 0) {
-    const fallbackMetadata = generateMetadataFromSection(sections[0]);
-    finalMetadata = {
-      title: fallbackMetadata.title,
-      description: fallbackMetadata.description,
-      keywords: fallbackMetadata.keywords,
-      images: fallbackMetadata.images
-    };
-  }
+
 
   // Create JSON string for sections with proper formatting
   const sectionsJson = JSON.stringify(sections, null, 2);
