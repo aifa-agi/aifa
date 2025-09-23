@@ -23,7 +23,7 @@ import { Step12V2 } from "./step12-2-fractal";
  * - Keeps the legacy entry name "AdminPagePreview" to avoid breaking external imports.
  * - Resolves page by slug, checks page.isPreviewComplited and mounts either V1 or V2 subtree.
  */
-export function AdminPagePreview({ slug }: AdminPageInfoProps) {
+export function AdminPageStep12({ slug }: AdminPageInfoProps) {
   const { categories, loading, initialized } = useNavigationMenu();
   const { data: session } = useSession();
   const role: UserType = session?.user?.type || "guest";
@@ -60,4 +60,4 @@ export function AdminPagePreview({ slug }: AdminPageInfoProps) {
   return <Step12V2 slug={slug} />;
 }
 
-export default AdminPagePreview;
+export default AdminPageStep12;

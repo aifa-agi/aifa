@@ -3,9 +3,7 @@
 "use client";
 
 import { useAdminPagesNav } from "../(_context)/admin-pages-nav-context";
-import { AdminPageDeploy } from "./admin-pages/admin-page-deploy";
 import { AdminPageInfo } from "./admin-pages/admin-page-info/(_service)/(_components)/admin-page-info";
-import { AdminPagePreview } from "./admin-pages/steps/step12/admin-page-preview";
 import { CompetitorResearch } from "./admin-pages/steps/competitor-research/(_service)/(_components)/competitor-research";
 
 import { AdminPageStep10 } from "./admin-pages/steps/step10/step10";
@@ -18,6 +16,8 @@ import { AdminPageStep6 } from "./admin-pages/steps/step6/step6";
 import { AdminPageStep7 } from "./admin-pages/steps/step7/step7";
 import { AdminPageStep8 } from "./admin-pages/steps/step8/step8";
 import { AdminPageStep9 } from "./admin-pages/steps/step9/step9";
+import { AdminPageStep13 } from "./admin-pages/steps/step13";
+import AdminPageStep12 from "./admin-pages/steps/step12";
 
 export function AdminPageContent() {
   const { activeTab, slug } = useAdminPagesNav();
@@ -48,9 +48,9 @@ export function AdminPageContent() {
     case "step11":
       return <AdminPageStep11 slug={slug} />;
     case "preview":
-      return <AdminPagePreview slug={slug} />;
+      return <AdminPageStep12 slug={slug} />;
     case "deploy":
-      return <AdminPageDeploy slug={slug} />;
+      return <AdminPageStep13 slug={slug} />;
     default:
       return <AdminPageInfo slug={slug} />;
   }

@@ -16,14 +16,14 @@ import { useModal } from "@/app/@right/(_service)/(_context)/modal-context";
 
 interface PageActionsMenuProps
   extends PageDataStatus,
-    Pick<
-      PageActionsHook,
-      | "handleAddTitle"
-      | "handleAddDescription"
-      | "handleAddImages"
-      | "handleAddKeywords"
-      | "handleAddPageCode"
-    > {
+  Pick<
+    PageActionsHook,
+    | "handleAddTitle"
+    | "handleAddDescription"
+    | "handleAddImages"
+    | "handleAddKeywords"
+    | "handleAddPageCode"
+  > {
   currentPageData: PageData | null;
   hasUnsavedChanges?: boolean;
 }

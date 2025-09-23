@@ -41,7 +41,7 @@ export function usePageBodyStatus({
     }
 
     const hasSections =
-      currentPageData.sections && currentPageData.sections.length > 0;
+      (currentPageData.sections && currentPageData.sections.length > 0)|| currentPageData?.isPreviewComplited
 
     return hasSections ? "complete" : "ready";
   }, [currentPageData, dataStatus, hasUnsavedChanges]);

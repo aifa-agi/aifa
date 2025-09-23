@@ -7,7 +7,6 @@
     "fr": "Menu mobile",
     "it": "Menu mobile"
   },
-  
   "Close Menu": {
     "ru": "Закрыть меню",
     "en": "Close Menu",
@@ -23,6 +22,13 @@
     "de": "Menü öffnen",
     "fr": "Ouvrir le menu",
     "it": "Apri menu"
+  },
+  "Contents": {
+    "ru": "Содержание",
+    "en": "Contents",
+    "es": "Contenido",
+    "de": "Inhalt",
+    "fr": "Contenu",
+    "it": "Indice"
   }
-
 }

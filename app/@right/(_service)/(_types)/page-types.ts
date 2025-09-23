@@ -328,29 +328,7 @@ export interface DraftReport {
   generatedAt: string;
 }
 
-export interface FinalReport {
-  reportId: string;
-  pageId: string;
-  finalStructure: FinalContentResult[];
-  overallFinalAnalysis?: {
-    overallScore?: number;
-    summary?: string;
-    achievements?: string[];
-    finalMetrics?: {
-      wordCount?: number;
-      readabilityScore?: number;
-      seoScore?: number;
-      engagementPotential?: number;
-      semanticComplexity?: number;
-    };
-    semanticAccomplishments?: {
-      effectiveBlockTypes?: SemanticBlockType[];
-      userJourneyOptimization?: number;
-      conversionPathClarity?: number;
-    };
-  };
-  completedAt: string;
-}
+
 
 export interface AISemanticCapabilities {
   canGenerateCustomBlocks: boolean;
@@ -436,7 +414,7 @@ export interface PageData {
   isPreviewComplited?: boolean;
 
    // step 13
-  finalReport?: FinalReport;
+  finalReport?: string[];
 
   hasBadge?: boolean;
   badgeName?: BadgeName;

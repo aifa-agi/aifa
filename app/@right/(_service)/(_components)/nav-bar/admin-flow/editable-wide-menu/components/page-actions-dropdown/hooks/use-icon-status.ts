@@ -29,7 +29,7 @@ export function useIconStatus({
       hasTitleData && hasDescriptionData && hasKeywordsData && hasImagesData;
 
     const hasSections =
-      currentPageData.sections && currentPageData.sections.length > 0;
+      (currentPageData?.sections && currentPageData?.sections.length > 0) || currentPageData?.isPreviewComplited;
 
     if (hasBasicData && hasSections) {
       return "complete";

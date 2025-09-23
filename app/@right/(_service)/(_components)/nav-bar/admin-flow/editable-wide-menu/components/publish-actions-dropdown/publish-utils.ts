@@ -14,7 +14,7 @@ export const globeColors: Record<PublishState, string> = {
  */
 export function hasPageContent(page: PageData): boolean {
   const hasBasicContent = Boolean(
-    page.title &&
+      (page.title &&
       page.title.trim().length > 0 &&
       page.description &&
       page.description.trim().length > 0 &&
@@ -23,7 +23,7 @@ export function hasPageContent(page: PageData): boolean {
       page.keywords &&
       page.keywords.length > 0 &&
       page.sections &&
-      page.sections.length > 0
+      page.sections.length > 0) || page.isPreviewComplited
   );
 
   return hasBasicContent;

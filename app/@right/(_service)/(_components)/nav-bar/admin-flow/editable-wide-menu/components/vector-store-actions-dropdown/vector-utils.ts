@@ -30,9 +30,10 @@ export function hasPageContent(page: PageData): boolean {
 
   // Check sections (must have at least one)
   const hasSections = Boolean(page.sections && page.sections.length > 0);
-
+  
+  const hasDeployedPreview = Boolean(page.isPreviewComplited)
   const hasAllContent =
-    hasTitle && hasDescription && hasImages && hasKeywords && hasSections;
+    (hasTitle && hasDescription && hasImages && hasKeywords && hasSections) || hasDeployedPreview;
 
   // Debug logging to help identify missing content
   if (!hasAllContent) {
