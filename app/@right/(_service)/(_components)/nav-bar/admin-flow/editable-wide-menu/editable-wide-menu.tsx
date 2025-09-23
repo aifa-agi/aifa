@@ -55,30 +55,45 @@ export default function EditableWideMenu({
       }}
     >
       <div className="flex h-full">
-        <PageSection
-          activeCategory={menuOperations.activeCategory}
-          categories={categories}
-          setCategories={setCategories}
-          onAddPage={menuOperations.handleAddPage}
-          onPageDragEnd={menuOperations.handlePageDragEnd}
-          setIsOpen={setIsOpen}
-        />
+        {/* Левая колонка для страниц */}
+        <div className="flex-1 overflow-x-auto min-w-0 p-4">
+          <PageSection
+            activeCategory={menuOperations.activeCategory}
+            categories={categories}
+            setCategories={setCategories}
+            onAddPage={menuOperations.handleAddPage}
+            onPageDragEnd={menuOperations.handlePageDragEnd}
+            setIsOpen={setIsOpen}
+          />
+        </div>
 
-        <CategorySection
-          categories={categories}
-          setCategories={setCategories}
-          activeCategoryTitle={menuOperations.activeCategoryTitle}
-          onCategoryClick={menuOperations.setActiveCategoryTitle}
-          onCategoryDragEnd={menuOperations.handleCategoryDragEnd}
-          onAddCategory={menuOperations.handleAddCategory}
-          dirty={dirty}
-          loading={loading}
-          onUpdate={onUpdate}
-          onRetry={onRetry}
-          canRetry={canRetry}
-          retryCount={retryCount}
-          lastError={lastError}
-        />
+        {/* Разделитель */}
+        <div className="w-px bg-gray-700 h-full"></div>
+
+        {/* --- ИЗМЕНЕНИЕ НАЧАЛО --- */}
+        {/* 
+          Правая колонка для категорий.
+          1. Удален 'p-4', чтобы убрать лишние отступы.
+          2. Добавлен 'overflow-y-auto', чтобы вернуть вертикальную прокрутку.
+        */}
+        <div className="flex-shrink-0 w-72 overflow-y-auto">
+          {/* --- ИЗМЕНЕНИЕ КОНЕЦ --- */}
+          <CategorySection
+            categories={categories}
+            setCategories={setCategories}
+            activeCategoryTitle={menuOperations.activeCategoryTitle}
+            onCategoryClick={menuOperations.setActiveCategoryTitle}
+            onCategoryDragEnd={menuOperations.handleCategoryDragEnd}
+            onAddCategory={menuOperations.handleAddCategory}
+            dirty={dirty}
+            loading={loading}
+            onUpdate={onUpdate}
+            onRetry={onRetry}
+            canRetry={canRetry}
+            retryCount={retryCount}
+            lastError={lastError}
+          />
+        </div>
       </div>
     </div>
   );

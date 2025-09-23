@@ -43,7 +43,7 @@ export function CategorySection({
   lastError,
 }: CategorySectionProps) {
   return (
-    <div className="w-80 bg-gray-900 p-8 flex flex-col">
+    <div className="bg-gray-900 p-8 flex flex-col">
       <h3 className="text-gray-400 text-sm font-semibold mb-2 tracking-wider">
         CATEGORIES
       </h3>

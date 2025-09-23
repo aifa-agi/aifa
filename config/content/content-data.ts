@@ -3815,7 +3815,7 @@ export const contentData = {
         ],
         "hasBadge": false,
         "type": "blog",
-        "isPublished": true,
+        "isPublished": false,
         "isAddedToPrompt": false,
         "isVectorConnected": false,
         "isChatSynchronized": false,
@@ -3863,5 +3863,5 @@ export const contentData = {
 
 export type contentData = typeof contentData;
 
-export const lastUpdated = "2025-09-23T09:15:58.807Z";
+export const lastUpdated = "2025-09-23T12:36:03.638Z";
 export const generatedBy = "menu-persist-api";

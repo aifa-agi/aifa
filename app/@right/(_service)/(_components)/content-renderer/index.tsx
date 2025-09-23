@@ -23,6 +23,7 @@ import "@/components/tiptap/tiptap-node/paragraph-node/paragraph-node.scss";
 import BlurImage from "../shared/blur-image";
 import { getBlurDataURL, placeholderBlurhash } from "../../(_libs)/(_utils)/utils";
 import Image from "next/image";
+import { useTranslation } from "../../(_libs)/translation";
 
 // Wrapper для максимальной ширины
 function MaxWidthWrapper({
@@ -106,11 +107,7 @@ function HeroImage({ image }: { image: PageImage }) {
           src={image.href}
           sizes="(max-width: 768px) 770px, 1000px"
         />
-        {image.alt && (
-          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm">
-            {image.alt}
-          </div>
-        )}
+
       </div>
     </div>
   );
@@ -163,11 +160,11 @@ function SidebarTableOfContents({
   }
 
 
-
+  const { t } = useTranslation();
   return (
     <div className="space-y-1">
       <h3 className="text-sm font-medium text-muted-foreground mb-3">
-        Содержание
+        {t("Contents")}
       </h3>
       <nav className="space-y-1">
         {navigationSections.map(({ id, h2Title }) => (

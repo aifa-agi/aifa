@@ -48,9 +48,12 @@ export function PageListItem({
 
   const [isAdminCategory, setAdminCategory] = useState(false);
 
+  const fullTitle = humanize(page.title ?? page.linkName);
+  const displayTitle =
+    fullTitle.length > 20 ? `${fullTitle.substring(0, 20)}...` : fullTitle;
+
   const handlePageClick = () => {
     if (categoryTitle.toLowerCase() === "admin") {
-      // При параллельной маршрутизации нужно использовать router.push с href напрямую
       if (page.href) {
         router.push(page.href);
         setIsOpen(false);
@@ -77,16 +80,23 @@ export function PageListItem({
       {...attributes}
       {...listeners}
     >
-      <div className="flex-grow flex items-center gap-2 overflow-hidden">
+      {/* --- ИЗМЕНЕНИЕ НАЧАЛО --- */}
+      {/* Добавлен инлайновый стиль minWidth для предотвращения сжатия */}
+      <div
+        className="flex-grow flex items-center gap-2 overflow-hidden"
+        style={{ minWidth: "200px" }}
+      >
+        {/* --- ИЗМЕНЕНИЕ КОНЕЦ --- */}
         <span
           className={cn(
             "overflow-hidden text-ellipsis whitespace-nowrap",
             isAdminCategory &&
-              "cursor-pointer hover:text-primary hover:underline"
+            "cursor-pointer hover:text-primary hover:underline"
           )}
           onClick={handlePageClick}
+          title={fullTitle}
         >
-          {humanize(page.title ?? page.linkName)}
+          {displayTitle}
         </span>
         {page.hasBadge && page.badgeName && (
           <Badge className="shadow-none rounded-full px-2.5 py-0.5 text-xs font-semibold h-6 flex items-center">

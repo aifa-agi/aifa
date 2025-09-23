@@ -15,7 +15,7 @@ export default async function AdminLayout({
   const allowed: UserType[] = [UserType.admin, UserType.architect];
 
   if (!session || !allowed.includes(session.user.type)) {
-    redirect("/");
+    redirect("/login");
   }
 
   return <>{children}</>;
