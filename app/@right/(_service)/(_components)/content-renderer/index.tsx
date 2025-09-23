@@ -22,6 +22,7 @@ import "@/components/tiptap/tiptap-node/list-node/list-node.scss";
 import "@/components/tiptap/tiptap-node/paragraph-node/paragraph-node.scss";
 import BlurImage from "../shared/blur-image";
 import { getBlurDataURL, placeholderBlurhash } from "../../(_libs)/(_utils)/utils";
+import Image from "next/image";
 
 // Wrapper для максимальной ширины
 function MaxWidthWrapper({
@@ -95,9 +96,8 @@ function HeroImage({ image }: { image: PageImage }) {
   return (
     <div className="hero-image-container mb-8">
       <div className="relative w-full h-64 md:h-80 lg:h-96 overflow-hidden rounded-lg 2xl:rounded-t-xl 2xl:rounded-b-none">
-        <BlurImage
+        <Image
           alt={image.alt || "Aifa dev image"}
-          blurDataURL={placeholderBlurhash}
           className="aspect-[1200/630] border-b object-cover md:rounded-t-xl"
           width={1200}
           height={630}
