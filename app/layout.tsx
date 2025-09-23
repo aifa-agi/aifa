@@ -21,11 +21,9 @@ import { AppProvider } from "@/contexts/app-context";
 import { DevIndicatorClient } from "@/lib/utils/dev-indicator-client";
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  viewportFit: "cover",
+
 };
 
 const geist = Geist({

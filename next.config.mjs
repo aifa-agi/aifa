@@ -29,7 +29,7 @@ const nextConfig = {
         hostname: 'avatar.vercel.sh', // Allows images from this hostname.
       },
     ],
-    unoptimized: !isImageOptimizationOn,
+    //unoptimized: !isImageOptimizationOn,
   },
 };
 
