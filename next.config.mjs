@@ -28,6 +28,12 @@ const nextConfig = {
       {
         hostname: 'avatar.vercel.sh', // Allows images from this hostname.
       },
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
     //unoptimized: !isImageOptimizationOn,
   },
