@@ -1,10 +1,12 @@
 // Auto-generated page - do not edit manually
-// Generated on: 2025-09-22T19:39:45.819Z
+// Generated on: 2025-09-22T23:32:56.966Z
 // Source href: /kanarskie-ostrova/paromy-na-tenerife
 // Page metadata: Паромы на Тенерифе! Тенерифе 2026 | 3 sections
 
 import { Metadata } from "next";
 import ContentRenderer from "@/app/@right/(_service)/(_components)/content-renderer";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 // Встроенные данные секций
 const sections = [
@@ -22,7 +24,7 @@ const sections = [
           "content": [
             {
               "type": "text",
-              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову roma”””"
+              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову ))))"
             }
           ]
         },
@@ -369,6 +371,12 @@ const sections = [
   }
 ];
 
+// Данные героического изображения
+const heroImage = {
+  "href": "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png",
+  "alt": "Паромы на Тенерифе"
+};
+
 // Генерация метаданных для SEO из pageMetadata
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -419,20 +427,29 @@ export default function Page() {
   return (
     <article className="page-content">
       {/* Заголовок страницы */}
-      <header className="page-header mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 leading-tight">
-          Паромы на Тенерифе! Тенерифе 2026
-        </h1>
+      <div className="container max-w-screen-2xl pt-6 px-4 md:pt-10">
+        <div className="flex flex-col space-y-4">
+          <h1 className="font-heading text-3xl text-foreground sm:text-4xl">
+            Паромы на Тенерифе! Тенерифе 2026
+          </h1>
         
-        {/* Описание страницы */}
-        <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-4xl">
-          Полный гид по морским перевозкам 2025
-        </p>
-      </header>
+          {/* Описание страницы */}
+          <p className="text-base text-muted-foreground md:text-lg">
+            Полный гид по морским перевозкам 2025
+          </p>
 
-      {/* Контент секций */}
-      <div className="page-sections">
-        <ContentRenderer sections={sections} />
+          <div className="flex items-center space-x-4">
+            <Badge className="shadow-none rounded-md px-2.5 py-0.5 text-xs font-semibold h-6 flex items-center">
+              Blog
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      {/* Контент секций с героическим изображением */}
+      <div className="relative">
+        <div className="absolute top-52 w-full border-t" />
+        <ContentRenderer sections={sections} heroImage={heroImage} />
       </div>
     </article>
   );

@@ -21,46 +21,60 @@ export function generatePageTsxContent(
   const { pageMetadata, sections } = payload;
   
   // Use metadata from payload or fallback from first section
-  let finalMetadata = {
+  const finalMetadata = {
     title: pageMetadata.title || "Страница без заголовка",
     description: pageMetadata.description || "Описание отсутствует", 
     keywords: pageMetadata.keywords || [],
     images: pageMetadata.images || []
   };
 
-
-
+  // Properly escape strings for template literals (not JSX)
+  const escapedTitle = finalMetadata.title.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+  const escapedDescription = finalMetadata.description.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+  
   // Create JSON string for sections with proper formatting
   const sectionsJson = JSON.stringify(sections, null, 2);
+  
+  // Prepare hero image data
+  const heroImageData = finalMetadata.images.length > 0 ? {
+    href: finalMetadata.images[0].href,
+    alt: finalMetadata.images[0].alt || ""
+  } : null;
 
-  const pageContent = `// Auto-generated page - do not edit manually
+  // Generate the page content using template literal
+  return `// Auto-generated page - do not edit manually
 // Generated on: ${new Date().toISOString()}
 // Source href: /${firstPartHref}/${secondPartHref}
 // Page metadata: ${pageMetadata.title || 'No title'} | ${sections.length} sections
 
 import { Metadata } from "next";
 import ContentRenderer from "@/app/@right/(_service)/(_components)/content-renderer";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 // Встроенные данные секций
 const sections = ${sectionsJson};
 
+// Данные героического изображения
+const heroImage = ${heroImageData ? JSON.stringify(heroImageData, null, 2) : 'null'};
+
 // Генерация метаданных для SEO из pageMetadata
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "${finalMetadata.title.replace(/"/g, '\\"')}",
-    description: "${finalMetadata.description.replace(/"/g, '\\"')}",
+    title: "${escapedTitle}",
+    description: "${escapedDescription}",
     keywords: ${JSON.stringify(finalMetadata.keywords)},
     
     // Open Graph метатеги
     openGraph: {
-      title: "${finalMetadata.title.replace(/"/g, '\\"')}",
-      description: "${finalMetadata.description.replace(/"/g, '\\"')}",
+      title: "${escapedTitle}",
+      description: "${escapedDescription}",
       type: "article",
-      url: "/${firstPartHref}/${secondPartHref}",
-      ${finalMetadata.images.length > 0 ? `images: [
+      url: "/${firstPartHref}/${secondPartHref}",${finalMetadata.images.length > 0 ? `
+      images: [
         {
           url: "${finalMetadata.images[0].href}",
-          alt: "${finalMetadata.images[0].alt?.replace(/"/g, '\\"') || ''}",
+          alt: "${finalMetadata.images[0].alt?.replace(/`/g, '\\`').replace(/\$/g, '\\$') || ''}",
         }
       ],` : ''}
     },
@@ -68,9 +82,9 @@ export async function generateMetadata(): Promise<Metadata> {
     // Twitter метатеги
     twitter: {
       card: "summary_large_image",
-      title: "${finalMetadata.title.replace(/"/g, '\\"')}",
-      description: "${finalMetadata.description.replace(/"/g, '\\"')}",
-      ${finalMetadata.images.length > 0 ? `images: ["${finalMetadata.images[0].href}"],` : ''}
+      title: "${escapedTitle}",
+      description: "${escapedDescription}",${finalMetadata.images.length > 0 ? `
+      images: ["${finalMetadata.images[0].href}"],` : ''}
     },
     
     // Дополнительные метатеги
@@ -94,25 +108,31 @@ export default function Page() {
   return (
     <article className="page-content">
       {/* Заголовок страницы */}
-      <header className="page-header mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 leading-tight">
-          ${finalMetadata.title.replace(/"/g, '\\"')}
-        </h1>
+      <div className="container max-w-screen-2xl pt-6 px-4 md:pt-10">
+        <div className="flex flex-col space-y-4">
+          <h1 className="font-heading text-3xl text-foreground sm:text-4xl">
+            ${escapedTitle}
+          </h1>
         
-        {/* Описание страницы */}
-        <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-4xl">
-          ${finalMetadata.description.replace(/"/g, '\\"')}
-        </p>
-      </header>
+          {/* Описание страницы */}
+          <p className="text-base text-muted-foreground md:text-lg">
+            ${escapedDescription}
+          </p>
 
-      {/* Контент секций */}
-      <div className="page-sections">
-        <ContentRenderer sections={sections} />
+          <div className="flex items-center space-x-4">
+            <Badge className="shadow-none rounded-md px-2.5 py-0.5 text-xs font-semibold h-6 flex items-center">
+              Blog
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      {/* Контент секций с героическим изображением */}
+      <div className="relative">
+        <div className="absolute top-52 w-full border-t" />
+        <ContentRenderer sections={sections} heroImage={heroImage} />
       </div>
     </article>
   );
-}
-`;
-
-  return pageContent;
+}`;
 }

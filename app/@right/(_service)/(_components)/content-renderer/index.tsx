@@ -1,8 +1,16 @@
 // @/app/@right/(_service)/(_components)/content-renderer/index.tsx
 
-import React from "react";
+"use client";
+
+import React, { createRef, useEffect, useRef } from "react";
 import { ExtendedSection } from "../../(_types)/section-types";
 import { TipTapNode, TipTapDocument } from "./types";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAppContext } from "@/contexts/app-context";
+import { useRightSidebar } from "@/contexts/right-sidebar-context";
+import { useInteractiveSections } from "@/app/@right/(_service)/hooks/useInteractiveSections";
+import { InteractiveSection } from "@/components/shared/interactive-section";
+import { Button } from "@/components/ui/button";
 
 // Импортируем все стили TipTap
 import "@/components/tiptap/tiptap-node/blockquote-node/blockquote-node.scss";
@@ -13,11 +21,177 @@ import "@/components/tiptap/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap/tiptap-node/list-node/list-node.scss";
 import "@/components/tiptap/tiptap-node/paragraph-node/paragraph-node.scss";
 
-export interface ContentRendererProps {
-  sections: ExtendedSection[];
+// Wrapper для максимальной ширины
+function MaxWidthWrapper({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`mx-auto w-full max-w-screen-xl px-2.5 md:px-20 ${className}`}>
+      {children}
+    </div>
+  );
 }
 
-// Исправленный рендерер для заголовков
+// Типы для изображений страницы
+export interface PageImage {
+  href: string;
+  alt?: string;
+}
+
+export interface ContentRendererProps {
+  sections: ExtendedSection[];
+  heroImage?: PageImage;
+}
+
+// Интерфейс для навигационных секций
+interface NavigationSection {
+  id: string;
+  h2Title: string;
+  shortTitle: string;
+}
+
+// Функция для извлечения первого H2 заголовка из TipTap документа
+function extractFirstH2Heading(document: TipTapDocument): string | null {
+  if (!document?.content) {
+    return null;
+  }
+
+  for (const node of document.content) {
+    if (node.type === "heading" && node.attrs?.level === 2 && node.content) {
+      const headingText = extractTextFromNode(node);
+      if (headingText.trim()) {
+        return headingText.trim();
+      }
+    }
+  }
+
+  return null;
+}
+
+// Функция для извлечения текста из узла
+function extractTextFromNode(node: TipTapNode): string {
+  if (node.type === "text" && node.text) {
+    return node.text;
+  }
+
+  if (node.content && Array.isArray(node.content)) {
+    return node.content
+      .map(childNode => extractTextFromNode(childNode))
+      .join(" ");
+  }
+
+  return "";
+}
+
+// Компонент для отображения героического изображения
+function HeroImage({ image }: { image: PageImage }) {
+  return (
+    <div className="hero-image-container mb-8">
+      <div className="relative w-full h-64 md:h-80 lg:h-96 overflow-hidden rounded-lg 2xl:rounded-t-xl 2xl:rounded-b-none">
+        <img
+          src={image.href}
+          alt={image.alt || ""}
+          className="w-full h-full object-cover"
+          loading="eager"
+          style={{
+            objectPosition: "center",
+          }}
+        />
+        {image.alt && (
+          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm">
+            {image.alt}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Компонент навигационных кнопок для экранов до 2xl
+function SectionNavigationButtons({
+  navigationSections,
+  onNavigate
+}: {
+  navigationSections: NavigationSection[];
+  onNavigate: (sectionId: string) => void;
+}) {
+  if (navigationSections.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="sticky top-0 z-40 mb-6 2xl:hidden">
+      <div className="overflow-x-auto custom-scrollbar">
+        <div className="flex gap-4 min-w-fit bg-background py-2">
+          {navigationSections.map(({ id, shortTitle }) => (
+            <Button
+              key={id}
+              onClick={() => onNavigate(id)}
+              variant="outline"
+              className="whitespace-nowrap flex-shrink-0"
+            >
+              {shortTitle}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Компонент боковой навигации для широких экранов
+function SidebarTableOfContents({
+  navigationSections,
+  onNavigate,
+}: {
+  navigationSections: NavigationSection[];
+  onNavigate: (sectionId: string) => void;
+}) {
+  if (navigationSections.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-1">
+      <h3 className="text-sm font-medium text-muted-foreground mb-3">
+        Содержание
+      </h3>
+      <nav className="space-y-1">
+        {navigationSections.map(({ id, h2Title }) => (
+          <a
+            key={id}
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate(id);
+            }}
+            href={`#${id}`}
+            className="block text-sm text-muted-foreground hover:text-foreground transition-colors py-1 leading-tight line-clamp-1 cursor-pointer"
+            title={h2Title}
+          >
+            {h2Title}
+          </a>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+// Компонент разделителя секций
+function SectionSeparator() {
+  return (
+    <div className="section-separator">
+      <div className="h-6" />
+      <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
+      <div className="h-9" />
+    </div>
+  );
+}
+
+// Исправленный рендерер для заголовков с padding для H2
 function renderHeading(node: TipTapNode, index: number): React.ReactNode {
   const level = node.attrs?.level || 1;
   const textAlign = node.attrs?.textAlign;
@@ -25,12 +199,17 @@ function renderHeading(node: TipTapNode, index: number): React.ReactNode {
 
   const style = textAlign ? { textAlign: textAlign as React.CSSProperties['textAlign'] } : undefined;
 
+  // Добавляем padding для H2 заголовков: справа 36px, сверху 4px
+  const h2Style = level === 2
+    ? { ...style, paddingRight: '36px', paddingTop: '4px' }
+    : style;
+
   // Правильный способ создания динамических заголовков
   switch (level) {
     case 1:
       return <h1 key={index} style={style}>{content}</h1>;
     case 2:
-      return <h2 key={index} style={style}>{content}</h2>;
+      return <h2 key={index} style={h2Style}>{content}</h2>;
     case 3:
       return <h3 key={index} style={style}>{content}</h3>;
     case 4:
@@ -188,25 +367,154 @@ function renderTipTapDocument(document: TipTapDocument): React.ReactNode[] {
 }
 
 // Компонент для рендеринга отдельной секции
-function renderSection(section: ExtendedSection, index: number): React.ReactNode {
+function renderSection(
+  section: ExtendedSection,
+  index: number,
+  isLastSection: boolean,
+  sectionRef: React.RefObject<HTMLElement | null>,
+  isSendMode: boolean,
+  isHovered: boolean,
+  isMobile: boolean,
+  onHover: (id: string | null) => void,
+  onActivate: (id: string) => void,
+  onSend: (id: string) => void
+): React.ReactNode {
   const { id, bodyContent } = section;
 
   return (
-    <section key={id || index} className="mb-12 last:mb-0">
+    <React.Fragment key={id || index}>
+      <InteractiveSection
+        id={id || `section-${index}`}
+        ref={sectionRef}
+        isSendMode={isSendMode}
+        isHovered={isHovered}
+        isMobile={isMobile}
+        onHover={onHover}
+        onActivate={onActivate}
+        onSend={onSend}
+      >
+        {/* Контент секции с правильным классом для TipTap стилей */}
+        {bodyContent && (
+          <div className="tiptap ProseMirror">
+            {renderTipTapDocument(bodyContent as TipTapDocument)}
+          </div>
+        )}
+      </InteractiveSection>
 
-
-      {/* Контент секции с правильным классом для TipTap стилей */}
-      {bodyContent && (
-        <div className="tiptap ProseMirror">
-          {renderTipTapDocument(bodyContent as TipTapDocument)}
-        </div>
-      )}
-    </section>
+      {/* Добавляем разделитель после каждой секции, кроме последней */}
+      {!isLastSection && <SectionSeparator />}
+    </React.Fragment>
   );
 }
 
 // Основной компонент ContentRenderer
-export default function ContentRenderer({ sections }: ContentRendererProps) {
+export default function ContentRenderer({ sections, heroImage }: ContentRendererProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { setInteractionContext } = useAppContext();
+  const { isOpen, closeDrawer } = useRightSidebar();
+
+  const {
+    sendModeSectionId,
+    setSendModeSectionId,
+    hoveredSectionId,
+    setHoveredSectionId,
+    isMobile,
+  } = useInteractiveSections();
+
+  // Создание рефов для всех секций
+  const sectionRefs = useRef<
+    Record<string, React.RefObject<HTMLElement | null>>
+  >(
+    sections.reduce(
+      (acc, section) => {
+        const sectionId = section.id || `section-${sections.indexOf(section)}`;
+        acc[sectionId] = createRef<HTMLElement>();
+        return acc;
+      },
+      {} as Record<string, React.RefObject<HTMLElement | null>>
+    )
+  );
+
+  // Извлечение навигационных секций
+  const navigationSections: NavigationSection[] = sections
+    .map((section, index) => {
+      const sectionId = section.id || `section-${index}`;
+      const h2Title = section.bodyContent
+        ? extractFirstH2Heading(section.bodyContent as TipTapDocument)
+        : null;
+
+      if (!h2Title) return null;
+
+      return {
+        id: sectionId,
+        h2Title,
+        shortTitle: h2Title.substring(0, 10) + (h2Title.length > 10 ? '...' : '')
+      };
+    })
+    .filter((item): item is NavigationSection => item !== null);
+
+  const scrollTo = searchParams.get("scroll-to");
+
+  // Эффект для прокрутки к секции
+  useEffect(() => {
+    if (!scrollTo) return;
+
+    const ref = sectionRefs.current[scrollTo];
+    if (ref?.current) {
+      // Небольшая задержка для обеспечения корректного рендеринга
+      const scrollTimer = setTimeout(() => {
+        ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        setSendModeSectionId(scrollTo);
+      }, 100);
+
+      // Таймер для сброса состояния и очистки URL
+      const resetTimer = setTimeout(() => {
+        setSendModeSectionId(null);
+        // Используем shallow routing для очистки параметра
+        const currentPath = window.location.pathname;
+        const currentSearch = new URLSearchParams(window.location.search);
+        currentSearch.delete("scroll-to");
+        const newUrl = currentSearch.toString()
+          ? `${currentPath}?${currentSearch.toString()}`
+          : currentPath;
+
+        router.push(newUrl, { scroll: false });
+      }, 3500);
+
+      return () => {
+        clearTimeout(scrollTimer);
+        clearTimeout(resetTimer);
+      };
+    }
+  }, [scrollTo, setSendModeSectionId, router]);
+
+  // Обработчик клика по кнопке навигации с shallow routing
+  const handleNavigationClick = (sectionId: string) => {
+    // Получаем текущий путь и параметры
+    const currentPath = window.location.pathname;
+    const currentSearch = new URLSearchParams(window.location.search);
+
+    // Устанавливаем новый параметр scroll-to
+    currentSearch.set("scroll-to", sectionId);
+
+    // Формируем новый URL
+    const newUrl = `${currentPath}?${currentSearch.toString()}`;
+
+    // Используем shallow routing для предотвращения полной перезагрузки
+    router.push(newUrl, { scroll: false });
+  };
+
+  // Обработчик отправки в чат
+  const handleSendClick = (sectionId: string) => {
+    const pageName = "Content Page";
+    setInteractionContext(pageName, sectionId);
+    if (isMobile && isOpen) {
+      closeDrawer();
+    }
+    setTimeout(() => setSendModeSectionId(null), 1000);
+  };
+
   if (!sections || sections.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
@@ -227,9 +535,64 @@ export default function ContentRenderer({ sections }: ContentRendererProps) {
 
   return (
     <div className="content-renderer">
-      <main className="mx-auto max-w-4xl px-6 py-8">
-        {sections.map((section, index) => renderSection(section, index))}
-      </main>
+      <div className="relative">
+        {/* Декоративная линия только для 2xl+ */}
+        <div className="absolute top-52 w-full border-t hidden 2xl:block" />
+
+        {/* Единая структура с условным grid layout */}
+        <div className="2xl:block">
+          <MaxWidthWrapper className="2xl:grid 2xl:grid-cols-4 2xl:gap-10 pt-8 max-md:px-0">
+            {/* Основной контейнер с условными стилями */}
+            <div className={`
+              mx-auto max-w-4xl px-6 py-8 
+              2xl:relative 2xl:col-span-3 2xl:mb-10 2xl:flex 2xl:flex-col 2xl:space-y-8 
+              2xl:bg-background  2xl:px-0 2xl:py-0 2xl:max-w-none 2xl:mx-0
+            `}>
+
+              {/* Героическое изображение */}
+              {heroImage && <HeroImage image={heroImage} />}
+
+              {/* Контейнер контента с условным отступом */}
+              <div className="2xl:px-[.8rem] 2xl:pb-10 2xl:md:px-8">
+
+                {/* Навигационные кнопки для экранов до 2xl */}
+                <SectionNavigationButtons
+                  navigationSections={navigationSections}
+                  onNavigate={handleNavigationClick}
+                />
+
+                {/* Рендеринг интерактивных секций */}
+                {sections.map((section, index) => {
+                  const sectionId = section.id || `section-${index}`;
+                  const sectionRef = sectionRefs.current[sectionId];
+                  const isLastSection = index === sections.length - 1;
+
+                  return renderSection(
+                    section,
+                    index,
+                    isLastSection,
+                    sectionRef,
+                    sendModeSectionId === sectionId,
+                    hoveredSectionId === sectionId,
+                    isMobile,
+                    setHoveredSectionId,
+                    setSendModeSectionId,
+                    handleSendClick
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Боковая навигация только для 2xl+ */}
+            <div className="sticky top-20 col-span-1 mt-52 hidden 2xl:flex flex-col divide-y divide-muted self-start pb-24">
+              <SidebarTableOfContents
+                navigationSections={navigationSections}
+                onNavigate={handleNavigationClick}
+              />
+            </div>
+          </MaxWidthWrapper>
+        </div>
+      </div>
     </div>
   );
 }
