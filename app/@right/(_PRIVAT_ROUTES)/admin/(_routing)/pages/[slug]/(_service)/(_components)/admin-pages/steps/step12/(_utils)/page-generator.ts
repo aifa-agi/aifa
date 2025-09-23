@@ -109,11 +109,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: canonicalUrl,
     },
     
-    // Метаданные для поисковых роботов
-    robots: {
-      index: true,
-      follow: true,
-    },
+    
     
     // Автор и издатель
     authors: [{ name: process.env.SITE_AUTHOR || "Site Author" }],
