@@ -20,6 +20,8 @@ import "@/components/tiptap/tiptap-node/horizontal-rule-node/horizontal-rule-nod
 import "@/components/tiptap/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap/tiptap-node/list-node/list-node.scss";
 import "@/components/tiptap/tiptap-node/paragraph-node/paragraph-node.scss";
+import BlurImage from "../shared/blur-image";
+import { getBlurDataURL, placeholderBlurhash } from "../../(_libs)/(_utils)/utils";
 
 // Wrapper для максимальной ширины
 function MaxWidthWrapper({
@@ -87,19 +89,22 @@ function extractTextFromNode(node: TipTapNode): string {
   return "";
 }
 
+
 // Компонент для отображения героического изображения
 function HeroImage({ image }: { image: PageImage }) {
   return (
     <div className="hero-image-container mb-8">
       <div className="relative w-full h-64 md:h-80 lg:h-96 overflow-hidden rounded-lg 2xl:rounded-t-xl 2xl:rounded-b-none">
-        <img
+        <BlurImage
+          alt={image.alt || "Aifa dev image"}
+          blurDataURL={placeholderBlurhash}
+          className="aspect-[1200/630] border-b object-cover md:rounded-t-xl"
+          width={1200}
+          height={630}
+          priority
+          placeholder="blur"
           src={image.href}
-          alt={image.alt || ""}
-          className="w-full h-full object-cover"
-          loading="eager"
-          style={{
-            objectPosition: "center",
-          }}
+          sizes="(max-width: 768px) 770px, 1000px"
         />
         {image.alt && (
           <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm">
@@ -110,6 +115,8 @@ function HeroImage({ image }: { image: PageImage }) {
     </div>
   );
 }
+
+
 
 // Компонент навигационных кнопок для экранов до 2xl
 function SectionNavigationButtons({
@@ -154,6 +161,8 @@ function SidebarTableOfContents({
   if (navigationSections.length === 0) {
     return null;
   }
+
+
 
   return (
     <div className="space-y-1">
@@ -413,6 +422,7 @@ export default function ContentRenderer({ sections, heroImage }: ContentRenderer
   const searchParams = useSearchParams();
   const { setInteractionContext } = useAppContext();
   const { isOpen, closeDrawer } = useRightSidebar();
+
 
   const {
     sendModeSectionId,

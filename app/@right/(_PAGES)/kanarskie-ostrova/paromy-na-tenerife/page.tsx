@@ -1,7 +1,7 @@
 // Auto-generated page - do not edit manually
-// Generated on: 2025-09-22T19:58:01.536Z
+// Generated on: 2025-09-23T09:16:18.026Z
 // Source href: /kanarskie-ostrova/paromy-na-tenerife
-// Page metadata: Паромы на Тенерифе! Тенерифе 2026 | 4 sections
+// Page metadata: Паромы на Тенерифе! Тенерифе 2026 | 5 sections
 
 import { Metadata } from "next";
 import ContentRenderer from "@/app/@right/(_service)/(_components)/content-renderer";
@@ -24,7 +24,7 @@ const sections = [
           "content": [
             {
               "type": "text",
-              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову real git push"
+              "text": "Паромы на Тенерифе: удобный и живописный способ путешествовать по острову"
             }
           ]
         },
@@ -574,6 +574,113 @@ const sections = [
       ]
     },
     "order": 4
+  },
+  {
+    "id": "h2-5",
+    "bodyContent": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": {
+            "textAlign": null,
+            "level": 2
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Практические советы для путешествия на пароме на Тенерифе"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "textAlign": null
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Путешествие на пароме по Тенерифе — это замечательный способ открыть для себя остров и соседние территории, наслаждаясь морскими пейзажами и комфортом на борту. Однако, чтобы поездка прошла без лишних волнений и доставила только приятные впечатления, важно заранее подготовиться. Планируя путешествие на пароме, уделите внимание нескольким ключевым моментам: выбору удобного времени отправления, правильной упаковке багажа, подготовке необходимых документов и соблюдению правил безопасности на борту. Такой подход поможет избежать неожиданных ситуаций и сделает ваше путешествие максимально комфортным и приятным."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": {
+            "textAlign": null,
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Советы по упаковке багажа, документам и безопасности"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "textAlign": null
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Правильная упаковка багажа — залог удобства во время поездки на пароме. Рекомендуется брать с собой только необходимое, учитывая продолжительность путешествия и погодные условия. Обязательно упакуйте легкую одежду для прогулок на палубе, а также теплую кофту или ветровку — морской бриз может быть прохладным. Если путешествуете с детьми, возьмите запасные вещи, любимые игрушки и необходимые средства ухода. Не стоит забывать и про солнцезащитные средства, особенно в летний сезон."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "textAlign": null
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Подготовка документов — еще один важный аспект. Для поездки на пароме на Тенерифе обычно требуются следующие документы:"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "textAlign": null
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Паспорт или удостоверение личности (в зависимости от гражданства и маршрута)\n  Билеты на паром (электронные или распечатанные)\n  Медицинская страховка, особенно если планируется длительное путешествие\n  Документы на ребенка (если путешествуете с детьми), например, свидетельство о рождении"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "textAlign": null
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Обязательно проверьте сроки действия всех документов и наличие необходимых виз, если маршрут включает международные переходы."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "textAlign": null
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Безопасность на борту — приоритет для всех пассажиров. Следуйте инструкциям экипажа и правилам поведения, не оставляйте детей без присмотра и обращайте внимание на указатели эвакуационных выходов. Во время шторма или волнения моря старайтесь оставаться в безопасных зонах и избегать скользких поверхностей. Также рекомендуется заранее ознакомиться с правилами перевозки багажа и запрещенными к провозу предметами, чтобы избежать неприятных ситуаций при посадке."
+            }
+          ]
+        }
+      ]
+    },
+    "order": 5
   }
 ];
 
@@ -583,19 +690,27 @@ const heroImage = {
   "alt": "Паромы на Тенерифе"
 };
 
-// Генерация метаданных для SEO из pageMetadata
+// ИСПРАВЛЕННАЯ генерация метаданных для SEO из pageMetadata
 export async function generateMetadata(): Promise<Metadata> {
+  const siteUrl = process.env.SITE_URL || 'https://example.com';
+  
+  // КРИТИЧЕСКИ ВАЖНО: правильная сборка canonical URL
+  const canonicalUrl = `${siteUrl}/kanarskie-ostrova/paromy-na-tenerife`;
+  
   return {
     title: "Паромы на Тенерифе! Тенерифе 2026",
     description: "Полный гид по морским перевозкам 2025",
-    keywords: ["Паромы на Тенерифе", "билеты на паром Тенерифе", "расписание паромов Тенерифе"],
-
+    keywords: ["Паромы на Тенерифе","билеты на паром Тенерифе","расписание паромов Тенерифе"],
+    
+    // ИСПРАВЛЕНИЕ: добавляем metadataBase для правильных URL
+    metadataBase: new URL(siteUrl),
+    
     // Open Graph метатеги
     openGraph: {
       title: "Паромы на Тенерифе! Тенерифе 2026",
       description: "Полный гид по морским перевозкам 2025",
       type: "article",
-      url: "/kanarskie-ostrova/paromy-na-tenerife",
+      url: canonicalUrl,
       images: [
         {
           url: "https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png",
@@ -603,7 +718,7 @@ export async function generateMetadata(): Promise<Metadata> {
         }
       ],
     },
-
+    
     // Twitter метатеги
     twitter: {
       card: "summary_large_image",
@@ -611,19 +726,19 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "Полный гид по морским перевозкам 2025",
       images: ["https://9d8adypzz8xutnay.public.blob.vercel-storage.com/Screenshot%202023-12-14%20193752-iLFevnFZR8YF77PoIZRUXcusgSutpX.png"],
     },
-
-    // Дополнительные метатеги
+    
+    // ИСПРАВЛЕНИЕ: правильный canonical URL - главное изменение
     alternates: {
-      canonical: "/kanarskie-ostrova/paromy-na-tenerife",
+      canonical: canonicalUrl,
     },
-
+    
     // Метаданные для поисковых роботов
     robots: {
       index: true,
       follow: true,
     },
-
-    // Автор и издатель (можно настроить через env)
+    
+    // Автор и издатель
     authors: [{ name: process.env.SITE_AUTHOR || "Site Author" }],
   };
 }
@@ -633,16 +748,24 @@ export default function Page() {
   return (
     <article className="page-content">
       {/* Заголовок страницы */}
-      <header className="page-header mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4 leading-tight">
-          Паромы на Тенерифе! Тенерифе 2026
-        </h1>
+      <div className="container max-w-screen-2xl pt-6 px-4 md:pt-10">
+        <div className="flex flex-col space-y-4">
+          <h1 className="font-heading text-3xl text-foreground sm:text-4xl">
+            Паромы на Тенерифе! Тенерифе 2026
+          </h1>
+        
+          {/* Описание страницы */}
+          <p className="text-base text-muted-foreground md:text-lg">
+            Полный гид по морским перевозкам 2025
+          </p>
 
-        {/* Описание страницы */}
-        <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-4xl">
-          Полный гид по морским перевозкам 2025
-        </p>
-      </header>
+          <div className="flex items-center space-x-4">
+            <Badge className="shadow-none rounded-md px-2.5 py-0.5 text-xs font-semibold h-6 flex items-center">
+              Blog
+            </Badge>
+          </div>
+        </div>
+      </div>
 
       {/* Контент секций с героическим изображением */}
       <div className="relative">

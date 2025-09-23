@@ -13,6 +13,15 @@ import { generateMetadataFromSection } from "@/app/@right/(_service)/(_component
  * @param payload - Complete page data including pageMetadata and sections
  * @returns string - Complete TypeScript/React page component code
  */
+/**
+ * Generates complete page.tsx content with embedded sections data and metadata
+ * Production-critical function - preserve exact template structure and formatting
+ * 
+ * @param firstPartHref - First part of the URL path (category)
+ * @param secondPartHref - Second part of the URL path (subcategory)
+ * @param payload - Complete page data including pageMetadata and sections
+ * @returns string - Complete TypeScript/React page component code
+ */
 export function generatePageTsxContent(
   firstPartHref: string,
   secondPartHref: string,
@@ -58,19 +67,27 @@ const sections = ${sectionsJson};
 // Данные героического изображения
 const heroImage = ${heroImageData ? JSON.stringify(heroImageData, null, 2) : 'null'};
 
-// Генерация метаданных для SEO из pageMetadata
+// ИСПРАВЛЕННАЯ генерация метаданных для SEO из pageMetadata
 export async function generateMetadata(): Promise<Metadata> {
+  const siteUrl = process.env.SITE_URL || 'https://example.com';
+  
+  // КРИТИЧЕСКИ ВАЖНО: правильная сборка canonical URL
+  const canonicalUrl = \`\${siteUrl}/${firstPartHref}/${secondPartHref}\`;
+  
   return {
     title: "${escapedTitle}",
     description: "${escapedDescription}",
     keywords: ${JSON.stringify(finalMetadata.keywords)},
+    
+    // ИСПРАВЛЕНИЕ: добавляем metadataBase для правильных URL
+    metadataBase: new URL(siteUrl),
     
     // Open Graph метатеги
     openGraph: {
       title: "${escapedTitle}",
       description: "${escapedDescription}",
       type: "article",
-      url: "/${firstPartHref}/${secondPartHref}",${finalMetadata.images.length > 0 ? `
+      url: canonicalUrl,${finalMetadata.images.length > 0 ? `
       images: [
         {
           url: "${finalMetadata.images[0].href}",
@@ -87,9 +104,9 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ["${finalMetadata.images[0].href}"],` : ''}
     },
     
-    // Дополнительные метатеги
+    // ИСПРАВЛЕНИЕ: правильный canonical URL - главное изменение
     alternates: {
-      canonical: "/${firstPartHref}/${secondPartHref}",
+      canonical: canonicalUrl,
     },
     
     // Метаданные для поисковых роботов
@@ -98,7 +115,7 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true,
     },
     
-    // Автор и издатель (можно настроить через env)
+    // Автор и издатель
     authors: [{ name: process.env.SITE_AUTHOR || "Site Author" }],
   };
 }
@@ -136,3 +153,4 @@ export default function Page() {
   );
 }`;
 }
+
