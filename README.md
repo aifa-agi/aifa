@@ -97,7 +97,12 @@ Specification stage. The documents below describe the target architecture; the i
 
 ## License
 
-[GNU AGPL-3.0](LICENSE).
+[Business Source License 1.1](LICENSE) — the project is in its research stage:
+
+- copying, modifying and non-production use are allowed; **non-commercial research and education are allowed in production too**;
+- on **2028-10-09** the Licensed Work becomes available under the **MIT License**.
+
+The 2024–2025 codebase in the [`legacy-v0`](https://github.com/aifa-agi/aifa/tree/legacy-v0) branch stays under GNU AGPL-3.0.
 
 ---
-*Maintained under `aifa.dev` / Open-Source Architecture.*
+*Maintained under `aifa.dev` / source-available research, MIT from 2028-10-09.*
